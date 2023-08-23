@@ -10,7 +10,11 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-frontend-hmrc"             % "7.9.0-play-28",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping"  % "1.13.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"     % bootstrapVersion,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"             % hmrcMongoVersion
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"             % hmrcMongoVersion,
+    "com.beachape"      %% "enumeratum-play-json"           % "1.7.0",
+    "com.chuusai"       %% "shapeless"                      % "2.4.0-M1",
+    "org.typelevel"     %% "cats-core"                      % "2.10.0",
+    "fr.marcwrobel"          % "jbanking"                       % "4.0.0"
   )
 
   val test = Seq(
@@ -23,7 +27,9 @@ object AppDependencies {
     "org.scalacheck"          %% "scalacheck"              % "1.15.4",
     "org.pegdown"             %  "pegdown"                 % "1.6.0",
     "org.jsoup"               %  "jsoup"                   % "1.14.3",
-    "com.vladsch.flexmark"    %  "flexmark-all"            % "0.62.2"
+    "com.vladsch.flexmark"    %  "flexmark-all"            % "0.62.2",
+    "com.beachape"                 %% "enumeratum-scalacheck"       % "1.7.0",
+    "io.chrisdavenport"            %% "cats-scalacheck"             % "0.3.2"
   ).map(_ % "test, it")
 
   def apply(): Seq[ModuleID] = compile ++ test

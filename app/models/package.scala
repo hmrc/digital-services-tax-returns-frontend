@@ -1,6 +1,102 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import fr.marcwrobel.jbanking.iban.Iban
 import play.api.libs.json._
+import shapeless.tag.@@
 
 package object models {
+
+  type UTR = String @@ UTR.Tag
+  object UTR
+    extends RegexValidatedString(
+      "^[0-9]{10}$",
+      _.replaceAll(" ", "")
+    )
+
+  type Percent = Float @@ Percent.Tag
+  object Percent extends ValidatedType[Float] {
+    def validateAndTransform(in: Float): Option[Float] =
+      Some(in).filter { x =>
+        (x >= 0 && x <= 100) && (BigDecimal(x.toString).scale <= 3)
+      }
+  }
+
+  type Postcode = String @@ Postcode.Tag
+  object Postcode
+    extends RegexValidatedString(
+      """^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$""",
+      _.trim.replaceAll("[ \\t]+", " ").toUpperCase
+    )
+
+  type Money = BigDecimal @@ Money.Tag
+  object Money extends ValidatedType[BigDecimal] {
+    def validateAndTransform(in: BigDecimal): Option[BigDecimal] =
+      Some(in).filter(_.toString.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
+  }
+
+  type CompanyName = String @@ CompanyName.Tag
+  object CompanyName
+    extends RegexValidatedString(
+      regex = """^[a-zA-Z0-9 '&.-]{1,105}$"""
+    )
+
+  type IBAN = String @@ IBAN.Tag
+  object IBAN extends ValidatedType[String] {
+    override def validateAndTransform(in: String): Option[String] =
+      Some(in).map(_.replaceAll("\\s+", "")).filter(Iban.isValid)
+  }
+
+  type SafeId = String @@ SafeId.Tag
+  object SafeId
+    extends RegexValidatedString(
+      "^[A-Z0-9]{1,15}$"
+    )
+
+  type SortCode = String @@ SortCode.Tag
+  object SortCode
+    extends RegexValidatedString(
+      """^[0-9]{6}$""",
+      _.filter(_.isDigit)
+    )
+
+  type AccountNumber = String @@ AccountNumber.Tag
+  object AccountNumber
+    extends RegexValidatedString(
+      """^[0-9]{8}$""",
+      _.filter(_.isDigit)
+    )
+
+  type BuildingSocietyRollNumber = String @@ BuildingSocietyRollNumber.Tag
+  object BuildingSocietyRollNumber
+    extends RegexValidatedString(
+      """^[A-Za-z0-9 -]{1,18}$"""
+    )
+
+  type AccountName = String @@ AccountName.Tag
+  object AccountName
+    extends RegexValidatedString(
+      """^[a-zA-Z&^]{1,35}$"""
+    )
+
+  type DSTRegNumber = String @@ DSTRegNumber.Tag
+  object DSTRegNumber
+    extends RegexValidatedString(
+      "^([A-Z]{2}DST[0-9]{10})$"
+    )
 
   implicit class RichJsObject(jsObject: JsObject) {
 
