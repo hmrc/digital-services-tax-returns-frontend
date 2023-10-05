@@ -12,7 +12,7 @@ The Digital Services Tax (DST) digital service is split into a number of differe
 
 **Stub** - Microservice that is used to mimic the DES APIs when running services locally or in the development and staging environments.
 
-This is the main frontend, currently containing the registration form.
+This is the main frontend, currently containing the returns form.
 
 For details about the digital services tax see [the GOV.UK guidance](https://www.gov.uk/government/consultations/digital-services-tax-draft-guidance)
 
@@ -28,8 +28,6 @@ Run the code from source using
 Open your browser and navigate to the following url:
 
 `http://localhost:8743/digital-services-tax-returns-frontend`
-
-*You need to be on the VPN*
 
 Ensure your service manager config is up to date, and run the following command:
 
