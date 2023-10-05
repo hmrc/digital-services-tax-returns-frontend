@@ -14,7 +14,10 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
 @import registration.Registration
+@import models.registration.CompanyRegWrapper
+@import models.registration.Company
 @import models.formatDate
 @import models.registration.Period
 
@@ -31,7 +34,8 @@ useFullWidth = true
 ) {
 
 
-@company = @{reg.companyReg.company}
+@{val company = reg.companyReg.company}
+
 <div class="grid-row govuk-grid-column-full no-padding-left">
     <div class="govuk-grid-column-two-thirds no-padding-left">
 
@@ -91,7 +95,8 @@ useFullWidth = true
             </p>
             <p class="govuk-body">@formatDate(period.paymentDue)</p>
             <p class="govuk-body">
-                <a class="govuk-link" href="@uk.gov.hmrc.digitalservicestax.controllers.routes.PaymentsController.payYourDST()">
+<!--                            This will be changed to the new repository url once it is created -->
+                <a class="govuk-link" href="@appConfig.dstFrontendReturnActionUrl">
                     @messages("returnsDashboard.pay-tax")
                 </a>
             </p>
@@ -103,8 +108,8 @@ useFullWidth = true
             <h2 class="govuk-heading-m">@messages("returnsDashboard.return-due")</h2>
             <p class="govuk-body">@{formatDate(period.returnDue)}</p>
             <p class="govuk-body">
-                <!--                            This will be changed to the new repository url once it is created -->
-                <a class="govuk-link" href='@controllers.routes.ReturnsController.returnAction(period.key, "")/'>
+<!--                            This will be changed to the new repository url once it is created -->
+                <a class="govuk-link" href="@appConfig.dstFrontendReturnActionUrl">
                     @messages("returnsDashboard.submit-return")
                 </a>
             </p>

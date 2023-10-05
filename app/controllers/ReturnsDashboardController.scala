@@ -67,32 +67,5 @@ class ReturnsDashboardController @Inject()(
     }
   }
 
-  def showAmendments(): Action[AnyContent] = authorisedAction.async { implicit request: AuthorisedRequest[AnyContent] =>
 
-    dstConnector.lookupRegistration().flatMap {
-      case None =>
-        dstConnector.lookupPendingRegistrationExists().flatMap {
-          case true =>
-            logger.info("[ReturnsController] Pending registration")
-            Future.successful(
-              Ok()()
-            )
-          case _ => Future.successful(Redirect(appConfig.dstFrontendShowAmendmentsPageUrl))
-        }
-      case Some(_) =>
-        dstConnector.lookupAmendableReturns().map { outstandingPeriods =>
-          outstandingPeriods.toList match {
-            case Nil =>
-              NotFound
-            case periods =>
-              Ok(
-                layout(
-                  pageTitle =
-                    Some(s"${msg("resubmit-a-return.title")} - ${msg("common.title")} - ${msg("common.title.suffix")}")
-                )(resubmitAReturn("resubmit-a-return", periods, periodForm)(msg, request))
-              )
-          }
-        }
-    }
-  }
 }
