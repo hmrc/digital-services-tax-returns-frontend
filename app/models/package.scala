@@ -158,6 +158,19 @@ package object models {
       }
     )
 
+  type NonEmptyString = String @@ NonEmptyString.Tag
+  object NonEmptyString extends ValidatedType[String] {
+    def validateAndTransform(in: String): Option[String] =
+      Some(in).filter(_.nonEmpty)
+  }
+
+  type FormBundleNumber = String @@ FormBundleNumber.Tag
+  object FormBundleNumber
+    extends RegexValidatedString(
+      regex = "^[0-9]{12}$"
+    )
+
+
   implicit class RichJsObject(jsObject: JsObject) {
 
     def setObject(path: JsPath, value: JsValue): JsResult[JsObject] =

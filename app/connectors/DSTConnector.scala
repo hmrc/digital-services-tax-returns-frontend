@@ -16,6 +16,7 @@
 
 package connectors
 
+import models.BackendAndFrontendJson._
 import models.registration.{Period, Registration}
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -28,12 +29,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(implicit
                                                                          executionContext: ExecutionContext,
                                                                          hc: HeaderCarrier
-) {
+) extends DSTService[Future] {
 
   val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
 
   def lookupRegistration(): Future[Option[Registration]] =
     http.GET[Option[Registration]](s"$backendURL/registration")
+
+
 
   def lookupPendingRegistrationExists(): Future[Boolean] =
     http.GET[HttpResponse](s"$backendURL/pending-registration").map {
@@ -51,5 +54,6 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
     http.GET[List[Period]](s"$backendURL/returns/all").map(_.toSet)
 
   case class MicroServiceConnectionException(msg: String) extends Exception(msg)
+
 }
 

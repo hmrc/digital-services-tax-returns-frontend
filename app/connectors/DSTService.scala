@@ -24,14 +24,6 @@ import uk.gov.hmrc.http.HttpResponse
 
 trait DSTService[F[_]] {
 
-  def lookupCompany(): F[Option[CompanyRegWrapper]]
-
-  def lookupCompany(utr: UTR, postcode: Postcode): F[Option[CompanyRegWrapper]]
-
-  def submitRegistration(reg: Registration): F[HttpResponse]
-
-  def submitReturn(period: Period, ret: Return): F[HttpResponse]
-
   def lookupRegistration(): F[Option[Registration]]
 
   def lookupPendingRegistrationExists(): F[Boolean]
@@ -45,21 +37,12 @@ trait DSTService[F[_]] {
   def transform[G[_]](nat: F ~> G): DSTService[G] = {
     val old = this
     new DSTService[G] {
-      def lookupCompany(utr: UTR, postcode: Postcode): G[Option[CompanyRegWrapper]] = nat(
-        old.lookupCompany(utr, postcode)
-      )
-
-      def lookupCompany(): G[Option[CompanyRegWrapper]] = nat(old.lookupCompany())
 
       def lookupOutstandingReturns(): G[Set[Period]] = nat(old.lookupOutstandingReturns())
 
       def lookupRegistration(): G[Option[Registration]] = nat(old.lookupRegistration())
 
       def lookupPendingRegistrationExists(): G[Boolean] = nat(old.lookupPendingRegistrationExists())
-
-      def submitRegistration(reg: Registration): G[HttpResponse] = nat(old.submitRegistration(reg))
-
-      def submitReturn(period: Period, ret: Return): G[HttpResponse] = nat(old.submitReturn(period, ret))
 
       def lookupAmendableReturns(): G[Set[Period]] = nat(old.lookupAmendableReturns())
 

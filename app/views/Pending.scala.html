@@ -17,10 +17,10 @@
 @this(
 govukLayout: views.html.layouts.GovukLayoutWrapper
 )
-@()(implicit messages: Messages)
+@()(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
-pageTitle = Some(s"${errorPrefix(form)}${titleNoForm(messages("agentImporterHasEORI.title"))}")
+    pageTitle = Some(s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}")
 ) {
 
 
