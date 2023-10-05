@@ -14,14 +14,22 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.digitalservicestax.data.Registration
-@import uk.gov.hmrc.digitalservicestax.frontend.formatDate
+@import registration.Registration
+@import models.formatDate
+@import models.registration.Period
 
 @this(
+govukLayout: views.html.layouts.GovukLayoutWrapper,
 govukSummaryList : GovukSummaryList
 )
 
-@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit messages: Messages)
+@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit messages: Messages, appConfig: FrontendAppConfig)
+
+@govukLayout(
+pageTitle = Some(s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}"),
+useFullWidth = true
+) {
+
 
 @company = @{reg.companyReg.company}
 <div class="grid-row govuk-grid-column-full no-padding-left">
@@ -95,7 +103,8 @@ govukSummaryList : GovukSummaryList
             <h2 class="govuk-heading-m">@messages("returnsDashboard.return-due")</h2>
             <p class="govuk-body">@{formatDate(period.returnDue)}</p>
             <p class="govuk-body">
-                <a class="govuk-link" href='@uk.gov.hmrc.digitalservicestax.controllers.routes.ReturnsController.returnAction(period.key, "")/'>
+                <!--                            This will be changed to the new repository url once it is created -->
+                <a class="govuk-link" href='@controllers.routes.ReturnsController.returnAction(period.key, "")/'>
                     @messages("returnsDashboard.submit-return")
                 </a>
             </p>
@@ -111,7 +120,8 @@ govukSummaryList : GovukSummaryList
                     @if(amended.nonEmpty) {
                     <li>
                         <p class="govuk-body">
-                            <a class="govuk-link" href="@uk.gov.hmrc.digitalservicestax.controllers.routes.ReturnsController.showAmendments()">
+<!--                            This will be changed to the new repository url once it is created -->
+                            <a class="govuk-link" href="@appConfig.dstFrontendShowAmendmentsPageUrl">
                                 @messages("returnsDashboard.amendments")
                             </a>
                         </p>
@@ -131,3 +141,5 @@ govukSummaryList : GovukSummaryList
     </div>
 
 </div>
+
+}

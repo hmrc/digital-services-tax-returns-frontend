@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,24 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models
+@this(
+govukLayout: views.html.layouts.GovukLayoutWrapper
+)
 
-case class Field(name: String, errorKeys: Map[ErrorType, String])
+@()(implicit messages: Messages)
 
-object Field {
+@govukLayout(
+pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title")}")
+)
 
-  def apply(name: String, errors: (ErrorType, String)*): Field =
-    Field(name, errors.toMap)
-}
+<h1 class="govuk-heading-l">@messages("wrong-account.heading")</h1>
+<p class="govuk-body">@messages("wrong-account.sign-out.reason")</p>
+<p class="govuk-body">@messages("wrong-account.sign-in.reason")</p>
 
-sealed trait ErrorType
-case object Required extends ErrorType
-case object Invalid extends ErrorType
+<p class="govuk-body">
+    <a href="@controllers.routes.AuthenticationController.signIn()" class="govuk-button" role="button">
+        @messages("common.sign-in")
+    </a>
+</p>

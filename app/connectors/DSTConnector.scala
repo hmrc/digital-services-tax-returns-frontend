@@ -16,40 +16,21 @@
 
 package connectors
 
-import models.registration.{CompanyRegWrapper, Period, Registration}
-import models.returns.Return
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse, UpstreamErrorResponse}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import models.{UTR, Postcode}
+import models.registration.{Period, Registration}
 import play.api.http.Status.OK
+import uk.gov.hmrc.http.HttpReads.Implicits._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class DSTConnector(val http: HttpClient, servicesConfig: ServicesConfig)(implicit
+class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(implicit
                                                                          executionContext: ExecutionContext,
                                                                          hc: HeaderCarrier
 ) {
 
   val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
-
-  def submitRegistration(reg: Registration): Future[HttpResponse] =
-    http.POST[Registration, Either[UpstreamErrorResponse, HttpResponse]](s"$backendURL/registration", reg).map {
-      case Right(value) => value
-      case Left(e)      => throw e
-    }
-
-  def submitReturn(period: Period, ret: Return): Future[HttpResponse] = {
-    val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
-    http.POST[Return, Either[UpstreamErrorResponse, HttpResponse]](s"$backendURL/returns/$encodedKey", ret).map {
-      case Right(value) => value
-      case Left(e)      => throw e
-    }
-  }
-  def lookupCompany(): Future[Option[CompanyRegWrapper]]              =
-    http.GET[Option[CompanyRegWrapper]](s"$backendURL/lookup-company")
-
-  def lookupCompany(utr: UTR, postcode: Postcode): Future[Option[CompanyRegWrapper]] =
-    http.GET[Option[CompanyRegWrapper]](s"$backendURL/lookup-company/$utr/$postcode")
 
   def lookupRegistration(): Future[Option[Registration]] =
     http.GET[Option[Registration]](s"$backendURL/registration")

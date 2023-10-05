@@ -17,13 +17,31 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
+import models.registration.Period
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
 import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration) {
+class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig, periodKey: Period) {
+
+  private def loadConfig(key: String) = configuration.get[String](key)
+
+  val dstFrontendBaseUrl: String = servicesConfig.baseUrl("digital-services-tax-frontend")
+  val dstFrontendRegistrationUrl: String = dstFrontendBaseUrl + "/register"
+  val dstFrontendShowAmendmentsPageUrl: String = dstFrontendBaseUrl + "/resubmit-a-return"
+  val dstFrontendReturnActionUrl: String = dstFrontendBaseUrl + s"/submit-return/${periodKey}"
+
+  lazy val dstIndexPage: String        = loadConfig("dst-index-page-url")
+  lazy val ggLoginUrl: String                     = s"$companyAuthFrontend$companyAuthSignInPath"
+  lazy val feedbackSurveyUrl: String   = loadConfig("microservice.services.feedback-survey.url")
+  private lazy val companyAuthFrontend: String    = servicesConfig.getConfString("company-auth.url", "")
+  private lazy val companyAuthSignInPath: String  = servicesConfig.getConfString("company-auth.sign-in-path", "")
+  private lazy val companyAuthSignOutPath: String = servicesConfig.getConfString("company-auth.sign-out-path", "")
+
+  lazy val signOutDstUrl: String       = s"$companyAuthFrontend$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
 
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")

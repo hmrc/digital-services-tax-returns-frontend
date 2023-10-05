@@ -16,6 +16,8 @@
 
 package models.registration
 
+import models.{AddressLine, CountryCode, Postcode}
+
 sealed trait Address {
   def line1: AddressLine
   def line2: Option[AddressLine]

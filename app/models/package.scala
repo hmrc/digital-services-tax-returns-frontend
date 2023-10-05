@@ -14,11 +14,29 @@
  * limitations under the License.
  */
 
+import com.ibm.icu.text.SimpleDateFormat
+import com.ibm.icu.util.{TimeZone, ULocale}
 import fr.marcwrobel.jbanking.iban.Iban
 import play.api.libs.json._
 import shapeless.tag.@@
 
+import java.time.{LocalDate, ZoneId}
+
 package object models {
+  private val zone             = "Europe/London"
+  val zoneId: ZoneId           = ZoneId.of(zone)
+
+  def formatDate(localDate: LocalDate, dateFormatPattern: String = "d MMMM yyyy"): String = {
+    val date = java.util.Date.from(localDate.atStartOfDay(zoneId).toInstant)
+    createDateFormatForPattern(dateFormatPattern).format(date)
+  }
+
+  def createDateFormatForPattern(pattern: String): SimpleDateFormat = {
+    val locale: ULocale = ULocale.getDefault
+    val sdf             = new SimpleDateFormat(pattern, locale)
+    sdf.setTimeZone(TimeZone.getTimeZone(zone))
+    sdf
+  }
 
   type UTR = String @@ UTR.Tag
   object UTR
@@ -35,6 +53,20 @@ package object models {
       }
   }
 
+  type Email = String @@ Email.Tag
+  object Email extends ValidatedType[String] {
+    def validateAndTransform(email: String): Option[String] = {
+      import org.apache.commons.validator.routines.EmailValidator
+      Some(email).filter(EmailValidator.getInstance.isValid(_))
+    }
+  }
+
+  type InternalId = String @@ InternalId.Tag
+  object InternalId
+    extends RegexValidatedString(
+      regex = "^Int-[a-f0-9-]*$"
+    )
+
   type Postcode = String @@ Postcode.Tag
   object Postcode
     extends RegexValidatedString(
@@ -48,10 +80,22 @@ package object models {
       Some(in).filter(_.toString.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
   }
 
+  type PhoneNumber = String @@ PhoneNumber.Tag
+  object PhoneNumber
+    extends RegexValidatedString(
+      "^[A-Z0-9 \\-]{1,30}$"
+    )
+
   type CompanyName = String @@ CompanyName.Tag
   object CompanyName
     extends RegexValidatedString(
       regex = """^[a-zA-Z0-9 '&.-]{1,105}$"""
+    )
+
+  type AddressLine = String @@ AddressLine.Tag
+  object AddressLine
+    extends RegexValidatedString(
+      regex = """^[a-zA-Z0-9 '&.-]{1,35}$"""
     )
 
   type IBAN = String @@ IBAN.Tag
@@ -96,6 +140,22 @@ package object models {
   object DSTRegNumber
     extends RegexValidatedString(
       "^([A-Z]{2}DST[0-9]{10})$"
+    )
+
+  type RestrictiveString = String @@ RestrictiveString.Tag
+  object RestrictiveString
+    extends RegexValidatedString(
+      """^[a-zA-Z'&-^]{1,35}$"""
+    )
+
+  type CountryCode = String @@ CountryCode.Tag
+  object CountryCode
+    extends RegexValidatedString(
+      """^[A-Z][A-Z]$""",
+      _.toUpperCase match {
+        case "UK"  => "GB"
+        case other => other
+      }
     )
 
   implicit class RichJsObject(jsObject: JsObject) {

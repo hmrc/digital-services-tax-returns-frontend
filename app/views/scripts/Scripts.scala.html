@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package models
+@import views.html.helper.CSPNonce
 
-case class Field(name: String, errorKeys: Map[ErrorType, String])
+@this()
 
-object Field {
+@()(implicit request: RequestHeader)
 
-  def apply(name: String, errors: (ErrorType, String)*): Field =
-    Field(name, errors.toMap)
-}
-
-sealed trait ErrorType
-case object Required extends ErrorType
-case object Invalid extends ErrorType
+<script @{CSPNonce.attr} src='@routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+<script @{CSPNonce.attr} src='@routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
+<script @{CSPNonce.attr} src='@routes.Assets.versioned("javascripts/application.js")'></script>

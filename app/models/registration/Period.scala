@@ -16,6 +16,10 @@
 
 package models.registration
 
+import models.ValidatedType
+import play.api.libs.json.{Json, OFormat}
+import shapeless.tag.@@
+
 import java.time.LocalDate
 
 final case class Period(start: LocalDate, end: LocalDate, returnDue: LocalDate, key: Period.Key) {
@@ -34,4 +38,6 @@ object Period {
     def validateAndTransform(in: String): Option[String] =
       Some(in).filter(x => x.nonEmpty && x.size <= 4).map("^#".r.replaceAllIn(_, ""))
   }
+
+  implicit val periodFormat: OFormat[Period] = Json.format[Period]
 }

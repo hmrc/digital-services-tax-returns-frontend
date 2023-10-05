@@ -16,40 +16,32 @@
 
 package controllers.services
 
-import scala.concurrent.Future
+import config.FrontendAppConfig
+import connectors.DSTConnector
+import models.registration.Registration
+import play.api.Logger
+import play.api.i18n.Messages
 
-class CheckRegistrations {
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-  backend.lookupRegistration().flatMap {
-    case None                                          =>
-      backend.lookupPendingRegistrationExists().flatMap {
-        case true =>
-          logger.info("[PaymentsController] Pending registration")
-          Future.successful(
-            Ok(
-              layout(
-                pageTitle = Some(s"${msg("common.title.short")} - ${msg("common.title")}")
-              )(views.html.end.pending()(msg))
-            )
-          )
-        case _    => Future.successful(Redirect(routes.RegistrationController.registerAction(" ")))
-      }
-    case Some(reg) if reg.registrationNumber.isDefined =>
-      backend.lookupOutstandingReturns().map { periods =>
-        Ok(
-          layout(
-            pageTitle = Some(s"${msg("common.title.short")} - ${msg("common.title")}")
-          )(payYourDst(reg.registrationNumber, periods.toList.sortBy(_.start))(msg))
-        )
-      }
-    case Some(_)                                       =>
-      Future.successful(
-        Ok(
-          layout(
-            pageTitle = Some(s"${msg("common.title.short")} - ${msg("common.title")}")
-          )(views.html.end.pending()(msg))
-        )
-      )
+class CheckRegistrations @Inject()(dstConnector: DSTConnector, pending: views.html.Pending, appConfig: FrontendAppConfig)(implicit
+                                                                                                                          ec: ExecutionContext,
+                                                                                                                          val messages: Messages
+) {
+
+  val logger = Logger(getClass)
+
+  def isRegPendingOrRegNumExists: Future[(Boolean, Option[Registration])] = {
+
+    dstConnector.lookupRegistration().flatMap {
+      case None =>
+        dstConnector.lookupPendingRegistrationExists().map((_, None))
+      case Some(reg) if reg.registrationNumber.isDefined =>
+        Future.successful(false, Some(reg))
+      case Some(_) =>
+        Future.successful(true, None)
+    }
   }
 
 }

@@ -16,6 +16,8 @@
 
 package models.registration
 
+import models.CompanyName
+
 final case class Company(
                           name: CompanyName,
                           address: Address

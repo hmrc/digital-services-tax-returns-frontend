@@ -16,24 +16,83 @@
 
 package controllers
 
+import config.FrontendAppConfig
+import connectors.DSTConnector
 import controllers.actions._
-import javax.inject.Inject
+import controllers.services.CheckRegistrations
+import play.api.Logger
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import play.api.mvc.{Action, AnyContent, ControllerHelpers}
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
+import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
 import views.html.ReturnsDashboardView
 
-class ReturnsDashboardController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ReturnsDashboardView
-                                     ) extends FrontendBaseController with I18nSupport {
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
-  def onPageLoad: Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      Ok(view())
+class ReturnsDashboardController @Inject()(
+                                            authorisedAction: Auth,
+                                            val http: HttpClient,
+                                            val authConnector: AuthConnector,
+                                            view: ReturnsDashboardView,
+                                            dstConnector: DSTConnector,
+                                            checkRegistrations: CheckRegistrations,
+                                            pending: views.html.Pending
+                                          )(implicit
+                                            ec: ExecutionContext,
+                                            val messagesApi: MessagesApi,
+                                            val appConfig: FrontendAppConfig,
+                                          ) extends ControllerHelpers
+  with FrontendHeaderCarrierProvider
+  with I18nSupport
+  with AuthorisedFunctions {
+
+  val logger                              = Logger(getClass)
+
+  def onPageLoad: Action[AnyContent] = authorisedAction.async { implicit request =>
+    checkRegistrations.isRegPendingOrRegNumExists.flatMap {
+      case (_, Some(reg)) =>
+        for {
+          outstandingPeriods <- dstConnector.lookupOutstandingReturns()
+          amendedPeriods <- dstConnector.lookupAmendableReturns()
+        } yield Ok(
+          view(reg, outstandingPeriods.toList.sortBy(_.start), amendedPeriods.toList.sortBy(_.start))
+        )
+      case (true, _) =>
+        logger.info("Registration is Pending")
+        Future.successful(Ok(pending()))
+      case _ =>
+        Future.successful(Redirect(appConfig.dstFrontendBaseUrl))
+    }
+  }
+
+  def showAmendments(): Action[AnyContent] = authorisedAction.async { implicit request: AuthorisedRequest[AnyContent] =>
+
+    dstConnector.lookupRegistration().flatMap {
+      case None =>
+        dstConnector.lookupPendingRegistrationExists().flatMap {
+          case true =>
+            logger.info("[ReturnsController] Pending registration")
+            Future.successful(
+              Ok()()
+            )
+          case _ => Future.successful(Redirect(appConfig.dstFrontendShowAmendmentsPageUrl))
+        }
+      case Some(_) =>
+        dstConnector.lookupAmendableReturns().map { outstandingPeriods =>
+          outstandingPeriods.toList match {
+            case Nil =>
+              NotFound
+            case periods =>
+              Ok(
+                layout(
+                  pageTitle =
+                    Some(s"${msg("resubmit-a-return.title")} - ${msg("common.title")} - ${msg("common.title.suffix")}")
+                )(resubmitAReturn("resubmit-a-return", periods, periodForm)(msg, request))
+              )
+          }
+        }
+    }
   }
 }
