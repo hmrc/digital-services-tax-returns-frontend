@@ -20,8 +20,8 @@
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcTrackingConsentSnippet
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcReportTechnicalIssueHelper
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
-@import navigation.NavigatorBack
-@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
+@import views.html.helpers.FullWidthMainContent
+@import views.html.scripts.Scripts
 @import views.html.helper.CSPNonce
 
 @this(
@@ -30,7 +30,7 @@ govukPhaseBanner: GovukPhaseBanner,
 govukBackLink: GovukBackLink,
 hmrcHeader: HmrcHeader,
 hmrcTimeoutDialog : HmrcTimeoutDialog,
-hmrcScripts: HmrcScripts,
+scripts: Scripts,
 appConfig: config.FrontendAppConfig,
 hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
 hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
@@ -40,11 +40,10 @@ defaultMainContentLayout: TwoThirdsMainContent
 )
 
 @(
-    bodyClasses: Option[String] = None,
     pageTitle: Option[String] = None,
+    bodyClasses: Option[String] = None,
     timeout: Boolean = true,
     js: Option[Html] = None,
-
     useFullWidth: Boolean = false,
     refresh: Int = 0)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
@@ -56,7 +55,7 @@ defaultMainContentLayout: TwoThirdsMainContent
         @hmrcTimeoutDialog(TimeoutDialog(
             timeout = Some(appConfig.timeout),
             countdown = Some(appConfig.countdown),
-            keepAliveUrl = Some(routes.KeepAliveController.keepAlive().url),
+            keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
             signOutUrl = Some(routes.AuthenticationController.signOut().url),
             timeoutUrl = Some(routes.AuthenticationController.signOut().url),
             title = Some(messages("timeout.title")),
@@ -67,43 +66,14 @@ defaultMainContentLayout: TwoThirdsMainContent
 
 }
 
-@beforeContentBlock = {
-
-    @{backLinkNav.flatMap(_.maybeCall) match {
-        case Some(call) => govukBackLink(BackLink(
-            attributes = Map("id"->"back-link"),
-            classes = "govuk-!-display-none-print",
-            href = call.url,
-            content = Text(messages("site.back"))
-        ))
-        case None => paragraph(Html(""), "govuk-!-margin-bottom-8")
-    }}
-}
-
 @content = {
     @contentBlock
-    @hmrcReportTechnicalIssue(
-        ReportTechnicalIssue(
-            appConfig.appName,
-            appConfig.appName,
-            classes = Some("get-help-action"),
-            referrerUrl = Some(request.uri),
-            baseUrl = Some(appConfig.contactHost)
-        )
-    )
+    @hmrcReportTechnicalIssueHelper()
 }
 
 @govukLayout(
-  serviceName = Some(messages("service.name").toString()),
   pageTitle = pageTitle,
-  isWelshTranslationAvailable = false,
-  signOutUrl = Some(appConfig.signOutDstUrl),
-  serviceUrl = Some(messages("service.homePageUrl")),
-<!--  headerBlock = Some(siteHeader(timeout)),-->
-<!--  beforeContentBlock = Some(beforeContentBlock),-->
-  footerBlock = Some(hmrcStandardFooter()),
-  bodyEndBlock = Some(afterContentScripts),
   headBlock = Some(head),
-  scriptsBlock = Some(scripts),
+  scriptsBlock = Some(scripts()),
   mainContentLayout = if(useFullWidth) Some(fullWidthMainContent(_)) else Some(defaultMainContentLayout(_))
 )(content)

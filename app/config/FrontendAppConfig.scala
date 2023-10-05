@@ -46,7 +46,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
-  private val contactHost = configuration.get[String]("contact-frontend.host")
+  val contactHost = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "digital-services-tax-returns-frontend"
 
   def feedbackUrl(implicit request: RequestHeader): String =

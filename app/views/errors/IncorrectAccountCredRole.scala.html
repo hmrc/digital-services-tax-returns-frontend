@@ -23,7 +23,7 @@ govukLayout: views.html.layouts.GovukLayoutWrapper
 @govukLayout(
 pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title")}")
 )
-
+{
 <h1 class="govuk-heading-l">@messages("wrong-creds.heading")</h1>
 <p class="govuk-body" id="cred_role_p1">@messages("wrong-creds.p1")</p>
 <p class="govuk-body" id="cred_role_p2">@messages("wrong-creds.p2")</p>
@@ -46,4 +46,4 @@ pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title"
  </li>
  <li id="cred_role_p4">@messages("wrong-creds.p4")</li>
 </ul>
-
+}

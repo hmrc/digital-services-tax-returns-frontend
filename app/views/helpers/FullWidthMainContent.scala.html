@@ -14,20 +14,12 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@this(
-    layout: layouts.GovukLayoutWrapper
-)
+@this()
 
-@()(implicit request: RequestHeader, messages: Messages, appConfig: FrontendAppConfig)
+@(contentBlock: Html)
 
-@layout(pageTitle = Some(messages("time-out.title").toString())) {
-    <h1 class="govuk-heading-l">@messages("time-out.title")</h1>
-    <p class="govuk-body">@messages("time-out.save")</p>
-
-    <p class="govuk-body">
-        <a href="@controllers.routes.AuthenticationController.signIn" class="govuk-button" role="button">
-            @messages("common.sign-in")
-        </a>
-    </p>
-}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @contentBlock
+    </div>
+</div>
