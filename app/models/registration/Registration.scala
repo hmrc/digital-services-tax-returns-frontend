@@ -17,7 +17,6 @@
 package models.registration
 
 import models.DSTRegNumber
-import play.api.libs.json.{Json, OFormat}
 
 import java.time.LocalDate
 
@@ -30,7 +29,3 @@ final case class Registration(
                                accountingPeriodEnd: LocalDate,
                                registrationNumber: Option[DSTRegNumber] = None
                              )
-
-object Registration {
-  implicit val registration: OFormat[Registration] = Json.format[Registration]
-}

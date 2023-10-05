@@ -38,9 +38,9 @@ class CheckRegistrations @Inject()(dstConnector: DSTConnector, pending: views.ht
       case None =>
         dstConnector.lookupPendingRegistrationExists().map((_, None))
       case Some(reg) if reg.registrationNumber.isDefined =>
-        Future.successful(false, Some(reg))
+        Future.successful((false, Some(reg)))
       case Some(_) =>
-        Future.successful(true, None)
+        Future.successful((true, None))
     }
   }
 

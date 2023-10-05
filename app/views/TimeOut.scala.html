@@ -19,7 +19,7 @@
     layout: layouts.GovukLayoutWrapper
 )
 
-@()(implicit request: RequestHeader, messages: Messages, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
 
 @layout(pageTitle = Some(messages("time-out.title").toString())) {
     <h1 class="govuk-heading-l">@messages("time-out.title")</h1>

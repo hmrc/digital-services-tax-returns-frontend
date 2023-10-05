@@ -23,18 +23,18 @@
 
 @this(
 govukLayout: views.html.layouts.GovukLayoutWrapper,
-govukSummaryList : GovukSummaryList
+govukSummaryList : GovukSummaryList,
+appConfig: FrontendAppConfig
 )
 
-@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit messages: Messages, appConfig: FrontendAppConfig)
+@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit request: Request[_], messages: Messages)
+@company = @{reg.companyReg.company}
 
 @govukLayout(
 pageTitle = Some(s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}"),
 useFullWidth = true
 ) {
 
-
-@{val company = reg.companyReg.company}
 
 <div class="grid-row govuk-grid-column-full no-padding-left">
     <div class="govuk-grid-column-two-thirds no-padding-left">
@@ -71,7 +71,7 @@ useFullWidth = true
         content = HtmlContent(messages("returnsDashboard.company-name"))
         ),
         value = Value(
-        content = HtmlContent(@company.name)
+        content = HtmlContent(company.name)
         )
         )
         )

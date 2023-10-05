@@ -28,7 +28,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(implicit
                                                                          executionContext: ExecutionContext,
                                                                          hc: HeaderCarrier
-) {
+) extends DSTService[Future] {
 
   val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
 
