@@ -16,6 +16,7 @@
 
 package connectors
 
+import models.BackendAndFrontendJson._
 import models.registration.{Period, Registration}
 import play.api.http.Status.OK
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -28,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(implicit
                                                                          executionContext: ExecutionContext,
                                                                          hc: HeaderCarrier
-) extends DSTService[Future] {
+) {
 
   val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
 

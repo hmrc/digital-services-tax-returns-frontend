@@ -22,7 +22,7 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle    = Some(titleNoForm(messages("signedOut.title")))
+    pageTitle = Some(s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}")
 ) {
 
     <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>

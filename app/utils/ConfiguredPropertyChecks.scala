@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package models.registration
+package utils
 
-import models.DSTRegNumber
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-import java.time.LocalDate
-
-final case class Registration(
-                               companyReg: CompanyRegWrapper,
-                               alternativeContact: Option[Address],
-                               ultimateParent: Option[Company],
-                               contact: ContactDetails,
-                               dateLiable: LocalDate,
-                               accountingPeriodEnd: LocalDate,
-                               registrationNumber: Option[DSTRegNumber] = None
-                             )
+trait ConfiguredPropertyChecks extends ScalaCheckDrivenPropertyChecks {
+  implicit val numberSuccessfulTests: PropertyCheckConfiguration = PropertyCheckConfiguration(10)
+}
