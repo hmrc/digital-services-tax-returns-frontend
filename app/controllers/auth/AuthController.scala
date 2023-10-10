@@ -14,41 +14,40 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.auth
 
+import config.FrontendAppConfig
 import controllers.actions.IdentifierAction
-import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.binders.RedirectUrl._
-import uk.gov.hmrc.play.bootstrap.binders._
+import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.{JourneyRecoveryContinueView, JourneyRecoveryStartAgainView}
 
 import javax.inject.Inject
+import scala.concurrent.ExecutionContext
 
-class JourneyRecoveryController @Inject() (
+class AuthController @Inject() (
   val controllerComponents: MessagesControllerComponents,
-  identify: IdentifierAction,
-  continueView: JourneyRecoveryContinueView,
-  startAgainView: JourneyRecoveryStartAgainView
-) extends FrontendBaseController
-    with I18nSupport
-    with Logging {
+  config: FrontendAppConfig,
+  sessionRepository: SessionRepository,
+  identify: IdentifierAction
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  def onPageLoad(continueUrl: Option[RedirectUrl] = None): Action[AnyContent] = identify { implicit request =>
-    val safeUrl: Option[String] = continueUrl.flatMap { unsafeUrl =>
-      unsafeUrl.getEither(OnlyRelative) match {
-        case Right(safeUrl) =>
-          Some(safeUrl.url)
-        case Left(message)  =>
-          logger.info(message)
-          None
+  def signOut(): Action[AnyContent] = identify.async { implicit request =>
+    sessionRepository
+      .clear(request.userId)
+      .map { _ =>
+        Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
       }
-    }
+  }
 
-    safeUrl
-      .map(url => Ok(continueView(url)))
-      .getOrElse(Ok(startAgainView()))
+  def signOutNoSurvey(): Action[AnyContent] = identify.async { implicit request =>
+    sessionRepository
+      .clear(request.userId)
+      .map { _ =>
+        Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
+      }
   }
 }

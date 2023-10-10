@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
-package models.requests
+package controllers.auth
 
-import play.api.mvc.{Request, WrappedRequest}
+import javax.inject.Inject
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.auth.SignedOutView
 
-case class IdentifierRequest[A](request: Request[A], userId: String) extends WrappedRequest[A](request)
+class SignedOutController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  view: SignedOutView
+) extends FrontendBaseController
+    with I18nSupport {
+
+  def onPageLoad: Action[AnyContent] = Action { implicit request =>
+    Ok(view())
+  }
+}
