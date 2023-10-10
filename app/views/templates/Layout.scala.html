@@ -25,24 +25,26 @@
 @import views.html.helper.CSPNonce
 
 @this(
-govukLayout: GovukLayout,
-govukPhaseBanner: GovukPhaseBanner,
-govukBackLink: GovukBackLink,
-hmrcHeader: HmrcHeader,
-hmrcTimeoutDialog : HmrcTimeoutDialog,
-scripts: Scripts,
-appConfig: config.FrontendAppConfig,
-hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
-hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
-hmrcStandardFooter: HmrcStandardFooter,
-fullWidthMainContent: FullWidthMainContent,
-defaultMainContentLayout: TwoThirdsMainContent
+    appConfig: config.FrontendAppConfig,
+    govukLayout: GovukLayout,
+    govukBackLink: GovukBackLink,
+    hmrcHeader: HmrcHeader,
+    hmrcStandardHeader: HmrcStandardHeader,
+    hmrcTimeoutDialog : HmrcTimeoutDialog,
+    scripts: Scripts,
+    hmrcTrackingConsentSnippet: HmrcTrackingConsentSnippet,
+    hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
+    hmrcStandardFooter: HmrcStandardFooter,
+    fullWidthMainContent: FullWidthMainContent,
+    defaultMainContentLayout: TwoThirdsMainContent
 )
 
 @(
     pageTitle: Option[String] = None,
-    bodyClasses: Option[String] = None,
+    showBackLink: Boolean = true,
     timeout: Boolean = true,
+    showSignOut: Boolean = true,
+    bodyClasses: Option[String] = None,
     js: Option[Html] = None,
     useFullWidth: Boolean = false,
     refresh: Int = 0)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
@@ -66,6 +68,12 @@ defaultMainContentLayout: TwoThirdsMainContent
 
 }
 
+@beforeContent = {
+    @if(showBackLink) {
+        @govukBackLink(BackLinkViewModel(href = "#").withCssClass("js-visible"))
+    }
+}
+
 @content = {
     @contentBlock
     @hmrcReportTechnicalIssueHelper()
@@ -74,6 +82,10 @@ defaultMainContentLayout: TwoThirdsMainContent
 @govukLayout(
   pageTitle = pageTitle,
   headBlock = Some(head),
+  headerBlock = Some(hmrcStandardHeader(
+    serviceUrl  = Some(routes.ReturnsDashboardController.onPageLoad.url),
+    signOutUrl  = if(showSignOut) Some(routes.AuthenticationController.signOut().url) else None
+)),
   scriptsBlock = Some(scripts()),
   mainContentLayout = if(useFullWidth) Some(fullWidthMainContent(_)) else Some(defaultMainContentLayout(_))
 )(content)

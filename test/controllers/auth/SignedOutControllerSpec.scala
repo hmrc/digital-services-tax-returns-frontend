@@ -17,6 +17,7 @@
 package controllers.auth
 
 import base.SpecBase
+import controllers.routes
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.auth.SignedOutView

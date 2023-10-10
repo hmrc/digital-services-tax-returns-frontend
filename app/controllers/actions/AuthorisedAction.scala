@@ -32,7 +32,7 @@ import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import views.html.errors.{IncorrectAccountAffinity, IncorrectAccountCredRole}
-import views.html.layouts.GovukLayoutWrapper
+import views.html.templates.Layout
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,7 +48,7 @@ trait Auth
 @Singleton
 class AuthorisedAction @Inject()(
                                   mcc: MessagesControllerComponents,
-                                  layout: GovukLayoutWrapper,
+                                  layout: Layout,
                                   incorrectAccountAffinity: IncorrectAccountAffinity,
                                   incorrectAccountCredRole: IncorrectAccountCredRole,
                                   val authConnector: AuthConnector

@@ -25,14 +25,14 @@ import uk.gov.hmrc.play.bootstrap.binders.SafeRedirectUrl
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig, periodKey: Period) {
+class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig) {
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
   val dstFrontendBaseUrl: String = servicesConfig.baseUrl("digital-services-tax-frontend")
   val dstFrontendRegistrationUrl: String = dstFrontendBaseUrl + "/register"
   val dstFrontendShowAmendmentsPageUrl: String = dstFrontendBaseUrl + "/resubmit-a-return"
-  val dstFrontendReturnActionUrl: String = dstFrontendBaseUrl + s"/submit-return/${periodKey}"
+  val dstFrontendReturnActionUrl: String = dstFrontendBaseUrl + s"/submit-return/###"
 
   lazy val dstIndexPage: String        = loadConfig("dst-index-page-url")
   lazy val ggLoginUrl: String                     = s"$companyAuthFrontend$companyAuthSignInPath"

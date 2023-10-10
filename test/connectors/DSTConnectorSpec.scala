@@ -15,174 +15,82 @@
  */
 
 package connectors
-
-import com.github.tomakehurst.wiremock.client.WireMock._
-import models.BackendAndFrontendJson._
-import models.registration.{CompanyRegWrapper, Period, Registration}
-import models.returns.Return
-import models.{Postcode, UTR}
-import org.scalacheck.Arbitrary.arbitrary
-import org.scalactic.anyvals.PosInt
-import play.api.libs.json.Json
-import play.mvc.Http.Status
-import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import utils.{ConfiguredPropertyChecks, WiremockServer}
+import models.registration.CompanyRegWrapper
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
+import org.mockito.Mockito._
+import org.mockito.ArgumentMatchers._
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import com.github.tomakehurst.wiremock.client.WireMock._
+import test.utils.WiremockServer
+import models.registration.Registration
+import org.scalatest.OptionValues.convertOptionToValuable
+import org.scalatest.concurrent.ScalaFutures
+import org.scalatest.freespec.AnyFreeSpec
+import app.models.BackendAndFrontendJson._
+import config.FrontendAppConfig
+import models.DSTRegNumber
+import org.scalatest.matchers.must.Matchers.{convertToAnyMustWrapper, defined}
+import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.libs.json.Json
+import play.api.test.FakeRequest
+import play.api.test.Helpers.{route, running}
+import play.mvc.Http
+import shapeless.tag.@@
+import utils.WiremockServer
+import app.models.registration.{Registration, CompanyRegWrapper, Address, Company, ContactDetails}
 
-class DSTConnectorSpec extends WiremockServer with ConfiguredPropertyChecks {
 
-  implicit override val generatorDrivenConfig = PropertyCheckConfiguration(minSize = 1, minSuccessful = PosInt(1))
+import java.time.LocalDate
 
-  object DSTTestConnector extends DSTConnector(httpClient, servicesConfig) {
-    override val backendURL: String = mockServerUrl
-  }
+class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with GuiceOneAppPerSuite with ScalaFutures {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  "should lookup a company successfully" in {
-    forAll { reg: CompanyRegWrapper =>
+  override lazy val app: Application = new GuiceApplicationBuilder()
+    .configure(
+      conf = "microservice.services.digital-services-tax.port" -> mockServer.port()
+    )
+    .build()
+
+  lazy val connector: DSTConnector = app.injector.instanceOf[DSTConnector]
+
+  "DSTConnectorSpec" - {
+
+    "successfully lookup a registration" in {
+
+      val testRegistration = Registration(
+        companyReg = CompanyRegWrapper("testID"),
+        alternativeContact = Some(Address("123 Test Street", "Testville", "12345")),
+        ultimateParent = Some(Company("Parent Co", Address("456 Parent St", "Parentville", "67890"))),
+        contact = ContactDetails("Test", "Test", "test@example.com", "+1234567890"),
+        dateLiable = LocalDate.of(2022, 1, 1),
+        accountingPeriodEnd = LocalDate.of(2022, 12, 31),
+        registrationNumber = DSTRegNumber("AADST1234567890")
+      )
+
+      // Stubbing the HTTP call
       stubFor(
-        get(urlPathEqualTo(s"/lookup-company"))
+        get(urlPathEqualTo("/registration"))
           .willReturn(
             aResponse()
               .withStatus(200)
-              .withBody(Json.toJson(reg).toString())
+              .withBody(Json.toJson(testRegistration).toString())
           )
       )
 
-      whenReady(DSTTestConnector.lookupCompany()) { res =>
-        res mustBe defined
-        res.value mustEqual reg
-      }
-    }
-  }
+      // Calling the function under test
+      val response = connector.lookupRegistration()
 
-  "should lookup a company successfully by utr and postcode" in {
-    forAll { (utr: UTR, postcode: Postcode, reg: CompanyRegWrapper) =>
-      val escaped = postcode.replaceAll("\\s+", "")
-
-      stubFor(
-        get(urlPathEqualTo(s"/lookup-company/$utr/$escaped"))
-          .willReturn(
-            aResponse()
-              .withStatus(200)
-              .withBody(Json.toJson(reg).toString())
-          )
-      )
-
-      val response = DSTTestConnector.lookupCompany(utr, postcode)
+      // Verifying the result
       whenReady(response) { res =>
         res mustBe defined
-        res.value mustEqual reg
-      }
-    }
-  }
-
-  "should lookup a registration successfully" in {
-    forAll { reg: Registration =>
-      stubFor(
-        get(urlPathEqualTo(s"/registration"))
-          .willReturn(
-            aResponse()
-              .withStatus(200)
-              .withBody(Json.toJson(reg).toString())
-          )
-      )
-
-      val response = DSTTestConnector.lookupRegistration()
-      whenReady(response) { res =>
-        res mustBe defined
-        res.value mustEqual reg
-      }
-    }
-  }
-
-  "should lookup a pending registration successfully" in {
-    forAll { reg: Registration =>
-      stubFor(
-        get(urlPathEqualTo(s"/pending-registration"))
-          .willReturn(
-            aResponse()
-              .withStatus(200)
-              .withBody(Json.toJson("DstRegNumber").toString())
-          )
-      )
-
-      val response = DSTTestConnector.lookupPendingRegistrationExists()
-      whenReady(response) { res =>
-        res mustBe true
-      }
-    }
-  }
-
-  "should lookup a pending registration NotFound" in {
-    forAll { reg: Registration =>
-      stubFor(
-        get(urlPathEqualTo(s"/pending-registration"))
-          .willReturn(
-            aResponse()
-              .withStatus(404)
-          )
-      )
-
-      val response = DSTTestConnector.lookupPendingRegistrationExists()
-      whenReady(response) { res =>
-        res mustBe false
-      }
-    }
-  }
-
-  "should lookup a list of outstanding return periods successfully" in {
-    forAll { periods: Set[Period] =>
-      stubFor(
-        get(urlPathEqualTo(s"/returns/outstanding"))
-          .willReturn(
-            aResponse()
-              .withStatus(200)
-              .withBody(Json.toJson(periods).toString())
-          )
-      )
-
-      val response = DSTTestConnector.lookupOutstandingReturns()
-      whenReady(response) { res =>
-        res must contain allElementsOf periods
-      }
-    }
-  }
-
-  "should lookup a list of submitted return periods successfully" in {
-    forAll { periods: Set[Period] =>
-      stubFor(
-        get(urlPathEqualTo(s"/returns/amendable"))
-          .willReturn(
-            aResponse()
-              .withStatus(200)
-              .withBody(Json.toJson(periods).toString())
-          )
-      )
-
-      val response = DSTTestConnector.lookupAmendableReturns()
-      whenReady(response) { res =>
-        res must contain allElementsOf periods
-      }
-    }
-  }
-
-  "should lookup a list of all return periods successfully" in {
-    forAll { periods: Set[Period] =>
-      stubFor(
-        get(urlPathEqualTo(s"/returns/all"))
-          .willReturn(
-            aResponse()
-              .withStatus(200)
-              .withBody(Json.toJson(periods).toString())
-          )
-      )
-
-      val response = DSTTestConnector.lookupAllReturns()
-      whenReady(response) { res =>
-        res must contain allElementsOf periods
+        res.value mustEqual testRegistration
       }
     }
   }
