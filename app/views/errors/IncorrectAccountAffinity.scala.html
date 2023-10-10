@@ -28,7 +28,7 @@ pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title"
 <p class="govuk-body">@messages("wrong-account.sign-in.reason")</p>
 
 <p class="govuk-body">
-    <a href="@controllers.routes.AuthenticationController.signIn()" class="govuk-button" role="button">
+    <a href="@controllers.auth.routes.AuthenticationController.signIn()" class="govuk-button" role="button">
         @messages("common.sign-in")
     </a>
 </p>

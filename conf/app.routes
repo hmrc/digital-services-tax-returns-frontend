@@ -6,17 +6,16 @@ GET         /                                            controllers.ReturnsDash
 
 GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /sign-in                                     controllers.AuthenticationController.signIn()
-GET         /sign-out                                    controllers.AuthenticationController.signOut()
+GET         /sign-in                                     controllers.auth.AuthenticationController.signIn()
+GET         /sign-out                                    controllers.auth.AuthenticationController.signOut()
+
+GET        /time-out                                     controllers.auth.AuthenticationController.timeOut()
 
 GET         /refresh-session                             controllers.KeepAliveController.keepAlive
 
 GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
 GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
-
-GET         /sign-in                                     controllers.AuthenticationController.signIn
-GET         /sign-out                                    controllers.AuthenticationController.signOut
 
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 

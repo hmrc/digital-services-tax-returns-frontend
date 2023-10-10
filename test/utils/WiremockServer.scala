@@ -17,33 +17,25 @@
 package utils
 
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, Suite}
-
-import scala.concurrent.ExecutionContext
 
 trait WiremockServer extends BeforeAndAfterAll with BeforeAndAfterEach {
   this: Suite =>
-  val port: Int = 11111
 
-  protected[this] val mockServer = new WireMockServer(port)
+  protected val mockServer: WireMockServer = new WireMockServer(wireMockConfig.dynamicPort())
 
-  implicit lazy val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
-
-  val mockServerUrl = s"http://localhost:$port"
-
-  override protected def beforeAll(): Unit = {
-    super.beforeAll()
+  override def beforeAll(): Unit = {
     mockServer.start()
-    WireMock.configureFor("localhost", port)
+    super.beforeAll()
   }
 
-  override protected def beforeEach(): Unit = {
+  override def beforeEach(): Unit = {
+    mockServer.resetAll()
     super.beforeEach()
-    WireMock.reset()
   }
 
-  override protected def afterAll(): Unit = {
+  override def afterAll(): Unit = {
     super.afterAll()
     mockServer.stop()
   }

@@ -18,7 +18,7 @@ package controllers.actions
 
 import com.google.inject.ImplementedBy
 import config.FrontendAppConfig
-import controllers.routes
+import controllers.auth.routes
 import models.InternalId
 import play.api.Logger
 import play.api.i18n.Messages

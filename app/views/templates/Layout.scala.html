@@ -59,8 +59,8 @@
             timeout = Some(appConfig.timeout),
             countdown = Some(appConfig.countdown),
             keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
-            signOutUrl = Some(routes.AuthenticationController.signOut().url),
-            timeoutUrl = Some(routes.AuthenticationController.signOut().url),
+            signOutUrl = Some(controllers.auth.routes.AuthenticationController.signOut().url),
+            timeoutUrl = Some(controllers.auth.routes.AuthenticationController.timeOut().url),
             title = Some(messages("timeout.title")),
             messageSuffix = Some(messages("timeout.messageSuffix")),
             language = Some(messages.lang.code)
@@ -85,7 +85,7 @@
   headBlock = Some(head),
   headerBlock = Some(hmrcStandardHeader(
     serviceUrl  = Some(routes.ReturnsDashboardController.onPageLoad.url),
-    signOutUrl  = if(showSignOut) Some(routes.AuthenticationController.signOut().url) else None
+    signOutUrl  = if(showSignOut) Some(controllers.auth.routes.AuthenticationController.signOut().url) else None
 )),
   scriptsBlock = Some(scripts()),
   mainContentLayout = if(useFullWidth) Some(fullWidthMainContent(_)) else Some(defaultMainContentLayout(_))

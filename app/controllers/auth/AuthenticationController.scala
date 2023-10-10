@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.auth
 
 import config.FrontendAppConfig
 import play.api.Logging
@@ -40,10 +40,6 @@ class AuthenticationController @Inject()(mcc: MessagesControllerComponents, time
 
   def signOut: Action[AnyContent] = Action {
     Redirect(appConfig.signOutDstUrl).withNewSession
-  }
-
-  def timeIn(referrer: String): Action[AnyContent] = Action {
-    Redirect(appConfig.ggLoginUrl, Map("continue" -> Seq(referrer), "origin" -> Seq(appConfig.appName)))
   }
 
   def timeOut: Action[AnyContent] = Action { implicit request =>

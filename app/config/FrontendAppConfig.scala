@@ -17,7 +17,6 @@
 package config
 
 import com.google.inject.{Inject, Singleton}
-import models.registration.Period
 import play.api.Configuration
 import play.api.i18n.Lang
 import play.api.mvc.RequestHeader
@@ -63,8 +62,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
     configuration.get[Boolean]("features.welsh-translation")
 
   def languageMap: Map[String, Lang] = Map(
-    "en" -> Lang("en"),
-    "cy" -> Lang("cy")
+    "en" -> Lang("en")
   )
 
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")

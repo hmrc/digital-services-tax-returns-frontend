@@ -17,11 +17,16 @@
 package controllers
 
 import base.SpecBase
+import config.FrontendAppConfig
+import generators.ModelGenerators._
+import models.registration.{Period, Registration}
+import org.scalacheck.Arbitrary
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.ReturnsDashboardView
 
-class ReturnsDashboardControllerSpec extends SpecBase {
+class ReturnsDashboardControllerSpec extends SpecBase with ScalaCheckPropertyChecks {
 
   "ReturnsDashboard Controller" - {
 
@@ -30,14 +35,17 @@ class ReturnsDashboardControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad.url)
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[ReturnsDashboardView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        val registration = Arbitrary.arbitrary[Registration].sample.value
+        val period = Arbitrary.arbitrary[Period].sample.value
+        contentAsString(result) mustEqual view(registration, List(period), List(period))(request, messages(application),appConfig).toString
       }
     }
   }
