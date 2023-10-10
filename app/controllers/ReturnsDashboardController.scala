@@ -20,52 +20,46 @@ import config.FrontendAppConfig
 import connectors.DSTConnector
 import controllers.actions._
 import controllers.services.CheckRegistrations
-import play.api.Logger
+import play.api.{Logger, Logging}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, ControllerHelpers}
+import play.api.mvc.{Action, AnyContent, ControllerHelpers, MessagesControllerComponents}
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
 import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendHeaderCarrierProvider
+import uk.gov.hmrc.play.bootstrap.frontend.controller.{FrontendBaseController, FrontendHeaderCarrierProvider}
 import views.html.ReturnsDashboardView
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ReturnsDashboardController @Inject()(
-                                            authorisedAction: Auth,
-                                            val http: HttpClient,
-                                            val authConnector: AuthConnector,
-                                            view: ReturnsDashboardView,
-                                            dstConnector: DSTConnector,
-                                            checkRegistrations: CheckRegistrations,
-                                            pending: views.html.Pending
-                                          )(implicit
-                                            ec: ExecutionContext,
-                                            val messagesApi: MessagesApi,
-                                            val appConfig: FrontendAppConfig,
-                                          ) extends ControllerHelpers
-  with FrontendHeaderCarrierProvider
-  with I18nSupport
-  with AuthorisedFunctions {
+class ReturnsDashboardController @Inject() (
+  val controllerComponents: MessagesControllerComponents,
+  val authConnector: AuthConnector,
+  view: ReturnsDashboardView,
+  dstConnector: DSTConnector,
+  checkRegistrations: CheckRegistrations,
+  pending: views.html.Pending
+)(implicit
+  ec: ExecutionContext,
+  val appConfig: FrontendAppConfig
+) extends FrontendBaseController
+    with I18nSupport
+    with Logging {
 
-  val logger                              = Logger(getClass)
-
-  def onPageLoad: Action[AnyContent] = authorisedAction.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
     checkRegistrations.isRegPendingOrRegNumExists.flatMap {
       case (_, Some(reg)) =>
         for {
           outstandingPeriods <- dstConnector.lookupOutstandingReturns()
-          amendedPeriods <- dstConnector.lookupAmendableReturns()
+          amendedPeriods     <- dstConnector.lookupAmendableReturns()
         } yield Ok(
           view(reg, outstandingPeriods.toList.sortBy(_.start), amendedPeriods.toList.sortBy(_.start))
         )
-      case (true, _) =>
+      case (true, _)      =>
         logger.info("Registration is Pending")
         Future.successful(Ok(pending()))
-      case _ =>
+      case _              =>
         Future.successful(Redirect(appConfig.dstFrontendBaseUrl))
     }
   }
-
 
 }

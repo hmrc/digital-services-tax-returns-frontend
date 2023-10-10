@@ -21,18 +21,18 @@ import connectors.DSTConnector
 import models.registration.Registration
 import play.api.Logger
 import play.api.i18n.Messages
+import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CheckRegistrations @Inject()(dstConnector: DSTConnector, pending: views.html.Pending, appConfig: FrontendAppConfig)(implicit
-                                                                                                                          ec: ExecutionContext,
-                                                                                                                          val messages: Messages
+                                                                                                                          ec: ExecutionContext
 ) {
 
   val logger = Logger(getClass)
 
-  def isRegPendingOrRegNumExists: Future[(Boolean, Option[Registration])] = {
+  def isRegPendingOrRegNumExists()(implicit hc: HeaderCarrier): Future[(Boolean, Option[Registration])] = {
 
     dstConnector.lookupRegistration().flatMap {
       case None =>

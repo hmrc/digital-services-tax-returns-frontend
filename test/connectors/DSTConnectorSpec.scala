@@ -20,21 +20,22 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.ModelGenerators._
 import models.BackendAndFrontendJson._
 import models.registration.Registration
+import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers.{convertToAnyMustWrapper, defined}
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
+import uk.gov.hmrc.http.HeaderCarrier
 import utils.WiremockServer
 
-class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with GuiceOneAppPerSuite with ScalaFutures with IntegrationPatience {
+class DSTConnectorSpec extends AnyFreeSpec with WiremockServer  with ScalaFutures with IntegrationPatience {
 
+  implicit val hc: HeaderCarrier   = HeaderCarrier()
 
-  override lazy val app: Application = new GuiceApplicationBuilder()
+  lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
       conf = "microservice.services.digital-services-tax.port" -> mockServer.port()
     )
@@ -45,22 +46,22 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with GuiceOneAppP
   "DSTConnectorSpec" - {
 
     "successfully lookup a registration" in {
-      forAll { reg: Registration =>
-        stubFor(
-          get(urlPathEqualTo(s"/registration"))
+      val registration = Arbitrary.arbitrary[Registration].sample.value
+
+      mockServer.stubFor(
+          get(urlPathEqualTo(s"/digital-services-tax/registration"))
             .willReturn(
               aResponse()
                 .withStatus(200)
-                .withBody(Json.toJson(reg).toString())
-            )
-        )
+                .withBody(Json.toJson(registration).toString())
+            ))
 
         val response = connector.lookupRegistration()
         whenReady(response) { res =>
           res mustBe defined
-          res.value mustEqual reg
+          res.value mustEqual registration
         }
       }
     }
-    }
+
 }
