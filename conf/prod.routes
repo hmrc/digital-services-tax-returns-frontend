@@ -1,12 +1,6 @@
 # Add all the application routes to the app.routes file
-<<<<<<< HEAD
-->         /digital-services-tax-returns                    app.Routes
-->         /                                                health.Routes
 
-GET        /admin/metrics                                    @com.kenshoo.play.metrics.MetricsController.metrics
-=======
 ->         /digital-services-tax-returns          app.Routes
 ->         /                                      health.Routes
 
 GET        /admin/metrics                         @com.kenshoo.play.metrics.MetricsController.metrics
->>>>>>> 68353df32c95a28256af2aef153092067a8189fe
