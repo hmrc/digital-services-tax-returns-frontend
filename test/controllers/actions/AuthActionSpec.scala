@@ -19,7 +19,9 @@ package controllers.actions
 import base.SpecBase
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import connectors.DSTConnector
 import controllers.routes
+import org.mockito.MockitoSugar.mock
 import play.api.mvc.{BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -33,6 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase {
 
+  val mockDstConnector: DSTConnector =  mock[DSTConnector]
   class Harness(authAction: IdentifierAction) {
     def onPageLoad() = authAction(_ => Results.Ok)
   }
@@ -51,6 +54,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new MissingBearerToken),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -75,6 +79,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new BearerTokenExpired),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -99,6 +104,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientEnrolments),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -123,6 +129,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientConfidenceLevel),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -147,6 +154,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAuthProvider),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -171,6 +179,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -195,6 +204,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedCredentialRole),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )

@@ -20,3 +20,5 @@ GET         /check-your-answers                          controllers.CheckYourAn
 GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
 
 GET         /returnsDashboard                            controllers.ReturnsDashboardController.onPageLoad()
+
+GET         /pay-your-digital-services-tax               controllers.PayYourDigitalServiceTaxController.onPageLoad()

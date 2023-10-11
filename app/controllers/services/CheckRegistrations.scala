@@ -19,8 +19,7 @@ package controllers.services
 import config.FrontendAppConfig
 import connectors.DSTConnector
 import models.registration.Registration
-import play.api.Logger
-import play.api.i18n.Messages
+import play.api.Logging
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
@@ -28,9 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class CheckRegistrations @Inject()(dstConnector: DSTConnector, pending: views.html.Pending, appConfig: FrontendAppConfig)(implicit
                                                                                                                           ec: ExecutionContext
-) {
-
-  val logger = Logger(getClass)
+) extends Logging {
 
   def isRegPendingOrRegNumExists()(implicit hc: HeaderCarrier): Future[(Boolean, Option[Registration])] = {
 

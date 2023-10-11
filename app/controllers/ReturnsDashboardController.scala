@@ -18,14 +18,12 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.DSTConnector
-import controllers.actions._
 import controllers.services.CheckRegistrations
-import play.api.{Logger, Logging}
-import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, ControllerHelpers, MessagesControllerComponents}
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions}
-import uk.gov.hmrc.http.HttpClient
-import uk.gov.hmrc.play.bootstrap.frontend.controller.{FrontendBaseController, FrontendHeaderCarrierProvider}
+import play.api.Logging
+import play.api.i18n.I18nSupport
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ReturnsDashboardView
 
 import javax.inject.Inject
