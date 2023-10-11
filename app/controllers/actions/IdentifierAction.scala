@@ -48,9 +48,8 @@ class AuthenticatedIdentifierAction @Inject() (
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    authorised(AuthProviders(GovernmentGateway, Verify) and Organisation).retrieve(Retrievals.internalId) {
+    authorised(AuthProviders(GovernmentGateway, Verify) and Organisation and User).retrieve(Retrievals.internalId) {
       case Some(internalId) =>
-        println("=====================================================dstConnector.lookupRegistration()"+dstConnector.lookupRegistration())
         lookupRegistration(request, internalId, block)
       case _                => throw new UnauthorizedException("Unable to retrieve internal Id")
     } recover {
@@ -67,11 +66,6 @@ class AuthenticatedIdentifierAction @Inject() (
     block: IdentifierRequest[A] => Future[Result]
   )(implicit hc: HeaderCarrier): Future[Result] =
     dstConnector.lookupRegistration().flatMap {
-      case None =>
-        dstConnector.lookupPendingRegistrationExists().flatMap {
-          case true => Future.successful(Ok(views.html.()))
-          case false => Future.successful(Redirect(config.dstFrontendRegistrationUrl))
-        }
       case Some(reg) if reg.registrationNumber.isDefined =>
         block(IdentifierRequest(request, internalId))
       case _                                       =>
