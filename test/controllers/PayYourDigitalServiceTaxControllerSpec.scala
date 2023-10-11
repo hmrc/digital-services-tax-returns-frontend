@@ -17,27 +17,51 @@
 package controllers
 
 import base.SpecBase
+import connectors.DSTConnector
+import models.DSTRegNumber
+import models.registration.Period
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito._
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import views.html.PayYourDigitalServiceTaxView
 
-class PayYourDigitalServiceTaxControllerSpec extends SpecBase {
+import java.time.LocalDate
+import scala.concurrent.Future
+
+class PayYourDigitalServiceTaxControllerSpec extends SpecBase with MockitoSugar {
+
+  val mockDstConnector: DSTConnector = mock[DSTConnector]
 
   "PayYourDigitalServiceTax Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          inject.bind[DSTConnector].toInstance(mockDstConnector)
+        )
+        .build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
+        val period = Period(LocalDate.now(),
+          LocalDate.now().plusDays(1),
+          LocalDate.now().plusDays(5),
+          Period.Key("key"))
 
-        val result = route(application, request).value
+        when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
+
+        val request = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
+        val dstRegNumber = Some(DSTRegNumber("AMDST0799721562"))
+         val result = route(application, request).value
+
 
         val view = application.injector.instanceOf[PayYourDigitalServiceTaxView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view()(request, messages(application)).toString
+        contentAsString(result) mustEqual view(dstRegNumber, List(period))(request, messages(application)).toString
       }
     }
   }

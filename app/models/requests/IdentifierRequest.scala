@@ -16,6 +16,7 @@
 
 package models.requests
 
+import models.DSTRegNumber
 import play.api.mvc.{Request, WrappedRequest}
 
-case class IdentifierRequest[A](request: Request[A], userId: String) extends WrappedRequest[A](request)
+case class IdentifierRequest[A](request: Request[A], userId: String, registrationNumber: Option[DSTRegNumber]) extends WrappedRequest[A](request)

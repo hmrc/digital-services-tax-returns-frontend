@@ -16,24 +16,29 @@
 
 package controllers
 
+import connectors.DSTConnector
 import controllers.actions._
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.PayYourDigitalServiceTaxView
 
+import scala.concurrent.ExecutionContext
+
 class PayYourDigitalServiceTaxController @Inject()(
                                        override val messagesApi: MessagesApi,
                                        identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
+                                       dstConnector: DSTConnector,
                                        val controllerComponents: MessagesControllerComponents,
                                        view: PayYourDigitalServiceTaxView
-                                     ) extends FrontendBaseController with I18nSupport {
+                                     ) (implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify {
+  def onPageLoad: Action[AnyContent] = identify.async {
     implicit request =>
-      Ok(view())
+      dstConnector.lookupOutstandingReturns().map { periods =>
+        Ok(view(request.registrationNumber, periods.toList.sortBy(_.start)))
+      }
   }
 }
