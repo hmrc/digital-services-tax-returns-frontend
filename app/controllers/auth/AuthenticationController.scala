@@ -25,8 +25,8 @@ import views.html.TimeOut
 
 import javax.inject.Inject
 
-class AuthenticationController @Inject()(mcc: MessagesControllerComponents, timeOutView: TimeOut)(implicit
-                                                                                                  appConfig: FrontendAppConfig
+class AuthenticationController @Inject() (mcc: MessagesControllerComponents, timeOutView: TimeOut)(implicit
+  appConfig: FrontendAppConfig
 ) extends FrontendController(mcc)
     with I18nSupport
     with Logging {

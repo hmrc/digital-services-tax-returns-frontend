@@ -28,24 +28,24 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
-  val dstFrontendBaseUrl: String = servicesConfig.baseUrl("digital-services-tax-frontend")
-  val dstFrontendRegistrationUrl: String = dstFrontendBaseUrl + "/digital-services-tax/register/"
+  val dstFrontendBaseUrl: String               = servicesConfig.baseUrl("digital-services-tax-frontend")
+  val dstFrontendRegistrationUrl: String       = dstFrontendBaseUrl + "/digital-services-tax/register/"
   val dstFrontendShowAmendmentsPageUrl: String = dstFrontendBaseUrl + "/resubmit-a-return"
-  val dstFrontendReturnActionUrl: String = dstFrontendBaseUrl + s"/submit-return/###"
+  val dstFrontendReturnActionUrl: String       = dstFrontendBaseUrl + s"/submit-return/###"
 
-  lazy val dstIndexPage: String        = loadConfig("dst-index-page-url")
+  lazy val dstIndexPage: String                   = loadConfig("dst-index-page-url")
   lazy val ggLoginUrl: String                     = s"$companyAuthFrontend$companyAuthSignInPath"
-  lazy val feedbackSurveyUrl: String   = loadConfig("microservice.services.feedback-survey.url")
+  lazy val feedbackSurveyUrl: String              = loadConfig("microservice.services.feedback-survey.url")
   private lazy val companyAuthFrontend: String    = servicesConfig.getConfString("company-auth.url", "")
   private lazy val companyAuthSignInPath: String  = servicesConfig.getConfString("company-auth.sign-in-path", "")
   private lazy val companyAuthSignOutPath: String = servicesConfig.getConfString("company-auth.sign-out-path", "")
 
-  lazy val signOutDstUrl: String       = s"$companyAuthFrontend$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
+  lazy val signOutDstUrl: String = s"$companyAuthFrontend$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
 
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
-  val contactHost = configuration.get[String]("contact-frontend.host")
+  val contactHost                          = configuration.get[String]("contact-frontend.host")
   private val contactFormServiceIdentifier = "digital-services-tax-returns-frontend"
 
   def feedbackUrl(implicit request: RequestHeader): String =

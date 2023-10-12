@@ -19,7 +19,7 @@ package generators
 import cats.implicits.{none, _}
 import models.registration._
 import models.{AddressLine, CompanyName, CountryCode, DSTRegNumber, Email, NonEmptyString, PhoneNumber, Postcode, RegexValidatedString, RestrictiveString, SafeId, UTR}
-import org.scalacheck.Arbitrary.{arbitrary, arbBigDecimal => _, _}
+import org.scalacheck.Arbitrary.{arbBigDecimal => _, arbitrary, _}
 import org.scalacheck.cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
 import shapeless.tag.@@
@@ -30,12 +30,12 @@ import java.time.LocalDate
 
 object ModelGenerators {
 
-  implicit def arbAddressLine: Arbitrary[AddressLine]           = Arbitrary(AddressLine.gen)
-  implicit def arbPostcode: Arbitrary[Postcode]                 = Arbitrary(Postcode.gen.retryUntil(x => x == x.replaceAll(" ", "")))
-  implicit def arbCountryCode: Arbitrary[CountryCode]           = Arbitrary(CountryCode.gen)
-  implicit def arbCompanyName: Arbitrary[CompanyName]           = Arbitrary(CompanyName.gen)
-  implicit def arbPhone: Arbitrary[PhoneNumber]                 = Arbitrary(PhoneNumber.gen)
-  implicit def arbDSTNumber: Arbitrary[DSTRegNumber]            = Arbitrary(DSTRegNumber.gen)
+  implicit def arbAddressLine: Arbitrary[AddressLine] = Arbitrary(AddressLine.gen)
+  implicit def arbPostcode: Arbitrary[Postcode]       = Arbitrary(Postcode.gen.retryUntil(x => x == x.replaceAll(" ", "")))
+  implicit def arbCountryCode: Arbitrary[CountryCode] = Arbitrary(CountryCode.gen)
+  implicit def arbCompanyName: Arbitrary[CompanyName] = Arbitrary(CompanyName.gen)
+  implicit def arbPhone: Arbitrary[PhoneNumber]       = Arbitrary(PhoneNumber.gen)
+  implicit def arbDSTNumber: Arbitrary[DSTRegNumber]  = Arbitrary(DSTRegNumber.gen)
 
   implicit class RichRegexValidatedString[A <: RegexValidatedString](val in: A) {
     def gen = RegexpGen.from(in.regex).map(in.apply)
@@ -45,21 +45,21 @@ object ModelGenerators {
     RestrictiveString.gen
 //        RegexpGen.from("""^[0-9a-zA-Z{À-˿’}\\- &`'^._|]{1,255}$""")
   )
-  implicit val arbString: Arbitrary[String] = Arbitrary(
+  implicit val arbString: Arbitrary[String]                      = Arbitrary(
     Gen.alphaNumStr.map(_.take(255))
   )
 
   def neString(maxLen: Int = 255) = (
     Gen.alphaNumChar,
     arbitrary[String]
-    ).mapN((num, str) => s"$num$str").map(_.take(maxLen)).map(NonEmptyString.apply)
+  ).mapN((num, str) => s"$num$str").map(_.take(maxLen)).map(NonEmptyString.apply)
 
   // note this does NOT check all RFC-compliant email addresses (e.g. '"john doe"@company.co.uk')
   implicit def arbEmail: Arbitrary[Email] = Arbitrary {
     (
       neString(20),
       neString(20)
-      ).mapN((a, b) => Email(s"$a@$b.co.uk"))
+    ).mapN((a, b) => Email(s"$a@$b.co.uk"))
   }
 
   def date(start: LocalDate, end: LocalDate): Gen[LocalDate] =
@@ -150,7 +150,7 @@ object ModelGenerators {
         arbitrary[LocalDate],
         arbitrary[LocalDate],
         arbitrary[Period.Key]
-        ).mapN(Period.apply)
+      ).mapN(Period.apply)
     )
 
 }

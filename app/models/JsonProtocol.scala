@@ -114,7 +114,6 @@ object BackendAndFrontendJson extends SimpleJson {
   implicit val companyRegWrapperFormat: OFormat[CompanyRegWrapper] = Json.format[CompanyRegWrapper]
   implicit val registrationFormat: OFormat[Registration]           = Json.format[Registration]
 
-
   implicit def listMapReads[V](implicit formatV: Reads[V]): Reads[ListMap[String, V]] = new Reads[ListMap[String, V]] {
     def reads(json: JsValue) = json match {
       case JsObject(m) =>
@@ -137,7 +136,6 @@ object BackendAndFrontendJson extends SimpleJson {
       case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("error.expected.jsobject"))))
     }
   }
-
 
   implicit val domesticBankAccountFormat: OFormat[DomesticBankAccount] = Json.format[DomesticBankAccount]
   implicit val foreignBankAccountFormat: OFormat[ForeignBankAccount]   = Json.format[ForeignBankAccount]

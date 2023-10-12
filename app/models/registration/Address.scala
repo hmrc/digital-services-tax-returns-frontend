@@ -51,7 +51,7 @@ final case class ForeignAddress(
 object Address extends SimpleJson {
 
   implicit val foreignAddressFormat: OFormat[ForeignAddress] = Json.format[ForeignAddress]
-  implicit val ukAddressFormat: OFormat[UkAddress] = Json.format[UkAddress]
+  implicit val ukAddressFormat: OFormat[UkAddress]           = Json.format[UkAddress]
 
   implicit val format: Format[Address] = new Format[Address] {
 
@@ -63,8 +63,8 @@ object Address extends SimpleJson {
         )
 
     override def writes(o: Address): JsValue = o match {
-      case m:UkAddress => ukAddressFormat.writes(m)
-      case m:ForeignAddress => foreignAddressFormat.writes(m)
+      case m: UkAddress      => ukAddressFormat.writes(m)
+      case m: ForeignAddress => foreignAddressFormat.writes(m)
     }
   }
 }

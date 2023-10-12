@@ -26,8 +26,7 @@ import play.api.libs.json.{JsValue, Json}
 class AddressSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
   "serialize and de-serialise uk address model" in {
-    val json: JsValue = Json.parse(
-      """|  {
+    val json: JsValue = Json.parse("""|  {
          |    "line1" : "The house",
          |    "line2" : "The Road",
          |     "line3" : "line3",
@@ -36,16 +35,17 @@ class AddressSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
          |      "_type" : "uk.gov.hmrc.digitalservicestax.data.UkAddress"
          | }""".stripMargin)
 
-    json.as[Address] mustBe UkAddress(AddressLine("The house"),
+    json.as[Address] mustBe UkAddress(
+      AddressLine("The house"),
       Some(AddressLine("The Road")),
       Some(AddressLine("line3")),
       Some(AddressLine("line4")),
-      Postcode("HG18 3RE"))
+      Postcode("HG18 3RE")
+    )
   }
 
   "serialize and de-serialise non uk address model" in {
-    val json: JsValue = Json.parse(
-      """|  {
+    val json: JsValue = Json.parse("""|  {
          |    "line1" : "The house",
          |    "line2" : "The Road",
          |     "line3" : "line3",
@@ -54,10 +54,12 @@ class AddressSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
          |      "_type" : "uk.gov.hmrc.digitalservicestax.data.ForeignAddress"
          | }""".stripMargin)
 
-    json.as[Address] mustBe ForeignAddress(AddressLine("The house"),
+    json.as[Address] mustBe ForeignAddress(
+      AddressLine("The house"),
       Some(AddressLine("The Road")),
       Some(AddressLine("line3")),
       Some(AddressLine("line4")),
-      CountryCode("FR"))
+      CountryCode("FR")
+    )
   }
 }

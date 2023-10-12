@@ -34,24 +34,50 @@ class RegistrationSpec extends AnyFreeSpec with Matchers with ScalaCheckProperty
 
     "must serialise and de-serialise registration model" in {
       val registration = Arbitrary.arbitrary[Registration].sample.value
-      val  json = Json.toJson[Registration](registration)
+      val json         = Json.toJson[Registration](registration)
       json.as[Registration] mustBe registration
     }
 
     "de-serialise registration model" in {
-      val registration = Registration(CompanyRegWrapper(Company(CompanyName("SAP Intern"),
-        UkAddress(AddressLine("The house"),
-          Some(AddressLine("The Road")),
-          Some(AddressLine("line3")),
-          Some(AddressLine("line4")),
-          Postcode("HG18 3RE"))), None, Some(SafeId("XJ0008010817305")),
-        false), None,
-        Some(Company(CompanyName("GroupName"),
-          UkAddress(AddressLine("1 Road Street"),
-            Some(AddressLine("City")), Some(AddressLine("City")),
-            Some(AddressLine("County")), Postcode("AB12 1AB")))),
-        ContactDetails(RestrictiveString("John"), RestrictiveString("Smith"), PhoneNumber("09876543234"),
-          Email("test@email.com")), LocalDate.parse("2020-04-20"), LocalDate.parse("2020-12-31"), Some(DSTRegNumber("AMDST0799721562")))
+      val registration = Registration(
+        CompanyRegWrapper(
+          Company(
+            CompanyName("SAP Intern"),
+            UkAddress(
+              AddressLine("The house"),
+              Some(AddressLine("The Road")),
+              Some(AddressLine("line3")),
+              Some(AddressLine("line4")),
+              Postcode("HG18 3RE")
+            )
+          ),
+          None,
+          Some(SafeId("XJ0008010817305")),
+          false
+        ),
+        None,
+        Some(
+          Company(
+            CompanyName("GroupName"),
+            UkAddress(
+              AddressLine("1 Road Street"),
+              Some(AddressLine("City")),
+              Some(AddressLine("City")),
+              Some(AddressLine("County")),
+              Postcode("AB12 1AB")
+            )
+          )
+        ),
+        ContactDetails(
+          RestrictiveString("John"),
+          RestrictiveString("Smith"),
+          PhoneNumber("09876543234"),
+          Email("test@email.com")
+        ),
+        LocalDate.parse("2020-04-20"),
+        LocalDate.parse("2020-12-31"),
+        Some(DSTRegNumber("AMDST0799721562"))
+      )
 
       val json: JsValue = Json.parse("""| {"companyReg" : {
                                         |            "company" : {

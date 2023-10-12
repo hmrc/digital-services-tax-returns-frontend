@@ -30,7 +30,7 @@ class ReturnsDashboardControllerSpec extends SpecBase with ScalaCheckPropertyChe
 
   "ReturnsDashboard Controller" - {
 
-   /* "must return OK and the correct view for a GET" in {
+    /* "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 

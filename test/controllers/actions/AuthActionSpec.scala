@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthActionSpec extends SpecBase with MockitoSugar {
 
-  val mockDstConnector: DSTConnector =  mock[DSTConnector]
+  val mockDstConnector: DSTConnector = mock[DSTConnector]
   class Harness(authAction: IdentifierAction) {
     def onPageLoad() = authAction(_ => Results.Ok)
   }
@@ -231,21 +231,23 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
         val application = applicationBuilder(userAnswers = None).build()
 
         running(application) {
-          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val bodyParsers  = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig    = application.injector.instanceOf[FrontendAppConfig]
           val registration = Arbitrary.arbitrary[Registration].sample.value
 
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
-          val retrieval: AuthRetrievals = Some("Int-7e341-48319ddb53")
+          val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
           when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
             retrieval
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(retrieval)
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
 
-          val action = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
-          val result = controller.onPageLoad()(FakeRequest("", ""))
+          val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe OK
 
         }
@@ -262,19 +264,21 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
         running(application) {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig = application.injector.instanceOf[FrontendAppConfig]
+          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
-          val retrieval: AuthRetrievals = Some("Int-7e341-48319ddb53")
+          val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
           when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
             retrieval
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(None))
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(retrieval)
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
 
-          val action = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
-          val result = controller.onPageLoad()(FakeRequest("", ""))
+          val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe Some(appConfig.dstFrontendRegistrationUrl)
 

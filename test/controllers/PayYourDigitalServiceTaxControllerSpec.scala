@@ -50,8 +50,8 @@ class PayYourDigitalServiceTaxControllerSpec extends SpecBase with MockitoSugar 
 
         when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-        val request      = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
-        val result       = route(application, request).value
+        val request = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
+        val result  = route(application, request).value
 
         val view = application.injector.instanceOf[PayYourDigitalServiceTaxView]
 

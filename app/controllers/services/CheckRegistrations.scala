@@ -25,20 +25,22 @@ import uk.gov.hmrc.http.HeaderCarrier
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CheckRegistrations @Inject()(dstConnector: DSTConnector, pending: views.html.Pending, appConfig: FrontendAppConfig)(implicit
-                                                                                                                          ec: ExecutionContext
+class CheckRegistrations @Inject() (
+  dstConnector: DSTConnector,
+  pending: views.html.Pending,
+  appConfig: FrontendAppConfig
+)(implicit
+  ec: ExecutionContext
 ) extends Logging {
 
-  def isRegPendingOrRegNumExists()(implicit hc: HeaderCarrier): Future[(Boolean, Option[Registration])] = {
-
+  def isRegPendingOrRegNumExists()(implicit hc: HeaderCarrier): Future[(Boolean, Option[Registration])] =
     dstConnector.lookupRegistration().flatMap {
-      case None =>
+      case None                                          =>
         dstConnector.lookupPendingRegistrationExists().map((_, None))
       case Some(reg) if reg.registrationNumber.isDefined =>
         Future.successful((false, Some(reg)))
-      case Some(_) =>
+      case Some(_)                                       =>
         Future.successful((true, None))
     }
-  }
 
 }

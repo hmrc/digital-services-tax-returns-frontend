@@ -27,18 +27,19 @@ import views.html.PayYourDigitalServiceTaxView
 
 import scala.concurrent.ExecutionContext
 
-class PayYourDigitalServiceTaxController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       identify: IdentifierAction,
-                                       dstConnector: DSTConnector,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: PayYourDigitalServiceTaxView
-                                     ) (implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class PayYourDigitalServiceTaxController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  dstConnector: DSTConnector,
+  val controllerComponents: MessagesControllerComponents,
+  view: PayYourDigitalServiceTaxView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify.async {
-    implicit request =>
-      dstConnector.lookupOutstandingReturns().map { periods =>
-        Ok(view(request.registration.registrationNumber, periods.toList.sortBy(_.start)))
-      }
+  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+    dstConnector.lookupOutstandingReturns().map { periods =>
+      Ok(view(request.registration.registrationNumber, periods.toList.sortBy(_.start)))
+    }
   }
 }

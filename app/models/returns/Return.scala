@@ -21,11 +21,11 @@ import models.{Money, Percent, RepaymentDetails}
 import scala.collection.immutable.ListMap
 
 final case class Return(
-                         reportedActivities: Set[Activity],
-                         alternateCharge: Map[Activity, Percent],
-                         crossBorderReliefAmount: Money,
-                         allowanceAmount: Option[Money],
-                         companiesAmount: ListMap[GroupCompany, Money],
-                         totalLiability: Money,
-                         repayment: Option[RepaymentDetails]
-                       )
+  reportedActivities: Set[Activity],
+  alternateCharge: Map[Activity, Percent],
+  crossBorderReliefAmount: Money,
+  allowanceAmount: Option[Money],
+  companiesAmount: ListMap[GroupCompany, Money],
+  totalLiability: Money,
+  repayment: Option[RepaymentDetails]
+)

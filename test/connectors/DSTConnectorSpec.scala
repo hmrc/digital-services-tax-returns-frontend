@@ -31,9 +31,9 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.WiremockServer
 
-class DSTConnectorSpec extends AnyFreeSpec with WiremockServer  with ScalaFutures with IntegrationPatience {
+class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures with IntegrationPatience {
 
-  implicit val hc: HeaderCarrier   = HeaderCarrier()
+  implicit val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val app: Application = new GuiceApplicationBuilder()
     .configure(
@@ -49,19 +49,20 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer  with ScalaFuture
       val registration = Arbitrary.arbitrary[Registration].sample.value
 
       mockServer.stubFor(
-          get(urlPathEqualTo(s"/digital-services-tax/registration"))
-            .willReturn(
-              aResponse()
-                .withStatus(200)
-                .withBody(Json.toJson(registration).toString())
-            ))
+        get(urlPathEqualTo(s"/digital-services-tax/registration"))
+          .willReturn(
+            aResponse()
+              .withStatus(200)
+              .withBody(Json.toJson(registration).toString())
+          )
+      )
 
-        val response = connector.lookupRegistration()
-        whenReady(response) { res =>
-          res mustBe defined
-          res.value mustEqual registration
-        }
+      val response = connector.lookupRegistration()
+      whenReady(response) { res =>
+        res mustBe defined
+        res.value mustEqual registration
       }
     }
+  }
 
 }
