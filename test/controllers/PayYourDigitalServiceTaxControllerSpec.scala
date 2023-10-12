@@ -18,7 +18,6 @@ package controllers
 
 import base.SpecBase
 import connectors.DSTConnector
-import models.DSTRegNumber
 import models.registration.Period
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
@@ -46,17 +45,13 @@ class PayYourDigitalServiceTaxControllerSpec extends SpecBase with MockitoSugar 
         .build()
 
       running(application) {
-        val period = Period(LocalDate.now(),
-          LocalDate.now().plusDays(1),
-          LocalDate.now().plusDays(5),
-          Period.Key("key"))
+        val period =
+          Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
         when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-        val request = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
-        val dstRegNumber = Some(DSTRegNumber("AMDST0799721562"))
-         val result = route(application, request).value
-
+        val request      = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
+        val result       = route(application, request).value
 
         val view = application.injector.instanceOf[PayYourDigitalServiceTaxView]
 

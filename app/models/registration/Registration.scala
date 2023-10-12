@@ -21,11 +21,11 @@ import models.DSTRegNumber
 import java.time.LocalDate
 
 final case class Registration(
-                               companyReg: CompanyRegWrapper,
-                               alternativeContact: Option[Address],
-                               ultimateParent: Option[Company],
-                               contact: ContactDetails,
-                               dateLiable: LocalDate,
-                               accountingPeriodEnd: LocalDate,
-                               registrationNumber: Option[DSTRegNumber] = None
-                             )
+  companyReg: CompanyRegWrapper,
+  alternativeContact: Option[Address],
+  ultimateParent: Option[Company],
+  contact: ContactDetails,
+  dateLiable: LocalDate,
+  accountingPeriodEnd: LocalDate,
+  registrationNumber: Option[DSTRegNumber] = None
+)

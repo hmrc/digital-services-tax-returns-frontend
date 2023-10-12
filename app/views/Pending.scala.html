@@ -20,7 +20,7 @@ govukLayout: templates.Layout
 @()(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
-pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title")}")
+pageTitle = s"${messages("common.title.short")} - ${messages("common.title")}"
 ) {
 
 

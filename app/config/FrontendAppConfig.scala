@@ -29,7 +29,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   private def loadConfig(key: String) = configuration.get[String](key)
 
   val dstFrontendBaseUrl: String = servicesConfig.baseUrl("digital-services-tax-frontend")
-  val dstFrontendRegistrationUrl: String = dstFrontendBaseUrl + "/digital-services-tax/register"
+  val dstFrontendRegistrationUrl: String = dstFrontendBaseUrl + "/digital-services-tax/register/"
   val dstFrontendShowAmendmentsPageUrl: String = dstFrontendBaseUrl + "/resubmit-a-return"
   val dstFrontendReturnActionUrl: String = dstFrontendBaseUrl + s"/submit-return/###"
 

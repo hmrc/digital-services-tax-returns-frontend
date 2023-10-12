@@ -31,7 +31,7 @@ govukSummaryList : GovukSummaryList
 @company = @{reg.companyReg.company}
 
 @govukLayout(
-pageTitle = Some(s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}"),
+pageTitle = s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}",
 useFullWidth = true
 ) {
 
@@ -95,8 +95,7 @@ useFullWidth = true
             </p>
             <p class="govuk-body">@formatDate(period.paymentDue)</p>
             <p class="govuk-body">
-<!--                            This will be changed to the new repository url once it is created -->
-                <a class="govuk-link" href="@appConfig.dstFrontendReturnActionUrl">
+                <a class="govuk-link" href="@routes.PayYourDigitalServiceTaxController.onPageLoad.url" >
                     @messages("returnsDashboard.pay-tax")
                 </a>
             </p>

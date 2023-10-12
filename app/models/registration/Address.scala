@@ -16,7 +16,8 @@
 
 package models.registration
 
-import models.{AddressLine, CountryCode, Postcode}
+import models.{AddressLine, CountryCode, Postcode, SimpleJson}
+import play.api.libs.json.{Format, JsResult, JsValue, Json, OFormat}
 
 sealed trait Address {
   def line1: AddressLine
@@ -45,4 +46,25 @@ final case class ForeignAddress(
   countryCode: CountryCode
 ) extends Address {
   def postalCode: String = ""
+}
+
+object Address extends SimpleJson {
+
+  implicit val foreignAddressFormat: OFormat[ForeignAddress] = Json.format[ForeignAddress]
+  implicit val ukAddressFormat: OFormat[UkAddress] = Json.format[UkAddress]
+
+  implicit val format: Format[Address] = new Format[Address] {
+
+    override def reads(json: JsValue): JsResult[Address] =
+      json
+        .validate[UkAddress]
+        .orElse(
+          json.validate[ForeignAddress]
+        )
+
+    override def writes(o: Address): JsValue = o match {
+      case m:UkAddress => ukAddressFormat.writes(m)
+      case m:ForeignAddress => foreignAddressFormat.writes(m)
+    }
+  }
 }

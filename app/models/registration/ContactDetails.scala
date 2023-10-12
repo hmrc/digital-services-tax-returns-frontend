@@ -19,8 +19,8 @@ package models.registration
 import models.{Email, PhoneNumber, RestrictiveString}
 
 final case class ContactDetails(
-                                 forename: RestrictiveString,
-                                 surname: RestrictiveString,
-                                 phoneNumber: PhoneNumber,
-                                 email: Email
-                               )
+  forename: RestrictiveString,
+  surname: RestrictiveString,
+  phoneNumber: PhoneNumber,
+  email: Email
+)

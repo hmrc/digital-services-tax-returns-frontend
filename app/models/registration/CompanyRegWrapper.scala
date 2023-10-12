@@ -19,8 +19,8 @@ package models.registration
 import models.{SafeId, UTR}
 
 final case class CompanyRegWrapper(
-                                    company: Company,
-                                    utr: Option[UTR] = None,
-                                    safeId: Option[SafeId] = None,
-                                    useSafeId: Boolean = false
-                                  )
+  company: Company,
+  utr: Option[UTR] = None,
+  safeId: Option[SafeId] = None,
+  useSafeId: Boolean = false
+)

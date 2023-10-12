@@ -21,7 +21,7 @@ govukLayout: templates.Layout
 @()(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
-pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title")}")
+pageTitle = s"${messages("common.title.short")} - ${messages("common.title")}"
 ){
 <h1 class="govuk-heading-l">@messages("wrong-creds.heading")</h1>
 <p class="govuk-body" id="cred_role_p1">@messages("wrong-creds.p1")</p>

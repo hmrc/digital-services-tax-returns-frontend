@@ -21,7 +21,7 @@ govukLayout: views.html.templates.Layout
 @()(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
-pageTitle = Some(s"${messages("common.title.short")} - ${messages("common.title")}")
+pageTitle = s"${messages("common.title.short")} - ${messages("common.title")}"
 ){
 <h1 class="govuk-heading-l">@messages("wrong-account.heading")</h1>
 <p class="govuk-body">@messages("wrong-account.sign-out.reason")</p>
