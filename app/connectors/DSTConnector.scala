@@ -32,14 +32,8 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
 
   val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
 
-  def lookupRegistration()(implicit hc: HeaderCarrier): Future[Option[Registration]] = {
-
-    http.GET[HttpResponse](s"$backendURL/registration") map {
-      case resp if resp.status == OK => println("================================"+resp.json)
-        Some(resp.json.as[Registration])
-      case _ => None
-    }
-  }
+  def lookupRegistration()(implicit hc: HeaderCarrier): Future[Option[Registration]] =
+    http.GET[Option[Registration]](s"$backendURL/registration")
 
   def lookupPendingRegistrationExists()(implicit hc: HeaderCarrier): Future[Boolean] =
     http.GET[HttpResponse](s"$backendURL/pending-registration").map {

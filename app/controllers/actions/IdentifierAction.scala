@@ -65,12 +65,10 @@ class AuthenticatedIdentifierAction @Inject() (
     internalId: String,
     block: IdentifierRequest[A] => Future[Result]
   )(implicit hc: HeaderCarrier): Future[Result] = {
-    println("========lookupRegistration============================="+internalId)
     dstConnector.lookupRegistration().flatMap {
       case Some(reg) if reg.registrationNumber.isDefined =>
-        block(IdentifierRequest(request, internalId, reg.registrationNumber))
+        block(IdentifierRequest(request, internalId, reg))
       case _                                       =>
-
         Future.successful(Redirect(config.dstFrontendRegistrationUrl))
     }
   }

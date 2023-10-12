@@ -16,18 +16,23 @@
 
 package controllers.actions
 
+import generators.ModelGenerators._
 import models.DSTRegNumber
+import models.registration.Registration
 
 import javax.inject.Inject
 import models.requests.IdentifierRequest
+import org.scalacheck.Arbitrary
+import org.scalatest.OptionValues
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction {
+class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues{
 
+  val registration = Arbitrary.arbitrary[Registration].sample.value
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id", Some(DSTRegNumber("AMDST0799721562"))))
+    block(IdentifierRequest(request, "id", registration.copy(registrationNumber = Some(DSTRegNumber("AMDST0799721562")))))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

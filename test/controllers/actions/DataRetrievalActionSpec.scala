@@ -17,9 +17,12 @@
 package controllers.actions
 
 import base.SpecBase
+import generators.ModelGenerators._
+import models.registration.Registration
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import models.{DSTRegNumber, UserAnswers}
 import org.mockito.Mockito._
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import repositories.SessionRepository
@@ -32,6 +35,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
+  val registration = Arbitrary.arbitrary[Registration].sample.value
 
   "Data Retrieval Action" - {
 
@@ -43,7 +47,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         when(sessionRepository.get("id")) thenReturn Future(None)
         val action            = new Harness(sessionRepository)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", Some(DSTRegNumber("AMDST0799721562")))).futureValue
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", registration)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -57,7 +61,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
         val action            = new Harness(sessionRepository)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", None)).futureValue
+        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", registration)).futureValue
 
         result.userAnswers mustBe defined
       }

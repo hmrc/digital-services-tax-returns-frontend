@@ -18,7 +18,7 @@ package controllers
 
 import config.FrontendAppConfig
 import connectors.DSTConnector
-import controllers.services.CheckRegistrations
+import controllers.actions.IdentifierAction
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -27,15 +27,14 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ReturnsDashboardView
 
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 class ReturnsDashboardController @Inject() (
   val controllerComponents: MessagesControllerComponents,
   val authConnector: AuthConnector,
   view: ReturnsDashboardView,
   dstConnector: DSTConnector,
-  checkRegistrations: CheckRegistrations,
-  pending: views.html.Pending
+  identify: IdentifierAction
 )(implicit
   ec: ExecutionContext,
   val appConfig: FrontendAppConfig
@@ -43,21 +42,13 @@ class ReturnsDashboardController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = Action.async { implicit request =>
-    checkRegistrations.isRegPendingOrRegNumExists.flatMap {
-      case (_, Some(reg)) =>
-        for {
-          outstandingPeriods <- dstConnector.lookupOutstandingReturns()
-          amendedPeriods     <- dstConnector.lookupAmendableReturns()
-        } yield Ok(
-          view(reg, outstandingPeriods.toList.sortBy(_.start), amendedPeriods.toList.sortBy(_.start))
-        )
-      case (true, _)      =>
-        logger.info("Registration is Pending")
-        Future.successful(Ok(pending()))
-      case _              =>
-        Future.successful(Redirect(appConfig.dstFrontendBaseUrl))
-    }
+  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+    for {
+      outstandingPeriods <- dstConnector.lookupOutstandingReturns()
+      amendedPeriods     <- dstConnector.lookupAmendableReturns()
+    } yield Ok(
+      view(request.registration, outstandingPeriods.toList.sortBy(_.start), amendedPeriods.toList.sortBy(_.start))
+    )
   }
 
 }

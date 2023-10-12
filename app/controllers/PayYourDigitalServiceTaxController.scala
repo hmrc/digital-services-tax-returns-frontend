@@ -38,7 +38,7 @@ class PayYourDigitalServiceTaxController @Inject()(
   def onPageLoad: Action[AnyContent] = identify.async {
     implicit request =>
       dstConnector.lookupOutstandingReturns().map { periods =>
-        Ok(view(request.registrationNumber, periods.toList.sortBy(_.start)))
+        Ok(view(request.registration.registrationNumber, periods.toList.sortBy(_.start)))
       }
   }
 }
