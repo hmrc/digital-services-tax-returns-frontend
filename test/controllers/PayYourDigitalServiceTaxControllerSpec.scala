@@ -56,7 +56,10 @@ class PayYourDigitalServiceTaxControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[PayYourDigitalServiceTaxView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(dstRegNumber, List(period).sortBy(_.start))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(dstRegNumber, List(period).sortBy(_.start))(
+          request,
+          messages(application)
+        ).toString
       }
     }
   }

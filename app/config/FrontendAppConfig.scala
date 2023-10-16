@@ -43,7 +43,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
-  val contactHost                          = configuration.get[String]("contact-frontend.host")
+  val contactHost = configuration.get[String]("contact-frontend.host")
 
   val loginUrl: String         = configuration.get[String]("urls.login")
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")

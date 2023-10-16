@@ -94,39 +94,39 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
     }
   }
 
-    "should return an empty Set of Period when there are no submitted return periods" in {
+  "should return an empty Set of Period when there are no submitted return periods" in {
 
-      stubGet(Json.toJson(emptyPeriods), s"/digital-services-tax/returns/amendable", OK)
+    stubGet(Json.toJson(emptyPeriods), s"/digital-services-tax/returns/amendable", OK)
 
-      val response = connector.lookupAmendableReturns()
-      whenReady(response) { res =>
-        res mustBe emptyPeriods
-      }
+    val response = connector.lookupAmendableReturns()
+    whenReady(response) { res =>
+      res mustBe emptyPeriods
     }
+  }
 
-    "should lookup a list of all return periods successfully" in {
-      val periods = Arbitrary.arbitrary[Set[Period]].sample.value
+  "should lookup a list of all return periods successfully" in {
+    val periods = Arbitrary.arbitrary[Set[Period]].sample.value
 
-      stubGet(Json.toJson(periods), s"/digital-services-tax/returns/all", OK)
+    stubGet(Json.toJson(periods), s"/digital-services-tax/returns/all", OK)
 
-      val response = connector.lookupAllReturns()
-      whenReady(response) { res =>
-        res must contain allElementsOf periods
-      }
+    val response = connector.lookupAllReturns()
+    whenReady(response) { res =>
+      res must contain allElementsOf periods
     }
+  }
 
-    "should return an empty Set of Period when there are no return periods" in {
-      val periods = Set.empty[Period]
+  "should return an empty Set of Period when there are no return periods" in {
+    val periods = Set.empty[Period]
 
-      stubGet(Json.toJson(periods), s"/digital-services-tax/returns/all", OK)
+    stubGet(Json.toJson(periods), s"/digital-services-tax/returns/all", OK)
 
-      val response = connector.lookupAllReturns()
-      whenReady(response) { res =>
-        res mustBe periods
-      }
+    val response = connector.lookupAllReturns()
+    whenReady(response) { res =>
+      res mustBe periods
     }
+  }
 
-  private def stubGet(body: JsValue, url: String, status: Int): Any = {
+  private def stubGet(body: JsValue, url: String, status: Int): Any =
     mockServer.stubFor(
       get(urlPathEqualTo(url))
         .willReturn(
@@ -135,5 +135,4 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
             .withBody(body.toString())
         )
     )
-  }
 }

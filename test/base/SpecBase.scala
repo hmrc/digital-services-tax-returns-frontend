@@ -48,9 +48,10 @@ trait SpecBase
   val dstRegNumber = Some(DSTRegNumber("AMDST0799721562"))
 
   private val reg: Registration = Arbitrary.arbitrary[Registration].sample.value
-  private val address = Arbitrary.arbitrary[Address].sample.value
+  private val address           = Arbitrary.arbitrary[Address].sample.value
 
-  val registration: Registration = reg.copy(registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
+  val registration: Registration = reg.copy(
+    registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
     companyReg = CompanyRegWrapper(company = Company(CompanyName("Some Corporation"), address)),
     ultimateParent = None
   )

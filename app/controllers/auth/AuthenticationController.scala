@@ -23,7 +23,6 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.TimeOut
 
-
 import javax.inject.Inject
 
 class AuthenticationController @Inject() (mcc: MessagesControllerComponents, timeOutView: TimeOut)(implicit
@@ -35,7 +34,10 @@ class AuthenticationController @Inject() (mcc: MessagesControllerComponents, tim
   def signIn: Action[AnyContent] = Action {
     Redirect(
       url = appConfig.ggLoginUrl,
-      queryStringParams = Map("continue" -> Seq(controllers.routes.ReturnsDashboardController.onPageLoad.url), "origin" -> Seq(appConfig.appName))
+      queryStringParams = Map(
+        "continue" -> Seq(controllers.routes.ReturnsDashboardController.onPageLoad.url),
+        "origin"   -> Seq(appConfig.appName)
+      )
     )
   }
 

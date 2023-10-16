@@ -28,12 +28,13 @@ import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues{
+class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues {
 
   val registration: Registration = Arbitrary.arbitrary[Registration].sample.value
-  val address = Arbitrary.arbitrary[Address].sample.value
+  val address                    = Arbitrary.arbitrary[Address].sample.value
 
-  val updatedRegistration: Registration = registration.copy(registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
+  val updatedRegistration: Registration = registration.copy(
+    registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
     companyReg = CompanyRegWrapper(company = Company(CompanyName("Some Corporation"), address)),
     ultimateParent = None
   )

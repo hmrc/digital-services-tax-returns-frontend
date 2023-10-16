@@ -25,26 +25,27 @@ import views.html.TimeOut
 
 class AuthenticationControllerSpec extends SpecBase with MockitoSugar {
 
- "AuthenticationControllerSpec" - {
+  "AuthenticationControllerSpec" - {
 
-   "must sign the user in successfully" in {
+    "must sign the user in successfully" in {
 
-     val application =
-       applicationBuilder(None)
-         .build()
+      val application =
+        applicationBuilder(None)
+          .build()
 
-     running(application) {
+      running(application) {
 
-       val appConfig = application.injector.instanceOf[FrontendAppConfig]
-       val request   = FakeRequest(GET, routes.AuthenticationController.signIn().url)
+        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val request   = FakeRequest(GET, routes.AuthenticationController.signIn().url)
 
-       val result = route(application, request).value
-       val expectedUrl = s"${appConfig.ggLoginUrl}?continue=%2Fdigital-services-tax-returns&origin=digital-services-tax-returns-frontend"
+        val result      = route(application, request).value
+        val expectedUrl =
+          s"${appConfig.ggLoginUrl}?continue=%2Fdigital-services-tax-returns&origin=digital-services-tax-returns-frontend"
 
-       status(result) mustEqual SEE_OTHER
-       redirectLocation(result).value mustEqual expectedUrl
-     }
-   }
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual expectedUrl
+      }
+    }
 
     "must sign the user out successfully" in {
 
@@ -66,22 +67,22 @@ class AuthenticationControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-   "timeout user out successfully" in {
+    "timeout user out successfully" in {
 
-     val application =
-       applicationBuilder(None)
-         .build()
+      val application =
+        applicationBuilder(None)
+          .build()
 
-     running(application) {
-       val timeOutView = application.injector.instanceOf[TimeOut]
-       val request   = FakeRequest(GET, routes.AuthenticationController.timeOut().url)
+      running(application) {
+        val timeOutView = application.injector.instanceOf[TimeOut]
+        val request     = FakeRequest(GET, routes.AuthenticationController.timeOut().url)
 
-       val result = route(application, request).value
+        val result = route(application, request).value
 
-       status(result) mustEqual OK
-       contentAsString(result) mustEqual timeOutView()(request, messages(application)).toString()
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual timeOutView()(request, messages(application)).toString()
 
-     }
-   }
+      }
+    }
   }
 }

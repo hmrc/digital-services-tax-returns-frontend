@@ -35,44 +35,43 @@ import scala.language.postfixOps
 
 class ReturnsDashboardControllerSpec extends SpecBase with MockitoSugar {
 
-  implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val hc: HeaderCarrier     = HeaderCarrier()
   val mockDstConnector: DSTConnector = mock[DSTConnector]
 
   "ReturnsDashboard Controller" - {
 
+    "return OK and the correct view for a GET" in {
 
-      "return OK and the correct view for a GET" in {
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          inject.bind[DSTConnector].toInstance(mockDstConnector)
+        )
+        .build()
 
-        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-          .overrides(
-            inject.bind[DSTConnector].toInstance(mockDstConnector)
-          )
-          .build()
+      running(application) {
+        val period1 =
+          Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
-        running(application) {
-          val period1 =
-            Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
+        val period2 =
+          Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
-          val period2 =
-            Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
+        when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period1)))
+        when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period2)))
 
-          when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period1)))
-          when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period2)))
+        val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad.url)
+        val result  = route(application, request).value
 
-          val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad.url)
-          val result = route(application, request).value
+        val view = application.injector.instanceOf[ReturnsDashboardView]
 
-          val view = application.injector.instanceOf[ReturnsDashboardView]
-
-          status(result) mustEqual OK
-          contentAsString(result) mustEqual view(
-            registration,
-            List(period1)
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(
+          registration,
+          List(period1)
             .sortBy(_.start),
-            List(period2)
+          List(period2)
             .sortBy(_.start)
-          )(request, messages(application)).toString
-        }
+        )(request, messages(application)).toString
       }
     }
+  }
 }
