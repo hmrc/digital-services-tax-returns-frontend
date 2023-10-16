@@ -18,30 +18,38 @@ package controllers.auth
 
 import base.SpecBase
 import config.FrontendAppConfig
-import org.mockito.ArgumentMatchers.{any, eq => eqTo}
-import org.mockito.Mockito.{times, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import repositories.SessionRepository
+import views.html.TimeOut
 
-import java.net.URLEncoder
+class AuthenticationControllerSpec extends SpecBase with MockitoSugar {
 
-import scala.concurrent.Future
+ "AuthenticationControllerSpec" - {
 
-class AuthControllerSpec extends SpecBase with MockitoSugar {
+   "must sign the user in successfully" in {
 
-  /* "signOut" - {
+     val application =
+       applicationBuilder(None)
+         .build()
 
-    "must clear user answers and redirect to sign out, specifying the exit survey as the continue URL" in {
+     running(application) {
 
-      val mockSessionRepository = mock[SessionRepository]
-      when(mockSessionRepository.clear(any())) thenReturn Future.successful(true)
+       val appConfig = application.injector.instanceOf[FrontendAppConfig]
+       val request   = FakeRequest(GET, routes.AuthenticationController.signIn().url)
+
+       val result = route(application, request).value
+       val expectedUrl = s"${appConfig.ggLoginUrl}?continue=%2Fdigital-services-tax-returns&origin=digital-services-tax-returns-frontend"
+
+       status(result) mustEqual SEE_OTHER
+       redirectLocation(result).value mustEqual expectedUrl
+     }
+   }
+
+    "must sign the user out successfully" in {
 
       val application =
         applicationBuilder(None)
-          .overrides(bind[SessionRepository].toInstance(mockSessionRepository))
           .build()
 
       running(application) {
@@ -51,13 +59,29 @@ class AuthControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val encodedContinueUrl  = URLEncoder.encode(appConfig.exitSurveyUrl, "UTF-8")
-        val expectedRedirectUrl = s"${appConfig.signOutUrl}?continue=$encodedContinueUrl"
+        val expectedRedirectUrl = s"${appConfig.signOutDstUrl}"
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual expectedRedirectUrl
-        verify(mockSessionRepository, times(1)).clear(eqTo(userAnswersId))
       }
     }
-  }*/
+
+   "timeout user out successfully" in {
+
+     val application =
+       applicationBuilder(None)
+         .build()
+
+     running(application) {
+       val timeOutView = application.injector.instanceOf[TimeOut]
+       val request   = FakeRequest(GET, routes.AuthenticationController.timeOut().url)
+
+       val result = route(application, request).value
+
+       status(result) mustEqual OK
+       contentAsString(result) mustEqual timeOutView()(request, messages(application)).toString()
+
+     }
+   }
+  }
 }

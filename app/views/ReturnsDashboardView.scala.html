@@ -23,10 +23,11 @@
 
 @this(
 govukLayout: templates.Layout,
-govukSummaryList : GovukSummaryList
+govukSummaryList : GovukSummaryList,
+appConfig: FrontendAppConfig
 )
 
-@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit request:Request[_], messages: Messages, appConfig: FrontendAppConfig)
+@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit request:Request[_], messages: Messages)
 
 @company = @{reg.companyReg.company}
 

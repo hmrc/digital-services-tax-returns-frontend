@@ -17,8 +17,8 @@
 package controllers.actions
 
 import generators.ModelGenerators._
-import models.DSTRegNumber
-import models.registration.Registration
+import models.{CompanyName, DSTRegNumber}
+import models.registration.{Address, Company, CompanyRegWrapper, Registration}
 
 import javax.inject.Inject
 import models.requests.IdentifierRequest
@@ -28,13 +28,18 @@ import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues {
+class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues{
 
-  val registration                                                                                                = Arbitrary.arbitrary[Registration].sample.value
+  val registration: Registration = Arbitrary.arbitrary[Registration].sample.value
+  val address = Arbitrary.arbitrary[Address].sample.value
+
+  val updatedRegistration: Registration = registration.copy(registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
+    companyReg = CompanyRegWrapper(company = Company(CompanyName("Some Corporation"), address)),
+    ultimateParent = None
+  )
+
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(
-      IdentifierRequest(request, "id", registration.copy(registrationNumber = Some(DSTRegNumber("AMDST0799721562"))))
-    )
+    block(IdentifierRequest(request, "id", updatedRegistration))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

@@ -18,35 +18,61 @@ package controllers
 
 import base.SpecBase
 import config.FrontendAppConfig
-import generators.ModelGenerators._
-import models.registration.{Period, Registration}
-import org.scalacheck.Arbitrary
-import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
+import connectors.DSTConnector
+import models.registration.Period
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 import views.html.ReturnsDashboardView
 
-class ReturnsDashboardControllerSpec extends SpecBase with ScalaCheckPropertyChecks {
+import java.time.LocalDate
+import scala.concurrent.Future
+import scala.language.postfixOps
+
+class ReturnsDashboardControllerSpec extends SpecBase with MockitoSugar {
+
+  implicit val hc: HeaderCarrier = HeaderCarrier()
+  val mockDstConnector: DSTConnector = mock[DSTConnector]
 
   "ReturnsDashboard Controller" - {
 
-    /* "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      "return OK and the correct view for a GET" in {
 
-      running(application) {
-        val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad.url)
-        val appConfig = application.injector.instanceOf[FrontendAppConfig]
+        val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            inject.bind[DSTConnector].toInstance(mockDstConnector)
+          )
+          .build()
 
-        val result = route(application, request).value
+        running(application) {
+          val period1 =
+            Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
-        val view = application.injector.instanceOf[ReturnsDashboardView]
+          val period2 =
+            Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
-        status(result) mustEqual OK
-        val registration = Arbitrary.arbitrary[Registration].sample.value
-        val period = Arbitrary.arbitrary[Period].sample.value
-        contentAsString(result) mustEqual view(registration, List(period), List(period))(request, messages(application),appConfig).toString
+          when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period1)))
+          when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period2)))
+
+          val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad.url)
+          val result = route(application, request).value
+
+          val view = application.injector.instanceOf[ReturnsDashboardView]
+
+          status(result) mustEqual OK
+          contentAsString(result) mustEqual view(
+            registration,
+            List(period1)
+            .sortBy(_.start),
+            List(period2)
+            .sortBy(_.start)
+          )(request, messages(application)).toString
+        }
       }
-    }*/
-  }
+    }
 }

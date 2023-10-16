@@ -18,9 +18,8 @@ package connectors
 
 import models.BackendAndFrontendJson._
 import models.registration.{Period, Registration}
-import play.api.http.Status.OK
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.Inject
@@ -35,12 +34,6 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
   def lookupRegistration()(implicit hc: HeaderCarrier): Future[Option[Registration]] =
     http.GET[Option[Registration]](s"$backendURL/registration")
 
-  def lookupPendingRegistrationExists()(implicit hc: HeaderCarrier): Future[Boolean] =
-    http.GET[HttpResponse](s"$backendURL/pending-registration").map {
-      case resp if resp.status == OK => true
-      case _                         => false
-    }
-
   def lookupOutstandingReturns()(implicit hc: HeaderCarrier): Future[Set[Period]] =
     http.GET[List[Period]](s"$backendURL/returns/outstanding").map(_.toSet)
 
@@ -50,5 +43,4 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
   def lookupAllReturns()(implicit hc: HeaderCarrier): Future[Set[Period]] =
     http.GET[List[Period]](s"$backendURL/returns/all").map(_.toSet)
 
-  case class MicroServiceConnectionException(msg: String) extends Exception(msg)
 }

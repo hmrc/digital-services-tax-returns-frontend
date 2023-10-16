@@ -35,7 +35,6 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
   class Harness(sessionRepository: SessionRepository) extends DataRetrievalActionImpl(sessionRepository) {
     def callTransform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] = transform(request)
   }
-  val registration = Arbitrary.arbitrary[Registration].sample.value
 
   "Data Retrieval Action" - {
 

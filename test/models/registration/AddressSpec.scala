@@ -35,13 +35,16 @@ class AddressSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
          |      "_type" : "uk.gov.hmrc.digitalservicestax.data.UkAddress"
          | }""".stripMargin)
 
-    json.as[Address] mustBe UkAddress(
+    val address = json.as[Address]
+    address.countryCode mustBe CountryCode("GB")
+    address mustBe UkAddress(
       AddressLine("The house"),
       Some(AddressLine("The Road")),
       Some(AddressLine("line3")),
       Some(AddressLine("line4")),
       Postcode("HG18 3RE")
     )
+
   }
 
   "serialize and de-serialise non uk address model" in {
@@ -54,7 +57,9 @@ class AddressSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyCheck
          |      "_type" : "uk.gov.hmrc.digitalservicestax.data.ForeignAddress"
          | }""".stripMargin)
 
-    json.as[Address] mustBe ForeignAddress(
+    val address = json.as[Address]
+    address.postalCode mustBe ""
+    address mustBe ForeignAddress(
       AddressLine("The house"),
       Some(AddressLine("The Road")),
       Some(AddressLine("line3")),

@@ -16,18 +16,19 @@
 
 @import config.FrontendAppConfig
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    appConfig: FrontendAppConfig
 )
 
-@()(implicit request: Request[_], messages: Messages, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = messages("time-out.title").toString()) {
     <h1 class="govuk-heading-l">@messages("time-out.title")</h1>
     <p class="govuk-body">@messages("time-out.save")</p>
 
     <p class="govuk-body">
-        <a href="@controllers.auth.routes.AuthenticationController.signIn" class="govuk-button" role="button">
-            @messages("common.sign-in")
+        <a href="@controllers.auth.routes.AuthenticationController.signIn.url" class="govuk-button" role="button">
+            @messages("site.sign-in")
         </a>
     </p>
 }
