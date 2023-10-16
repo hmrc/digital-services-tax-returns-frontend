@@ -36,8 +36,6 @@ pageTitle = s"${messages("returnsDashboard.heading")} - ${messages("common.title
 useFullWidth = true
 ) {
 
-
-
 <div class="grid-row govuk-grid-column-full no-padding-left">
     <div class="govuk-grid-column-two-thirds no-padding-left">
 
@@ -135,8 +133,11 @@ useFullWidth = true
                     <li>
                         <p class="govuk-body">
                             @messages("returnsDashboard.previous-payments")
-                            <a class='govuk-link text-overflow' href="mailto:@appConfig.ccgEmail">@appConfig.ccgEmail</a>
+
+                            @Html("<a class='govuk-link text-overflow' href='mailto:ccgdstmailbox@hmrc.gov.uk'>ccgdstmailbox@hmrc.gov.uk</a>")<br>
+
                             @messages("returnsDashboard.previous-payments1")
+
                         </p>
 
                     </li>
