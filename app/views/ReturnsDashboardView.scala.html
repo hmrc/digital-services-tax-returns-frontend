@@ -32,7 +32,7 @@ appConfig: FrontendAppConfig
 @company = @{reg.companyReg.company}
 
 @govukLayout(
-pageTitle = s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}",
+pageTitle = s"${messages("returnsDashboard.heading")} - ${messages("common.title")} - ${messages("common.title.suffix")}",
 useFullWidth = true
 ) {
 
@@ -134,11 +134,11 @@ useFullWidth = true
                     }
                     <li>
                         <p class="govuk-body">
-                            @messages(
-                            "returnsDashboard.previous-payments",
-                            Html("<a class='govuk-link text-overflow' href='mailto:ccgdstmailbox@hmrc.gov.uk'>ccgdstmailbox@hmrc.gov.uk</a>")
-                            )
+                            @messages("returnsDashboard.previous-payments")
+                            <a class='govuk-link text-overflow' href="mailto:@appConfig.ccgEmail">@appConfig.ccgEmail</a>
+                            @messages("returnsDashboard.previous-payments1")
                         </p>
+
                     </li>
                 </ul>
             </div>
