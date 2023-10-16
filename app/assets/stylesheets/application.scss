@@ -11,17 +11,26 @@
   padding: 20px;
 }
 
-.card .card-body > *:last-child, .card > *:last-child {
+.card .card-body>*:last-child,
+.card>*:last-child {
   margin-bottom: 0;
 }
 
 @media (min-width: 40.0625em) {
-  .card {
-    margin-bottom: 0;
-  }
+.card {
+  margin-bottom: 0;
+}
+}
+
+.no-padding-left {
+  padding-left: 0px;
+}
+
+.padding-bottom-50 {
+  padding-bottom: 50px;
 }
 
 .text-overflow {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
