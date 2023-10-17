@@ -22,3 +22,8 @@ GET         /unauthorised                                controllers.Unauthorise
 GET         /returnsDashboard                            controllers.ReturnsDashboardController.onPageLoad()
 
 GET         /pay-your-digital-services-tax               controllers.PayYourDigitalServiceTaxController.onPageLoad()
+
+GET        /selectActivitiesController                        controllers.SelectActivitiesControllerController.onPageLoad(mode: Mode = NormalMode)
+POST       /selectActivitiesController                        controllers.SelectActivitiesControllerController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSelectActivitiesController                  controllers.SelectActivitiesControllerController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSelectActivitiesController                  controllers.SelectActivitiesControllerController.onSubmit(mode: Mode = CheckMode)
