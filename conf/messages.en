@@ -106,10 +106,10 @@ pay-your-dst.how-to-pay.1=Find out
 pay-your-dst.how-to-pay.2=how to pay your Digital Services Tax (opens in a new window or tab)
 pay-your-dst.back-to-details=Back to details
 
-selectActivitiesController.title = selectActivitiesController
-selectActivitiesController.heading = selectActivitiesController
-selectActivitiesController.option1 = Option 1
-selectActivitiesController.option2 = Option 2
-selectActivitiesController.checkYourAnswersLabel = selectActivitiesController
-selectActivitiesController.error.required = Select selectActivitiesController
-selectActivitiesController.change.hidden = SelectActivitiesController
+selectActivities.title = selectActivities
+selectActivities.heading = selectActivities
+selectActivities.option1 = Option 1
+selectActivities.option2 = Option 2
+selectActivities.checkYourAnswersLabel = selectActivities
+selectActivities.error.required = Select selectActivities
+selectActivities.change.hidden = SelectActivities

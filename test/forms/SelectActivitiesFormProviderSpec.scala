@@ -1,10 +1,10 @@
 package forms
 
 import forms.behaviours.CheckboxFieldBehaviours
-import models.SelectActivitiesController
+import models.SelectActivities
 import play.api.data.FormError
 
-class SelectActivitiesControllerFormProviderSpec extends CheckboxFieldBehaviours {
+class SelectActivitiesFormProviderSpec extends CheckboxFieldBehaviours {
 
   val form = new SelectActivitiesControllerFormProvider()()
 
@@ -13,10 +13,10 @@ class SelectActivitiesControllerFormProviderSpec extends CheckboxFieldBehaviours
     val fieldName = "value"
     val requiredKey = "selectActivitiesController.error.required"
 
-    behave like checkboxField[SelectActivitiesController](
+    behave like checkboxField[SelectActivities](
       form,
       fieldName,
-      validValues  = SelectActivitiesController.values,
+      validValues  = SelectActivities.values,
       invalidError = FormError(s"$fieldName[0]", "error.invalid")
     )
 

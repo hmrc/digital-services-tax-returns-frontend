@@ -1,29 +1,29 @@
 package controllers
 
 import base.SpecBase
-import forms.SelectActivitiesControllerFormProvider
-import models.{NormalMode, SelectActivitiesController, UserAnswers}
+import forms.SelectActivitiesFormProvider
+import models.{NormalMode, SelectActivities, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.SelectActivitiesControllerPage
+import pages.SelectActivitiesPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.SelectActivitiesControllerView
+import views.html.SelectActivitiesView
 
 import scala.concurrent.Future
 
-class SelectActivitiesControllerControllerSpec extends SpecBase with MockitoSugar {
+class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val selectActivitiesControllerRoute = routes.SelectActivitiesControllerController.onPageLoad(NormalMode).url
+  lazy val selectActivitiesControllerRoute = routes.SelectActivitiesController.onPageLoad(NormalMode).url
 
-  val formProvider = new SelectActivitiesControllerFormProvider()
+  val formProvider = new SelectActivitiesFormProvider()
   val form = formProvider()
 
   "SelectActivitiesController Controller" - {
@@ -37,7 +37,7 @@ class SelectActivitiesControllerControllerSpec extends SpecBase with MockitoSuga
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[SelectActivitiesControllerView]
+        val view = application.injector.instanceOf[SelectActivitiesView]
 
         status(result) mustEqual OK
 
@@ -47,19 +47,19 @@ class SelectActivitiesControllerControllerSpec extends SpecBase with MockitoSuga
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(SelectActivitiesControllerPage, SelectActivitiesController.values.toSet).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(SelectActivitiesPage, SelectActivities.values.toSet).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request = FakeRequest(GET, selectActivitiesControllerRoute)
 
-        val view = application.injector.instanceOf[SelectActivitiesControllerView]
+        val view = application.injector.instanceOf[SelectActivitiesView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(SelectActivitiesController.values.toSet), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(SelectActivities.values.toSet), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -80,7 +80,7 @@ class SelectActivitiesControllerControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, selectActivitiesControllerRoute)
-            .withFormUrlEncodedBody(("value[0]", SelectActivitiesController.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", SelectActivities.values.head.toString))
 
         val result = route(application, request).value
 
@@ -100,7 +100,7 @@ class SelectActivitiesControllerControllerSpec extends SpecBase with MockitoSuga
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[SelectActivitiesControllerView]
+        val view = application.injector.instanceOf[SelectActivitiesView]
 
         val result = route(application, request).value
 
@@ -130,7 +130,7 @@ class SelectActivitiesControllerControllerSpec extends SpecBase with MockitoSuga
       running(application) {
         val request =
           FakeRequest(POST, selectActivitiesControllerRoute)
-            .withFormUrlEncodedBody(("value[0]", SelectActivitiesController.values.head.toString))
+            .withFormUrlEncodedBody(("value[0]", SelectActivities.values.head.toString))
 
         val result = route(application, request).value
 

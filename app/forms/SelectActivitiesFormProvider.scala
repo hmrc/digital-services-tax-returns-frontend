@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
+import javax.inject.Inject
+
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms.set
 import models.SelectActivities
-import play.api.libs.json.JsPath
 
-case object SelectActivitiesPage extends QuestionPage[Set[SelectActivities]] {
+class SelectActivitiesFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ toString
-
-  override def toString: String = "selectActivities"
+  def apply(): Form[Set[SelectActivities]] =
+    Form(
+      "value" -> set(enumerable[SelectActivities]("selectActivities.error.required")).verifying(nonEmptySet("selectActivities.error.required"))
+    )
 }

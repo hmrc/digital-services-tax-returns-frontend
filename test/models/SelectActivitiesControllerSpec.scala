@@ -14,29 +14,29 @@ class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with Scal
 
     "must deserialise valid values" in {
 
-      val gen = arbitrary[SelectActivitiesController]
+      val gen = arbitrary[SelectActivities]
 
       forAll(gen) {
         selectActivitiesController =>
 
-          JsString(selectActivitiesController.toString).validate[SelectActivitiesController].asOpt.value mustEqual selectActivitiesController
+          JsString(selectActivitiesController.toString).validate[SelectActivities].asOpt.value mustEqual selectActivitiesController
       }
     }
 
     "must fail to deserialise invalid values" in {
 
-      val gen = arbitrary[String] suchThat (!SelectActivitiesController.values.map(_.toString).contains(_))
+      val gen = arbitrary[String] suchThat (!SelectActivities.values.map(_.toString).contains(_))
 
       forAll(gen) {
         invalidValue =>
 
-          JsString(invalidValue).validate[SelectActivitiesController] mustEqual JsError("error.invalid")
+          JsString(invalidValue).validate[SelectActivities] mustEqual JsError("error.invalid")
       }
     }
 
     "must serialise" in {
 
-      val gen = arbitrary[SelectActivitiesController]
+      val gen = arbitrary[SelectActivities]
 
       forAll(gen) {
         selectActivitiesController =>
