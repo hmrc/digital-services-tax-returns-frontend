@@ -21,11 +21,11 @@ import org.scalatest.matchers.must.Matchers
 
 class ModeSpec extends AnyFreeSpec with Matchers {
   "Mode" - {
-      "must return NormalMode" in {
-        Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
-      }
-      "must return CheckMode" in {
-        Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
-      }
+    "must return NormalMode" in {
+      Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
+    }
+    "must return CheckMode" in {
+      Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
+    }
   }
 }

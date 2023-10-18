@@ -150,10 +150,8 @@ package object models {
         regex = "^[0-9]{12}$"
       )
 
-
-  def sortPeriods(periods: Set[Period]) = {
+  def sortPeriods(periods: Set[Period]) =
     periods.toList.sortBy(_.start)
-  }
   implicit class RichJsObject(jsObject: JsObject) {
 
     def setObject(path: JsPath, value: JsValue): JsResult[JsObject] =
