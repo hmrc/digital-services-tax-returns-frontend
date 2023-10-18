@@ -17,12 +17,9 @@
 package controllers.actions
 
 import base.SpecBase
-import generators.ModelGenerators._
-import models.registration.Registration
+import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
-import models.{DSTRegNumber, UserAnswers}
 import org.mockito.Mockito._
-import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.FakeRequest
 import repositories.SessionRepository

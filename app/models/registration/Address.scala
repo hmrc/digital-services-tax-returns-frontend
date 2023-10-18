@@ -17,7 +17,7 @@
 package models.registration
 
 import models.{AddressLine, CountryCode, Postcode, SimpleJson}
-import play.api.libs.json.{Format, JsResult, JsValue, Json, OFormat}
+import play.api.libs.json._
 
 sealed trait Address {
   def line1: AddressLine

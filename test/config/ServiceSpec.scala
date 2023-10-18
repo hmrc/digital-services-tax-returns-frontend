@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package models.returns
+package config
 
-import models.{Money, Percent, RepaymentDetails}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-import scala.collection.immutable.ListMap
+class ServiceSpec extends AnyFreeSpec with Matchers {
 
-final case class Return(
-  reportedActivities: Set[Activity],
-  alternateCharge: Map[Activity, Percent],
-  crossBorderReliefAmount: Money,
-  allowanceAmount: Option[Money],
-  companiesAmount: ListMap[GroupCompany, Money],
-  totalLiability: Money,
-  repayment: Option[RepaymentDetails]
-)
+  "Service" - {
+    "must build the base Url from he input" in {
+      val service = Service("host", "port", "protocol")
+      service.baseUrl mustBe "protocol://host:port"
+      service.toString mustBe "protocol://host:port"
+      Service.convertToString(service) mustBe "protocol://host:port"
+    }
+  }
+}
