@@ -19,6 +19,7 @@ package controllers
 import config.FrontendAppConfig
 import connectors.DSTConnector
 import controllers.actions.IdentifierAction
+import models.sortPeriods
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
@@ -47,7 +48,7 @@ class ReturnsDashboardController @Inject() (
       outstandingPeriods <- dstConnector.lookupOutstandingReturns()
       amendedPeriods     <- dstConnector.lookupAmendableReturns()
     } yield Ok(
-      view(request.registration, outstandingPeriods.toList.sortBy(_.start), amendedPeriods.toList.sortBy(_.start))
+      view(request.registration, sortPeriods(outstandingPeriods), sortPeriods(amendedPeriods))
     )
   }
 

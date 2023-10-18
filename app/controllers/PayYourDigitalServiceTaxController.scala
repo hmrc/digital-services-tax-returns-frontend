@@ -18,13 +18,13 @@ package controllers
 
 import connectors.DSTConnector
 import controllers.actions._
-
-import javax.inject.Inject
+import models.sortPeriods
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.PayYourDigitalServiceTaxView
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class PayYourDigitalServiceTaxController @Inject() (
@@ -39,7 +39,8 @@ class PayYourDigitalServiceTaxController @Inject() (
 
   def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
     dstConnector.lookupOutstandingReturns().map { periods =>
-      Ok(view(request.registration.registrationNumber, periods.toList.sortBy(_.start)))
+      Ok(view(request.registration.registrationNumber, sortPeriods(periods)))
     }
   }
+
 }

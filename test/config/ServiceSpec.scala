@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package models
+package config
 
-sealed trait BankAccount
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-final case class ForeignBankAccount(iban: IBAN) extends BankAccount
+class ServiceSpec extends AnyFreeSpec with Matchers {
 
-final case class DomesticBankAccount(
-  sortCode: SortCode,
-  accountNo: AccountNumber,
-  buildingSocietyNumber: Option[BuildingSocietyRollNumber]
-) extends BankAccount
-
-final case class RepaymentDetails(
-  accountName: AccountName,
-  bankAccount: BankAccount
-)
+  "Service" - {
+    "must build the base Url from he input" in {
+      val service = Service("host", "port", "protocol")
+      service.baseUrl mustBe "protocol://host:port"
+      service.toString mustBe "protocol://host:port"
+      Service.convertToString(service) mustBe "protocol://host:port"
+    }
+  }
+}

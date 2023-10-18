@@ -47,8 +47,8 @@ refresh: Int = 0)(contentBlock: Html)(implicit request: Request[_], messages: Me
             keepAliveUrl = Some(routes.KeepAliveController.keepAlive.url),
             signOutUrl = Some(controllers.auth.routes.AuthenticationController.signOut().url),
             timeoutUrl = Some(controllers.auth.routes.AuthenticationController.timeOut().url),
-            title = Some(messages("timeout.title")),
-            messageSuffix = Some(messages("timeout.messageSuffix"))
+            title = Some(messages("time-out.title")),
+            messageSuffix = Some(messages("time-out.messageSuffix"))
             )))
         } else None
     )

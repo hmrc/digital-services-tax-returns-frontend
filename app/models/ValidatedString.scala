@@ -16,9 +16,10 @@
 
 package models
 
-import shapeless._
-import tag._
 import cats.implicits._
+import shapeless._
+import shapeless.tag._
+
 import scala.util.matching.Regex
 
 trait ValidatedType[BaseType] {

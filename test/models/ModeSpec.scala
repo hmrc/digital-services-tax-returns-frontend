@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package models.returns
+package models
 
-import models.{Money, Percent, RepaymentDetails}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-import scala.collection.immutable.ListMap
-
-final case class Return(
-  reportedActivities: Set[Activity],
-  alternateCharge: Map[Activity, Percent],
-  crossBorderReliefAmount: Money,
-  allowanceAmount: Option[Money],
-  companiesAmount: ListMap[GroupCompany, Money],
-  totalLiability: Money,
-  repayment: Option[RepaymentDetails]
-)
+class ModeSpec extends AnyFreeSpec with Matchers {
+  "Mode" - {
+    "must return NormalMode" in {
+      Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
+    }
+    "must return CheckMode" in {
+      Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
+    }
+  }
+}
