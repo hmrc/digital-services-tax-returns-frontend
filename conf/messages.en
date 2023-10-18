@@ -17,7 +17,7 @@ date.month = Month
 date.year = Year
 
 time-out.title=For your security, we signed you out
-timeout.messageSuffix=GOV.UK
+time-out.messageSuffix=GOV.UK
 
 #Common
 common.title=Digital Services Tax
