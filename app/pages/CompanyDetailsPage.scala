@@ -21,7 +21,7 @@ import play.api.libs.json.JsPath
 
 case class CompanyDetailsPage(index: Index) extends QuestionPage[CompanyDetails] {
 
-  override def path: JsPath = JsPath \ "details" \ index.position \ toString
+  override def path: JsPath = JsPath \ "manage-details" \ index.position \ toString
 
   override def toString: String = "companyDetails"
 }

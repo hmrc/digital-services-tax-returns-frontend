@@ -31,41 +31,42 @@ import views.html.CompanyDetailsView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CompanyDetailsController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
-                                      navigator: Navigator,
-                                      identify: IdentifierAction,
-                                      getData: DataRetrievalAction,
-                                      requireData: DataRequiredAction,
-                                      formProvider: CompanyDetailsFormProvider,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      view: CompanyDetailsView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class CompanyDetailsController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: CompanyDetailsFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: CompanyDetailsView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) {
-    implicit request =>
+  def onPageLoad(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+    val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsPage(index)) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsPage(index)) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, index, mode))
+    Ok(view(preparedForm, index, mode))
   }
 
-  def onSubmit(index: Index,mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, index, mode))),
-
+  def onSubmit(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(CompanyDetailsPage(index), value))
+            updatedAnswers <-
+              Future.fromTry(
+                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(CompanyDetailsPage(index), value)
+              )
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(CompanyDetailsPage(index), mode, updatedAnswers))
       )
