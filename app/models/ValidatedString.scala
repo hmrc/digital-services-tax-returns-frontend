@@ -16,9 +16,10 @@
 
 package models
 
-import shapeless._
-import tag._
 import cats.implicits._
+import shapeless._
+import shapeless.tag._
+
 import scala.util.matching.Regex
 
 trait ValidatedType[BaseType] {
@@ -49,6 +50,7 @@ class RegexValidatedString(
 
   val regexCompiled: Regex = regex.r
 
-  def validateAndTransform(in: String): Option[String] =
+  def validateAndTransform(in: String): Option[String] = {
     transform(in).some.filter(regexCompiled.findFirstIn(_).isDefined)
+  }
 }

@@ -16,17 +16,16 @@
 
 package models
 
-sealed trait BankAccount
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-final case class ForeignBankAccount(iban: IBAN) extends BankAccount
-
-final case class DomesticBankAccount(
-  sortCode: SortCode,
-  accountNo: AccountNumber,
-  buildingSocietyNumber: Option[BuildingSocietyRollNumber]
-) extends BankAccount
-
-final case class RepaymentDetails(
-  accountName: AccountName,
-  bankAccount: BankAccount
-)
+class ModeSpec extends AnyFreeSpec with Matchers {
+  "Mode" - {
+      "must return NormalMode" in {
+        Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
+      }
+      "must return CheckMode" in {
+        Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
+      }
+  }
+}

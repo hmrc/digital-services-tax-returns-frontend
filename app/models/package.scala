@@ -16,7 +16,7 @@
 
 import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
-import fr.marcwrobel.jbanking.iban.Iban
+import models.registration.Period
 import play.api.libs.json._
 import shapeless.tag.@@
 
@@ -45,14 +45,6 @@ package object models {
         _.replaceAll(" ", "")
       )
 
-  type Percent = Float @@ Percent.Tag
-  object Percent extends ValidatedType[Float] {
-    def validateAndTransform(in: Float): Option[Float] =
-      Some(in).filter { x =>
-        (x >= 0 && x <= 100) && (BigDecimal(x.toString).scale <= 3)
-      }
-  }
-
   type Email = String @@ Email.Tag
   object Email extends ValidatedType[String] {
     def validateAndTransform(email: String): Option[String] = {
@@ -74,12 +66,6 @@ package object models {
         _.trim.replaceAll("[ \\t]+", " ").toUpperCase
       )
 
-  type Money = BigDecimal @@ Money.Tag
-  object Money extends ValidatedType[BigDecimal] {
-    def validateAndTransform(in: BigDecimal): Option[BigDecimal] =
-      Some(in).filter(_.toString.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
-  }
-
   type PhoneNumber = String @@ PhoneNumber.Tag
   object PhoneNumber
       extends RegexValidatedString(
@@ -97,12 +83,6 @@ package object models {
       extends RegexValidatedString(
         regex = """^[a-zA-Z0-9 '&.-]{1,35}$"""
       )
-
-  type IBAN = String @@ IBAN.Tag
-  object IBAN extends ValidatedType[String] {
-    override def validateAndTransform(in: String): Option[String] =
-      Some(in).map(_.replaceAll("\\s+", "")).filter(Iban.isValid)
-  }
 
   type SafeId = String @@ SafeId.Tag
   object SafeId
@@ -170,6 +150,10 @@ package object models {
         regex = "^[0-9]{12}$"
       )
 
+
+  def sortPeriods(periods: Set[Period]) = {
+    periods.toList.sortBy(_.start)
+  }
   implicit class RichJsObject(jsObject: JsObject) {
 
     def setObject(path: JsPath, value: JsValue): JsResult[JsObject] =

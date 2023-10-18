@@ -118,6 +118,5 @@ class RegistrationSpec extends AnyFreeSpec with Matchers with ScalaCheckProperty
 
       json.as[Registration] mustBe registration
     }
-
   }
 }
