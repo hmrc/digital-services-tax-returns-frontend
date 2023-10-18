@@ -30,7 +30,12 @@ trait StringFieldBehaviours extends FieldBehaviours {
       }
     }
 
-  def fieldWithInValidData(form: Form[_], fieldName: String, invalidDataGenerator: Gen[String], invalidDataError: FormError): Unit =
+  def fieldWithInValidData(
+    form: Form[_],
+    fieldName: String,
+    invalidDataGenerator: Gen[String],
+    invalidDataError: FormError
+  ): Unit =
     s"not bind invalid characters" in {
       forAll(invalidDataGenerator -> "inValidDataItem") { dataItem: String =>
         val result = form.bind(Map(fieldName -> dataItem)).apply(fieldName)

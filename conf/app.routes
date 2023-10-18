@@ -23,7 +23,7 @@ GET         /returnsDashboard                            controllers.ReturnsDash
 
 GET         /pay-your-digital-services-tax               controllers.PayYourDigitalServiceTaxController.onPageLoad()
 
-GET        /:index/companyDetails                        controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
-POST       /:index/companyDetails                        controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
-GET        /:index/changeCompanyDetails                  controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
-POST       /:index/changeCompanyDetails                  controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+GET        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
+POST       /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
+GET        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
+POST       /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)

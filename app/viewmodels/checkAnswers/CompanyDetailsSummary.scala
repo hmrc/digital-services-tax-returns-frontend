@@ -26,21 +26,21 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object CompanyDetailsSummary  {
+object CompanyDetailsSummary {
 
   def row(index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CompanyDetailsPage(index)).map {
-      answer =>
+    answers.get(CompanyDetailsPage(index)).map { answer =>
+      val value = HtmlFormat.escape(answer.companyName).toString + "<br/>" + HtmlFormat
+        .escape(answer.uniqueTaxpayerReference.getOrElse(""))
+        .toString
 
-      val value = HtmlFormat.escape(answer.companyName).toString + "<br/>" + HtmlFormat.escape(answer.uniqueTaxpayerReference).toString
-
-        SummaryListRowViewModel(
-          key     = "companyDetails.checkYourAnswersLabel",
-          value   = ValueViewModel(HtmlContent(value)),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
-              .withVisuallyHiddenText(messages("companyDetails.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "companyDetails.checkYourAnswersLabel",
+        value = ValueViewModel(HtmlContent(value)),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
+            .withVisuallyHiddenText(messages("companyDetails.change.hidden"))
         )
+      )
     }
 }

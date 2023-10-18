@@ -42,7 +42,7 @@
                 field = form("companyName"),
                 label = LabelViewModel(messages("companyDetails.companyName"))
             )
-            .withWidth(Full)
+            .withWidth(TwoThirds)
             .withHint(Hint(content = messages("companyDetails.companyName.hint")))
         )
 
@@ -51,8 +51,8 @@
                 field = form("uniqueTaxpayerReference"),
                 label = LabelViewModel(messages("companyDetails.uniqueTaxpayerReference"))
             )
-            .withWidth(Full)
-            .withHint(Hint(content = messages("companyDetails.uniqueTaxpayerReference.hint")))
+            .withWidth(TwoThirds)
+            .withHint(Hint(content = HtmlContent(messages("companyDetails.uniqueTaxpayerReference.hint"))))
         )
 
         @govukButton(

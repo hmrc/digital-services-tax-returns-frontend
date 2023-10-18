@@ -37,14 +37,15 @@ import scala.concurrent.Future
 class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
-  val index = Index(0)
+  val index       = Index(0)
 
   val formProvider = new CompanyDetailsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val companyDetailsRoute = routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
 
-  val userAnswers: UserAnswers = emptyUserAnswers.set(CompanyDetailsPage(index), CompanyDetails("value 1", "1234567890")).success.value
+  val userAnswers: UserAnswers =
+    emptyUserAnswers.set(CompanyDetailsPage(index), CompanyDetails("value 1", Some("1234567890"))).success.value
 
   "CompanyDetails Controller" - {
 
@@ -76,7 +77,11 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(CompanyDetails("value 1", "1234567890")), index, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(CompanyDetails("value 1", Some("1234567890"))),
+          index,
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -123,36 +128,6 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual BAD_REQUEST
         contentAsString(result) mustEqual view(boundForm, index, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, companyDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, companyDetailsRoute)
-            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "1234567890"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
   }

@@ -28,7 +28,7 @@ class IndexSpec extends AnyFreeSpec with Matchers with OptionValues {
 
   "indexPathBindable" - {
     val binder = Index.indexPathBindable
-    val key = "index"
+    val key    = "index"
 
     "bind a valid index" in {
       binder.bind(key, "1") mustBe Right(Index(0))
