@@ -50,7 +50,6 @@ class RegexValidatedString(
 
   val regexCompiled: Regex = regex.r
 
-  def validateAndTransform(in: String): Option[String] = {
+  def validateAndTransform(in: String): Option[String] =
     transform(in).some.filter(regexCompiled.findFirstIn(_).isDefined)
-  }
 }

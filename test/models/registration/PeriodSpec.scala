@@ -25,15 +25,21 @@ import java.time.LocalDate
 class PeriodSpec extends AnyFreeSpec with Matchers with SimpleJson {
   "Period" - {
     "calculate paymentDue when endDate is day of month and length of month are equal" in {
-      Period(LocalDate.parse("2021-10-11"),
+      Period(
+        LocalDate.parse("2021-10-11"),
         LocalDate.parse("2022-10-31"),
-        LocalDate.parse("2023-10-20"), Period.Key("key")).paymentDue mustBe LocalDate.parse("2023-08-01")
+        LocalDate.parse("2023-10-20"),
+        Period.Key("key")
+      ).paymentDue mustBe LocalDate.parse("2023-08-01")
     }
 
     "calculate paymentDue when endDate is day of month and length of month are not equal" in {
-      Period(LocalDate.parse("2021-10-11"),
+      Period(
+        LocalDate.parse("2021-10-11"),
         LocalDate.parse("2022-10-10"),
-        LocalDate.parse("2023-10-20"), Period.Key("key")).paymentDue mustBe LocalDate.parse("2023-07-11")
+        LocalDate.parse("2023-10-20"),
+        Period.Key("key")
+      ).paymentDue mustBe LocalDate.parse("2023-07-11")
     }
   }
 }

@@ -41,7 +41,7 @@ class UserAnswersSpec extends AnyFreeSpec with TryValues with OptionValues {
 
     ".remove" - {
       "must remove the data from userAnswers" in {
-        val userAnswers = UserAnswers("id").set(SamplePage(), "value1").success.value
+        val userAnswers        = UserAnswers("id").set(SamplePage(), "value1").success.value
         val updatedUserAnswers = userAnswers.remove(SamplePage()).success.value
 
         updatedUserAnswers.get(SamplePage()) mustBe None
