@@ -16,7 +16,6 @@
 
 package connectors
 
-import akka.http.scaladsl.model.HttpHeader.ParsingResult.Ok
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.ModelGenerators._
 import models.BackendAndFrontendJson._

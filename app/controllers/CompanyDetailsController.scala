@@ -18,8 +18,6 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
-
-import javax.inject.Inject
 import models.{Index, Mode, UserAnswers}
 import navigation.Navigator
 import pages.CompanyDetailsPage
@@ -29,6 +27,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CompanyDetailsView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CompanyDetailsController @Inject() (
