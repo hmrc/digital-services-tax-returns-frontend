@@ -27,3 +27,8 @@ GET        /manage-companies/add/:index/company          controllers.CompanyDeta
 POST       /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
 GET        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
 POST       /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+
+GET        /manageCompanies                        controllers.ManageCompaniesController.onPageLoad(mode: Mode = NormalMode)
+POST       /manageCompanies                        controllers.ManageCompaniesController.onSubmit(mode: Mode = NormalMode)
+GET        /changeManageCompanies                  controllers.ManageCompaniesController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeManageCompanies                  controllers.ManageCompaniesController.onSubmit(mode: Mode = CheckMode)
