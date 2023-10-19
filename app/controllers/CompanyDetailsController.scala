@@ -18,8 +18,6 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
-
-import javax.inject.Inject
 import models.{Index, Mode, UserAnswers}
 import models.{Index, Mode, UserAnswers}
 import navigation.Navigator
