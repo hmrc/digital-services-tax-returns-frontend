@@ -22,10 +22,7 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle    = titleNoForm(messages("signedOut.title")),
-    showBackLink = false,
-    timeout      = false,
-    showSignOut  = false
+    pageTitle = s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}"
 ) {
 
     <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
@@ -35,7 +32,7 @@
     <p class="govuk-body">
         @govukButton(
             ButtonViewModel(messages("site.signIn"))
-                .asLink(routes.IndexController.onPageLoad.url)
+                .asLink(routes.ReturnsDashboardController.onPageLoad.url)
         )
     </p>
 }

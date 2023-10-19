@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package controllers.auth
+package models.registration
 
-import javax.inject.Inject
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.auth.SignedOutView
+import models.{SafeId, UTR}
 
-class SignedOutController @Inject() (
-  val controllerComponents: MessagesControllerComponents,
-  view: SignedOutView
-) extends FrontendBaseController
-    with I18nSupport {
-
-  def onPageLoad: Action[AnyContent] = Action { implicit request =>
-    Ok(view())
-  }
-}
+final case class CompanyRegWrapper(
+  company: Company,
+  utr: Option[UTR] = None,
+  safeId: Option[SafeId] = None,
+  useSafeId: Boolean = false
+)

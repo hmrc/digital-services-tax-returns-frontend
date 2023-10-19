@@ -1,0 +1,152 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.FrontendAppConfig
+@import registration.Registration
+@import models.registration.CompanyRegWrapper
+@import models.registration.Company
+@import models.formatDate
+@import models.registration.Period
+
+@this(
+govukLayout: templates.Layout,
+govukSummaryList : GovukSummaryList,
+appConfig: FrontendAppConfig
+)
+
+@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit request:Request[_], messages: Messages)
+
+@company = @{reg.companyReg.company}
+
+@govukLayout(
+pageTitle = s"${messages("returnsDashboard.heading")} - ${messages("common.title")} - ${messages("common.title.suffix")}",
+useFullWidth = true,
+showBackLink = false
+) {
+
+<div class="grid-row govuk-grid-column-full no-padding-left">
+    <div class="govuk-grid-column-two-thirds no-padding-left">
+
+        <h1 class="govuk-heading-xl">
+            @messages("returnsDashboard.heading")
+        </h1>
+
+
+
+        @govukSummaryList(SummaryList(
+        rows = Seq(
+        SummaryListRow(
+        key = Key(
+        content = HtmlContent(messages("returnsDashboard.dst-no"))
+        ),
+        value = Value(
+        content = HtmlContent(reg.registrationNumber.getOrElse(""))
+        )
+        )
+        ) ++ reg.ultimateParent.fold(Seq.empty[SummaryListRow]){parent =>
+        Seq(
+        SummaryListRow(
+        key = Key(
+        content = HtmlContent(messages("returnsDashboard.ultimate-parent-name"))
+        ),
+        value = Value(
+        content = HtmlContent(parent.name)
+        )
+        ),
+        SummaryListRow(
+        key = Key(
+        content = HtmlContent(messages("returnsDashboard.company-name"))
+        ),
+        value = Value(
+        content = HtmlContent(company.name)
+        )
+        )
+        )
+        }
+        ))
+
+    </div>
+</div>
+
+<div class="grid-row govuk-grid-column-full no-padding-left padding-bottom-50">
+    @outstanding.headOption.map { period =>
+    <div class="govuk-grid-column-one-third no-padding-left">
+        <div class="card">
+            <h2 class="govuk-heading-m">@messages("returnsDashboard.payment-due")</h2>
+            <p class="govuk-body">
+                @messages("returnsDashboard.payment-due-warning.due")
+                <span class="govuk-!-font-weight-bold">
+                            @messages("returnsDashboard.payment-due-warning.after")
+                        </span>
+                @messages("returnsDashboard.payment-due-warning.return-submitted")
+            </p>
+            <p class="govuk-body">@formatDate(period.paymentDue)</p>
+            <p class="govuk-body">
+                <a class="govuk-link" href="@routes.PayYourDigitalServiceTaxController.onPageLoad.url" >
+                    @messages("returnsDashboard.pay-tax")
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third no-padding-left">
+        <div class="card">
+            <h2 class="govuk-heading-m">@messages("returnsDashboard.return-due")</h2>
+            <p class="govuk-body">@{formatDate(period.returnDue)}</p>
+            <p class="govuk-body">
+<!--                            This will be changed to the new repository url once it is created -->
+                <a class="govuk-link" href="@appConfig.dstFrontendReturnActionUrl">
+                    @messages("returnsDashboard.submit-return")
+                </a>
+            </p>
+        </div>
+    </div>
+    }
+
+    <div class="govuk-grid-column-one-third no-padding-left">
+        <div class="card" id="cardAmount">
+            <div class="card-body" style="border-bottom: 0px;">
+                <h2 class="govuk-heading-m">@messages("returnsDashboard.account-history")</h2>
+                <ul class="govuk-list">
+                    @if(amended.nonEmpty) {
+                    <li>
+                        <p class="govuk-body">
+<!--                            This will be changed to the new repository url once it is created -->
+                            <a class="govuk-link" href="@appConfig.dstFrontendShowAmendmentsPageUrl">
+                                @messages("returnsDashboard.amendments")
+                            </a>
+                        </p>
+                    </li>
+                    }
+                    <li>
+                        <p class="govuk-body">
+                            @messages("returnsDashboard.previous-payments")
+
+                            @Html("<a class='govuk-link text-overflow' href='mailto:ccgdstmailbox@hmrc.gov.uk'>ccgdstmailbox@hmrc.gov.uk</a>")<br>
+
+                            @messages("returnsDashboard.previous-payments1")
+
+                        </p>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+}

@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package controllers
+package models
 
-import com.google.inject.Inject
-import config.FrontendAppConfig
-import play.api.i18n.Lang
-import play.api.mvc._
-import uk.gov.hmrc.play.language.{LanguageController, LanguageUtils}
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.must.Matchers
 
-class LanguageSwitchController @Inject() (
-  appConfig: FrontendAppConfig,
-  languageUtils: LanguageUtils,
-  cc: ControllerComponents
-) extends LanguageController(languageUtils, cc) {
-
-  override def fallbackURL: String = routes.IndexController.onPageLoad.url
-
-  override def languageMap: Map[String, Lang] = appConfig.languageMap
+class ModeSpec extends AnyFreeSpec with Matchers {
+  "Mode" - {
+    "must return NormalMode" in {
+      Mode.jsLiteral.to(NormalMode) mustBe "NormalMode"
+    }
+    "must return CheckMode" in {
+      Mode.jsLiteral.to(CheckMode) mustBe "CheckMode"
+    }
+  }
 }

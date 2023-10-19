@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,25 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package controllers
+@import views.html.helper.CSPNonce
 
-import controllers.actions.IdentifierAction
-import javax.inject.Inject
-import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.IndexView
+@this()
 
-class IndexController @Inject() (
-  val controllerComponents: MessagesControllerComponents,
-  identify: IdentifierAction,
-  view: IndexView
-) extends FrontendBaseController
-    with I18nSupport {
+@()(implicit request: RequestHeader)
 
-  def onPageLoad: Action[AnyContent] = identify { implicit request =>
-    Ok(view())
-  }
-}
+<script @{CSPNonce.attr} src='@routes.Assets.versioned("lib/govuk-frontend/govuk/all.js")'></script>
+<script @{CSPNonce.attr} src='@routes.Assets.versioned("lib/hmrc-frontend/hmrc/all.js")'></script>
+<script @{CSPNonce.attr} src='@routes.Assets.versioned("javascripts/application.js")'></script>

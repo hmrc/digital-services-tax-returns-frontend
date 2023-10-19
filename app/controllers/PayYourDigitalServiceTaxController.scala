@@ -14,40 +14,33 @@
  * limitations under the License.
  */
 
-package controllers.auth
+package controllers
 
-import config.FrontendAppConfig
-import controllers.actions.IdentifierAction
-import play.api.i18n.I18nSupport
+import connectors.DSTConnector
+import controllers.actions._
+import models.sortPeriods
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
-import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import views.html.PayYourDigitalServiceTaxView
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
-class AuthController @Inject() (
+class PayYourDigitalServiceTaxController @Inject() (
+  override val messagesApi: MessagesApi,
+  identify: IdentifierAction,
+  dstConnector: DSTConnector,
   val controllerComponents: MessagesControllerComponents,
-  config: FrontendAppConfig,
-  sessionRepository: SessionRepository,
-  identify: IdentifierAction
+  view: PayYourDigitalServiceTaxView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
-  def signOut(): Action[AnyContent] = identify.async { implicit request =>
-    sessionRepository
-      .clear(request.userId)
-      .map { _ =>
-        Redirect(config.signOutUrl, Map("continue" -> Seq(config.exitSurveyUrl)))
-      }
+  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+    dstConnector.lookupOutstandingReturns().map { periods =>
+      Ok(view(request.registration.registrationNumber, sortPeriods(periods)))
+    }
   }
 
-  def signOutNoSurvey(): Action[AnyContent] = identify.async { implicit request =>
-    sessionRepository
-      .clear(request.userId)
-      .map { _ =>
-        Redirect(config.signOutUrl, Map("continue" -> Seq(routes.SignedOutController.onPageLoad.url)))
-      }
-  }
 }

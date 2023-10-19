@@ -19,7 +19,14 @@ package controllers.actions
 import base.SpecBase
 import com.google.inject.Inject
 import config.FrontendAppConfig
+import connectors.DSTConnector
 import controllers.routes
+import generators.ModelGenerators._
+import models.registration.Registration
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito._
+import org.scalacheck.Arbitrary
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.{BodyParsers, Results}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -31,8 +38,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthActionSpec extends SpecBase {
+class AuthActionSpec extends SpecBase with MockitoSugar {
 
+  val mockDstConnector: DSTConnector = mock[DSTConnector]
   class Harness(authAction: IdentifierAction) {
     def onPageLoad() = authAction(_ => Results.Ok)
   }
@@ -51,6 +59,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new MissingBearerToken),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -75,6 +84,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new BearerTokenExpired),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -99,6 +109,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientEnrolments),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -123,6 +134,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientConfidenceLevel),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -147,6 +159,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAuthProvider),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -171,6 +184,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -195,6 +209,7 @@ class AuthActionSpec extends SpecBase {
 
           val authAction = new AuthenticatedIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedCredentialRole),
+            mockDstConnector,
             appConfig,
             bodyParsers
           )
@@ -203,6 +218,70 @@ class AuthActionSpec extends SpecBase {
 
           status(result) mustBe SEE_OTHER
           redirectLocation(result) mustBe Some(routes.UnauthorisedController.onPageLoad.url)
+        }
+      }
+    }
+
+    "The organization is registered for HMRC-DST-ORG enrollment" - {
+
+      "must create an IdentifierRequest and allow the organisation to proceed" in {
+
+        type AuthRetrievals = Option[String]
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers  = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig    = application.injector.instanceOf[FrontendAppConfig]
+          val registration = Arbitrary.arbitrary[Registration].sample.value
+
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
+          when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
+
+          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val controller = new Harness(action)
+          val result     = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe OK
+
+        }
+      }
+    }
+
+    "The organization is not registered for HMRC-DST-ORG enrollment" - {
+
+      "must be redirected to registration journey" in {
+
+        type AuthRetrievals = Option[String]
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
+          when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(None))
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
+
+          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val controller = new Harness(action)
+          val result     = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(appConfig.dstFrontendRegistrationUrl)
+
         }
       }
     }

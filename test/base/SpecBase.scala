@@ -17,7 +17,10 @@
 package base
 
 import controllers.actions._
-import models.UserAnswers
+import generators.ModelGenerators._
+import models.registration.{Address, Company, CompanyRegWrapper, Registration}
+import models.{CompanyName, DSTRegNumber, UserAnswers}
+import org.scalacheck.Arbitrary
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -41,6 +44,17 @@ trait SpecBase
   def emptyUserAnswers: UserAnswers = UserAnswers(userAnswersId)
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
+
+  val dstRegNumber = Some(DSTRegNumber("AMDST0799721562"))
+
+  private val reg: Registration = Arbitrary.arbitrary[Registration].sample.value
+  private val address           = Arbitrary.arbitrary[Address].sample.value
+
+  val registration: Registration = reg.copy(
+    registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
+    companyReg = CompanyRegWrapper(company = Company(CompanyName("Some Corporation"), address)),
+    ultimateParent = None
+  )
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()

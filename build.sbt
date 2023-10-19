@@ -9,6 +9,10 @@ lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) // Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(inConfig(Test)(testSettings): _*)
+  .settings(
+    // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
+    libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always)
+  )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(itSettings): _*)
   .settings(majorVersion := 0)
@@ -34,7 +38,8 @@ lazy val root = (project in file("."))
     ),
     PlayKeys.playDefaultPort := 8743,
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
-      ".*Routes.*;.*viewmodels.govuk.*;",
+      ".*javascript.*;.*Routes.*;.*viewmodels.*;.*ViewUtils.*;.*GuiceInjector;.*views.*;" +
+      ".*Routes.*;.*viewmodels.govuk.*;app.*;prod.*",
     ScoverageKeys.coverageMinimumStmtTotal := 78,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
