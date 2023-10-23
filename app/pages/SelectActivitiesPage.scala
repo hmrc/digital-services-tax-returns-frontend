@@ -19,9 +19,9 @@ package pages
 import models.SelectActivities
 import play.api.libs.json.JsPath
 
-case object SelectActivitiesPage extends QuestionPage[Set[SelectActivities]] {
+case class SelectActivitiesPage() extends QuestionPage[Set[SelectActivities]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ "details"  \ toString
 
   override def toString: String = "selectActivities"
 }

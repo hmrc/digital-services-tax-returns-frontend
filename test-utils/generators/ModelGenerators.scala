@@ -17,9 +17,10 @@
 package generators
 
 import cats.implicits.{none, _}
+import enumeratum.scalacheck.arbEnumEntry
 import models.registration._
-import models.{AddressLine, CompanyName, CountryCode, DSTRegNumber, Email, NonEmptyString, PhoneNumber, Postcode, RegexValidatedString, RestrictiveString, SafeId, UTR}
-import org.scalacheck.Arbitrary.{arbBigDecimal => _, arbitrary, _}
+import models.{Activity, AddressLine, CompanyName, CountryCode, DSTRegNumber, Email, NonEmptyString, PhoneNumber, Postcode, RegexValidatedString, RestrictiveString, SafeId, UTR}
+import org.scalacheck.Arbitrary.{arbitrary, arbBigDecimal => _, _}
 import org.scalacheck.cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
 import shapeless.tag.@@
@@ -152,5 +153,14 @@ object ModelGenerators {
         arbitrary[Period.Key]
       ).mapN(Period.apply)
     )
+
+  implicit def genActivitySet: Gen[Set[Activity]] = Gen
+    .oneOf(1, 2, 3)
+    .map { x =>
+      Gen.listOfN(x, arbitrary[Activity])
+    }
+    .flatten
+    .retryUntil(x => x.distinct.size == x.size, 100)
+    .map(_.toSet)
 
 }

@@ -25,19 +25,21 @@ sealed trait SelectActivities
 
 object SelectActivities extends Enumerable.Implicits {
 
-  case object Option1 extends WithName("option1") with SelectActivities
-  case object Option2 extends WithName("option2") with SelectActivities
+  case object Option1 extends WithName("Social media") with SelectActivities
+  case object Option2 extends WithName("Search engine") with SelectActivities
+  case object Option3 extends WithName("Online marketplace") with SelectActivities
 
   val values: Seq[SelectActivities] = Seq(
     Option1,
-    Option2
+    Option2,
+    Option3
   )
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =
     values.zipWithIndex.map {
       case (value, index) =>
         CheckboxItemViewModel(
-          content = Text(messages(s"selectActivities.${value.toString}")),
+          content = Text(messages(s"${value.toString}")),
           fieldId = "value",
           index   = index,
           value   = value.toString

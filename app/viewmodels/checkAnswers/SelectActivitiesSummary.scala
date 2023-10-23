@@ -29,13 +29,13 @@ import viewmodels.implicits._
 object SelectActivitiesSummary  {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SelectActivitiesPage).map {
+    answers.get(SelectActivitiesPage()).map {
       answers =>
 
         val value = ValueViewModel(
           HtmlContent(
             answers.map {
-              answer => HtmlFormat.escape(messages(s"selectActivities.$answer")).toString
+              answer => HtmlFormat.escape(messages(s"$answer")).toString
             }
             .mkString(",<br>")
           )
