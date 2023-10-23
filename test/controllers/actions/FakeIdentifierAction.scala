@@ -17,15 +17,14 @@
 package controllers.actions
 
 import generators.ModelGenerators._
-import models.{CompanyName, DSTRegNumber}
 import models.registration.{Address, Company, CompanyRegWrapper, Registration}
-
-import javax.inject.Inject
 import models.requests.IdentifierRequest
+import models.{CompanyName, DSTRegNumber}
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues
 import play.api.mvc._
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues {

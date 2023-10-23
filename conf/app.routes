@@ -22,3 +22,8 @@ GET         /unauthorised                                controllers.Unauthorise
 GET         /returnsDashboard                            controllers.ReturnsDashboardController.onPageLoad()
 
 GET         /pay-your-digital-services-tax               controllers.PayYourDigitalServiceTaxController.onPageLoad()
+
+GET        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
+POST       /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
+GET        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
+POST       /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)

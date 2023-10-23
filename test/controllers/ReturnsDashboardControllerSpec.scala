@@ -17,7 +17,6 @@
 package controllers
 
 import base.SpecBase
-import config.FrontendAppConfig
 import connectors.DSTConnector
 import models.registration.Period
 import org.mockito.ArgumentMatchers.any

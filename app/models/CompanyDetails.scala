@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package navigation
+package models
 
-import models.{Mode, UserAnswers}
-import pages._
-import play.api.mvc.Call
+import play.api.libs.json._
 
-class FakeNavigator(desiredRoute: Call) extends Navigator {
+case class CompanyDetails(companyName: String, uniqueTaxpayerReference: Option[String])
 
-  override def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call =
-    desiredRoute
+object CompanyDetails {
+  implicit val format: OFormat[CompanyDetails] = Json.format[CompanyDetails]
 }

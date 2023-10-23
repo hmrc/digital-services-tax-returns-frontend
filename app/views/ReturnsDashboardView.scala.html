@@ -108,7 +108,7 @@ showBackLink = false
             <p class="govuk-body">@{formatDate(period.returnDue)}</p>
             <p class="govuk-body">
 <!--                            This will be changed to the new repository url once it is created -->
-                <a class="govuk-link" href="@appConfig.dstFrontendReturnActionUrl">
+                <a class="govuk-link" href="@routes.CompanyDetailsController.onPageLoad(Index(0), NormalMode).url">
                     @messages("returnsDashboard.submit-return")
                 </a>
             </p>
