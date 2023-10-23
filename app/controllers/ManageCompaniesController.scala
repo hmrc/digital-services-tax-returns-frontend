@@ -18,16 +18,20 @@ package controllers
 
 import controllers.actions._
 import forms.ManageCompaniesFormProvider
-import javax.inject.Inject
-import models.Mode
+import models.requests.DataRequest
+import models.{Index, Mode}
 import navigation.Navigator
-import pages.ManageCompaniesPage
+import pages.{CompanyDetailsListPage, ManageCompaniesPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
+import viewmodels.checkAnswers.CompanyDetailsSummary
+import viewmodels.govuk.summarylist._
 import views.html.ManageCompaniesView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ManageCompaniesController @Inject()(
@@ -47,12 +51,15 @@ class ManageCompaniesController @Inject()(
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.get(ManageCompaniesPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
+      Ok(view(form, mode, getSummaryList))
+  }
 
-      Ok(view(preparedForm, mode))
+  private def getSummaryList(implicit request: DataRequest[AnyContent]) = {
+    val numberOfCompanies: Int = request.userAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+    val summaryListRow: Seq[SummaryListRow] = List.range(0, numberOfCompanies).map(Index(_)) flatMap { index =>
+      CompanyDetailsSummary.row(index, request.userAnswers)
+    }
+    SummaryListViewModel(summaryListRow)
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -60,12 +67,11 @@ class ManageCompaniesController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, mode, getSummaryList))),
 
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ManageCompaniesPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(ManageCompaniesPage, mode, updatedAnswers))
       )
   }

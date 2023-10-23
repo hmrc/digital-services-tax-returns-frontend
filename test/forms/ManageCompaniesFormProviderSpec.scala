@@ -16,11 +16,10 @@
 
 package forms
 
-import forms.behaviours.OptionFieldBehaviours
-import models.ManageCompanies
+import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class ManageCompaniesFormProviderSpec extends OptionFieldBehaviours {
+class ManageCompaniesFormProviderSpec extends BooleanFieldBehaviours {
 
   val form = new ManageCompaniesFormProvider()()
 
@@ -29,11 +28,10 @@ class ManageCompaniesFormProviderSpec extends OptionFieldBehaviours {
     val fieldName = "value"
     val requiredKey = "manageCompanies.error.required"
 
-    behave like optionsField[ManageCompanies](
+    behave like booleanField(
       form,
       fieldName,
-      validValues  = ManageCompanies.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      invalidError = FormError(fieldName, "error.boolean")
     )
 
     behave like mandatoryField(

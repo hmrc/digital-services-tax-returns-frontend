@@ -28,6 +28,7 @@ class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Call = {
     case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(NormalMode)
+    case ManageCompaniesPage => ua => addCompanyDetails(NormalMode)(ua)
     case _ => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
@@ -41,4 +42,14 @@ class Navigator @Inject() () {
     case CheckMode  =>
       checkRouteMap(page)(userAnswers)
   }
+
+  private def addCompanyDetails(mode: Mode)(userAnswers: UserAnswers): Call =
+    userAnswers.get(ManageCompaniesPage) match {
+      case Some(true) =>
+        val count = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
+        val index = Index(count)
+        routes.CompanyDetailsController.onPageLoad(index, mode)
+      case _ =>
+       ???
+    }
 }

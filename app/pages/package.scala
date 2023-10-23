@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-package forms
-
-import forms.mappings.Mappings
-import play.api.data.Form
-
-import javax.inject.Inject
-
-class ManageCompaniesFormProvider @Inject() extends Mappings {
-
-  def apply(): Form[Boolean] =
-    Form(
-      "value" -> boolean("manageCompanies.error.required")
-    )
+package object pages {
+  val companyDetailsList: String = "company-details"
 }

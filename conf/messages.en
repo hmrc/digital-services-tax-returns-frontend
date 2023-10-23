@@ -124,8 +124,8 @@ companyDetails.error.companyName.invalid = Company name must only include letter
 companyDetails.error.uniqueTaxpayerReference.required = Enter uniqueTaxpayerReference
 companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference must be 10 characters or less
 companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
-companyDetails.companyName.change.hidden = Company name
-companyDetails.uniqueTaxpayerReference.change.hidden = Corporation Tax Unique Taxpayer Reference
+companyDetails.change.hidden = Change company name
+companyDetails.remove.hidden = Remove company
 
 #Manage companies
 manageCompanies.title = Confirm the companies in your group that have a Digital Services Tax liability
@@ -133,7 +133,5 @@ manageCompanies.heading = Confirm the companies in your group that have a Digita
 manageCompanies.addCompany.heading=Do you need to add another company?
 manageCompanies.hint=You must tell us about all the companies in your group that have a Digital Services Tax \
   liability for this return period
-manageCompanies.yes = Yes
-manageCompanies.no = No
 manageCompanies.checkYourAnswersLabel = Confirm the companies in your group that have a Digital Services Tax liability
 manageCompanies.error.required = Select yes if you need to add another company to your group

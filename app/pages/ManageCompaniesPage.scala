@@ -16,12 +16,11 @@
 
 package pages
 
-import models.ManageCompanies
 import play.api.libs.json.JsPath
 
-case object ManageCompaniesPage extends QuestionPage[ManageCompanies] {
+case object ManageCompaniesPage extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ toString
 
-  override def toString: String = "manageCompanies"
+  override def toString: String = "add-companies"
 }

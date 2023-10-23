@@ -18,17 +18,17 @@ package controllers
 
 import base.SpecBase
 import forms.ManageCompaniesFormProvider
-import models.{NormalMode, ManageCompanies, UserAnswers}
+import models.NormalMode
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ManageCompaniesPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import viewmodels.govuk.summarylist._
 import views.html.ManageCompaniesView
 
 import scala.concurrent.Future
@@ -56,25 +56,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ManageCompaniesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(ManageCompaniesPage, ManageCompanies.values.head).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, manageCompaniesRoute)
-
-        val view = application.injector.instanceOf[ManageCompaniesView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ManageCompanies.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, SummaryListViewModel(List.empty))(request, messages(application)).toString
       }
     }
 
@@ -95,7 +77,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, manageCompaniesRoute)
-            .withFormUrlEncodedBody(("value", ManageCompanies.values.head.toString))
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -120,7 +102,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, SummaryListViewModel(List.empty))(request, messages(application)).toString
       }
     }
 
@@ -145,7 +127,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, manageCompaniesRoute)
-            .withFormUrlEncodedBody(("value", ManageCompanies.values.head.toString))
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
