@@ -43,7 +43,7 @@
                 label = LabelViewModel(messages("companyDetails.companyName"))
             )
             .withWidth(TwoThirds)
-            .withHint(Hint(content = messages("companyDetails.companyName.hint")))
+            .withHint(HintViewModel(messages("companyDetails.companyName.hint")))
         )
 
         @govukInput(
@@ -52,7 +52,7 @@
                 label = LabelViewModel(messages("companyDetails.uniqueTaxpayerReference"))
             )
             .withWidth(TwoThirds)
-            .withHint(Hint(content = HtmlContent(messages("companyDetails.uniqueTaxpayerReference.hint"))))
+            .withHint(HintViewModel(messages("companyDetails.uniqueTaxpayerReference.hint")))
         )
 
         @govukButton(

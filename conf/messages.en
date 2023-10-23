@@ -127,10 +127,13 @@ companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Cor
 companyDetails.companyName.change.hidden = Company name
 companyDetails.uniqueTaxpayerReference.change.hidden = Corporation Tax Unique Taxpayer Reference
 
+#Manage companies
 manageCompanies.title = Confirm the companies in your group that have a Digital Services Tax liability
 manageCompanies.heading = Confirm the companies in your group that have a Digital Services Tax liability
+manageCompanies.addCompany.heading=Do you need to add another company?
+manageCompanies.hint=You must tell us about all the companies in your group that have a Digital Services Tax \
+  liability for this return period
 manageCompanies.yes = Yes
 manageCompanies.no = No
 manageCompanies.checkYourAnswersLabel = Confirm the companies in your group that have a Digital Services Tax liability
-manageCompanies.error.required = Select manageCompanies
-manageCompanies.change.hidden = ManageCompanies
+manageCompanies.error.required = Select yes if you need to add another company to your group

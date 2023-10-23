@@ -38,6 +38,15 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.ReturnsDashboardController.onPageLoad
       }
+
+      "must go from a CompanyDetailsPage to ManageCompanies page" in {
+
+        navigator.nextPage(
+          CompanyDetailsPage(index = Index(0)),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" - {
