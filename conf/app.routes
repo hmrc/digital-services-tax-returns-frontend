@@ -23,7 +23,7 @@ GET         /returnsDashboard                            controllers.ReturnsDash
 
 GET         /pay-your-digital-services-tax               controllers.PayYourDigitalServiceTaxController.onPageLoad()
 
-GET        /select-activities                                 controllers.SelectActivitiesController.onPageLoad(mode: Mode = NormalMode)
-POST       /select-activities                                 controllers.SelectActivitiesController.onSubmit(mode: Mode = NormalMode)
-GET        /changeSelectActivitiesController                  controllers.SelectActivitiesController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeSelectActivitiesController                  controllers.SelectActivitiesController.onSubmit(mode: Mode = CheckMode)
+GET        /select-activities                        controllers.SelectActivitiesController.onPageLoad(mode: Mode = NormalMode)
+POST       /select-activities                        controllers.SelectActivitiesController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/select-activities                  controllers.SelectActivitiesController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/select-activities                  controllers.SelectActivitiesController.onSubmit(mode: Mode = CheckMode)
