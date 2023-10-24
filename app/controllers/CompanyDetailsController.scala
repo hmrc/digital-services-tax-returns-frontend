@@ -19,7 +19,6 @@ package controllers
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
 import models.{Index, Mode, UserAnswers}
-import models.{Index, Mode, UserAnswers}
 import navigation.Navigator
 import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
