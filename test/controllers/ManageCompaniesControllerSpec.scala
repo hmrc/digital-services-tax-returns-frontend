@@ -40,7 +40,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
   lazy val manageCompaniesRoute = routes.ManageCompaniesController.onPageLoad(NormalMode).url
 
   val formProvider = new ManageCompaniesFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "ManageCompanies Controller" - {
 
@@ -56,7 +56,10 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ManageCompaniesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, SummaryListViewModel(List.empty))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, SummaryListViewModel(List.empty))(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -102,7 +105,10 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, SummaryListViewModel(List.empty))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, SummaryListViewModel(List.empty))(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

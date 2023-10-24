@@ -26,25 +26,23 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ManageCompaniesSummary  {
+object ManageCompaniesSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ManageCompaniesPage).map {
-      answer =>
-
-        val value = ValueViewModel(
-          HtmlContent(
-            HtmlFormat.escape(messages(s"manageCompanies.$answer"))
-          )
+    answers.get(ManageCompaniesPage).map { answer =>
+      val value = ValueViewModel(
+        HtmlContent(
+          HtmlFormat.escape(messages(s"manageCompanies.$answer"))
         )
+      )
 
-        SummaryListRowViewModel(
-          key     = "manageCompanies.checkYourAnswersLabel",
-          value   = value,
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.ManageCompaniesController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("manageCompanies.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "manageCompanies.checkYourAnswersLabel",
+        value = value,
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.ManageCompaniesController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("manageCompanies.change.hidden"))
         )
+      )
     }
 }

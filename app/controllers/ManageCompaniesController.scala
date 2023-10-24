@@ -34,27 +34,28 @@ import views.html.ManageCompaniesView
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ManageCompaniesController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       sessionRepository: SessionRepository,
-                                       navigator: Navigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: ManageCompaniesFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ManageCompaniesView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class ManageCompaniesController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: ManageCompaniesFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ManageCompaniesView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      Ok(view(form, mode, getSummaryList))
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    Ok(view(form, mode, getSummaryList))
   }
 
   private def getSummaryList(implicit request: DataRequest[AnyContent]) = {
-    val numberOfCompanies: Int = request.userAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+    val numberOfCompanies: Int              = request.userAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
     val summaryListRow: Seq[SummaryListRow] = List.range(0, numberOfCompanies).map(Index(_)) flatMap { index =>
       CompanyDetailsSummary.row(index, request.userAnswers)
     }
@@ -63,15 +64,14 @@ class ManageCompaniesController @Inject()(
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, getSummaryList))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ManageCompaniesPage, value))
-          } yield Redirect(navigator.nextPage(ManageCompaniesPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, getSummaryList))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ManageCompaniesPage, value))
+            } yield Redirect(navigator.nextPage(ManageCompaniesPage, mode, updatedAnswers))
+        )
   }
 }

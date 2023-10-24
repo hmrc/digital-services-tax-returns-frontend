@@ -159,8 +159,12 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val ua = userAnswers
-        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None)).success.value
-        .set(CompanyDetailsPage(Index(2)), CompanyDetails("value 3", None)).success.value
+        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None))
+        .success
+        .value
+        .set(CompanyDetailsPage(Index(2)), CompanyDetails("value 3", None))
+        .success
+        .value
 
       val application =
         applicationBuilder(userAnswers = Some(ua))

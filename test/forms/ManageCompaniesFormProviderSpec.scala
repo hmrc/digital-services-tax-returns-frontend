@@ -25,7 +25,7 @@ class ManageCompaniesFormProviderSpec extends BooleanFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "manageCompanies.error.required"
 
     behave like booleanField(
