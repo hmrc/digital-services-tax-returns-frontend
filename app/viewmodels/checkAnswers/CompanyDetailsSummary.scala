@@ -38,7 +38,7 @@ object CompanyDetailsSummary {
         actions = Seq(
           ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
             .withVisuallyHiddenText(messages("companyDetails.change.hidden")),
-          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
+          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(index, CheckMode).url)
             .withVisuallyHiddenText(messages("companyDetails.remove.hidden"))
             .withCssClass("")
         )

@@ -20,6 +20,7 @@ import controllers.routes
 import models._
 import pages._
 import play.api.mvc.Call
+import play.api.mvc.Results.Ok
 
 import javax.inject.{Inject, Singleton}
 
@@ -32,8 +33,9 @@ class Navigator @Inject() () {
     case _ => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
+  private val checkRouteMap: Page => UserAnswers => Call = {
+    case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(CheckMode)
+    case _ => _ => routes.CheckYourAnswersController.onPageLoad
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

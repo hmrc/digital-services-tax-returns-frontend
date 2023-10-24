@@ -47,6 +47,27 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
       }
+
+      "must go from a ManageCompaniesPage with option 'yes' to ManageCompanies page" in {
+
+        navigator.nextPage(
+          ManageCompaniesPage,
+          NormalMode,
+          UserAnswers("id").set(ManageCompaniesPage, true).success.value
+        ) mustBe routes.CompanyDetailsController.onPageLoad(index, NormalMode)
+      }
+
+      //TODO fix the test by placing the actual url of the page DDCYLS-3211 'Create Which activities are you reporting in this return page'
+      "must go from a ManageCompaniesPage with option 'false' to ManageCompanies page" in {
+
+       val result = intercept[NotImplementedError]{
+         navigator.nextPage(
+           ManageCompaniesPage,
+           NormalMode,
+           UserAnswers("id").set(ManageCompaniesPage, false).success.value
+         )
+       }
+      }
     }
 
     "in Check mode" - {

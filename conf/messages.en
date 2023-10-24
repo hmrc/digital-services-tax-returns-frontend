@@ -107,10 +107,8 @@ pay-your-dst.how-to-pay.2=how to pay your Digital Services Tax (opens in a new w
 pay-your-dst.back-to-details=Back to details
 
 # Company Details
-manage-companies-add-company.heading=Add company details
-manage-companies-edit-company.heading=Change company details
-
-companyDetails.title = Company details
+companyDetails.NormalMode.title = Add company details
+companyDetails.CheckMode.title = Change company details
 companyDetails.heading = Company details
 companyDetails.companyName = Company name
 companyDetails.companyName.hint = This is the name registered with an official company register, such as Companies House

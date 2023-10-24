@@ -1,34 +1,36 @@
 # microservice specific routes
 
-->          /hmrc-frontend                               hmrcfrontend.Routes
+->          /hmrc-frontend                                hmrcfrontend.Routes
 
-GET         /                                            controllers.ReturnsDashboardController.onPageLoad
+GET         /                                             controllers.ReturnsDashboardController.onPageLoad
 
-GET         /assets/*file                                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                                 controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /sign-in                                     controllers.auth.AuthenticationController.signIn()
-GET         /sign-out                                    controllers.auth.AuthenticationController.signOut()
+GET         /sign-in                                      controllers.auth.AuthenticationController.signIn()
+GET         /sign-out                                     controllers.auth.AuthenticationController.signOut()
 
-GET        /time-out                                     controllers.auth.AuthenticationController.timeOut()
+GET        /time-out                                      controllers.auth.AuthenticationController.timeOut()
 
-GET         /refresh-session                             controllers.KeepAliveController.keepAlive
+GET         /refresh-session                              controllers.KeepAliveController.keepAlive
 
-GET         /there-is-a-problem                          controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET         /there-is-a-problem                           controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET         /check-your-answers                          controllers.CheckYourAnswersController.onPageLoad
+GET         /check-your-answers                           controllers.CheckYourAnswersController.onPageLoad
 
-GET         /unauthorised                                controllers.UnauthorisedController.onPageLoad
+GET         /unauthorised                                 controllers.UnauthorisedController.onPageLoad
 
-GET         /returnsDashboard                            controllers.ReturnsDashboardController.onPageLoad()
+GET         /returnsDashboard                             controllers.ReturnsDashboardController.onPageLoad()
 
-GET         /pay-your-digital-services-tax               controllers.PayYourDigitalServiceTaxController.onPageLoad()
+GET         /pay-your-digital-services-tax                controllers.PayYourDigitalServiceTaxController.onPageLoad()
 
-GET        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
-POST       /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
-GET        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
-POST       /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+GET         /manage-companies/add/:index/company          controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
+POST        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
+GET         /manage-companies/delete/:index/company       controllers.CompanyDetailsController.onDelete(index: Index, mode: Mode = NormalMode)
+GET         /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
+POST        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+GET         /manage-companies/delete/:index/company       controllers.CompanyDetailsController.onDelete(index: Index, mode: Mode = CheckMode)
 
-GET        /manage-companies                             controllers.ManageCompaniesController.onPageLoad(mode: Mode = NormalMode)
-POST       /manage-companies                             controllers.ManageCompaniesController.onSubmit(mode: Mode = NormalMode)
-GET        /manage-companies                             controllers.ManageCompaniesController.onPageLoad(mode: Mode = CheckMode)
-POST       /manage-companies                             controllers.ManageCompaniesController.onSubmit(mode: Mode = CheckMode)
+GET         /manage-companies                             controllers.ManageCompaniesController.onPageLoad(mode: Mode = NormalMode)
+POST        /manage-companies                             controllers.ManageCompaniesController.onSubmit(mode: Mode = NormalMode)
+GET         /manage-companies                             controllers.ManageCompaniesController.onPageLoad(mode: Mode = CheckMode)
+POST        /manage-companies                             controllers.ManageCompaniesController.onSubmit(mode: Mode = CheckMode)

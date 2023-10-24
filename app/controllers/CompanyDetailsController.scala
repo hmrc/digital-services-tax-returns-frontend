@@ -20,7 +20,7 @@ import controllers.actions._
 import forms.CompanyDetailsFormProvider
 import models.{Index, Mode, UserAnswers}
 import navigation.Navigator
-import pages.CompanyDetailsPage
+import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -69,5 +69,22 @@ class CompanyDetailsController @Inject() (
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(CompanyDetailsPage(index), mode, updatedAnswers))
       )
+  }
+
+  def onDelete(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      for {
+        updatedAnswers <-
+          Future.fromTry(
+            request.userAnswers.remove(CompanyDetailsPage(index))
+          )
+        _              <- sessionRepository.set(updatedAnswers)
+      } yield {
+        val size = updatedAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+        size match {
+          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), mode))
+          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(mode))
+        }
+      }
   }
 }
