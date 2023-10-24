@@ -43,10 +43,6 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new SelectActivitiesFormProvider()
   val form = formProvider()
   val mockDstConnector: DSTConnector = mock[DSTConnector]
-  val userAnswers: UserAnswers =
-    emptyUserAnswers.set(SelectActivitiesPage(), Seq(SelectActivities.Option1, SelectActivities.Option2))
-      .success
-      .value
 
   lazy val selectActivitiesControllerRoute = routes.SelectActivitiesController.onPageLoad(mode = NormalMode).url
 
@@ -73,7 +69,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-
+      val userAnswers = UserAnswers(userAnswersId).set(SelectActivitiesPage, SelectActivities.values.toSet).success.value
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -91,8 +87,8 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val formData = Seq(
-        "value[0]" -> "Option1",
-        "value[1]" -> "Option2"
+        "value[0]" -> SelectActivities.Option1.toString,
+        "value[1]" -> SelectActivities.Option2.toString
       )
 
       val mockSessionRepository = mock[SessionRepository]
@@ -135,7 +131,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
 

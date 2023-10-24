@@ -14,6 +14,8 @@
  * limitations under the License.
  *@
 
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
@@ -36,7 +38,7 @@
             CheckboxesViewModel(
                 form   = form,
                 name   = "value",
-                legend = LegendViewModel(messages("select-activities.heading")).asPageHeading(),
+                legend = LegendViewModel(messages("select-activities.heading")).asPageHeading(LegendSize.Large),
                 items  = SelectActivities.checkboxItems
             ).withHint(HintViewModel(messages("select-activities.hint")))
         )

@@ -18,9 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.SelectActivitiesFormProvider
-
-import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.SelectActivitiesPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -29,6 +27,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.SelectActivitiesView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class SelectActivitiesController @Inject()(
@@ -45,10 +44,10 @@ class SelectActivitiesController @Inject()(
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(SelectActivitiesPage()) match {
+      val preparedForm = request.userAnswers.get(SelectActivitiesPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
@@ -56,7 +55,7 @@ class SelectActivitiesController @Inject()(
       Ok(view(preparedForm, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
@@ -65,9 +64,9 @@ class SelectActivitiesController @Inject()(
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(SelectActivitiesPage(), value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(SelectActivitiesPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(SelectActivitiesPage(), mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(SelectActivitiesPage, mode, updatedAnswers))
       )
   }
 }
