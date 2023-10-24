@@ -18,14 +18,13 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyDetailsFormProvider
-import models.{NormalMode, CompanyDetails, UserAnswers}
+import models.{CompanyDetails, Index, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CompanyDetailsPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -37,21 +36,15 @@ import scala.concurrent.Future
 class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
+  val index       = Index(0)
 
   val formProvider = new CompanyDetailsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val companyDetailsRoute = routes.CompanyDetailsController.onPageLoad(NormalMode).url
+  lazy val companyDetailsRoute = routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
 
-  val userAnswers = UserAnswers(
-    userAnswersId,
-    Json.obj(
-      CompanyDetailsPage.toString -> Json.obj(
-        "companyName" -> "value 1",
-        "uniqueTaxpayerReference" -> "value 2"
-      )
-    )
-  )
+  val userAnswers: UserAnswers =
+    emptyUserAnswers.set(CompanyDetailsPage(index), CompanyDetails("value 1", Some("1234567890"))).success.value
 
   "CompanyDetails Controller" - {
 
@@ -67,7 +60,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, index, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -83,7 +76,11 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(CompanyDetails("value 1", "value 2")), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(CompanyDetails("value 1", Some("1234567890"))),
+          index,
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -104,7 +101,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, companyDetailsRoute)
-            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "value 2"))
+            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "1234567890"))
 
         val result = route(application, request).value
 
@@ -129,37 +126,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, companyDetailsRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "must redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, companyDetailsRoute)
-            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "value 2"))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        contentAsString(result) mustEqual view(boundForm, index, NormalMode)(request, messages(application)).toString
       }
     }
   }

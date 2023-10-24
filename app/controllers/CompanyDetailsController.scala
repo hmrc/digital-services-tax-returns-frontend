@@ -18,8 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
-import javax.inject.Inject
-import models.Mode
+import models.{Index, Mode, UserAnswers}
 import navigation.Navigator
 import pages.CompanyDetailsPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -28,45 +27,47 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CompanyDetailsView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class CompanyDetailsController @Inject()(
-                                      override val messagesApi: MessagesApi,
-                                      sessionRepository: SessionRepository,
-                                      navigator: Navigator,
-                                      identify: IdentifierAction,
-                                      getData: DataRetrievalAction,
-                                      requireData: DataRequiredAction,
-                                      formProvider: CompanyDetailsFormProvider,
-                                      val controllerComponents: MessagesControllerComponents,
-                                      view: CompanyDetailsView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class CompanyDetailsController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: CompanyDetailsFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: CompanyDetailsView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+    val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsPage(index)) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(CompanyDetailsPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, index, mode))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
+  def onSubmit(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyDetailsPage, value))
+            updatedAnswers <-
+              Future.fromTry(
+                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(CompanyDetailsPage(index), value)
+              )
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(CompanyDetailsPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(CompanyDetailsPage(index), mode, updatedAnswers))
       )
   }
 }

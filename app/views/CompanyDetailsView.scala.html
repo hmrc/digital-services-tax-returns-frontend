@@ -15,6 +15,7 @@
  *@
 
 @import viewmodels.InputWidth._
+@import models.Index
 
 @this(
     layout: templates.Layout,
@@ -24,11 +25,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], index: Index, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("companyDetails.title"))) {
 
-    @formHelper(action = routes.CompanyDetailsController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.CompanyDetailsController.onSubmit(index, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -41,7 +42,8 @@
                 field = form("companyName"),
                 label = LabelViewModel(messages("companyDetails.companyName"))
             )
-            .withWidth(Full)
+            .withWidth(TwoThirds)
+            .withHint(Hint(content = messages("companyDetails.companyName.hint")))
         )
 
         @govukInput(
@@ -49,7 +51,8 @@
                 field = form("uniqueTaxpayerReference"),
                 label = LabelViewModel(messages("companyDetails.uniqueTaxpayerReference"))
             )
-            .withWidth(Full)
+            .withWidth(TwoThirds)
+            .withHint(Hint(content = HtmlContent(messages("companyDetails.uniqueTaxpayerReference.hint"))))
         )
 
         @govukButton(

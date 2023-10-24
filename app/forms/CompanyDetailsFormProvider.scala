@@ -16,24 +16,32 @@
 
 package forms
 
-import javax.inject.Inject
-
 import forms.mappings.Mappings
+import models.CompanyDetails
 import play.api.data.Form
 import play.api.data.Forms._
-import models.CompanyDetails
+
+import javax.inject.Inject
 
 class CompanyDetailsFormProvider @Inject() extends Mappings {
 
-  val companyNameMaxLength = 35
-  val uniqueTaxReferenceMaxLength =  35
+  val companyNameMaxLength       = 105
+  val companyNameRegex           = """^[a-zA-Z0-9 '&.-]{1,105}$"""
+  val uniqueTaxReferenceMaxRegex = "^[0-9]{10}$"
 
-   def apply(): Form[CompanyDetails] = Form(
-     mapping(
-      "companyName" -> text("companyDetails.error.companyName.required")
-        .verifying(maxLength(companyNameMaxLength, "companyDetails.error.companyName.length")),
-      "uniqueTaxpayerReference" -> text("companyDetails.error.uniqueTaxpayerReference.required")
-        .verifying(maxLength(uniqueTaxReferenceMaxLength, "companyDetails.error.uniqueTaxpayerReference.length"))
+  def apply(): Form[CompanyDetails] = Form(
+    mapping(
+      "companyName"             -> text("companyDetails.error.companyName.required")
+        .verifying(
+          firstError(
+            maxLength(companyNameMaxLength, "companyDetails.error.companyName.length"),
+            regexp(companyNameRegex, "companyDetails.error.companyName.invalid")
+          )
+        ),
+      "uniqueTaxpayerReference" -> optional(
+        text("companyDetails.error.uniqueTaxpayerReference.required")
+          .verifying(regexp(uniqueTaxReferenceMaxRegex, "companyDetails.error.uniqueTaxpayerReference.invalid"))
+      )
     )(CompanyDetails.apply)(CompanyDetails.unapply)
-   )
- }
+  )
+}

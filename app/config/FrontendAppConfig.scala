@@ -25,8 +25,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   private def loadConfig(key: String) = configuration.get[String](key)
 
-  val ccgEmail: String = configuration.get[String]("ccgEmail")
-
   val dstFrontendBaseUrl: String               = servicesConfig.baseUrl("digital-services-tax-frontend")
   val dstFrontendRegistrationUrl: String       = dstFrontendBaseUrl + "/digital-services-tax/register/"
   val dstFrontendShowAmendmentsPageUrl: String = dstFrontendBaseUrl + "/resubmit-a-return"
@@ -40,7 +38,6 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   lazy val signOutDstUrl: String = s"$companyAuthFrontend$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
 
-  val host: String    = configuration.get[String]("host")
   val appName: String = configuration.get[String]("appName")
 
   val contactHost = configuration.get[String]("contact-frontend.host")

@@ -117,28 +117,20 @@ pay-your-dst.back-to-details=Back to details
 # Company Details
 manage-companies-add-company.heading=Add company details
 manage-companies-edit-company.heading=Change company details
-company.heading=Company details
-company.name.heading=Company name
-company.name.hint=This is the name registered with an official company register, such as Companies House
-company.utr.heading=What is your Corporation Tax Unique Taxpayer Reference? (optional)
-company.utr.hint=This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation \
-  Tax. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can <a target=_blank class="govuk-link" href="https://www.gov.uk/find-lost-utr-number">find a lost UTR number (opens in a new window or tab)</a>.
 
-
-#Add & edit company error messages
-name.required=Enter the company’s name
-name.invalid=Company name must only include letters a to z, numbers, full stops, apostrophes, hyphens, ampersands (&) and spaces
-name.length.exceeded=Company name must be 105 characters or fewer
-utr.invalid=Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
-
-companyDetails.title = companyDetails
-companyDetails.heading = companyDetails
-companyDetails.companyName = companyName
-companyDetails.uniqueTaxpayerReference = uniqueTaxpayerReference
-companyDetails.checkYourAnswersLabel = CompanyDetails
-companyDetails.error.companyName.required = Enter companyName
+companyDetails.title = Company details
+companyDetails.heading = Company details
+companyDetails.companyName = Company name
+companyDetails.companyName.hint = This is the name registered with an official company register, such as Companies House
+companyDetails.uniqueTaxpayerReference = What is your Corporation Tax Unique Taxpayer Reference? (optional)
+companyDetails.uniqueTaxpayerReference.hint = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation \
+Tax. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can <a target=_blank class="govuk-link" href="https://www.gov.uk/find-lost-utr-number">find a lost UTR number (opens in a new window or tab)</a>.
+companyDetails.checkYourAnswersLabel = Company details
+companyDetails.error.companyName.required = Enter the company’s name
+companyDetails.error.companyName.length = Company name must be 105 characters or fewer
+companyDetails.error.companyName.invalid = Company name must only include letters a to z, numbers, full stops, apostrophes, hyphens, ampersands (&) and spaces
 companyDetails.error.uniqueTaxpayerReference.required = Enter uniqueTaxpayerReference
-companyDetails.error.companyName.length = companyName must be 5 characters or less
-companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference must be 35 characters or less
-companyDetails.companyName.change.hidden = companyName
-companyDetails.uniqueTaxpayerReference.change.hidden = uniqueTaxpayerReference
+companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference must be 10 characters or less
+companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
+companyDetails.companyName.change.hidden = Company name
+companyDetails.uniqueTaxpayerReference.change.hidden = Corporation Tax Unique Taxpayer Reference

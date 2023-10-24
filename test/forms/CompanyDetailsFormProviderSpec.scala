@@ -18,6 +18,7 @@ package forms
 
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import wolfendale.scalacheck.regexp.RegexpGen
 
 class CompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -25,15 +26,17 @@ class CompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".companyName" - {
 
-    val fieldName = "companyName"
-    val requiredKey = "companyDetails.error.companyName.required"
-    val lengthKey = "companyDetails.error.companyName.length"
-    val maxLength = 35
+    val fieldName        = "companyName"
+    val requiredKey      = "companyDetails.error.companyName.required"
+    val lengthKey        = "companyDetails.error.companyName.length"
+    val invalidKey       = "companyDetails.error.companyName.invalid"
+    val companyNameRegex = """^[a-zA-Z0-9 '&.-]{1,105}$"""
+    val maxLength        = 105
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      RegexpGen.from(companyNameRegex)
     )
 
     behave like fieldWithMaxLength(
@@ -41,6 +44,13 @@ class CompanyDetailsFormProviderSpec extends StringFieldBehaviours {
       fieldName,
       maxLength = maxLength,
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+    )
+
+    behave like fieldWithInValidData(
+      form,
+      fieldName,
+      RegexpGen.from(s"[!£^*(){}_+=:;|`~,±üçñèé@]{105}"),
+      invalidDataError = FormError(fieldName, invalidKey, Seq(companyNameRegex))
     )
 
     behave like mandatoryField(
@@ -52,28 +62,24 @@ class CompanyDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".uniqueTaxpayerReference" - {
 
-    val fieldName = "uniqueTaxpayerReference"
-    val requiredKey = "companyDetails.error.uniqueTaxpayerReference.required"
-    val lengthKey = "companyDetails.error.uniqueTaxpayerReference.length"
-    val maxLength = 35
+    val fieldName                  = "uniqueTaxpayerReference"
+    val requiredKey                = "companyDetails.error.uniqueTaxpayerReference.required"
+    val invalidKey                 = "companyDetails.error.uniqueTaxpayerReference.invalid"
+    val uniqueTaxReferenceMaxRegex = "^[0-9]{10}$"
+    val maxLength                  = 10
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      RegexpGen.from(uniqueTaxReferenceMaxRegex)
     )
 
     behave like fieldWithMaxLength(
       form,
       fieldName,
       maxLength = maxLength,
-      lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
+      lengthError = FormError(fieldName, invalidKey, Seq(uniqueTaxReferenceMaxRegex))
     )
 
-    behave like mandatoryField(
-      form,
-      fieldName,
-      requiredError = FormError(fieldName, requiredKey)
-    )
   }
 }
