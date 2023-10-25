@@ -137,3 +137,11 @@ companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference mu
 companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
 companyDetails.companyName.change.hidden = Company name
 companyDetails.uniqueTaxpayerReference.change.hidden = Corporation Tax Unique Taxpayer Reference
+
+socialMediaLoss.title = socialMediaLoss
+socialMediaLoss.heading = socialMediaLoss
+socialMediaLoss.yes = Yes
+socialMediaLoss.no = No
+socialMediaLoss.checkYourAnswersLabel = socialMediaLoss
+socialMediaLoss.error.required = Select socialMediaLoss
+socialMediaLoss.change.hidden = SocialMediaLoss
