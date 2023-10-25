@@ -18,16 +18,18 @@ package controllers
 
 import base.SpecBase
 import forms.ManageCompaniesFormProvider
-import models.NormalMode
+import models.{CompanyDetails, Index, NormalMode}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.CompanyDetailsPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import viewmodels.checkAnswers.CompanyDetailsSummary
 import viewmodels.govuk.summarylist._
 import views.html.ManageCompaniesView
 
@@ -46,17 +48,28 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val ua = emptyUserAnswers
+        .set(CompanyDetailsPage(Index(0)), CompanyDetails("value 1", None))
+        .success
+        .value
+        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None))
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(ua)).build()
 
       running(application) {
         val request = FakeRequest(GET, manageCompaniesRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ManageCompaniesView]
+        val view                = application.injector.instanceOf[ManageCompaniesView]
+        val expectedSummaryList = List.range(0, 2) flatMap { index =>
+          CompanyDetailsSummary.row(Index(index), ua)(messages(application))
+        }
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, SummaryListViewModel(List.empty))(
+        contentAsString(result) mustEqual view(form, NormalMode, SummaryListViewModel(expectedSummaryList))(
           request,
           messages(application)
         ).toString

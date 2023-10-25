@@ -56,8 +56,8 @@ class ManageCompaniesController @Inject() (
 
   private def getSummaryList(implicit request: DataRequest[AnyContent]) = {
     val numberOfCompanies: Int              = request.userAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
-    val summaryListRow: Seq[SummaryListRow] = List.range(0, numberOfCompanies).map(Index(_)) flatMap { index =>
-      CompanyDetailsSummary.row(index, request.userAnswers)
+    val summaryListRow: Seq[SummaryListRow] = List.range(0, numberOfCompanies) flatMap { index =>
+      CompanyDetailsSummary.row(Index(index), request.userAnswers)
     }
     SummaryListViewModel(summaryListRow)
   }
