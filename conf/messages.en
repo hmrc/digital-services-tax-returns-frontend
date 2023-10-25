@@ -79,6 +79,17 @@ returnsDashboard.amendments=Resubmit a previous return
 returnsDashboard.previous-payments= If you have a question regarding a payment, email
 returnsDashboard.previous-payments1 = with your HMRC Customer Compliance Manager (CCM) copied in, if you have one.
 
+#Select activities
+select-activities.title=Which activities are you reporting in this return?
+select-activities.heading=Which activities are you reporting in this return?
+select-activities.hint=Select all that apply
+select-activities.social-media=Social media
+select-activities.search-engine=Search engine
+select-activities.online-marketplace=Online marketplace
+select-activities.minLength=Select if you are reporting social media, search engine or online marketplace activities in this return
+select-activities.error.required=Select if you are reporting social media, search engine or online marketplace activities in this return
+
+
 #error pages
 wrong-account.heading=You cannot use this service
 wrong-account.sign-out.reason=You signed in with a Government Gateway user ID for an individual or agent. We have signed you out.

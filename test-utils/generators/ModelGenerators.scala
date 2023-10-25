@@ -18,7 +18,7 @@ package generators
 
 import cats.implicits.{none, _}
 import models.registration._
-import models.{AddressLine, CompanyName, CountryCode, DSTRegNumber, Email, NonEmptyString, PhoneNumber, Postcode, RegexValidatedString, RestrictiveString, SafeId, UTR}
+import models._
 import org.scalacheck.Arbitrary.{arbBigDecimal => _, arbitrary, _}
 import org.scalacheck.cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
