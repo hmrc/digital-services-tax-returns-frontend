@@ -14,25 +14,20 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.mvc.PathBindable
+import javax.inject.Inject
 
-case class Index(position: Int) {
-  val display: Int = position + 1
-}
+import forms.mappings.Mappings
+import play.api.data.Form
+import play.api.data.Forms.set
+import models.SelectActivities
 
-object Index {
+class SelectActivitiesFormProvider @Inject() extends Mappings {
 
-  implicit def indexPathBindable(implicit intBinder: PathBindable[Int]): PathBindable[Index] = new PathBindable[Index] {
-
-    override def bind(key: String, value: String): Either[String, Index] =
-      intBinder.bind(key, value) match {
-        case Right(x) if x > 0 => Right(Index(x - 1))
-        case _                 => Left("Index binding failed")
-      }
-
-    override def unbind(key: String, value: Index): String =
-      intBinder.unbind(key, value.position + 1)
-  }
+  def apply(): Form[Set[SelectActivities]] =
+    Form(
+      "value" -> set(enumerable[SelectActivities]("select-activities.error.required"))
+        .verifying(nonEmptySet("select-activities.error.required"))
+    )
 }
