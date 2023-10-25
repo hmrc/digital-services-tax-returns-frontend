@@ -60,10 +60,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a ManageCompaniesPage with option 'false' to Select activities page" in {
 
         navigator.nextPage(
-            ManageCompaniesPage,
-            NormalMode,
-            UserAnswers("id").set(ManageCompaniesPage, false).success.value
-          ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
+          ManageCompaniesPage,
+          NormalMode,
+          UserAnswers("id").set(ManageCompaniesPage, false).success.value
+        ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
       }
 
       "must go from a ManageCompaniesPage to Journey recovery page when data is missing" in {

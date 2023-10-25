@@ -46,13 +46,13 @@ class Navigator @Inject() () {
 
   private def addCompanyDetails(mode: Mode)(userAnswers: UserAnswers): Call =
     userAnswers.get(ManageCompaniesPage) match {
-      case Some(true) =>
+      case Some(true)  =>
         val count = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
         val index = Index(count)
         routes.CompanyDetailsController.onPageLoad(index, mode)
-      case Some(false)          =>
+      case Some(false) =>
         routes.SelectActivitiesController.onPageLoad(mode)
-      case _ => routes.JourneyRecoveryController.onPageLoad()
+      case _           => routes.JourneyRecoveryController.onPageLoad()
 
     }
 }
