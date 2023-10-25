@@ -18,9 +18,10 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
+import models.requests.OptionalDataRequest
 import models.{Index, Mode, UserAnswers}
 import navigation.Navigator
-import pages.CompanyDetailsPage
+import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -47,13 +48,16 @@ class CompanyDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsPage(index)) match {
+    val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(index)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
     Ok(view(preparedForm, index, mode))
   }
+
+  private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
+    request.userAnswers.getOrElse(UserAnswers(request.userId))
 
   def onSubmit(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     form
@@ -64,10 +68,27 @@ class CompanyDetailsController @Inject() (
           for {
             updatedAnswers <-
               Future.fromTry(
-                request.userAnswers.getOrElse(UserAnswers(request.userId)).set(CompanyDetailsPage(index), value)
+                getUserAnswers(request).set(CompanyDetailsPage(index), value)
               )
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(CompanyDetailsPage(index), mode, updatedAnswers))
       )
+  }
+
+  def onDelete(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+    implicit request =>
+      for {
+        updatedAnswers <-
+          Future.fromTry(
+            request.userAnswers.remove(CompanyDetailsPage(index))
+          )
+        _              <- sessionRepository.set(updatedAnswers)
+      } yield {
+        val size = updatedAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+        size match {
+          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), mode))
+          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(mode))
+        }
+      }
   }
 }

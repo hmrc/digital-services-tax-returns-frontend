@@ -26,12 +26,15 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class Navigator @Inject() () {
 
-  private val normalRoutes: Page => UserAnswers => Call = { case _ =>
-    _ => routes.ReturnsDashboardController.onPageLoad
+  private val normalRoutes: Page => UserAnswers => Call = {
+    case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(NormalMode)
+    case ManageCompaniesPage   => ua => addCompanyDetails(NormalMode)(ua)
+    case _                     => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
-  private val checkRouteMap: Page => UserAnswers => Call = { case _ =>
-    _ => routes.CheckYourAnswersController.onPageLoad
+  private val checkRouteMap: Page => UserAnswers => Call = {
+    case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(CheckMode)
+    case _                     => _ => routes.CheckYourAnswersController.onPageLoad
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -40,4 +43,16 @@ class Navigator @Inject() () {
     case CheckMode  =>
       checkRouteMap(page)(userAnswers)
   }
+
+  private def addCompanyDetails(mode: Mode)(userAnswers: UserAnswers): Call =
+    userAnswers.get(ManageCompaniesPage) match {
+      case Some(true)  =>
+        val count = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
+        val index = Index(count)
+        routes.CompanyDetailsController.onPageLoad(index, mode)
+      case Some(false) =>
+        routes.SelectActivitiesController.onPageLoad(mode)
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+
+    }
 }

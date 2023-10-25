@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +12,32 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
-)
+package forms
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+import forms.behaviours.BooleanFieldBehaviours
+import play.api.data.FormError
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+class ManageCompaniesFormProviderSpec extends BooleanFieldBehaviours {
 
-    <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
+  val form = new ManageCompaniesFormProvider()()
 
-    @govukSummaryList(list)
+  ".value" - {
+
+    val fieldName   = "value"
+    val requiredKey = "manageCompanies.error.required"
+
+    behave like booleanField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, "error.boolean")
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
 }

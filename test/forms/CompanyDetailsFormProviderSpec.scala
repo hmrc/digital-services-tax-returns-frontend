@@ -63,7 +63,6 @@ class CompanyDetailsFormProviderSpec extends StringFieldBehaviours {
   ".uniqueTaxpayerReference" - {
 
     val fieldName                  = "uniqueTaxpayerReference"
-    val requiredKey                = "companyDetails.error.uniqueTaxpayerReference.required"
     val invalidKey                 = "companyDetails.error.uniqueTaxpayerReference.invalid"
     val uniqueTaxReferenceMaxRegex = "^[0-9]{10}$"
     val maxLength                  = 10
