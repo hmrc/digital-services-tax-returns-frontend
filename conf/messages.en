@@ -88,6 +88,8 @@ select-activities.search-engine=Search engine
 select-activities.online-marketplace=Online marketplace
 select-activities.minLength=Select if you are reporting social media, search engine or online marketplace activities in this return
 select-activities.error.required=Select if you are reporting social media, search engine or online marketplace activities in this return
+selectActivities.checkYourAnswersLabel=Activity reported in this return
+selectActivities.change.hidden=Change activity reported in this return
 
 
 #error pages
@@ -143,3 +145,5 @@ socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.yes=Yes
 socialMediaLoss.no=No
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
+socialMediaLoss.checkYourAnswersLabel=Loss made
+socialMediaLoss.change.hidden=Change loss made
