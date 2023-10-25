@@ -24,9 +24,9 @@ import org.scalatest.matchers.must.Matchers
 import org.scalatest.OptionValues
 import play.api.libs.json.{JsError, JsString, Json}
 
-class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
+class SelectActivitiesSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyChecks with OptionValues {
 
-  "SelectActivitiesController" - {
+  "SelectActivities" - {
 
     implicit val arbitrarySelectActivities: Arbitrary[SelectActivities] = Arbitrary {
       Gen.oneOf(

@@ -138,10 +138,8 @@ companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Cor
 companyDetails.companyName.change.hidden = Company name
 companyDetails.uniqueTaxpayerReference.change.hidden = Corporation Tax Unique Taxpayer Reference
 
-socialMediaLoss.title = socialMediaLoss
-socialMediaLoss.heading = socialMediaLoss
-socialMediaLoss.yes = Yes
-socialMediaLoss.no = No
-socialMediaLoss.checkYourAnswersLabel = socialMediaLoss
-socialMediaLoss.error.required = Select socialMediaLoss
-socialMediaLoss.change.hidden = SocialMediaLoss
+socialMediaLoss.title=Has the group made a loss on its social media activity?
+socialMediaLoss.heading=Has the group made a loss on its social media activity?
+socialMediaLoss.yes=Yes
+socialMediaLoss.no=No
+socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
