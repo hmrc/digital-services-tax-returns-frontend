@@ -26,13 +26,13 @@ class SocialMediaLossFormProviderSpec extends OptionFieldBehaviours {
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "socialMediaLoss.error.required"
 
     behave like optionsField[SocialMediaLoss](
       form,
       fieldName,
-      validValues  = SocialMediaLoss.values,
+      validValues = SocialMediaLoss.values,
       invalidError = FormError(fieldName, "error.invalid")
     )
 

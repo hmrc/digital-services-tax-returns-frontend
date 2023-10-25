@@ -40,7 +40,7 @@ class SocialMediaLossControllerSpec extends SpecBase with MockitoSugar {
   lazy val socialMediaLossRoute = routes.SocialMediaLossController.onPageLoad(NormalMode).url
 
   val formProvider = new SocialMediaLossFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   "SocialMediaLossController" - {
 
@@ -74,7 +74,10 @@ class SocialMediaLossControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(SocialMediaLoss.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(SocialMediaLoss.values.head), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

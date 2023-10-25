@@ -32,10 +32,8 @@ class SocialMediaLossSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
       val gen = Gen.oneOf(SocialMediaLoss.values.toSeq)
 
-      forAll(gen) {
-        socialMediaLoss =>
-
-          JsString(socialMediaLoss.toString).validate[SocialMediaLoss].asOpt.value mustEqual socialMediaLoss
+      forAll(gen) { socialMediaLoss =>
+        JsString(socialMediaLoss.toString).validate[SocialMediaLoss].asOpt.value mustEqual socialMediaLoss
       }
     }
 
@@ -43,10 +41,8 @@ class SocialMediaLossSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
       val gen = arbitrary[String] suchThat (!SocialMediaLoss.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[SocialMediaLoss] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[SocialMediaLoss] mustEqual JsError("error.invalid")
       }
     }
 
@@ -54,10 +50,8 @@ class SocialMediaLossSpec extends AnyFreeSpec with Matchers with ScalaCheckPrope
 
       val gen = Gen.oneOf(SocialMediaLoss.values.toSeq)
 
-      forAll(gen) {
-        socialMediaLoss =>
-
-          Json.toJson(socialMediaLoss) mustEqual JsString(socialMediaLoss.toString)
+      forAll(gen) { socialMediaLoss =>
+        Json.toJson(socialMediaLoss) mustEqual JsString(socialMediaLoss.toString)
       }
     }
   }
