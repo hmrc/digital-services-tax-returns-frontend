@@ -20,7 +20,6 @@ import controllers.routes
 import models._
 import pages._
 import play.api.mvc.Call
-import play.api.mvc.Results.Ok
 
 import javax.inject.{Inject, Singleton}
 
@@ -51,7 +50,9 @@ class Navigator @Inject() () {
         val count = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
         val index = Index(count)
         routes.CompanyDetailsController.onPageLoad(index, mode)
-      case _          =>
-        ???
+      case Some(false)          =>
+        routes.SelectActivitiesController.onPageLoad(mode)
+      case _ => routes.JourneyRecoveryController.onPageLoad()
+
     }
 }

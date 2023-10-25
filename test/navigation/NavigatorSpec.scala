@@ -57,16 +57,22 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.CompanyDetailsController.onPageLoad(index, NormalMode)
       }
 
-      // TODO fix the test by placing the actual url of the page DDCYLS-3211 'Create Which activities are you reporting in this return page'
-      "must go from a ManageCompaniesPage with option 'false' to ManageCompanies page" in {
+      "must go from a ManageCompaniesPage with option 'false' to Select activities page" in {
 
-        val result = intercept[NotImplementedError] {
-          navigator.nextPage(
+        navigator.nextPage(
             ManageCompaniesPage,
             NormalMode,
             UserAnswers("id").set(ManageCompaniesPage, false).success.value
-          )
-        }
+          ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ManageCompaniesPage to Journey recovery page when data is missing" in {
+
+        navigator.nextPage(
+          ManageCompaniesPage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
     }
 
