@@ -40,8 +40,8 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new SelectActivitiesFormProvider()
-  val form = formProvider()
+  val formProvider                   = new SelectActivitiesFormProvider()
+  val form                           = formProvider()
   val mockDstConnector: DSTConnector = mock[DSTConnector]
 
   lazy val selectActivitiesControllerRoute = routes.SelectActivitiesController.onPageLoad(mode = NormalMode).url
@@ -58,7 +58,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request = FakeRequest(GET, selectActivitiesControllerRoute)
-        val result = route(application, request).value
+        val result  = route(application, request).value
 
         val view = application.injector.instanceOf[SelectActivitiesView]
 
@@ -69,7 +69,8 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers = UserAnswers(userAnswersId).set(SelectActivitiesPage, SelectActivities.values.toSet).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(SelectActivitiesPage, SelectActivities.values.toSet).success.value
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
@@ -80,7 +81,10 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(SelectActivities.values.toSet), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(SelectActivities.values.toSet), NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

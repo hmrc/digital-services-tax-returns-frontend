@@ -19,7 +19,7 @@ package generators
 import cats.implicits.{none, _}
 import models.registration._
 import models._
-import org.scalacheck.Arbitrary.{arbitrary, arbBigDecimal => _, _}
+import org.scalacheck.Arbitrary.{arbBigDecimal => _, arbitrary, _}
 import org.scalacheck.cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
 import shapeless.tag.@@

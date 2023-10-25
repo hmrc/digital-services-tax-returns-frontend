@@ -40,10 +40,11 @@ class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with Scal
 
       val gen: SelectActivities = arbitrary[SelectActivities].sample.getOrElse(SelectActivities.Option1)
 
-      forAll(gen) {
-        selectActivitiesController =>
-
-          JsString(selectActivitiesController.toString).validate[SelectActivities].asOpt.value mustEqual selectActivitiesController
+      forAll(gen) { selectActivitiesController =>
+        JsString(selectActivitiesController.toString)
+          .validate[SelectActivities]
+          .asOpt
+          .value mustEqual selectActivitiesController
       }
     }
 
@@ -51,10 +52,8 @@ class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with Scal
 
       val gen = arbitrary[String] suchThat (!SelectActivities.values.map(_.toString).contains(_))
 
-      forAll(gen) {
-        invalidValue =>
-
-          JsString(invalidValue).validate[SelectActivities] mustEqual JsError("error.invalid")
+      forAll(gen) { invalidValue =>
+        JsString(invalidValue).validate[SelectActivities] mustEqual JsError("error.invalid")
       }
     }
 
@@ -62,10 +61,8 @@ class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with Scal
 
       val gen: SelectActivities = arbitrary[SelectActivities].sample.getOrElse(SelectActivities.Option1)
 
-      forAll(gen) {
-        selectActivitiesController =>
-
-          Json.toJson(selectActivitiesController) mustEqual JsString(selectActivitiesController.toString)
+      forAll(gen) { selectActivitiesController =>
+        Json.toJson(selectActivitiesController) mustEqual JsString(selectActivitiesController.toString)
       }
     }
   }
