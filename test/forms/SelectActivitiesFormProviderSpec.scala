@@ -27,7 +27,7 @@ class SelectActivitiesFormProviderSpec extends CheckboxFieldBehaviours {
   ".value" - {
 
     val fieldName   = "value"
-    val requiredKey = "selectActivities.error.required"
+    val requiredKey = "select-activities.error.required"
 
     behave like checkboxField[SelectActivities](
       form,

@@ -27,7 +27,7 @@ class SelectActivitiesFormProvider @Inject() extends Mappings {
 
   def apply(): Form[Set[SelectActivities]] =
     Form(
-      "value" -> set(enumerable[SelectActivities]("selectActivities.error.required"))
-        .verifying(nonEmptySet("selectActivities.error.required"))
+      "value" -> set(enumerable[SelectActivities]("select-activities.error.required"))
+        .verifying(nonEmptySet("select-activities.error.required"))
     )
 }
