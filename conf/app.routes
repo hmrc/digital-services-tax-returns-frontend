@@ -49,3 +49,8 @@ GET        /report-social-media-alternative-charge        controllers.ReportMedi
 POST       /report-social-media-alternative-charge        controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-social-media-alternative-charge   controllers.ReportMediaAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-social-media-alternative-charge   controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /socialMediaLoss                        controllers.SocialMediaLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /socialMediaLoss                        controllers.SocialMediaLossController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSocialMediaLoss                  controllers.SocialMediaLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSocialMediaLoss                  controllers.SocialMediaLossController.onSubmit(mode: Mode = CheckMode)

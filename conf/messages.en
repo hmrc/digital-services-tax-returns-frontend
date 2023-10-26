@@ -150,3 +150,9 @@ reportMediaAlternativeCharge.heading = Are you applying the alternative charge f
 reportMediaAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your social media activity
 reportMediaAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportMediaAlternativeCharge.change.hidden = Alternative charge applied
+
+socialMediaLoss.title = socialMediaLoss
+socialMediaLoss.heading = socialMediaLoss
+socialMediaLoss.checkYourAnswersLabel = socialMediaLoss
+socialMediaLoss.error.required = Select yes if socialMediaLoss
+socialMediaLoss.change.hidden = SocialMediaLoss
