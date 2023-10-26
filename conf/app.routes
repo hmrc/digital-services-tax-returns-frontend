@@ -45,12 +45,13 @@ POST        /manage-companies/add/:index/company          controllers.CompanyDet
 GET         /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
 POST        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
 
-GET        /report-social-media-loss                        controllers.SocialMediaLossController.onPageLoad(mode: Mode = NormalMode)
-POST       /report-social-media-loss                        controllers.SocialMediaLossController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/report-social-media-loss                  controllers.SocialMediaLossController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/report-social-media-loss                  controllers.SocialMediaLossController.onSubmit(mode: Mode = CheckMode)
-
 GET        /report-social-media-alternative-charge        controllers.ReportMediaAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
 POST       /report-social-media-alternative-charge        controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-social-media-alternative-charge   controllers.ReportMediaAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-social-media-alternative-charge   controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /report-social-media-loss                      controllers.SocialMediaLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-social-media-loss                      controllers.SocialMediaLossController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-social-media-loss                 controllers.SocialMediaLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-social-media-loss                 controllers.SocialMediaLossController.onSubmit(mode: Mode = CheckMode)
+
