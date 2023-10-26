@@ -38,7 +38,7 @@ class SocialMediaLossControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new SocialMediaLossFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val socialMediaLossRoute = routes.SocialMediaLossController.onPageLoad(NormalMode).url
 
