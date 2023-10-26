@@ -38,7 +38,7 @@ class ReportMediaAlternativeChargeControllerSpec extends SpecBase with MockitoSu
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ReportMediaAlternativeChargeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val reportMediaAlternativeChargeRoute = routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode).url
 
