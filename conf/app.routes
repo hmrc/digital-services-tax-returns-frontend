@@ -44,3 +44,8 @@ GET         /manage-companies/add/:index/company          controllers.CompanyDet
 POST        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
 GET         /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
 POST        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+
+GET        /socialMediaLoss                        controllers.SocialMediaLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /socialMediaLoss                        controllers.SocialMediaLossController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSocialMediaLoss                  controllers.SocialMediaLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSocialMediaLoss                  controllers.SocialMediaLossController.onSubmit(mode: Mode = CheckMode)
