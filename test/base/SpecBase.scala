@@ -19,7 +19,7 @@ package base
 import controllers.actions._
 import generators.ModelGenerators._
 import models.registration.{Address, Company, CompanyRegWrapper, Registration}
-import models.{CompanyName, DSTRegNumber, UserAnswers}
+import models.{CompanyName, DSTRegNumber, Index, UserAnswers}
 import org.scalacheck.Arbitrary
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
@@ -46,6 +46,7 @@ trait SpecBase
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
   val dstRegNumber = Some(DSTRegNumber("AMDST0799721562"))
+  val index: Index = Index(0)
 
   private val reg: Registration = Arbitrary.arbitrary[Registration].sample.value
   private val address           = Arbitrary.arbitrary[Address].sample.value

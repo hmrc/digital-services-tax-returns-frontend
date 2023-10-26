@@ -21,8 +21,8 @@ import models.{CheckMode, Index, UserAnswers}
 import pages.CompanyDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{Empty, HtmlContent}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
@@ -30,17 +30,19 @@ object CompanyDetailsSummary {
 
   def row(index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(CompanyDetailsPage(index)).map { answer =>
-      val value = HtmlFormat.escape(answer.companyName).toString + "<br/>" + HtmlFormat
-        .escape(answer.uniqueTaxpayerReference.getOrElse(""))
-        .toString
+      val value = HtmlFormat.escape(answer.companyName).toString
 
       SummaryListRowViewModel(
-        key = "companyDetails.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = Key(HtmlContent(value)),
+        value = ValueViewModel(Empty),
         actions = Seq(
           ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
-            .withVisuallyHiddenText(messages("companyDetails.change.hidden"))
+            .withVisuallyHiddenText(messages("companyDetails.change.hidden")),
+          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(index, CheckMode).url)
+            .withVisuallyHiddenText(messages("companyDetails.remove.hidden"))
+            .withCssClass("")
         )
-      )
+      ).withCssClass("dst-listing")
     }
+
 }

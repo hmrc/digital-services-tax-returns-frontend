@@ -120,10 +120,8 @@ pay-your-dst.how-to-pay.2=how to pay your Digital Services Tax (opens in a new w
 pay-your-dst.back-to-details=Back to details
 
 # Company Details
-manage-companies-add-company.heading=Add company details
-manage-companies-edit-company.heading=Change company details
-
-companyDetails.title = Company details
+companyDetails.NormalMode.title = Add company details
+companyDetails.CheckMode.title = Change company details
 companyDetails.heading = Company details
 companyDetails.companyName = Company name
 companyDetails.companyName.hint = This is the name registered with an official company register, such as Companies House
@@ -137,9 +135,22 @@ companyDetails.error.companyName.invalid = Company name must only include letter
 companyDetails.error.uniqueTaxpayerReference.required = Enter uniqueTaxpayerReference
 companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference must be 10 characters or less
 companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
+companyDetails.change.hidden = Change company name
+companyDetails.remove.hidden = Remove company
 companyDetails.companyName.change.hidden = Company name
 companyDetails.uniqueTaxpayerReference.change.hidden = Corporation Tax Unique Taxpayer Reference
 
+#Manage companies
+manageCompanies.title = Confirm the companies in your group that have a Digital Services Tax liability
+manageCompanies.heading = Confirm the companies in your group that have a Digital Services Tax liability
+manageCompanies.addCompany.heading=Do you need to add another company?
+manageCompanies.hint=You must tell us about all the companies in your group that have a Digital Services Tax \
+  liability for this return period
+manageCompanies.checkYourAnswersLabel = Confirm the companies in your group that have a Digital Services Tax liability
+manageCompanies.error.required = Select yes if you need to add another company to your group
+
+
+#Report social meadia loss
 socialMediaLoss.title=Has the group made a loss on its social media activity?
 socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.yes=Yes

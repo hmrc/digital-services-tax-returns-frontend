@@ -33,7 +33,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -241,15 +241,38 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
             retrieval
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
-            retrieval
-          )
 
           val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
           val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe OK
 
+        }
+      }
+
+      "must return UnauthorizedException when internal Id is missing" in {
+
+        type AuthRetrievals = Option[String]
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = application.injector.instanceOf[FrontendAppConfig]
+
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals        = None
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
+
+          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val controller = new Harness(action)
+
+          val result = intercept[UnauthorizedException] {
+            await(controller.onPageLoad()(FakeRequest("", "")))
+          }
+          result.message mustBe "Unable to retrieve internal Id"
         }
       }
     }
@@ -272,9 +295,6 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
             retrieval
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(None))
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
-            retrieval
-          )
 
           val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)

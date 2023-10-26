@@ -28,7 +28,7 @@
 
 @layout(pageTitle = titleNoForm(messages("pay-your-dst.title")), showBackLink = true) {
 
-    <h1 class="govuk-heading-xl">@messages("pay-your-dst.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("pay-your-dst.heading")</h1>
     @outstanding.headOption.map { period =>
         <p class="govuk-body">@messages("pay-your-dst.due-date", s"${formatDate(period.paymentDue)}") </p>
     }

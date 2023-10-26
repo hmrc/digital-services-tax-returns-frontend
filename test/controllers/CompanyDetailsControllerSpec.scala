@@ -36,7 +36,6 @@ import scala.concurrent.Future
 class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
-  val index       = Index(0)
 
   val formProvider = new CompanyDetailsFormProvider()
   val form         = formProvider()
@@ -51,6 +50,22 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, companyDetailsRoute)
+
+        val view = application.injector.instanceOf[CompanyDetailsView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, index, NormalMode)(request, messages(application)).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when getData returns UserAnswers as 'None'" in {
+
+      val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
         val request = FakeRequest(GET, companyDetailsRoute)
@@ -129,5 +144,86 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         contentAsString(result) mustEqual view(boundForm, index, NormalMode)(request, messages(application)).toString
       }
     }
+
+    "must redirect to company details page on removing the last company details from manage companies page" in {
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, routes.CompanyDetailsController.onDelete(index, NormalMode).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
+      }
+    }
+
+    "must redirect to company details page on when no company details records exists" in {
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application =
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, routes.CompanyDetailsController.onDelete(index, NormalMode).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
+      }
+    }
+
+    "must redirect to manage companies page on removing the one of the company name from the list of companies" in {
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val ua = userAnswers
+        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None))
+        .success
+        .value
+        .set(CompanyDetailsPage(Index(2)), CompanyDetails("value 3", None))
+        .success
+        .value
+
+      val application =
+        applicationBuilder(userAnswers = Some(ua))
+          .overrides(
+            bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+            bind[SessionRepository].toInstance(mockSessionRepository)
+          )
+          .build()
+
+      running(application) {
+        val request =
+          FakeRequest(GET, routes.CompanyDetailsController.onDelete(index, NormalMode).url)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.ManageCompaniesController.onPageLoad(NormalMode).url
+      }
+    }
+
   }
 }

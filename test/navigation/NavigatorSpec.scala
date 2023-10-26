@@ -38,6 +38,42 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
         ) mustBe routes.ReturnsDashboardController.onPageLoad
       }
+
+      "must go from a CompanyDetailsPage to ManageCompanies page" in {
+
+        navigator.nextPage(
+          CompanyDetailsPage(index = Index(0)),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ManageCompaniesPage with option 'yes' to ManageCompanies page" in {
+
+        navigator.nextPage(
+          ManageCompaniesPage,
+          NormalMode,
+          UserAnswers("id").set(ManageCompaniesPage, true).success.value
+        ) mustBe routes.CompanyDetailsController.onPageLoad(index, NormalMode)
+      }
+
+      "must go from a ManageCompaniesPage with option 'false' to Select activities page" in {
+
+        navigator.nextPage(
+          ManageCompaniesPage,
+          NormalMode,
+          UserAnswers("id").set(ManageCompaniesPage, false).success.value
+        ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ManageCompaniesPage to Journey recovery page when data is missing" in {
+
+        navigator.nextPage(
+          ManageCompaniesPage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe routes.JourneyRecoveryController.onPageLoad()
+      }
     }
 
     "in Check mode" - {
@@ -50,6 +86,15 @@ class NavigatorSpec extends SpecBase {
           CheckMode,
           UserAnswers("id")
         ) mustBe routes.CheckYourAnswersController.onPageLoad
+      }
+
+      "must go from a CompanyDetailsPage to ManageCompanies page" in {
+
+        navigator.nextPage(
+          CompanyDetailsPage(index = Index(0)),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
       }
     }
   }
