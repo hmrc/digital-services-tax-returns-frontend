@@ -44,3 +44,8 @@ GET         /manage-companies/add/:index/company          controllers.CompanyDet
 POST        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
 GET         /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
 POST        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+
+GET        /reportMediaAlternativeCharge                        controllers.ReportMediaAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
+POST       /reportMediaAlternativeCharge                        controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
+GET        /changeReportMediaAlternativeCharge                  controllers.ReportMediaAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeReportMediaAlternativeCharge                  controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
