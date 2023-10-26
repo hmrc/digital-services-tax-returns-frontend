@@ -91,8 +91,8 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val formData = Seq(
-        "value[0]" -> SelectActivities.Option1.toString,
-        "value[1]" -> SelectActivities.Option2.toString
+        "value[0]" -> SelectActivities.SocialMedia.toString,
+        "value[1]" -> SelectActivities.SearchEngine.toString
       )
 
       val mockSessionRepository = mock[SessionRepository]

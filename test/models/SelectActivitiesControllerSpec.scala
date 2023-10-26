@@ -30,15 +30,15 @@ class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with Scal
 
     implicit val arbitrarySelectActivities: Arbitrary[SelectActivities] = Arbitrary {
       Gen.oneOf(
-        SelectActivities.Option1,
-        SelectActivities.Option2,
-        SelectActivities.Option3
+        SelectActivities.SocialMedia,
+        SelectActivities.SearchEngine,
+        SelectActivities.OnlineMarketplace
       )
     }
 
     "must deserialise valid values" in {
 
-      val gen: SelectActivities = arbitrary[SelectActivities].sample.getOrElse(SelectActivities.Option1)
+      val gen: SelectActivities = arbitrary[SelectActivities].sample.getOrElse(SelectActivities.SocialMedia)
 
       forAll(gen) { selectActivitiesController =>
         JsString(selectActivitiesController.toString)
@@ -59,7 +59,7 @@ class SelectActivitiesControllerSpec extends AnyFreeSpec with Matchers with Scal
 
     "must serialise" in {
 
-      val gen: SelectActivities = arbitrary[SelectActivities].sample.getOrElse(SelectActivities.Option1)
+      val gen: SelectActivities = arbitrary[SelectActivities].sample.getOrElse(SelectActivities.SocialMedia)
 
       forAll(gen) { selectActivitiesController =>
         Json.toJson(selectActivitiesController) mustEqual JsString(selectActivitiesController.toString)
