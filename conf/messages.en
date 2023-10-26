@@ -145,8 +145,8 @@ manageCompanies.hint=You must tell us about all the companies in your group that
 manageCompanies.checkYourAnswersLabel = Confirm the companies in your group that have a Digital Services Tax liability
 manageCompanies.error.required = Select yes if you need to add another company to your group
 
-crossBorderTransactionRelief.title = CrossBorderTransactionRelief
-crossBorderTransactionRelief.heading = CrossBorderTransactionRelief
+crossBorderTransactionRelief.title = How much cross-border transactions relief have you deducted from revenues in this return?
+crossBorderTransactionRelief.heading = How much cross-border transactions relief have you deducted from revenues in this return?
 crossBorderTransactionRelief.checkYourAnswersLabel = CrossBorderTransactionRelief
 crossBorderTransactionRelief.error.nonNumeric = Enter your crossBorderTransactionRelief using numbers
 crossBorderTransactionRelief.error.required = Enter your crossBorderTransactionRelief
