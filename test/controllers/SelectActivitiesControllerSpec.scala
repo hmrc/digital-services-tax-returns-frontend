@@ -44,7 +44,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
   val form                           = formProvider()
   val mockDstConnector: DSTConnector = mock[DSTConnector]
 
-  lazy val selectActivitiesControllerRoute = routes.SelectActivitiesController.onPageLoad(mode = NormalMode).url
+  lazy val selectActivitiesRoute = routes.SelectActivitiesController.onPageLoad(mode = NormalMode).url
 
   "SelectActivitiesController" - {
 
@@ -57,7 +57,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
         .build()
 
       running(application) {
-        val request = FakeRequest(GET, selectActivitiesControllerRoute)
+        val request = FakeRequest(GET, selectActivitiesRoute)
         val result  = route(application, request).value
 
         val view = application.injector.instanceOf[SelectActivitiesView]
@@ -74,7 +74,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, selectActivitiesControllerRoute)
+        val request = FakeRequest(GET, selectActivitiesRoute)
 
         val view = application.injector.instanceOf[SelectActivitiesView]
 
@@ -109,7 +109,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, selectActivitiesControllerRoute)
+          FakeRequest(POST, selectActivitiesRoute)
             .withFormUrlEncodedBody(formData: _*)
 
         val result = route(application, request).value
@@ -125,7 +125,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, selectActivitiesControllerRoute)
+          FakeRequest(POST, selectActivitiesRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
@@ -144,7 +144,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, selectActivitiesControllerRoute)
+        val request = FakeRequest(GET, selectActivitiesRoute)
 
         val result = route(application, request).value
 
@@ -159,7 +159,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, selectActivitiesControllerRoute)
+          FakeRequest(POST, selectActivitiesRoute)
             .withFormUrlEncodedBody(("value[0]", SelectActivities.values.head.toString))
 
         val result = route(application, request).value
