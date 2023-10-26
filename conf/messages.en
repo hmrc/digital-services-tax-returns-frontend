@@ -144,3 +144,12 @@ manageCompanies.hint=You must tell us about all the companies in your group that
   liability for this return period
 manageCompanies.checkYourAnswersLabel = Confirm the companies in your group that have a Digital Services Tax liability
 manageCompanies.error.required = Select yes if you need to add another company to your group
+
+crossBorderTransactionRelief.title = CrossBorderTransactionRelief
+crossBorderTransactionRelief.heading = CrossBorderTransactionRelief
+crossBorderTransactionRelief.checkYourAnswersLabel = CrossBorderTransactionRelief
+crossBorderTransactionRelief.error.nonNumeric = Enter your crossBorderTransactionRelief using numbers
+crossBorderTransactionRelief.error.required = Enter your crossBorderTransactionRelief
+crossBorderTransactionRelief.error.wholeNumber = Enter your crossBorderTransactionRelief using whole numbers
+crossBorderTransactionRelief.error.outOfRange = CrossBorderTransactionRelief must be between {0} and {1}
+crossBorderTransactionRelief.change.hidden = CrossBorderTransactionRelief

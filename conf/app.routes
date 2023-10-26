@@ -44,3 +44,8 @@ GET         /manage-companies/add/:index/company          controllers.CompanyDet
 POST        /manage-companies/add/:index/company          controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
 GET         /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
 POST        /manage-companies/edit/:index/company         controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+
+GET        /crossBorderTransactionRelief                  controllers.CrossBorderTransactionReliefController.onPageLoad(mode: Mode = NormalMode)
+POST       /crossBorderTransactionRelief                  controllers.CrossBorderTransactionReliefController.onSubmit(mode: Mode = NormalMode)
+GET        /changeCrossBorderTransactionRelief                        controllers.CrossBorderTransactionReliefController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeCrossBorderTransactionRelief                        controllers.CrossBorderTransactionReliefController.onSubmit(mode: Mode = CheckMode)
