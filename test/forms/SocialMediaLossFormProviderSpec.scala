@@ -22,7 +22,7 @@ import play.api.data.FormError
 class SocialMediaLossFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "socialMediaLoss.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new SocialMediaLossFormProvider()()
 
