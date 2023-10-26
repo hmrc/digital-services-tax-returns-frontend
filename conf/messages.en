@@ -153,7 +153,7 @@ reportMediaAlternativeCharge.error.required = Select yes if you are applying the
 reportMediaAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportMediaAlternativeCharge.change.hidden = Alternative charge applied
 
-#Report social meadia loss
+#Report social media loss
 socialMediaLoss.title=Has the group made a loss on its social media activity?
 socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
