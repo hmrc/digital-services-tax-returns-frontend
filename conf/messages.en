@@ -156,8 +156,6 @@ reportMediaAlternativeCharge.change.hidden = Alternative charge applied
 #Report social meadia loss
 socialMediaLoss.title=Has the group made a loss on its social media activity?
 socialMediaLoss.heading=Has the group made a loss on its social media activity?
-socialMediaLoss.yes=Yes
-socialMediaLoss.no=No
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
 socialMediaLoss.checkYourAnswersLabel=Loss made
 socialMediaLoss.change.hidden=Change loss made
