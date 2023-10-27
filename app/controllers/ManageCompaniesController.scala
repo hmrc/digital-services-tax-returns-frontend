@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ManageCompaniesFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode}
+import models.{Index, Mode, NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, ManageCompaniesPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -77,4 +77,12 @@ class ManageCompaniesController @Inject() (
             } yield Redirect(navigator.nextPage(ManageCompaniesPage, mode, updatedAnswers))
         )
   }
+
+  def redirectToOnLoadPage: Action[AnyContent] = (identify andThen getData) { implicit request =>
+    request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage) match {
+      case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(NormalMode))
+      case _ => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), NormalMode))
+    }
+  }
+
 }

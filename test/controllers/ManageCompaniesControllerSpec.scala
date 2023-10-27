@@ -79,14 +79,35 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to companies details page when there is no companies details to display" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
+      val manageRoute = routes.ManageCompaniesController.redirectToOnLoadPage().url
       running(application) {
-        val request = FakeRequest(GET, manageCompaniesRoute)
+        val request = FakeRequest(GET, manageRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
+      }
+    }
+
+    "must redirect to manage companies page when there are companies details exists to display" in {
+
+      val ua = emptyUserAnswers
+        .set(CompanyDetailsPage(Index(0)), CompanyDetails("value 1", None))
+        .success
+        .value
+        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None))
+        .success
+        .value
+      val application = applicationBuilder(userAnswers = Some(ua)).build()
+      val manageRoute = routes.ManageCompaniesController.redirectToOnLoadPage().url
+      running(application) {
+        val request = FakeRequest(GET, manageRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.ManageCompaniesController.onPageLoad(NormalMode).url
       }
     }
 
