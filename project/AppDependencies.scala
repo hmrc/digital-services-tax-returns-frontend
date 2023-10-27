@@ -11,7 +11,6 @@ object AppDependencies {
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % "1.13.0-play-28",
     "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % bootstrapVersion,
     "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % hmrcMongoVersion,
-    "com.beachape"      %% "enumeratum-play-json"          % "1.7.2",
     "com.chuusai"       %% "shapeless"                     % "2.4.0-M1",
     "commons-validator"  % "commons-validator"             % "1.7",
     "org.typelevel"     %% "cats-core"                     % "2.10.0",
