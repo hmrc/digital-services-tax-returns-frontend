@@ -25,7 +25,7 @@ import pages.{CompanyDetailsListPage, ManageCompaniesPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{SummaryList, SummaryListRow}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import viewmodels.checkAnswers.CompanyDetailsSummary
 import viewmodels.govuk.summarylist._
@@ -51,10 +51,13 @@ class ManageCompaniesController @Inject() (
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    Ok(view(form, mode, getSummaryList))
+    request.userAnswers.get(CompanyDetailsListPage) match {
+      case Some(list) if list.nonEmpty => Ok(view(form, mode, getSummaryList))
+      case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), mode))
+    }
   }
 
-  private def getSummaryList(implicit request: DataRequest[AnyContent]) = {
+  private def getSummaryList(implicit request: DataRequest[AnyContent]): SummaryList = {
     val numberOfCompanies: Int              = request.userAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
     val summaryListRow: Seq[SummaryListRow] = List.range(0, numberOfCompanies) flatMap { index =>
       CompanyDetailsSummary.row(Index(index), request.userAnswers)
