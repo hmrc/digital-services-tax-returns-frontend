@@ -17,83 +17,68 @@
 package controllers
 
 import base.SpecBase
-import connectors.DSTConnector
-import forms.SelectActivitiesFormProvider
-import models.{NormalMode, SelectActivities, UserAnswers}
+import forms.SocialMediaLossFormProvider
+import models.{NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.SelectActivitiesPage
-import play.api.inject
+import pages.SocialMediaLossPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.SelectActivitiesView
+import views.html.SocialMediaLossView
 
 import scala.concurrent.Future
-import scala.language.postfixOps
 
-class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
+class SocialMediaLossControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider                   = new SelectActivitiesFormProvider()
-  val form                           = formProvider()
-  val mockDstConnector: DSTConnector = mock[DSTConnector]
+  val formProvider = new SocialMediaLossFormProvider()
+  val form         = formProvider()
 
-  lazy val selectActivitiesRoute = routes.SelectActivitiesController.onPageLoad(mode = NormalMode).url
+  lazy val socialMediaLossRoute = routes.SocialMediaLossController.onPageLoad(NormalMode).url
 
-  "SelectActivitiesController" - {
+  "SocialMediaLoss Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          inject.bind[DSTConnector].toInstance(mockDstConnector)
-        )
-        .build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, selectActivitiesRoute)
-        val result  = route(application, request).value
+        val request = FakeRequest(GET, socialMediaLossRoute)
 
-        val view = application.injector.instanceOf[SelectActivitiesView]
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[SocialMediaLossView]
 
         status(result) mustEqual OK
-
         contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
-      val userAnswers =
-        UserAnswers(userAnswersId).set(SelectActivitiesPage, SelectActivities.values.toSet).success.value
+
+      val userAnswers = UserAnswers(userAnswersId).set(SocialMediaLossPage, true).success.value
+
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, selectActivitiesRoute)
+        val request = FakeRequest(GET, socialMediaLossRoute)
 
-        val view = application.injector.instanceOf[SelectActivitiesView]
+        val view = application.injector.instanceOf[SocialMediaLossView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(SelectActivities.values.toSet), NormalMode)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
       }
     }
 
     "must redirect to the next page when valid data is submitted" in {
-
-      val formData = Seq(
-        "value[0]" -> SelectActivities.SocialMedia.toString,
-        "value[1]" -> SelectActivities.SearchEngine.toString
-      )
 
       val mockSessionRepository = mock[SessionRepository]
 
@@ -109,8 +94,8 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, selectActivitiesRoute)
-            .withFormUrlEncodedBody(formData: _*)
+          FakeRequest(POST, socialMediaLossRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
@@ -125,12 +110,12 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, selectActivitiesRoute)
-            .withFormUrlEncodedBody(("value", "invalid value"))
+          FakeRequest(POST, socialMediaLossRoute)
+            .withFormUrlEncodedBody(("value", ""))
 
-        val boundForm = form.bind(Map("value" -> "invalid value"))
+        val boundForm = form.bind(Map("value" -> ""))
 
-        val view = application.injector.instanceOf[SelectActivitiesView]
+        val view = application.injector.instanceOf[SocialMediaLossView]
 
         val result = route(application, request).value
 
@@ -144,7 +129,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, selectActivitiesRoute)
+        val request = FakeRequest(GET, socialMediaLossRoute)
 
         val result = route(application, request).value
 
@@ -159,8 +144,8 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, selectActivitiesRoute)
-            .withFormUrlEncodedBody(("value[0]", SelectActivities.values.head.toString))
+          FakeRequest(POST, socialMediaLossRoute)
+            .withFormUrlEncodedBody(("value", "true"))
 
         val result = route(application, request).value
 
