@@ -81,7 +81,7 @@ class ManageCompaniesController @Inject() (
   def redirectToOnLoadPage: Action[AnyContent] = (identify andThen getData) { implicit request =>
     request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage) match {
       case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(NormalMode))
-      case _ => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), NormalMode))
+      case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), NormalMode))
     }
   }
 

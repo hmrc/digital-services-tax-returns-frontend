@@ -92,7 +92,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to manage companies page when there are companies details exists to display" in {
 
-      val ua = emptyUserAnswers
+      val ua          = emptyUserAnswers
         .set(CompanyDetailsPage(Index(0)), CompanyDetails("value 1", None))
         .success
         .value
