@@ -60,7 +60,9 @@ class Navigator @Inject() () {
 
   private def selectActivitiesNavigation(mode: Mode)(userAnswers: UserAnswers): Call =
     userAnswers.get(SelectActivitiesPage) match {
-      case Some(selectActivities) if selectActivities.contains(SelectActivities.Option1) =>
+      case Some(selectActivities) if selectActivities.contains(SelectActivities.SocialMedia) =>
         routes.SocialMediaLossController.onPageLoad(mode)
+      case _                                                                                 =>
+        routes.ReturnsDashboardController.onPageLoad
     }
 }
