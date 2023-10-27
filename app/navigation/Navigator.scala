@@ -29,11 +29,13 @@ class Navigator @Inject() () {
   private val normalRoutes: Page => UserAnswers => Call = {
     case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(NormalMode)
     case ManageCompaniesPage   => ua => addCompanyDetails(NormalMode)(ua)
+    case SelectActivitiesPage  => ua => selectActivitiesNavigation(NormalMode)(ua)
     case _                     => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
     case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(CheckMode)
+    case SelectActivitiesPage  => ua => selectActivitiesNavigation(CheckMode)(ua)
     case _                     => _ => routes.CheckYourAnswersController.onPageLoad
   }
 
@@ -54,5 +56,11 @@ class Navigator @Inject() () {
         routes.SelectActivitiesController.onPageLoad(mode)
       case _           => routes.JourneyRecoveryController.onPageLoad()
 
+    }
+
+  private def selectActivitiesNavigation(mode: Mode)(userAnswers: UserAnswers): Call =
+    userAnswers.get(SelectActivitiesPage) match {
+      case Some(selectActivities) if selectActivities.contains(SelectActivities.Option1) =>
+        routes.SocialMediaLossController.onPageLoad(mode)
     }
 }
