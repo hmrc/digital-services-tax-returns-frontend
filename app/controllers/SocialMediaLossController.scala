@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.SocialMediaLossFormProvider
-import models.Mode
+import models.{Mode, UserAnswers}
 import navigation.Navigator
 import pages.SocialMediaLossPage
 import play.api.i18n.{I18nSupport, MessagesApi}
