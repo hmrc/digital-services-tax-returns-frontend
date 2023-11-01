@@ -160,3 +160,9 @@ socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
 socialMediaLoss.checkYourAnswersLabel=Loss made
 socialMediaLoss.change.hidden=Change loss made
+
+reportAlternativeCharge.title = reportAlternativeCharge
+reportAlternativeCharge.heading = reportAlternativeCharge
+reportAlternativeCharge.checkYourAnswersLabel = reportAlternativeCharge
+reportAlternativeCharge.error.required = Select yes if reportAlternativeCharge
+reportAlternativeCharge.change.hidden = ReportAlternativeCharge
