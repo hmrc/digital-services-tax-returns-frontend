@@ -25,14 +25,14 @@ sealed trait SelectActivities
 
 object SelectActivities extends Enumerable.Implicits {
 
-  case object Option1 extends WithName("Social media") with SelectActivities
-  case object Option2 extends WithName("Search engine") with SelectActivities
-  case object Option3 extends WithName("Online marketplace") with SelectActivities
+  case object SocialMedia extends WithName("Social media") with SelectActivities
+  case object SearchEngine extends WithName("Search engine") with SelectActivities
+  case object OnlineMarketplace extends WithName("Online marketplace") with SelectActivities
 
   val values: Seq[SelectActivities] = Seq(
-    Option1,
-    Option2,
-    Option3
+    SocialMedia,
+    SearchEngine,
+    OnlineMarketplace
   )
 
   def checkboxItems(implicit messages: Messages): Seq[CheckboxItem] =

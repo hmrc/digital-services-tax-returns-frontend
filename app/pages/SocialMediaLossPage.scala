@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package models
+package pages
 
-import enumeratum._
+import play.api.libs.json.JsPath
 
-sealed trait Activity extends EnumEntry
-object Activity extends Enum[Activity] with PlayJsonEnum[Activity] {
-  def values = findValues
-  case object SocialMedia extends Activity
-  case object SearchEngine extends Activity
-  case object OnlineMarketplace extends Activity
+case object SocialMediaLossPage extends QuestionPage[Boolean] {
 
-  def toUrl(activity: Activity): String =
-    activity.toString.replaceAll("(^[A-Z].*)([A-Z])", "$1-$2").toLowerCase
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "socialMediaLoss"
 }
