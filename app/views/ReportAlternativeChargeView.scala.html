@@ -14,15 +14,23 @@
  * limitations under the License.
  *@
 
+@import viewmodels.LegendSize
+
 @this(
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
+    govukDetails: GovukDetails,
     govukRadios: GovukRadios,
     govukButton: GovukButton
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@hintAndIntro=@{govukDetails(
+    Details(summary = HtmlContent(messages("reportAlternativeCharge.details")),
+            content = HtmlContent(messages("reportAlternativeCharge.details.text"))
+    )) }
 
 @layout(pageTitle = title(form, messages("reportAlternativeCharge.title"))) {
 
@@ -35,8 +43,9 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("reportAlternativeCharge.heading")).asPageHeading()
+                legend = LegendViewModel(messages("reportAlternativeCharge.heading")).asPageHeading(LegendSize.Large)
             )
+             .withHint(HintViewModel(HtmlContent(hintAndIntro)))
         )
 
         @govukButton(

@@ -74,6 +74,15 @@ class NavigatorSpec extends SpecBase {
           emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
       }
+
+      "must go from a SelectActivitiesPage to Report alternative charges page" in {
+
+        navigator.nextPage(
+          SelectActivitiesPage,
+          NormalMode,
+          UserAnswers("id").set(SelectActivitiesPage, Set(SelectActivities.values.head)).success.value
+        ) mustBe routes.ReportAlternativeChargeController.onPageLoad(NormalMode)
+      }
     }
 
     "in Check mode" - {

@@ -29,13 +29,14 @@ class Navigator @Inject() () {
   private val normalRoutes: Page => UserAnswers => Call = {
     case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(NormalMode)
     case ManageCompaniesPage   => ua => addCompanyDetails(NormalMode)(ua)
-    case SelectActivitiesPage  => ua => selectActivitiesNavigation(NormalMode)(ua)
+    case SelectActivitiesPage  => _ =>  routes.ReportAlternativeChargeController.onPageLoad(NormalMode)
+    case ReportAlternativeChargePage  => ua =>  reportAlternativeChargeNavigation(NormalMode)(ua)
     case _                     => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
     case CompanyDetailsPage(_) => _ => routes.ManageCompaniesController.onPageLoad(CheckMode)
-    case SelectActivitiesPage  => ua => selectActivitiesNavigation(CheckMode)(ua)
+    case SelectActivitiesPage  => ua => reportAlternativeChargeNavigation(CheckMode)(ua)
     case _                     => _ => routes.CheckYourAnswersController.onPageLoad
   }
 
@@ -49,8 +50,8 @@ class Navigator @Inject() () {
   private def addCompanyDetails(mode: Mode)(userAnswers: UserAnswers): Call =
     userAnswers.get(ManageCompaniesPage) match {
       case Some(true)  =>
-        val count = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
-        val index = Index(count)
+        val count: Int = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
+        val index: Index = Index(count)
         routes.CompanyDetailsController.onPageLoad(index, mode)
       case Some(false) =>
         routes.SelectActivitiesController.onPageLoad(mode)
@@ -58,10 +59,22 @@ class Navigator @Inject() () {
 
     }
 
-  private def selectActivitiesNavigation(mode: Mode)(userAnswers: UserAnswers): Call =
-    userAnswers.get(SelectActivitiesPage) match {
-      case Some(selectActivities) if selectActivities.contains(SelectActivities.SocialMedia) =>
+  def navigationForSelectedActivities(selectActivities:Set[SelectActivities], mode: Mode): Call = {
+    selectActivities match {
+      case selectActivities if  selectActivities.contains(SelectActivities.SocialMedia) =>
+        ??? //TODO report-search-engine-loss page
+      case selectActivities if selectActivities.contains(SelectActivities.SearchEngine) =>
+        ??? //TODO report-search-engine-loss page
+      case selectActivities if selectActivities.contains(SelectActivities.SocialMedia) =>
+        ??? //TODO report-online-marketplace-loss page
+      case selectActivities if selectActivities.contains(SelectActivities.SocialMedia) && selectActivities.contains(SelectActivities.SearchEngine) =>
         routes.SocialMediaLossController.onPageLoad(mode)
+    }
+  }
+
+  private def reportAlternativeChargeNavigation(mode: Mode)(userAnswers: UserAnswers): Call =
+    userAnswers.get(SelectActivitiesPage) match {
+      case Some(selectActivities) => navigationForSelectedActivities(selectActivities, mode)
       case _                                                                                 =>
         routes.ReturnsDashboardController.onPageLoad
     }
