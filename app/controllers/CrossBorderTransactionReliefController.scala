@@ -18,17 +18,18 @@ package controllers
 
 import controllers.actions._
 import forms.CrossBorderTransactionReliefFormProvider
-
-import javax.inject.Inject
-import models.{Mode, UserAnswers}
+import models.Mode
 import navigation.Navigator
 import pages.CrossBorderTransactionReliefPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.input.PrefixOrSuffix
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CrossBorderTransactionReliefView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class CrossBorderTransactionReliefController @Inject()(
@@ -43,29 +44,31 @@ class CrossBorderTransactionReliefController @Inject()(
                                         view: CrossBorderTransactionReliefView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
+  val poundSymbolContent = HtmlContent("£")
+  val prefix = PrefixOrSuffix(classes = "govuk-input__prefix", attributes = Map("aria-hidden" -> "true"), content = poundSymbolContent)
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData) {
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
 
-      val preparedForm = request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CrossBorderTransactionReliefPage) match {
+      val preparedForm = request.userAnswers.get(CrossBorderTransactionReliefPage) match {
         case None => form
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode))
+      Ok(view(preparedForm, mode, prefix))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData).async {
+  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
+          Future.successful(BadRequest(view(formWithErrors, mode, prefix))),
 
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.getOrElse(UserAnswers(request.userId)).set(CrossBorderTransactionReliefPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(CrossBorderTransactionReliefPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(CrossBorderTransactionReliefPage, mode, updatedAnswers))
       )

@@ -1,3 +1,19 @@
+/*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package controllers
 
 import base.SpecBase
@@ -13,6 +29,8 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.input.PrefixOrSuffix
 import views.html.CrossBorderTransactionReliefView
 
 import scala.concurrent.Future
@@ -30,6 +48,9 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
 
   "CrossBorderTransactionRelief Controller" - {
 
+    val poundSymbolContent = HtmlContent("£")
+    val prefix = PrefixOrSuffix(classes = "govuk-input__prefix", attributes = Map("aria-hidden" -> "true"), content = poundSymbolContent)
+
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
@@ -42,7 +63,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val view = application.injector.instanceOf[CrossBorderTransactionReliefView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, prefix)(request, messages(application)).toString
       }
     }
 
@@ -60,7 +81,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, prefix)(request, messages(application)).toString
       }
     }
 
@@ -106,7 +127,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, prefix)(request, messages(application)).toString
       }
     }
 

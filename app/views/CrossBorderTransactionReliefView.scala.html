@@ -16,6 +16,7 @@
 
 @import viewmodels.LabelSize
 @import viewmodels.InputWidth._
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.input.PrefixOrSuffix
 
 @this(
     layout: templates.Layout,
@@ -25,7 +26,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, prefix: PrefixOrSuffix)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("crossBorderTransactionRelief.title"))) {
 
@@ -39,7 +40,7 @@
             InputViewModel(
                 field = form("value"),
                 label = LabelViewModel(messages("crossBorderTransactionRelief.heading")).asPageHeading(LabelSize.Large)
-            )
+            ).withPrefix(prefix)
             .asNumeric()
             .withWidth(Fixed10)
         )
