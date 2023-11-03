@@ -21,7 +21,7 @@ import play.api.data.FormError
 
 class ReportOnlineMarketplaceAlternativeChargeFormProviderSpec extends BooleanFieldBehaviours {
 
-  val requiredKey = "report-online-marketplace-alternative-charge.error.required"
+  val requiredKey = "reportOnlineMarketplaceAlternativeCharge.error.required"
   val invalidKey  = "error.boolean"
 
   val form = new ReportOnlineMarketplaceAlternativeChargeFormProvider()()

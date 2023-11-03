@@ -25,6 +25,6 @@ class ReportOnlineMarketplaceAlternativeChargeFormProvider @Inject() extends Map
 
   def apply(): Form[Boolean] =
     Form(
-      "value" -> boolean("report-online-marketplace-alternative-charge.error.required")
+      "value" -> boolean("reportOnlineMarketplaceAlternativeCharge.error.required")
     )
 }
