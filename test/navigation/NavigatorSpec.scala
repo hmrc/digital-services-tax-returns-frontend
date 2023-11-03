@@ -83,6 +83,74 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id").set(SelectActivitiesPage, Set(SelectActivities.values.head)).success.value
         ) mustBe routes.ReportAlternativeChargeController.onPageLoad(NormalMode)
       }
+
+      "must go from a ReportAlternativeChargePage to ReportMediaAlternativeChargePage when more then one activity and option 'yes' is selected" in {
+
+        navigator.nextPage(
+          ReportAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage,
+              Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
+      }
+
+      // TODO
+      "must go from a ReportAlternativeChargePage to ??? when more then one activity and option 'no' is selected" ignore {
+
+        navigator.nextPage(
+          ReportAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage,
+              Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe ???
+      }
+
+      "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {
+
+        navigator.nextPage(
+          ReportMediaAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .success
+            .value
+            .set(ReportMediaAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+      }
+
+      // TODO
+      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" ignore {
+
+        navigator.nextPage(
+          ReportMediaAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .success
+            .value
+            .set(ReportMediaAlternativeChargePage, false)
+            .success
+            .value
+        ) mustBe ???
+      }
     }
 
     "in Check mode" - {
