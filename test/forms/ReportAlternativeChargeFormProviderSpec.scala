@@ -22,7 +22,7 @@ import play.api.data.FormError
 class ReportAlternativeChargeFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "reportAlternativeCharge.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new ReportAlternativeChargeFormProvider()()
 
