@@ -31,9 +31,9 @@ object ReportOnlineMarketplaceAlternativeChargeSummary {
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
-        key = "reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel",
-        value = ValueViewModel(value),
-        actions = Seq(
+        "reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel",
+        ValueViewModel(value),
+        Seq(
           ActionItemViewModel(
             "site.change",
             routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(CheckMode).url
