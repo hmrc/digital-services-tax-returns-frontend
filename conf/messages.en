@@ -161,6 +161,13 @@ socialMediaLoss.error.required=Select yes if the group made a loss on its social
 socialMediaLoss.checkYourAnswersLabel=Loss made
 socialMediaLoss.change.hidden=Change loss made
 
+reportOnlineMarketplaceAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
+reportOnlineMarketplaceAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
+reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel = Loss made
+reportOnlineMarketplaceAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your online marketplace activity
+reportOnlineMarketplaceAlternativeCharge.change.hidden = Online marketplace alternative charge applied
+
+
 crossBorderTransactionRelief.title = How much cross-border transactions relief have you deducted from revenues in this return?
 crossBorderTransactionRelief.heading = How much cross-border transactions relief have you deducted from revenues in this return?
 crossBorderTransactionRelief.checkYourAnswersLabel = Amount of relief claimed on cross-border transactions

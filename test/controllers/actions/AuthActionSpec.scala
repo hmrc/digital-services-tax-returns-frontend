@@ -224,7 +224,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
     "The organization is registered for HMRC-DST-ORG enrollment" - {
 
-      "must create an IdentifierRequest and allow the organisation to proceed" in {
+      "must create an IdentifierRequest and allow the organisation to proceed when dstNewReturnsFrontendEnableFlag is true" in {
 
         type AuthRetrievals = Option[String]
 
@@ -232,11 +232,14 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
         running(application) {
           val bodyParsers  = application.injector.instanceOf[BodyParsers.Default]
-          val appConfig    = application.injector.instanceOf[FrontendAppConfig]
+          val appConfig    = mock[FrontendAppConfig]
           val registration = Arbitrary.arbitrary[Registration].sample.value
 
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
+
+          when(appConfig.dstNewReturnsFrontendEnableFlag) thenReturn true
+
           when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
             retrieval
           )
@@ -246,6 +249,37 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val controller = new Harness(action)
           val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe OK
+
+        }
+      }
+
+      "must return back to old frontend when dstNewReturnsFrontendEnableFlag is disabled" in {
+
+        type AuthRetrievals = Option[String]
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers  = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig    = mock[FrontendAppConfig]
+          val registration = Arbitrary.arbitrary[Registration].sample.value
+
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
+
+          when(appConfig.dstNewReturnsFrontendEnableFlag) thenReturn false
+          when(appConfig.dstFrontendRegistrationUrl) thenReturn "http://localhost:1234/oldReg"
+
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
+            retrieval
+          )
+          when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
+
+          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val controller = new Harness(action)
+          val result     = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe SEE_OTHER
+          redirectLocation(result) mustBe Some(appConfig.dstFrontendRegistrationUrl)
 
         }
       }

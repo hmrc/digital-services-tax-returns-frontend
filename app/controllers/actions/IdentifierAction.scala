@@ -50,7 +50,11 @@ class AuthenticatedIdentifierAction @Inject() (
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
     authorised(AuthProviders(GovernmentGateway, Verify) and Organisation and User).retrieve(Retrievals.internalId) {
       case Some(internalId) =>
-        lookupRegistration(request, internalId, block)
+        if (config.dstNewReturnsFrontendEnableFlag) {
+          lookupRegistration(request, internalId, block)
+        } else {
+          Future.successful(Redirect(config.dstFrontendRegistrationUrl))
+        }
       case _                => throw new UnauthorizedException("Unable to retrieve internal Id")
     } recover {
       case _: NoActiveSession        =>
