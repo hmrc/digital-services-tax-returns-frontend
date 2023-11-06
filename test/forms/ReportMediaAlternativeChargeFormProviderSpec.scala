@@ -21,7 +21,6 @@ import play.api.data.FormError
 
 class ReportMediaAlternativeChargeFormProviderSpec extends BooleanFieldBehaviours {
 
-  // LDS ignore
   val requiredKey = "reportMediaAlternativeCharge.error.required"
   val invalidKey  = "error.boolean"
 
