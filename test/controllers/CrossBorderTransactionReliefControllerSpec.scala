@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new CrossBorderTransactionReliefFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -62,7 +62,8 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(CrossBorderTransactionReliefPage, BigDecimal(100.00)).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(CrossBorderTransactionReliefPage, BigDecimal(100.00)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 

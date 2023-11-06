@@ -90,12 +90,12 @@ trait Formatters {
     }
 
   private[mappings] def currencyFormatter(
-                                           requiredKey: String,
-                                           invalidKey: String,
-                                           exceededKey: String,
-                                           maxLen: Int = Integer.MAX_VALUE,
-                                           args: Seq[String] = Seq.empty
-                                         ) =
+    requiredKey: String,
+    invalidKey: String,
+    exceededKey: String,
+    maxLen: Int = Integer.MAX_VALUE,
+    args: Seq[String] = Seq.empty
+  ) =
     new Formatter[BigDecimal] {
 
       val currencyRegexp = "^[0-9]+(\\.[0-9]{1,2})?$"
@@ -116,15 +116,13 @@ trait Formatters {
               } else {
                 Right(bigDecimalValue)
               }
-            case _ =>
+            case _                              =>
               Left(Seq(FormError(key, invalidKey, args)))
           }
-
 
       override def unbind(key: String, value: BigDecimal) =
         baseFormatter.unbind(key, value.setScale(2).toString)
     }
-
 
   private[mappings] def enumerableFormatter[A](requiredKey: String, invalidKey: String, args: Seq[String] = Seq.empty)(
     implicit ev: Enumerable[A]

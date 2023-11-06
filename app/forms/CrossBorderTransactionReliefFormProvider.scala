@@ -22,7 +22,7 @@ import play.api.data.Form
 import javax.inject.Inject
 
 class CrossBorderTransactionReliefFormProvider @Inject() extends Mappings {
-  val maxLen = 15
+  val maxLen                    = 15
   def apply(): Form[BigDecimal] =
     Form(
       "value" -> currency(

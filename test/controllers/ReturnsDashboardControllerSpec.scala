@@ -31,7 +31,6 @@ import views.html.ReturnsDashboardView
 import java.time.LocalDate
 import scala.concurrent.Future
 
-
 class ReturnsDashboardControllerSpec extends SpecBase with MockitoSugar {
 
   implicit val hc: HeaderCarrier     = HeaderCarrier()

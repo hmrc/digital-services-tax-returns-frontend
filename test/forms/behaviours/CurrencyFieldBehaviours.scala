@@ -20,8 +20,7 @@ import play.api.data.{Form, FormError}
 
 trait CurrencyFieldBehaviours extends FieldBehaviours {
 
-  def currencyField(form: Form[_], fieldName: String, invalidError: FormError): Unit = {
-
+  def currencyField(form: Form[_], fieldName: String, invalidError: FormError): Unit =
     "not bind non-numeric numbers" in {
 
       forAll(nonNumerics -> "nonNumeric") { nonNumeric =>
@@ -29,6 +28,5 @@ trait CurrencyFieldBehaviours extends FieldBehaviours {
         result.errors must contain only invalidError
       }
     }
-  }
 
 }

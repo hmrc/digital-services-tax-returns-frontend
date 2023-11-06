@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object CrossBorderTransactionReliefSummary  {
+object CrossBorderTransactionReliefSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CrossBorderTransactionReliefPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "crossBorderTransactionRelief.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.CrossBorderTransactionReliefController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("crossBorderTransactionRelief.change.hidden"))
-          )
+    answers.get(CrossBorderTransactionReliefPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "crossBorderTransactionRelief.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.CrossBorderTransactionReliefController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("crossBorderTransactionRelief.change.hidden"))
         )
+      )
     }
 }

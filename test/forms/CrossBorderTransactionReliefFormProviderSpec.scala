@@ -22,7 +22,7 @@ import wolfendale.scalacheck.regexp.RegexpGen
 
 class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviours {
 
-  val form = new CrossBorderTransactionReliefFormProvider()()
+  val form          = new CrossBorderTransactionReliefFormProvider()()
   val currencyRegex = "^\\d{1,15}(\\.\\d{2})?$"
 
   ".value" - {
