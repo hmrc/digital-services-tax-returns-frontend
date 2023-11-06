@@ -57,3 +57,8 @@ POST       /report-online-marketplace-alternative-charge        controllers.Repo
 GET        /edit/report-online-marketplace-alternative-charge   controllers.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-online-marketplace-alternative-charge   controllers.ReportOnlineMarketplaceAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /report-alternative-charge                     controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-alternative-charge                     controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-alternative-charge                controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-alternative-charge                controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
