@@ -38,9 +38,10 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ReportSearchAlternativeChargeFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
-  lazy val reportSearchAlternativeChargeRoute = routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode).url
+  lazy val reportSearchAlternativeChargeRoute =
+    routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode).url
 
   "ReportSearchAlternativeCharge Controller" - {
 
