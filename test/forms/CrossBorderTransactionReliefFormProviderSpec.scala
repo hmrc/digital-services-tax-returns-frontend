@@ -16,30 +16,35 @@
 
 package forms
 
-import forms.behaviours.BooleanFieldBehaviours
+import forms.behaviours.CurrencyFieldBehaviours
 import play.api.data.FormError
+import wolfendale.scalacheck.regexp.RegexpGen
 
-class ReportOnlineMarketplaceAlternativeChargeFormProviderSpec extends BooleanFieldBehaviours {
+class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviours {
 
-  val requiredKey = "reportOnlineMarketplaceAlternativeCharge.error.required"
-  val invalidKey  = "error.boolean"
-
-  val form = new ReportOnlineMarketplaceAlternativeChargeFormProvider()()
+  val form          = new CrossBorderTransactionReliefFormProvider()()
+  val currencyRegex = "^\\d{1,15}(\\.\\d{2})?$"
 
   ".value" - {
 
     val fieldName = "value"
 
-    behave like booleanField(
+    behave like fieldThatBindsValidData(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      RegexpGen.from(currencyRegex)
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, "crossBorderTransactionRelief.error.required")
+    )
+
+    behave like currencyField(
+      form,
+      fieldName,
+      FormError(fieldName, "crossBorderTransactionRelief.error.invalid")
     )
   }
 }

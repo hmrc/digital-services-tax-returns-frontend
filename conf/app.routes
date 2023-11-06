@@ -63,7 +63,14 @@ POST       /report-search-alternative-charge                        controllers.
 GET        /edit/report-search-alternative-charge                  controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-search-alternative-charge                  controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /cross-border-transaction-relief-amount                  controllers.CrossBorderTransactionReliefController.onPageLoad(mode: Mode = NormalMode)
+POST       /cross-border-transaction-relief-amount                  controllers.CrossBorderTransactionReliefController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/cross-border-transaction-relief-amount                        controllers.CrossBorderTransactionReliefController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/cross-border-transaction-relief-amount                        controllers.CrossBorderTransactionReliefController.onSubmit(mode: Mode = CheckMode)
+
 GET        /report-alternative-charge                     controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
 POST       /report-alternative-charge                     controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-alternative-charge                controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-alternative-charge                controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
+

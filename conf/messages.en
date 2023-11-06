@@ -174,6 +174,16 @@ reportSearchAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportSearchAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your search engine activity
 reportSearchAlternativeCharge.change.hidden = Alternative charge applied
 
+
+crossBorderTransactionRelief.title = How much cross-border transactions relief have you deducted from revenues in this return?
+crossBorderTransactionRelief.heading = How much cross-border transactions relief have you deducted from revenues in this return?
+crossBorderTransactionRelief.checkYourAnswersLabel = Amount of relief claimed on cross-border transactions
+crossBorderTransactionRelief.error.invalid = The amount of cross-border transactions relief you deducted from revenues must be an amount of \
+                                                  money, like 1,234.56 or 1,560.00
+crossBorderTransactionRelief.error.exceeded = The amount of cross-border transactions relief you deducted from revenues must be 15 numbers or fewer
+crossBorderTransactionRelief.error.required = Enter the amount of cross-border transactions relief you have deducted from revenues in this return in pounds or pounds and pence
+crossBorderTransactionRelief.change.hidden = Change the amount of relief claimed on cross-border transactions
+
 reportAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins in this return?
 reportAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins in this return?
 reportAlternativeCharge.details=What we mean by ‘alternative charge’
@@ -183,3 +193,4 @@ reportAlternativeCharge.error.required = Select yes if you are applying the alte
 reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
 reportAlternativeCharge.change.hidden = Alternative charge applied
+
