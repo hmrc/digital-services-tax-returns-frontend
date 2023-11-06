@@ -24,8 +24,6 @@ import pages.CrossBorderTransactionReliefPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
-import uk.gov.hmrc.govukfrontend.views.Aliases.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.input.PrefixOrSuffix
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CrossBorderTransactionReliefView
 
@@ -44,8 +42,6 @@ class CrossBorderTransactionReliefController @Inject()(
                                         view: CrossBorderTransactionReliefView
                                       )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
 
-  val poundSymbolContent = HtmlContent("£")
-  val prefix = PrefixOrSuffix(classes = "govuk-input__prefix", attributes = Map("aria-hidden" -> "true"), content = poundSymbolContent)
   val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
@@ -56,7 +52,7 @@ class CrossBorderTransactionReliefController @Inject()(
         case Some(value) => form.fill(value)
       }
 
-      Ok(view(preparedForm, mode, prefix))
+      Ok(view(preparedForm, mode))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
@@ -64,7 +60,7 @@ class CrossBorderTransactionReliefController @Inject()(
 
       form.bindFromRequest().fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode, prefix))),
+          Future.successful(BadRequest(view(formWithErrors, mode))),
 
         value =>
           for {

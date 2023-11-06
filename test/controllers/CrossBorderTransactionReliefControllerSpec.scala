@@ -29,8 +29,6 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.input.PrefixOrSuffix
 import views.html.CrossBorderTransactionReliefView
 
 import scala.concurrent.Future
@@ -42,14 +40,9 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = 0
-
   lazy val crossBorderTransactionReliefRoute = routes.CrossBorderTransactionReliefController.onPageLoad(NormalMode).url
 
   "CrossBorderTransactionRelief Controller" - {
-
-    val poundSymbolContent = HtmlContent("£")
-    val prefix = PrefixOrSuffix(classes = "govuk-input__prefix", attributes = Map("aria-hidden" -> "true"), content = poundSymbolContent)
 
     "must return OK and the correct view for a GET" in {
 
@@ -63,13 +56,13 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val view = application.injector.instanceOf[CrossBorderTransactionReliefView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, prefix)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(CrossBorderTransactionReliefPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(CrossBorderTransactionReliefPage, BigDecimal(100.00)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -81,7 +74,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, prefix)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(100.00), NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -102,7 +95,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
       running(application) {
         val request =
           FakeRequest(POST, crossBorderTransactionReliefRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("value", "100.00"))
 
         val result = route(application, request).value
 
@@ -127,7 +120,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, prefix)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -152,7 +145,7 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
       running(application) {
         val request =
           FakeRequest(POST, crossBorderTransactionReliefRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+            .withFormUrlEncodedBody(("value", "100.00"))
 
         val result = route(application, request).value
 

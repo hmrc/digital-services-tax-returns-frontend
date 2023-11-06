@@ -163,9 +163,9 @@ socialMediaLoss.change.hidden=Change loss made
 
 crossBorderTransactionRelief.title = How much cross-border transactions relief have you deducted from revenues in this return?
 crossBorderTransactionRelief.heading = How much cross-border transactions relief have you deducted from revenues in this return?
-crossBorderTransactionRelief.checkYourAnswersLabel = CrossBorderTransactionRelief
-crossBorderTransactionRelief.error.nonNumeric = Enter your crossBorderTransactionRelief using numbers
-crossBorderTransactionRelief.error.required = Enter your crossBorderTransactionRelief
-crossBorderTransactionRelief.error.wholeNumber = Enter your crossBorderTransactionRelief using whole numbers
-crossBorderTransactionRelief.error.outOfRange = CrossBorderTransactionRelief must be between {0} and {1}
-crossBorderTransactionRelief.change.hidden = CrossBorderTransactionRelief
+crossBorderTransactionRelief.checkYourAnswersLabel = Amount of relief claimed on cross-border transactions
+crossBorderTransactionRelief.error.invalid = The amount of cross-border transactions relief you deducted from revenues must be an amount of \
+                                                  money, like 1,234.56 or 1,560.00
+crossBorderTransactionRelief.error.exceeded = The amount of cross-border transactions relief you deducted from revenues must be 15 numbers or fewer
+crossBorderTransactionRelief.error.required = Enter the amount of cross-border transactions relief you have deducted from revenues in this return in pounds or pounds and pence
+crossBorderTransactionRelief.change.hidden = Change the amount of relief claimed on cross-border transactions

@@ -18,7 +18,7 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object CrossBorderTransactionReliefPage extends QuestionPage[Int] {
+case object CrossBorderTransactionReliefPage extends QuestionPage[BigDecimal] {
 
   override def path: JsPath = JsPath \ toString
 

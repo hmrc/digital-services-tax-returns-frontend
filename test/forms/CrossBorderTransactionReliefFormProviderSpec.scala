@@ -16,47 +16,35 @@
 
 package forms
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.CurrencyFieldBehaviours
 import play.api.data.FormError
+import wolfendale.scalacheck.regexp.RegexpGen
 
-class CrossBorderTransactionReliefFormProviderSpec extends IntFieldBehaviours {
+class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviours {
 
   val form = new CrossBorderTransactionReliefFormProvider()()
+  val currencyRegex = "^\\d{1,15}(\\.\\d{2})?$"
 
   ".value" - {
 
     val fieldName = "value"
 
-    val minimum = 0
-    val maximum = Int.MaxValue
-
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
-
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validDataGenerator
-    )
-
-    behave like intField(
-      form,
-      fieldName,
-      nonNumericError  = FormError(fieldName, "crossBorderTransactionRelief.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "crossBorderTransactionRelief.error.wholeNumber")
-    )
-
-    behave like intFieldWithRange(
-      form,
-      fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
-      expectedError = FormError(fieldName, "crossBorderTransactionRelief.error.outOfRange", Seq(minimum, maximum))
+      RegexpGen.from(currencyRegex)
     )
 
     behave like mandatoryField(
       form,
       fieldName,
       requiredError = FormError(fieldName, "crossBorderTransactionRelief.error.required")
+    )
+
+    behave like currencyField(
+      form,
+      fieldName,
+      FormError(fieldName, "crossBorderTransactionRelief.error.invalid")
     )
   }
 }

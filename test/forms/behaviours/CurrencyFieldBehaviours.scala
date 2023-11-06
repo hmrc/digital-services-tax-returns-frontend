@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package forms
+package forms.behaviours
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 
-import javax.inject.Inject
+trait CurrencyFieldBehaviours extends FieldBehaviours {
 
-class CrossBorderTransactionReliefFormProvider @Inject() extends Mappings {
-  val maxLen = 15
-  def apply(): Form[BigDecimal] =
-    Form(
-      "value" -> currency(
-        "crossBorderTransactionRelief.error.required",
-        "crossBorderTransactionRelief.error.invalid",
-        "crossBorderTransactionRelief.error.exceeded",
-        maxLen
-      )
-    )
+  def currencyField(form: Form[_], fieldName: String, invalidError: FormError): Unit = {
+
+    "not bind non-numeric numbers" in {
+
+      forAll(nonNumerics -> "nonNumeric") { nonNumeric =>
+        val result = form.bind(Map(fieldName -> nonNumeric)).apply(fieldName)
+        result.errors must contain only invalidError
+      }
+    }
+  }
+
 }
