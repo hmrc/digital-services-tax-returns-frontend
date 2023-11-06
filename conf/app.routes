@@ -62,3 +62,8 @@ GET        /report-search-alternative-charge                        controllers.
 POST       /report-search-alternative-charge                        controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-search-alternative-charge                  controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-search-alternative-charge                  controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
+
+GET        /report-alternative-charge                     controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-alternative-charge                     controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-alternative-charge                controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-alternative-charge                controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)

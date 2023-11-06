@@ -173,3 +173,13 @@ reportSearchAlternativeCharge.heading = Are you applying the alternative charge 
 reportSearchAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportSearchAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your search engine activity
 reportSearchAlternativeCharge.change.hidden = Alternative charge applied
+
+reportAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins in this return?
+reportAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins in this return?
+reportAlternativeCharge.details=What we mean by ‘alternative charge’
+reportAlternativeCharge.details.text=<p>This is an alternative method that businesses can use to work out their Digital Services Tax liability.</p>\
+<p>The alternative charge only benefits groups who make a loss or have a low UK profit margin on a Digital Services activity.</p>
+reportAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins in this return
+reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
+reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
+reportAlternativeCharge.change.hidden = Alternative charge applied

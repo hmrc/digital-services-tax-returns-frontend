@@ -19,13 +19,12 @@ package forms
 import forms.behaviours.BooleanFieldBehaviours
 import play.api.data.FormError
 
-class ReportOnlineMarketplaceAlternativeChargeFormProviderSpec extends BooleanFieldBehaviours {
+class ReportAlternativeChargeFormProviderSpec extends BooleanFieldBehaviours {
 
-  // LDS ignore
-  val requiredKey = "reportOnlineMarketplaceAlternativeCharge.error.required"
+  val requiredKey = "reportAlternativeCharge.error.required"
   val invalidKey  = "error.boolean"
 
-  val form = new ReportOnlineMarketplaceAlternativeChargeFormProvider()()
+  val form = new ReportAlternativeChargeFormProvider()()
 
   ".value" - {
 
