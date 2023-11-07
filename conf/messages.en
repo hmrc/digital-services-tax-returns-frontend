@@ -194,3 +194,9 @@ reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
+
+reportOnlineMarketplaceLoss.title = reportOnlineMarketplaceLoss
+reportOnlineMarketplaceLoss.heading = reportOnlineMarketplaceLoss
+reportOnlineMarketplaceLoss.checkYourAnswersLabel = reportOnlineMarketplaceLoss
+reportOnlineMarketplaceLoss.error.required = Select yes if reportOnlineMarketplaceLoss
+reportOnlineMarketplaceLoss.change.hidden = ReportOnlineMarketplaceLoss
