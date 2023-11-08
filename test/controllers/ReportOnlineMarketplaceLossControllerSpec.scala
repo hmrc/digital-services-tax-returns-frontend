@@ -38,7 +38,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ReportOnlineMarketplaceLossFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val reportOnlineMarketplaceLossRoute = routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode).url
 

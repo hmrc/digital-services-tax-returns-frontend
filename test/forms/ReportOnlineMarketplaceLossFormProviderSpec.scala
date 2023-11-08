@@ -22,7 +22,7 @@ import play.api.data.FormError
 class ReportOnlineMarketplaceLossFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "reportOnlineMarketplaceLoss.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new ReportOnlineMarketplaceLossFormProvider()()
 
