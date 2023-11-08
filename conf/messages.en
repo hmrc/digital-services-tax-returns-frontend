@@ -194,3 +194,9 @@ reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
+
+searchEngineLoss.title = searchEngineLoss
+searchEngineLoss.heading = searchEngineLoss
+searchEngineLoss.checkYourAnswersLabel = searchEngineLoss
+searchEngineLoss.error.required = Select yes if searchEngineLoss
+searchEngineLoss.change.hidden = SearchEngineLoss

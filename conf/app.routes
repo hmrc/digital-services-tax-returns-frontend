@@ -74,3 +74,8 @@ POST       /report-alternative-charge                           controllers.Repo
 GET        /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /searchEngineLoss                        controllers.SearchEngineLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /searchEngineLoss                        controllers.SearchEngineLossController.onSubmit(mode: Mode = NormalMode)
+GET        /changeSearchEngineLoss                  controllers.SearchEngineLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeSearchEngineLoss                  controllers.SearchEngineLossController.onSubmit(mode: Mode = CheckMode)
