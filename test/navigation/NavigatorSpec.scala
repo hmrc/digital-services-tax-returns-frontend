@@ -102,8 +102,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
       }
 
-      // TODO
-      "must go from a ReportAlternativeChargePage to ??? when more then one activity and option 'no' is selected" ignore {
+      "must go from a ReportAlternativeChargePage to ReportOnlineMarketplaceLossPage when Online marketplace activity option is selected" in {
 
         navigator.nextPage(
           ReportAlternativeChargePage,
@@ -111,14 +110,14 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               SelectActivitiesPage,
-              Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
+              Set[SelectActivities](SelectActivities.OnlineMarketplace)
             )
             .success
             .value
             .set(ReportAlternativeChargePage, true)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
       }
 
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {

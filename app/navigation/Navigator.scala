@@ -73,7 +73,7 @@ class Navigator @Inject() () {
         activities.head match {
           case SelectActivities.SocialMedia       => routes.SocialMediaLossController.onPageLoad(mode)
           case SelectActivities.SearchEngine      => ??? // TODO report-search-engine-loss
-          case SelectActivities.OnlineMarketplace => ??? // TODO report-online-marketplace-loss
+          case SelectActivities.OnlineMarketplace => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         }
       case selectActivities
           if selectActivities

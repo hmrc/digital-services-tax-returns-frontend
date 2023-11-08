@@ -75,7 +75,7 @@ GET        /edit/report-alternative-charge                      controllers.Repo
 POST       /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
-GET        /reportOnlineMarketplaceLoss                        controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = NormalMode)
-POST       /reportOnlineMarketplaceLoss                        controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = NormalMode)
-GET        /changeReportOnlineMarketplaceLoss                  controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeReportOnlineMarketplaceLoss                  controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = CheckMode)
+GET        /report-online-marketplace-loss                        controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-online-marketplace-loss                        controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-online-marketplace-loss                  controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-online-marketplace-loss                  controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = CheckMode)
