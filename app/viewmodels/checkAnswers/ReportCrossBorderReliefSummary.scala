@@ -24,21 +24,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ReportCrossBorderReliefSummary  {
+object ReportCrossBorderReliefSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportCrossBorderReliefPage).map {
-      answer =>
+    answers.get(ReportCrossBorderReliefPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "reportCrossBorderRelief.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.ReportCrossBorderReliefController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("reportCrossBorderRelief.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "reportCrossBorderRelief.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.ReportCrossBorderReliefController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("reportCrossBorderRelief.change.hidden"))
         )
+      )
     }
 }

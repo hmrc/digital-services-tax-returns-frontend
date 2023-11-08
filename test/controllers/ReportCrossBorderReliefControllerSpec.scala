@@ -38,7 +38,7 @@ class ReportCrossBorderReliefControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new ReportCrossBorderReliefFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val reportCrossBorderReliefRoute = routes.ReportCrossBorderReliefController.onPageLoad(NormalMode).url
 

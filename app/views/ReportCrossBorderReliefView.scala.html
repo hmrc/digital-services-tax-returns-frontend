@@ -20,11 +20,17 @@
     layout: templates.Layout,
     formHelper: FormWithCSRF,
     govukErrorSummary: GovukErrorSummary,
+    govukDetails: GovukDetails,
     govukRadios: GovukRadios,
     govukButton: GovukButton
 )
 
 @(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+
+@hintAndIntro=@{govukDetails(
+    Details(summary = HtmlContent(messages("reportCrossBorderRelief.details")),
+    content = HtmlContent(messages("reportCrossBorderRelief.details.text"))
+)) }
 
 @layout(pageTitle = title(form, messages("reportCrossBorderRelief.title"))) {
 
@@ -40,6 +46,7 @@
                 legend = LegendViewModel(messages("reportCrossBorderRelief.heading")).asPageHeading(LegendSize.Large)
             )
              .inline()
+             .withHint(HintViewModel(HtmlContent(hintAndIntro)))
         )
 
         @govukButton(
