@@ -74,3 +74,8 @@ POST       /report-alternative-charge                           controllers.Repo
 GET        /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /reportCrossBorderRelief                        controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = NormalMode)
+POST       /reportCrossBorderRelief                        controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = NormalMode)
+GET        /changeReportCrossBorderRelief                  controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeReportCrossBorderRelief                  controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = CheckMode)

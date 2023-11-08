@@ -194,3 +194,9 @@ reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
+
+reportCrossBorderRelief.title = reportCrossBorderRelief
+reportCrossBorderRelief.heading = reportCrossBorderRelief
+reportCrossBorderRelief.checkYourAnswersLabel = reportCrossBorderRelief
+reportCrossBorderRelief.error.required = Select yes if reportCrossBorderRelief
+reportCrossBorderRelief.change.hidden = ReportCrossBorderRelief
