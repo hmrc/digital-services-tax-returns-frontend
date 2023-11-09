@@ -33,9 +33,11 @@ class RegistrationSpec extends AnyFreeSpec with Matchers with ScalaCheckProperty
   "Registration" - {
 
     "must serialise and de-serialise registration model" in {
-      val registration = Arbitrary.arbitrary[Registration].sample.value
-      val json         = Json.toJson[Registration](registration)
-      json.as[Registration] mustBe registration
+      val expectedRegistration = Arbitrary.arbitrary[Registration].sample.value.copy(ultimateParent = None)
+      val json                 = Json.toJson[Registration](expectedRegistration)
+      val registration         = json.as[Registration]
+      registration mustBe expectedRegistration
+      registration.isGroupMessage mustBe "company"
     }
 
     "de-serialise registration model" in {
@@ -117,6 +119,7 @@ class RegistrationSpec extends AnyFreeSpec with Matchers with ScalaCheckProperty
                                         | }""".stripMargin)
 
       json.as[Registration] mustBe registration
+      json.as[Registration].isGroupMessage mustBe "group"
     }
   }
 }

@@ -35,7 +35,7 @@ GET         /manage-companies                                   controllers.Mana
 POST        /manage-companies                                   controllers.ManageCompaniesController.onSubmit(mode: Mode = NormalMode)
 GET         /manage-companies                                   controllers.ManageCompaniesController.onPageLoad(mode: Mode = CheckMode)
 POST        /manage-companies                                   controllers.ManageCompaniesController.onSubmit(mode: Mode = CheckMode)
-GET         /manage-companies/redirect                           controllers.ManageCompaniesController.redirectToOnLoadPage()
+GET         /manage-companies/redirect                          controllers.ManageCompaniesController.redirectToOnLoadPage()
 
 GET         /select-activities                                  controllers.SelectActivitiesController.onPageLoad(mode: Mode = NormalMode)
 POST        /select-activities                                  controllers.SelectActivitiesController.onSubmit(mode: Mode = NormalMode)
@@ -58,10 +58,10 @@ GET        /edit/report-online-marketplace-alternative-charge   controllers.Repo
 POST       /edit/report-online-marketplace-alternative-charge   controllers.ReportOnlineMarketplaceAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
-GET        /report-search-alternative-charge                        controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
-POST       /report-search-alternative-charge                        controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/report-search-alternative-charge                  controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/report-search-alternative-charge                  controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
+GET        /report-search-alternative-charge                    controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-search-alternative-charge                    controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-search-alternative-charge               controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-search-alternative-charge               controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
 GET        /cross-border-transaction-relief-amount              controllers.CrossBorderTransactionReliefController.onPageLoad(mode: Mode = NormalMode)
@@ -74,3 +74,8 @@ POST       /report-alternative-charge                           controllers.Repo
 GET        /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /report-cross-border-transaction-relief              controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-cross-border-transaction-relief              controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = CheckMode)
