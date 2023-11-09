@@ -24,8 +24,9 @@ class SearchEngineLossFormProviderSpec extends BooleanFieldBehaviours {
   // LDS ignore
   val requiredKey = "searchEngineLoss.error.required"
   val invalidKey  = "error.boolean"
+  val groupName   = "group"
 
-  val form = new SearchEngineLossFormProvider()()
+  val form = new SearchEngineLossFormProvider()(groupName)
 
   ".value" - {
 
@@ -34,13 +35,13 @@ class SearchEngineLossFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(groupName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(groupName))
     )
   }
 }

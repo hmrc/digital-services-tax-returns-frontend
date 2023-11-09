@@ -38,7 +38,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new SearchEngineLossFormProvider()
-  val form         = formProvider()
+  val form         = formProvider("company")
 
   lazy val searchEngineLossRoute = routes.SearchEngineLossController.onPageLoad(NormalMode).url
 

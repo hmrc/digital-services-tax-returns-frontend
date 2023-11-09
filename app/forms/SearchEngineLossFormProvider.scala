@@ -23,8 +23,8 @@ import play.api.data.Form
 
 class SearchEngineLossFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(groupMessage: String): Form[Boolean] =
     Form(
-      "value" -> boolean("searchEngineLoss.error.required")
+      "value" -> boolean("searchEngineLoss.error.required", args = Seq(groupMessage))
     )
 }
