@@ -194,6 +194,17 @@ reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
+reportCrossBorderRelief.title = Are you claiming any relief on cross-border transactions for this return period?
+reportCrossBorderRelief.heading = Are you claiming any relief on cross-border transactions for this return period?
+reportCrossBorderRelief.details=What we mean by ‘relief on cross-border transactions’
+reportCrossBorderRelief.details.text=<p> If a transaction involves a UK user and a non-UK user who is in a country \
+  that also operates a Digital Services Tax, only 50% of the revenues from that transaction will be taxable as UK revenues.</p>
+reportCrossBorderRelief.checkYourAnswersLabel = Are you claiming any relief on cross-border transactions for this period?
+
+reportCrossBorderRelief.error.required = Select yes if you are claiming any relief on cross-border transactions for this return period
+reportCrossBorderRelief.change.hidden = Change is you are claiming any relief on cross-border transactions for this period
+
+
 
 searchEngineLoss.title = Has the group made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?

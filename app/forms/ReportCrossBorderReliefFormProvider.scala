@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package models.requests
+package forms
 
-import models.UserAnswers
-import models.registration.Registration
-import play.api.mvc.{Request, WrappedRequest}
+import javax.inject.Inject
 
-case class OptionalDataRequest[A](
-  request: Request[A],
-  userId: String,
-  registration: Registration,
-  userAnswers: Option[UserAnswers]
-) extends WrappedRequest[A](request)
+import forms.mappings.Mappings
+import play.api.data.Form
 
-case class DataRequest[A](request: Request[A], userId: String, registration: Registration, userAnswers: UserAnswers)
-    extends WrappedRequest[A](request)
+class ReportCrossBorderReliefFormProvider @Inject() extends Mappings {
+
+  def apply(): Form[Boolean] =
+    Form(
+      "value" -> boolean("reportCrossBorderRelief.error.required")
+    )
+}

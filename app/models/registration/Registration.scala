@@ -28,4 +28,6 @@ final case class Registration(
   dateLiable: LocalDate,
   accountingPeriodEnd: LocalDate,
   registrationNumber: Option[DSTRegNumber] = None
-)
+) {
+  val isGroupMessage = if (ultimateParent.isDefined) "group" else "company"
+}

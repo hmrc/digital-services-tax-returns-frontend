@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package models.requests
+package pages
 
-import models.UserAnswers
-import models.registration.Registration
-import play.api.mvc.{Request, WrappedRequest}
+import play.api.libs.json.JsPath
 
-case class OptionalDataRequest[A](
-  request: Request[A],
-  userId: String,
-  registration: Registration,
-  userAnswers: Option[UserAnswers]
-) extends WrappedRequest[A](request)
+case object ReportCrossBorderReliefPage extends QuestionPage[Boolean] {
 
-case class DataRequest[A](request: Request[A], userId: String, registration: Registration, userAnswers: UserAnswers)
-    extends WrappedRequest[A](request)
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "reportCrossBorderRelief"
+}
