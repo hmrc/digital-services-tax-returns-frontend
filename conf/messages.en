@@ -205,3 +205,9 @@ reportCrossBorderRelief.error.required = Select yes if you are claiming any reli
 reportCrossBorderRelief.change.hidden = Change is you are claiming any relief on cross-border transactions for this period
 
 
+
+searchEngineLoss.title = Has the group made a loss on its search engine activity?
+searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
+searchEngineLoss.checkYourAnswersLabel = Loss made
+searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
+searchEngineLoss.change.hidden = Loss made

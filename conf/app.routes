@@ -79,3 +79,8 @@ GET        /report-cross-border-transaction-relief              controllers.Repo
 POST       /report-cross-border-transaction-relief              controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = CheckMode)
+
+GET        /report-search-engine-loss                           controllers.SearchEngineLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-search-engine-loss                           controllers.SearchEngineLossController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-search-engine-loss                      controllers.SearchEngineLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-search-engine-loss                      controllers.SearchEngineLossController.onSubmit(mode: Mode = CheckMode)
