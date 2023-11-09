@@ -196,7 +196,7 @@ reportAlternativeCharge.change.hidden = Alternative charge applied
 
 
 searchEngineLoss.title = Has the group made a loss on its search engine activity?
-searchEngineLoss.heading = Has the group made a loss on its search engine activity?
+searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.checkYourAnswersLabel = Loss made
-searchEngineLoss.error.required = Select yes if the group made a loss on its search engine activity
+searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
 searchEngineLoss.change.hidden = Loss made

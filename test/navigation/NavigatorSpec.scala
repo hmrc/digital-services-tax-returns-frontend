@@ -103,7 +103,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       // TODO
-      "must go from a ReportAlternativeChargePage to ??? when more then one activity and option 'no' is selected" ignore {
+      "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" ignore {
 
         navigator.nextPage(
           ReportAlternativeChargePage,
@@ -111,14 +111,14 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               SelectActivitiesPage,
-              Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
+              Set[SelectActivities](SelectActivities.SearchEngine)
             )
             .success
             .value
             .set(ReportAlternativeChargePage, true)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
       }
 
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {
