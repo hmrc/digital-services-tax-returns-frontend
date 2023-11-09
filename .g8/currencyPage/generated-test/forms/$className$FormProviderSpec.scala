@@ -3,38 +3,26 @@ package forms
 import forms.behaviours.IntFieldBehaviours
 import play.api.data.FormError
 
-class $className$FormProviderSpec extends IntFieldBehaviours {
+class $className$FormProviderSpec extends CurrencyFieldBehaviours {
 
   val form = new $className$FormProvider()()
+  val currencyRegex = "^\\d{1,15}(\\.\\d{2})?$"
 
   ".value" - {
 
     val fieldName = "value"
 
-    val minimum = $minimum$
-    val maximum = $maximum$
-
-    val validDataGenerator = intsInRangeWithCommas(minimum, maximum)
-
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validDataGenerator
+      RegexpGen.from(currencyRegex)
     )
 
-    behave like intField(
+    behave like currencyField(
       form,
       fieldName,
-      nonNumericError  = FormError(fieldName, "$className;format="decap"$.error.nonNumeric"),
-      wholeNumberError = FormError(fieldName, "$className;format="decap"$.error.wholeNumber")
-    )
-
-    behave like intFieldWithRange(
-      form,
-      fieldName,
-      minimum       = minimum,
-      maximum       = maximum,
-      expectedError = FormError(fieldName, "$className;format="decap"$.error.outOfRange", Seq(minimum, maximum))
+      nonNumericError  = FormError(fieldName, "$className;format="decap"$.error.invalid"),
+      wholeNumberError = FormError(fieldName, "$className;format="decap"$.error.exceeded")
     )
 
     behave like mandatoryField(

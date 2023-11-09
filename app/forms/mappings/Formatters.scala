@@ -109,9 +109,7 @@ trait Formatters {
           .flatMap {
             case s if s.matches(currencyRegexp) =>
               val bigDecimalValue = BigDecimal(s)
-              if (bigDecimalValue.scale > 2) {
-                Left(Seq(FormError(key, invalidKey, args)))
-              } else if (bigDecimalValue.precision - bigDecimalValue.scale > maxLen) {
+              if (bigDecimalValue.precision - bigDecimalValue.scale > maxLen) {
                 Left(Seq(FormError(key, exceededKey, args)))
               } else {
                 Right(bigDecimalValue)

@@ -44,7 +44,9 @@ class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviou
     behave like currencyField(
       form,
       fieldName,
-      FormError(fieldName, "crossBorderTransactionRelief.error.invalid")
+      15,
+      FormError(fieldName, "crossBorderTransactionRelief.error.invalid"),
+      FormError(fieldName, "crossBorderTransactionRelief.error.exceeded")
     )
   }
 }

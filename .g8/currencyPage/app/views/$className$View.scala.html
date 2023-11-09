@@ -1,5 +1,6 @@
+@import viewmodels.LabelSize
 @import viewmodels.InputWidth._
-@import viewmodels.LegendSize
+@import uk.gov.hmrc.govukfrontend.views.viewmodels.input.PrefixOrSuffix
 
 @this(
     layout: templates.Layout,
@@ -22,7 +23,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("$className;format="decap"$.heading")).asPageHeading(LegendSize.Large)
+                label = LabelViewModel(messages("$className;format="decap"$.heading")).asPageHeading(LabelSize.Large)
             )
             .withPrefix(PrefixOrSuffix(content = Text("£")))
             .withInputMode("decimal")

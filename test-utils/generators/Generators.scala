@@ -61,12 +61,13 @@ trait Generators {
       .suchThat(!_.isValidInt)
       .map("%f".format(_))
 
-  def decimalsWithMoreThen2DP: Gen[String] =
+  def numberWith3DP: Gen[String] =
     arbitrary[BigDecimal]
-      .suchThat(_.abs < Int.MaxValue)
       .suchThat(_.scale > 3)
-      .suchThat(!_.isValidInt)
       .map("%f".format(_))
+
+  def numbersMoreThenMaxLength(maxLength: Int): Gen[String] =
+    Gen.numChar.filter(_ != '0').map(_.toString * maxLength + 1)
 
 
   def intsBelowValue(value: Int): Gen[Int] =

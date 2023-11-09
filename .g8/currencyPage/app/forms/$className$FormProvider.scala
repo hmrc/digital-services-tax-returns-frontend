@@ -6,7 +6,7 @@ import play.api.data.Form
 
 class $className$FormProvider @Inject() extends Mappings {
 
-  val maxLen                    = 15
+  val MaxLength                    = $field1MaxLength$
 
   def apply(): Form[BigDecimal] =
     Form(
@@ -14,7 +14,7 @@ class $className$FormProvider @Inject() extends Mappings {
         "$className;format="decap"$.error.required",
         "$className;format="decap"$.error.invalid",
         "$className;format="decap"$.error.exceeded",
-        maxLen
+        MaxLength
       )
     )
 }

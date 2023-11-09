@@ -17,10 +17,9 @@ echo "" >> ../conf/messages.en
 echo "$className;format="decap"$.title = $className$" >> ../conf/messages.en
 echo "$className;format="decap"$.heading = $className$" >> ../conf/messages.en
 echo "$className;format="decap"$.checkYourAnswersLabel = $className$" >> ../conf/messages.en
-echo "$className;format="decap"$.error.nonNumeric = Enter your $className;format="decap"$ using numbers" >> ../conf/messages.en
 echo "$className;format="decap"$.error.required = Enter your $className;format="decap"$" >> ../conf/messages.en
-echo "$className;format="decap"$.error.wholeNumber = Enter your $className;format="decap"$ using whole numbers" >> ../conf/messages.en
-echo "$className;format="decap"$.error.outOfRange = $className$ must be between {0} and {1}" >> ../conf/messages.en
+echo "$className;format="decap"$.error.invalid = Enter your $className;format="decap"$ using numbers" >> ../conf/messages.en
+echo "$className;format="decap"$.error.exceeded = $className$ must be {0} characters or fewer" >> ../conf/messages.en
 echo "$className;format="decap"$.change.hidden = $className$" >> ../conf/messages.en
 
 echo "Migration $className;format="snake"$ completed"
