@@ -39,9 +39,10 @@ trait Mappings extends Formatters with Constraints {
     requiredKey: String = "error.required",
     invalidKey: String = "error.invalid",
     exceededKey: String = "error.exceeded",
+    maxMoneyKey: Option[String] = None,
     args: Seq[String] = Seq.empty
-  )(maxCheck: BigDecimal => Boolean): FieldMapping[BigDecimal] =
-    of(currencyFormatter(requiredKey, invalidKey, exceededKey, args)(maxCheck))
+  ): FieldMapping[BigDecimal] =
+    of(currencyFormatter(requiredKey, invalidKey, exceededKey, maxMoneyKey, args))
 
   protected def boolean(
     requiredKey: String = "error.required",

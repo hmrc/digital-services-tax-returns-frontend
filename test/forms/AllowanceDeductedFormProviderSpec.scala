@@ -49,7 +49,7 @@ class AllowanceDeductedFormProviderSpec extends CurrencyFieldBehaviours {
 
     "fail when input exceeds £25m" in {
       val result = form.bind(Map(fieldName -> "25000009")).apply(fieldName)
-      result.errors.head mustEqual  FormError(fieldName, "allowanceDeducted.error.max-money")
+      result.errors.head mustEqual FormError(fieldName, "allowanceDeducted.error.max-money")
     }
   }
 }

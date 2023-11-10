@@ -28,10 +28,7 @@ class CrossBorderTransactionReliefFormProvider @Inject() extends Mappings {
         "crossBorderTransactionRelief.error.required",
         "crossBorderTransactionRelief.error.invalid",
         "crossBorderTransactionRelief.error.exceeded"
-      )(maxCheck)
+      )
     )
 
-  private def maxCheck(value: BigDecimal): Boolean = {
-    value.precision - value.scale > 15
-  }
 }

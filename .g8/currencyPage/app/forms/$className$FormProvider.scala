@@ -14,4 +14,5 @@ class $className$FormProvider @Inject() extends Mappings {
         "$className;format="decap"$.error.exceeded"
       )
     )
+
 }

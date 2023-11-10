@@ -21,7 +21,7 @@ import play.api.data.FormError
 
 class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviours {
 
-  val form          = new CrossBorderTransactionReliefFormProvider()()
+  val form = new CrossBorderTransactionReliefFormProvider()()
 
   ".value" - {
 

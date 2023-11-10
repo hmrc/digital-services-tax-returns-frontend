@@ -47,9 +47,8 @@ trait Generators {
     genIntersperseString(numberGen, ",")
   }
 
-  def validCurrencyDataGenerator: Gen[String] = {
+  def validCurrencyDataGenerator: Gen[String] =
     RegexpGen.from("^[0-9]{1,15}(\\.[0-9]{1,2})?$")
-  }
 
   def intsLargerThanMaxValue: Gen[BigInt] =
     arbitrary[BigInt] suchThat (x => x > Int.MaxValue)

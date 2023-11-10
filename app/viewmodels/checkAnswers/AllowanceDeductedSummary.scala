@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object AllowanceDeductedSummary  {
+object AllowanceDeductedSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AllowanceDeductedPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "allowanceDeducted.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.AllowanceDeductedController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("allowanceDeducted.change.hidden"))
-          )
+    answers.get(AllowanceDeductedPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "allowanceDeducted.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.AllowanceDeductedController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("allowanceDeducted.change.hidden"))
         )
+      )
     }
 }

@@ -29,11 +29,9 @@ class AllowanceDeductedFormProvider @Inject() extends Mappings {
       "value" -> currency(
         requiredKey = "allowanceDeducted.error.required",
         invalidKey = "allowanceDeducted.error.invalid",
-        exceededKey = "allowanceDeducted.error.max-money"
-      )(maxCheck)
+        exceededKey = "allowanceDeducted.error.exceeded",
+        maxMoneyKey = Some("allowanceDeducted.error.max-money")
+      )
     )
 
-  private def maxCheck(value: BigDecimal): Boolean = {
-    value > maxMoney
-  }
 }
