@@ -79,6 +79,7 @@ class Navigator @Inject() () {
           if selectActivities
             .contains(SelectActivities.SocialMedia) && selectActivities.size > 1 =>
         routes.ReportMediaAlternativeChargeController.onPageLoad(mode)
+      case _                                  => ??? // TODO implementation is pending for other activities
     }
 
   private def navigationForSelectedActivitiesNo(selectActivities: Set[SelectActivities], mode: Mode): Call =
