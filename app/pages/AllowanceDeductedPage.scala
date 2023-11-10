@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package forms
+package pages
 
-import forms.mappings.Mappings
-import play.api.data.Form
+import play.api.libs.json.JsPath
 
-import javax.inject.Inject
+case object AllowanceDeductedPage extends QuestionPage[BigDecimal] {
 
-class CrossBorderTransactionReliefFormProvider @Inject() extends Mappings {
-  def apply(): Form[BigDecimal] =
-    Form(
-      "value" -> currency(
-        "crossBorderTransactionRelief.error.required",
-        "crossBorderTransactionRelief.error.invalid",
-        "crossBorderTransactionRelief.error.exceeded"
-      )(maxCheck)
-    )
+  override def path: JsPath = JsPath \ toString
 
-  private def maxCheck(value: BigDecimal): Boolean = {
-    value.precision - value.scale > 15
-  }
+  override def toString: String = "allowanceDeducted"
 }

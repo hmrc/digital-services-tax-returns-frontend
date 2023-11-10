@@ -6,15 +6,12 @@ import play.api.data.Form
 
 class $className$FormProvider @Inject() extends Mappings {
 
-  val MaxLength                    = $field1MaxLength$
-
   def apply(): Form[BigDecimal] =
     Form(
       "value" -> currency(
         "$className;format="decap"$.error.required",
         "$className;format="decap"$.error.invalid",
-        "$className;format="decap"$.error.exceeded",
-        MaxLength
+        "$className;format="decap"$.error.exceeded"
       )
     )
 }

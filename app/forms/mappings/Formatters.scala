@@ -93,12 +93,13 @@ trait Formatters {
     requiredKey: String,
     invalidKey: String,
     exceededKey: String,
-    maxLen: Int = Integer.MAX_VALUE,
     args: Seq[String] = Seq.empty
-  ) =
+  )(maxCheck: BigDecimal => Boolean) =
     new Formatter[BigDecimal] {
 
       val currencyRegexp = "^[0-9]+(\\.[0-9]{1,2})?$"
+      val currencyMaxLength =  15
+      val maxMoney = 25000000
 
       private val baseFormatter = stringFormatter(requiredKey, args)
 
@@ -109,7 +110,7 @@ trait Formatters {
           .flatMap {
             case s if s.matches(currencyRegexp) =>
               val bigDecimalValue = BigDecimal(s)
-              if (bigDecimalValue.precision - bigDecimalValue.scale > maxLen) {
+              if (maxCheck(bigDecimalValue)) {
                 Left(Seq(FormError(key, exceededKey, args)))
               } else {
                 Right(bigDecimalValue)

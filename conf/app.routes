@@ -79,3 +79,8 @@ GET        /report-cross-border-transaction-relief              controllers.Repo
 POST       /report-cross-border-transaction-relief              controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = CheckMode)
+
+GET        /allowanceDeducted                  controllers.AllowanceDeductedController.onPageLoad(mode: Mode = NormalMode)
+POST       /allowanceDeducted                  controllers.AllowanceDeductedController.onSubmit(mode: Mode = NormalMode)
+GET        /changeAllowanceDeducted                        controllers.AllowanceDeductedController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeAllowanceDeducted                        controllers.AllowanceDeductedController.onSubmit(mode: Mode = CheckMode)

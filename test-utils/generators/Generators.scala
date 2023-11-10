@@ -19,6 +19,7 @@ package generators
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalacheck.{Gen, Shrink}
+import wolfendale.scalacheck.regexp.RegexpGen
 
 import java.time.{Instant, LocalDate, ZoneOffset}
 
@@ -46,6 +47,10 @@ trait Generators {
     genIntersperseString(numberGen, ",")
   }
 
+  def validCurrencyDataGenerator: Gen[String] = {
+    RegexpGen.from("^[0-9]{1,15}(\\.[0-9]{1,2})?$")
+  }
+
   def intsLargerThanMaxValue: Gen[BigInt] =
     arbitrary[BigInt] suchThat (x => x > Int.MaxValue)
 
@@ -66,9 +71,8 @@ trait Generators {
       .suchThat(_.scale > 3)
       .map("%f".format(_))
 
-  def numbersMoreThenMaxLength(maxLength: Int): Gen[String] =
-    Gen.numChar.filter(_ != '0').map(_.toString * maxLength + 1)
-
+  def decimalNumbersWithMaxLength: Gen[String] =
+    Gen.numChar.filter(_ != '0').map(_.toString * 20)
 
   def intsBelowValue(value: Int): Gen[Int] =
     arbitrary[Int] suchThat (_ < value)

@@ -17,21 +17,23 @@
 package forms
 
 import forms.mappings.Mappings
+import javax.inject.Inject
 import play.api.data.Form
 
-import javax.inject.Inject
+class AllowanceDeductedFormProvider @Inject() extends Mappings {
 
-class CrossBorderTransactionReliefFormProvider @Inject() extends Mappings {
+  val maxMoney = 25000000
+
   def apply(): Form[BigDecimal] =
     Form(
       "value" -> currency(
-        "crossBorderTransactionRelief.error.required",
-        "crossBorderTransactionRelief.error.invalid",
-        "crossBorderTransactionRelief.error.exceeded"
+        requiredKey = "allowanceDeducted.error.required",
+        invalidKey = "allowanceDeducted.error.invalid",
+        exceededKey = "allowanceDeducted.error.max-money"
       )(maxCheck)
     )
 
   private def maxCheck(value: BigDecimal): Boolean = {
-    value.precision - value.scale > 15
+    value > maxMoney
   }
 }

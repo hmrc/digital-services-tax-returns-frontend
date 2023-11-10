@@ -1,12 +1,11 @@
 package forms
 
-import forms.behaviours.IntFieldBehaviours
+import forms.behaviours.CurrencyFieldBehaviours
 import play.api.data.FormError
 
 class $className$FormProviderSpec extends CurrencyFieldBehaviours {
 
   val form = new $className$FormProvider()()
-  val currencyRegex = "^\\d{1,15}(\\.\\d{2})?$"
 
   ".value" - {
 
@@ -15,14 +14,7 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      RegexpGen.from(currencyRegex)
-    )
-
-    behave like currencyField(
-      form,
-      fieldName,
-      nonNumericError  = FormError(fieldName, "$className;format="decap"$.error.invalid"),
-      wholeNumberError = FormError(fieldName, "$className;format="decap"$.error.exceeded")
+      validCurrencyDataGenerator
     )
 
     behave like mandatoryField(
@@ -30,5 +22,13 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, "$className;format="decap"$.error.required")
     )
+
+    behave like currencyField(
+      form,
+      fieldName,
+      invalidError = FormError(fieldName, "$className;format="decap"$.error.invalid"),
+      exceededError = FormError(fieldName, "$className;format="decap"$.error.exceeded")
+    )
+
   }
 }
