@@ -102,8 +102,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
       }
 
-      // TODO
-      "must go from a ReportAlternativeChargePage to ??? when more then one activity and option 'no' is selected" ignore {
+      "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
         navigator.nextPage(
           ReportAlternativeChargePage,
@@ -111,14 +110,32 @@ class NavigatorSpec extends SpecBase {
           UserAnswers("id")
             .set(
               SelectActivitiesPage,
-              Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
+              Set[SelectActivities](SelectActivities.OnlineMarketplace, SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportAlternativeChargePage to AllowanceDeductedPage when more then one activity is selected and option 'no' is selected" in {
+
+        navigator.nextPage(
+          ReportAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage,
+              Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage, false)
+            .success
+            .value
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {

@@ -81,7 +81,13 @@ class Navigator @Inject() () {
         routes.ReportMediaAlternativeChargeController.onPageLoad(mode)
     }
 
-  private def navigationForSelectedActivitiesNo(selectActivities: Set[SelectActivities], mode: Mode): Call = ???
+  private def navigationForSelectedActivitiesNo(selectActivities: Set[SelectActivities], mode: Mode): Call =
+    selectActivities match {
+      case activities if activities.contains(SelectActivities.OnlineMarketplace) =>
+        routes.ReportCrossBorderReliefController.onPageLoad(mode)
+      case _                                                                     =>
+        routes.AllowanceDeductedController.onPageLoad(mode)
+    }
 
   private def reportAlternativeChargeNavigation(mode: Mode)(userAnswers: UserAnswers): Call =
     (userAnswers.get(SelectActivitiesPage), userAnswers.get(ReportAlternativeChargePage)) match {

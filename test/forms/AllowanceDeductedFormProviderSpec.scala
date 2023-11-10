@@ -44,7 +44,7 @@ class AllowanceDeductedFormProviderSpec extends CurrencyFieldBehaviours {
       form,
       fieldName,
       invalidError = FormError(fieldName, "allowanceDeducted.error.invalid"),
-      exceededError = FormError(fieldName, "allowanceDeducted.error.max-money")
+      exceededError = FormError(fieldName, "allowanceDeducted.error.exceeded")
     )
 
     "fail when input exceeds £25m" in {
