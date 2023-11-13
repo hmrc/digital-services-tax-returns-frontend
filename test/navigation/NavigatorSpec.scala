@@ -102,8 +102,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
       }
 
-
-      "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" ignore {
+      "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" in {
 
         navigator.nextPage(
           ReportAlternativeChargePage,
