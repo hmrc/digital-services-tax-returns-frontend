@@ -89,3 +89,8 @@ GET        /allowance-deducted                                  controllers.Allo
 POST       /allowance-deducted                                  controllers.AllowanceDeductedController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/allowance-deducted                             controllers.AllowanceDeductedController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/allowance-deducted                             controllers.AllowanceDeductedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /uKBankDetails                        controllers.UKBankDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /uKBankDetails                        controllers.UKBankDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /changeUKBankDetails                  controllers.UKBankDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeUKBankDetails                  controllers.UKBankDetailsController.onSubmit(mode: Mode = CheckMode)

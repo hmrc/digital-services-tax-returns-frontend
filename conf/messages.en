@@ -224,3 +224,15 @@ searchEngineLoss.heading = Has the {0} made a loss on its search engine activity
 searchEngineLoss.checkYourAnswersLabel = Loss made
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
 searchEngineLoss.change.hidden = Loss made
+
+uKBankDetails.title = uKBankDetails
+uKBankDetails.heading = uKBankDetails
+uKBankDetails.accountName = accountName
+uKBankDetails.sortCode = sortCode
+uKBankDetails.checkYourAnswersLabel = UKBankDetails
+uKBankDetails.error.accountName.required = Enter accountName
+uKBankDetails.error.sortCode.required = Enter sortCode
+uKBankDetails.error.accountName.length = accountName must be 35 characters or less
+uKBankDetails.error.sortCode.length = sortCode must be 8 characters or less
+uKBankDetails.accountName.change.hidden = accountName
+uKBankDetails.sortCode.change.hidden = sortCode
