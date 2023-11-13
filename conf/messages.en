@@ -225,14 +225,31 @@ searchEngineLoss.checkYourAnswersLabel = Loss made
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
 searchEngineLoss.change.hidden = Loss made
 
-uKBankDetails.title = uKBankDetails
-uKBankDetails.heading = uKBankDetails
-uKBankDetails.accountName = accountName
-uKBankDetails.sortCode = sortCode
+uKBankDetails.title = Your bank details for repayment
+uKBankDetails.heading = Your bank details for repayment
+uKBankDetails.enter.the.details = Enter the details of the international bank account that repayments should be made into.
+uKBankDetails.accountName = Name on the account
+uKBankDetails.sortCode = Sort code
+uKBankDetails.sortCode.hint = The sort code must be 6 digits long
+uKBankDetails.accountNumber = Account number
+uKBankDetails.accountNumber.hint = The account number must be between 6 and 8 digits long
+uKBankDetails.buildingNumber = Building society roll number (if you have one)
+uKBankDetails.buildingNumber.hint = You can find the building society roll number on your card, statement or passbook
+
 uKBankDetails.checkYourAnswersLabel = UKBankDetails
-uKBankDetails.error.accountName.required = Enter accountName
-uKBankDetails.error.sortCode.required = Enter sortCode
+uKBankDetails.error.accountName.required = Enter the account number
 uKBankDetails.error.accountName.length = accountName must be 35 characters or less
-uKBankDetails.error.sortCode.length = sortCode must be 8 characters or less
-uKBankDetails.accountName.change.hidden = accountName
-uKBankDetails.sortCode.change.hidden = sortCode
+
+uKBankDetails.error.sortCode.required = Enter the sort code
+uKBankDetails.error.sortCode.invalid = sortCode must be 8 characters or less
+
+uKBankDetails.error.accountNumber.required = Enter the account number
+uKBankDetails.error.accountNumber.invalid  = Enter the account number in the correct format, like 123456 or 12345678
+
+uKBankDetails.error.buildingNumber.length  = Building society roll number must be 18 characters or fewer
+uKBankDetails.error.buildingNumber.invalid  = Building society roll number must only include letters a to z, numbers, hyphens and spaces
+
+uKBankDetails.accountName.change.hidden = Account name
+uKBankDetails.sortCode.change.hidden = Sort code
+uKBankDetails.accountNumber.change.hidden = Account number
+uKBankDetails.buildingRollNumber.change.hidden = Building society roll number (if you have one)

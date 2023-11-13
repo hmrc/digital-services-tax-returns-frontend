@@ -18,6 +18,7 @@ package forms
 
 import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import wolfendale.scalacheck.regexp.RegexpGen
 
 class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
 
@@ -25,15 +26,16 @@ class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".accountName" - {
 
-    val fieldName = "accountName"
+    val fieldName   = "accountName"
     val requiredKey = "uKBankDetails.error.accountName.required"
-    val lengthKey = "uKBankDetails.error.accountName.length"
-    val maxLength = 35
+    val lengthKey   = "uKBankDetails.error.accountName.length"
+    val maxLength   = 35
+    val regex       = """^[a-zA-Z&^]{1,35}$"""
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      RegexpGen.from(regex)
     )
 
     behave like fieldWithMaxLength(
@@ -52,15 +54,72 @@ class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
 
   ".sortCode" - {
 
-    val fieldName = "sortCode"
+    val fieldName   = "sortCode"
     val requiredKey = "uKBankDetails.error.sortCode.required"
-    val lengthKey = "uKBankDetails.error.sortCode.length"
-    val maxLength = 8
+    val lengthKey   = "uKBankDetails.error.sortCode.length"
+    val maxLength   = 8
+    val regex       = """^[0-9]{6}$"""
 
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      stringsWithMaxLength(maxLength)
+      RegexpGen.from(regex)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(regex))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  ".accountNumber" - {
+
+    val fieldName   = "accountNumber"
+    val requiredKey = "uKBankDetails.error.accountNumber.required"
+    val lengthKey   = "uKBankDetails.error.accountNumber.length"
+    val maxLength   = 8
+    val regex       = """^[0-9]{8}$"""
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      RegexpGen.from(regex)
+    )
+
+    behave like fieldWithMaxLength(
+      form,
+      fieldName,
+      maxLength = maxLength,
+      lengthError = FormError(fieldName, lengthKey, Seq(regex))
+    )
+
+    behave like mandatoryField(
+      form,
+      fieldName,
+      requiredError = FormError(fieldName, requiredKey)
+    )
+  }
+
+  ".buildingNumber" - {
+
+    val fieldName  = "buildingNumber"
+    val lengthKey  = "uKBankDetails.error.buildingNumber.length"
+    val invalidKey = "uKBankDetails.error.buildingNumber.invalid"
+    val maxLength  = 18
+    val regex      = """^[A-Za-z0-9 -]{1,18}$"""
+
+    behave like fieldThatBindsValidData(
+      form,
+      fieldName,
+      RegexpGen.from(regex)
     )
 
     behave like fieldWithMaxLength(
@@ -70,10 +129,11 @@ class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
       lengthError = FormError(fieldName, lengthKey, Seq(maxLength))
     )
 
-    behave like mandatoryField(
+    behave like fieldWithInValidData(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      RegexpGen.from(s"[!£^*(){}_+=:;|`~,±üçñèé@]{18}"),
+      FormError(fieldName, invalidKey, Seq(regex))
     )
   }
 }

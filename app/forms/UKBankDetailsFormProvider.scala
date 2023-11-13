@@ -25,12 +25,33 @@ import models.UKBankDetails
 
 class UKBankDetailsFormProvider @Inject() extends Mappings {
 
-   def apply(): Form[UKBankDetails] = Form(
-     mapping(
-      "accountName" -> text("uKBankDetails.error.accountName.required")
-        .verifying(maxLength(35, "uKBankDetails.error.accountName.length")),
-      "sortCode" -> text("uKBankDetails.error.sortCode.required")
-        .verifying(maxLength(8, "uKBankDetails.error.sortCode.length"))
+  val accountNameRegex        = """^[a-zA-Z&^]{1,35}$"""
+  val sortCodeRegex           = """^[0-9]{6}$"""
+  val accountNumberRegex      = """^[0-9]{8}$"""
+  val buildingRollNumberRegex = """^[A-Za-z0-9 -]{1,18}$"""
+
+  def apply(): Form[UKBankDetails] = Form(
+    mapping(
+      "accountName"    -> text("uKBankDetails.error.accountName.required")
+        .verifying(
+          firstError(
+            maxLength(35, "uKBankDetails.error.accountName.length"),
+            regexp(accountNameRegex, "uKBankDetails.error.accountName.invalid")
+          )
+        ),
+      "sortCode"       -> text("uKBankDetails.error.sortCode.required")
+        .verifying(regexp(sortCodeRegex, "uKBankDetails.error.sortCode.length")),
+      "accountNumber"  -> text("uKBankDetails.error.accountNumber.required")
+        .verifying(regexp(accountNumberRegex, "uKBankDetails.error.accountNumber.length")),
+      "buildingNumber" -> optional(
+        text()
+          .verifying(
+            firstError(
+              maxLength(18, "uKBankDetails.error.buildingNumber.length"),
+              regexp(buildingRollNumberRegex, "uKBankDetails.error.buildingNumber.invalid")
+            )
+          )
+      )
     )(UKBankDetails.apply)(UKBankDetails.unapply)
-   )
- }
+  )
+}

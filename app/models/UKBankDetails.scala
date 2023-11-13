@@ -18,8 +18,8 @@ package models
 
 import play.api.libs.json._
 
-case class UKBankDetails (accountName: String, sortCode: String)
+case class UKBankDetails(accountName: String, sortCode: String, accountNumber: String, buildingNumber: Option[String])
 
 object UKBankDetails {
-  implicit val format = Json.format[UKBankDetails]
+  implicit val format: OFormat[UKBankDetails] = Json.format[UKBankDetails]
 }

@@ -39,7 +39,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new UKBankDetailsFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val uKBankDetailsRoute = routes.UKBankDetailsController.onPageLoad(NormalMode).url
 
@@ -47,8 +47,9 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
     userAnswersId,
     Json.obj(
       UKBankDetailsPage.toString -> Json.obj(
-        "accountName" -> "value 1",
-        "sortCode" -> "value 2"
+        "accountName"   -> "Name",
+        "sortCode"      -> "123456",
+        "accountNumber" -> "12345678"
       )
     )
   )
@@ -83,7 +84,10 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(UKBankDetails("value 1", "value 2")), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(
+          form.fill(UKBankDetails("Name", "123456", "12345678", None)),
+          NormalMode
+        )(request, messages(application)).toString
       }
     }
 
@@ -104,7 +108,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, uKBankDetailsRoute)
-            .withFormUrlEncodedBody(("accountName", "value 1"), ("sortCode", "value 2"))
+            .withFormUrlEncodedBody(("accountName", "Name"), ("sortCode", "123456"), ("accountNumber", "12345678"))
 
         val result = route(application, request).value
 

@@ -36,12 +36,14 @@
 
         <h1 class="govuk-heading-l">@messages("uKBankDetails.heading")</h1>
 
+        <p class="govuk-body">@messages("uKBankDetails.enter.the.details")</p>
+
         @govukInput(
             InputViewModel(
                 field = form("accountName"),
                 label = LabelViewModel(messages("uKBankDetails.accountName"))
             )
-            .withWidth(Full)
+            .withWidth(TwoThirds)
         )
 
         @govukInput(
@@ -49,7 +51,26 @@
                 field = form("sortCode"),
                 label = LabelViewModel(messages("uKBankDetails.sortCode"))
             )
-            .withWidth(Full)
+            .withWidth(Fixed5)
+            .withHint(HintViewModel(messages("uKBankDetails.sortCode.hint")))
+        )
+
+        @govukInput(
+            InputViewModel(
+            field = form("accountNumber"),
+            label = LabelViewModel(messages("uKBankDetails.accountNumber"))
+            )
+            .withWidth(Fixed10)
+            .withHint(HintViewModel(messages("uKBankDetails.accountNumber.hint")))
+        )
+
+        @govukInput(
+            InputViewModel(
+            field = form("buildingNumber"),
+            label = LabelViewModel(messages("uKBankDetails.buildingNumber"))
+            )
+            .withWidth(Fixed10)
+            .withHint(HintViewModel(messages("uKBankDetails.buildingNumber.hint")))
         )
 
         @govukButton(
