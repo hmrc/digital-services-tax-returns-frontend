@@ -102,6 +102,25 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
       }
 
+
+      "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" ignore {
+
+        navigator.nextPage(
+          ReportAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage,
+              Set[SelectActivities](SelectActivities.SearchEngine)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
+      }
+
       "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
         navigator.nextPage(
