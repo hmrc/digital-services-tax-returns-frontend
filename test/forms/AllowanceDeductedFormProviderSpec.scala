@@ -18,10 +18,11 @@ package forms
 
 import forms.behaviours.CurrencyFieldBehaviours
 import play.api.data.FormError
+import wolfendale.scalacheck.regexp.RegexpGen
 
-class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviours {
+class AllowanceDeductedFormProviderSpec extends CurrencyFieldBehaviours {
 
-  val form = new CrossBorderTransactionReliefFormProvider()()
+  val form = new AllowanceDeductedFormProvider()()
 
   ".value" - {
 
@@ -30,20 +31,25 @@ class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviou
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validCurrencyDataGenerator
+      RegexpGen.from("^[0-9]{1,7}(\\.[0-9]{1,2})?$")
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "crossBorderTransactionRelief.error.required")
+      requiredError = FormError(fieldName, "allowanceDeducted.error.required")
     )
 
     behave like currencyField(
       form,
       fieldName,
-      FormError(fieldName, "crossBorderTransactionRelief.error.invalid"),
-      FormError(fieldName, "crossBorderTransactionRelief.error.exceeded")
+      invalidError = FormError(fieldName, "allowanceDeducted.error.invalid"),
+      exceededError = FormError(fieldName, "allowanceDeducted.error.exceeded")
     )
+
+    "fail when input exceeds £25m" in {
+      val result = form.bind(Map(fieldName -> "25000009")).apply(fieldName)
+      result.errors.head mustEqual FormError(fieldName, "allowanceDeducted.error.max-money")
+    }
   }
 }

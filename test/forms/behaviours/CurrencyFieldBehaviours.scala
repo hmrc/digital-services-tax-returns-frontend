@@ -20,7 +20,7 @@ import play.api.data.{Form, FormError}
 
 trait CurrencyFieldBehaviours extends FieldBehaviours {
 
-  def currencyField(form: Form[_], fieldName: String, invalidError: FormError): Unit =
+  def currencyField(form: Form[_], fieldName: String, invalidError: FormError, exceededError: FormError): Unit = {
     "not bind non-numeric numbers" in {
 
       forAll(nonNumerics -> "nonNumeric") { nonNumeric =>
@@ -28,5 +28,20 @@ trait CurrencyFieldBehaviours extends FieldBehaviours {
         result.errors must contain only invalidError
       }
     }
+
+    "not bind invalid decimal numbers" in {
+      forAll(decimalNumbersWithMaxLength -> "decimal") { decimal =>
+        val result = form.bind(Map(fieldName -> decimal)).apply(fieldName)
+        result.errors must contain only exceededError
+      }
+    }
+
+    "not bind decimal exceeding more then 2 decimal points" in {
+      forAll(numberWith3DP -> "decimal") { decimal =>
+        val result = form.bind(Map(fieldName -> decimal)).apply(fieldName)
+        result.errors must contain only invalidError
+      }
+    }
+  }
 
 }

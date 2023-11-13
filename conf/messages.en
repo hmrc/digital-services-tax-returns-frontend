@@ -204,7 +204,20 @@ reportCrossBorderRelief.checkYourAnswersLabel = Are you claiming any relief on c
 reportCrossBorderRelief.error.required = Select yes if you are claiming any relief on cross-border transactions for this return period
 reportCrossBorderRelief.change.hidden = Change is you are claiming any relief on cross-border transactions for this period
 
-
+allowanceDeducted.title = How much of the £25m annual allowance have you deducted from revenues in this return?
+allowanceDeducted.heading = How much of the £25m annual allowance have you deducted from revenues in this return?
+allowanceDeducted.details=What we mean by ‘£25m annual allowance’
+allowanceDeducted.details.text=<p>The £25m annual allowance means the first £25m of revenues derived \
+from UK users will not be subject to Digital Services Tax.</p><p>The allowance is pro-rated for accounting \
+periods less than 12 months.</p>
+allowanceDeducted.checkYourAnswersLabel = Amount of £25m annual allowance claimed
+allowanceDeducted.error.required = Enter how much of the £25m annual allowance you have deducted from revenues in this return
+allowanceDeducted.error.invalid = The amount of the £25m annual allowance you have deducted from revenues must be an amount \
+of money, like 1,234.56 or 1,560.00
+allowanceDeducted.error.exceeded = The amount of the £25m annual allowance you have deducted from revenues must be 15 numbers or fewer
+allowanceDeducted.error.minimum-money=The amount of the £25m annual allowance you have deducted from revenues must be £1 or more
+allowanceDeducted.error.max-money=The amount of the £25m annual allowance you have deducted from revenues must be £25m or less
+allowanceDeducted.change.hidden = Change the amount of £25m annual allowance claimed
 
 searchEngineLoss.title = Has the group made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
