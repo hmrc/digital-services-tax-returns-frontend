@@ -16,14 +16,24 @@
 
 package controllers
 import generators.ModelGenerators._
-import models.registration.{Address, Company, CompanyRegWrapper, Registration}
+import models.registration.{Address, Company, CompanyRegWrapper, Period, Registration}
 import models.{CompanyName, DSTRegNumber}
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues
 
+import java.time.LocalDate
+
 package object actions extends OptionValues {
   val registration: Registration = Arbitrary.arbitrary[Registration].sample.value
   val address                    = Arbitrary.arbitrary[Address].sample.value
+  val period: Period             = Arbitrary.arbitrary[Period].sample.value
+
+  val updatedPeriod = period.copy(
+    start = LocalDate.of(2020, 2, 28),
+    end = LocalDate.of(2021, 2, 28),
+    returnDue = LocalDate.of(2023, 2, 28),
+    key = Period.Key("001")
+  )
 
   val updatedRegistration: Registration = registration.copy(
     registrationNumber = Some(DSTRegNumber("AMDST0799721562")),

@@ -28,5 +28,10 @@ case class OptionalDataRequest[A](
   userAnswers: Option[UserAnswers]
 ) extends WrappedRequest[A](request)
 
-case class DataRequest[A](request: Request[A], userId: String, registration: Registration,period:Period, userAnswers: UserAnswers)
-    extends WrappedRequest[A](request)
+case class DataRequest[A](
+  request: Request[A],
+  userId: String,
+  registration: Registration,
+  period: Period,
+  userAnswers: UserAnswers
+) extends WrappedRequest[A](request)

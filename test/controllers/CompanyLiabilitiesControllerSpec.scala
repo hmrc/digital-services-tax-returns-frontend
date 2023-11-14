@@ -18,10 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyLiabilitiesFormProvider
-import models.{NormalMode, UserAnswers}
+import models.registration.Period
+import models.{NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CompanyLiabilitiesPage
 import play.api.inject.bind
@@ -37,6 +39,8 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new CompanyLiabilitiesFormProvider()
   val companyName  = registration.companyReg.company.name
+  val startDate    = formatDate(updatedPeriod.start)
+  val endDate      = formatDate(updatedPeriod.end)
   val form         = formProvider(companyName)
 
   def onwardRoute = Call("GET", "/foo")
@@ -59,7 +63,10 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[CompanyLiabilitiesView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, companyName)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, companyName, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -77,7 +84,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, companyName)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, companyName, startDate, endDate)(
           request,
           messages(application)
         ).toString
@@ -126,7 +133,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, companyName)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, companyName, startDate, endDate)(
           request,
           messages(application)
         ).toString

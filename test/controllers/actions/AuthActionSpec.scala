@@ -22,7 +22,7 @@ import config.FrontendAppConfig
 import connectors.DSTConnector
 import controllers.routes
 import generators.ModelGenerators._
-import models.registration.Registration
+import models.registration.{Period, Registration}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalacheck.Arbitrary
@@ -234,6 +234,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers  = application.injector.instanceOf[BodyParsers.Default]
           val appConfig    = mock[FrontendAppConfig]
           val registration = Arbitrary.arbitrary[Registration].sample.value
+          val period       = Arbitrary.arbitrary[Period].sample.value
 
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
@@ -244,6 +245,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
             retrieval
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
+          when(mockDstConnector.lookupAllReturns()(any())).thenReturn(Future.successful(Set(period)))
 
           val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
