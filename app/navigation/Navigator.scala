@@ -32,6 +32,7 @@ class Navigator @Inject() () {
     case SelectActivitiesPage             => _ => routes.ReportAlternativeChargeController.onPageLoad(NormalMode)
     case ReportAlternativeChargePage      => ua => reportAlternativeChargeNavigation(NormalMode)(ua)
     case ReportMediaAlternativeChargePage => ua => reportMediaAlternative(ua)
+    case ReportCrossBorderReliefPage      => ua => reportCrossBorderRelief(ua)(NormalMode)
     case _                                => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
@@ -47,6 +48,13 @@ class Navigator @Inject() () {
     case CheckMode  =>
       checkRouteMap(page)(userAnswers)
   }
+
+  def reportCrossBorderRelief(ua: UserAnswers)(mode: Mode): Call =
+    ua.get(ReportCrossBorderReliefPage) match {
+      case Some(true)  => ??? // TODO /relief-deducted page
+      case Some(false) => routes.AllowanceDeductedController.onPageLoad(mode)
+      case _           => routes.JourneyRecoveryController.onPageLoad()
+    }
 
   private def addCompanyDetails(mode: Mode)(userAnswers: UserAnswers): Call =
     userAnswers.get(ManageCompaniesPage) match {

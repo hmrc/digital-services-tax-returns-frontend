@@ -186,6 +186,34 @@ class NavigatorSpec extends SpecBase {
             .value
         ) mustBe ???
       }
+
+      "must go from a ReportCrossBorderReliefPage to AllowanceDeducted page when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportCrossBorderReliefPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportCrossBorderReliefPage, false)
+            .success
+            .value
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+      }
+
+      // TODO
+      "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" ignore {
+
+        navigator.nextPage(
+          ReportMediaAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .success
+            .value
+            .set(ReportCrossBorderReliefPage, true)
+            .success
+            .value
+        ) mustBe ???
+      }
     }
 
     "in Check mode" - {
