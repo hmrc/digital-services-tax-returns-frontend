@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyLiabilitiesFormProvider
-import models.Mode
+import models.{Mode, formatDate}
 import navigation.Navigator
 import pages.CompanyLiabilitiesPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,25 +46,29 @@ class CompanyLiabilitiesController @Inject() (
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val companyName  = request.registration.companyReg.company.name
+    val startDate    = formatDate(request.period.start)
+    val endDate      = formatDate(request.period.end)
     val form         = formProvider(companyName)
     val preparedForm = request.userAnswers.get(CompanyLiabilitiesPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, companyName))
+    Ok(view(preparedForm, mode, companyName, startDate, endDate))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val companyName = request.registration.companyReg.company.name
+      val startDate   = formatDate(request.period.start)
+      val endDate     = formatDate(request.period.end)
 
       val form = formProvider(companyName)
 
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, companyName))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, companyName, startDate, endDate))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage, value))
