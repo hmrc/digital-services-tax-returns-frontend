@@ -89,3 +89,9 @@ GET        /allowance-deducted                                  controllers.Allo
 POST       /allowance-deducted                                  controllers.AllowanceDeductedController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/allowance-deducted                             controllers.AllowanceDeductedController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/allowance-deducted                             controllers.AllowanceDeductedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /company-liabilities                                  controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = NormalMode)
+POST       /company-liabilities                                  controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode)
+

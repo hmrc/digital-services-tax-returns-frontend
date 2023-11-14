@@ -224,3 +224,12 @@ searchEngineLoss.heading = Has the {0} made a loss on its search engine activity
 searchEngineLoss.checkYourAnswersLabel = Loss made
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
 searchEngineLoss.change.hidden = Loss made
+
+companyLiabilities.title = What are your UK Digital Services Tax liabilities for {0} from {1} to {2}?
+companyLiabilities.heading = What are your UK Digital Services Tax liabilities for {0} from {1} to {2}?
+companyLiabilities.checkYourAnswersLabel = Company liabilities
+companyLiabilities.error.required = Enter the Digital Services Tax liability for {0} in pounds or pounds and pence
+companyLiabilities.error.invalid = The liability for {0} must be an amount of money, like 1,234.56 or 1,560.00
+companyLiabilities.error.exceeded = The liability for {0} must be 15 numbers or fewer
+companyLiabilities.change.hidden = Company liabilities
+
