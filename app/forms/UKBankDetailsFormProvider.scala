@@ -40,9 +40,9 @@ class UKBankDetailsFormProvider @Inject() extends Mappings {
           )
         ),
       "sortCode"       -> text("uKBankDetails.error.sortCode.required")
-        .verifying(regexp(sortCodeRegex, "uKBankDetails.error.sortCode.length")),
+        .verifying(regexp(sortCodeRegex, "uKBankDetails.error.sortCode.invalid")),
       "accountNumber"  -> text("uKBankDetails.error.accountNumber.required")
-        .verifying(regexp(accountNumberRegex, "uKBankDetails.error.accountNumber.length")),
+        .verifying(regexp(accountNumberRegex, "uKBankDetails.error.accountNumber.invalid")),
       "buildingNumber" -> optional(
         text()
           .verifying(

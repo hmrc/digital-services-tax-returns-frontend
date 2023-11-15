@@ -236,12 +236,13 @@ uKBankDetails.accountNumber.hint = The account number must be between 6 and 8 di
 uKBankDetails.buildingNumber = Building society roll number (if you have one)
 uKBankDetails.buildingNumber.hint = You can find the building society roll number on your card, statement or passbook
 
-uKBankDetails.checkYourAnswersLabel = UKBankDetails
-uKBankDetails.error.accountName.required = Enter the account number
-uKBankDetails.error.accountName.length = accountName must be 35 characters or less
+uKBankDetails.checkYourAnswersLabel = Return repayments
+uKBankDetails.error.accountName.required = Enter the account name
+uKBankDetails.error.accountName.invalid= Account name must only include letters a to z
+uKBankDetails.error.accountName.length = Account name must be 35 characters or less
 
 uKBankDetails.error.sortCode.required = Enter the sort code
-uKBankDetails.error.sortCode.invalid = sortCode must be 8 characters or less
+uKBankDetails.error.sortCode.invalid = Enter the sort code in the correct format, like 123456
 
 uKBankDetails.error.accountNumber.required = Enter the account number
 uKBankDetails.error.accountNumber.invalid  = Enter the account number in the correct format, like 123456 or 12345678

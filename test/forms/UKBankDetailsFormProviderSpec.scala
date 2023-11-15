@@ -56,7 +56,7 @@ class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "sortCode"
     val requiredKey = "uKBankDetails.error.sortCode.required"
-    val lengthKey   = "uKBankDetails.error.sortCode.length"
+    val lengthKey   = "uKBankDetails.error.sortCode.invalid"
     val maxLength   = 8
     val regex       = """^[0-9]{6}$"""
 
@@ -84,7 +84,7 @@ class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
 
     val fieldName   = "accountNumber"
     val requiredKey = "uKBankDetails.error.accountNumber.required"
-    val lengthKey   = "uKBankDetails.error.accountNumber.length"
+    val lengthKey   = "uKBankDetails.error.accountNumber.invalid"
     val maxLength   = 8
     val regex       = """^[0-9]{8}$"""
 
