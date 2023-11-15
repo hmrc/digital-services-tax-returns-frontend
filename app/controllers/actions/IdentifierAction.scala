@@ -75,7 +75,8 @@ class AuthenticatedIdentifierAction @Inject() (
           periods.toList match {
             case Nil     => Future.successful(NotFound)
             case periods =>
-              val latest = periods.sortBy(_.start).head  //TODO instead of head it should compare it with periodKey from url
+              val latest =
+                periods.sortBy(_.start).head // TODO instead of head it should compare it with periodKey from url
               block(IdentifierRequest(request, internalId, reg, latest))
           }
         }
