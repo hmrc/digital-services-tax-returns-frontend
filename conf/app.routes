@@ -94,3 +94,9 @@ GET        /uk-bank-details                                      controllers.UKB
 POST       /uk-bank-details                                      controllers.UKBankDetailsController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/uk-bank-details                                 controllers.UKBankDetailsController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/uk-bank-details                                 controllers.UKBankDetailsController.onSubmit(mode: Mode = CheckMode)
+
+GET        /company-liabilities                                  controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = NormalMode)
+POST       /company-liabilities                                  controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode)
+

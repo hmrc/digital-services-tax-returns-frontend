@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package models.requests
+package forms
 
-import models.UserAnswers
-import models.registration.{Period, Registration}
-import play.api.mvc.{Request, WrappedRequest}
+import forms.mappings.Mappings
 
-case class OptionalDataRequest[A](
-  request: Request[A],
-  userId: String,
-  registration: Registration,
-  period: Period,
-  userAnswers: Option[UserAnswers]
-) extends WrappedRequest[A](request)
+import javax.inject.Inject
+import play.api.data.Form
 
-case class DataRequest[A](
-  request: Request[A],
-  userId: String,
-  registration: Registration,
-  period: Period,
-  userAnswers: UserAnswers
-) extends WrappedRequest[A](request)
+class CompanyLiabilitiesFormProvider @Inject() extends Mappings {
+
+  def apply(companyName: String): Form[BigDecimal] =
+    Form(
+      "value" -> currency(
+        requiredKey = "companyLiabilities.error.required",
+        args = Seq(companyName),
+        invalidKey = "companyLiabilities.error.invalid",
+        exceededKey = "companyLiabilities.error.exceeded"
+      )
+    )
+
+}
