@@ -100,3 +100,8 @@ POST       /company-liabilities                                  controllers.Com
 GET        /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode)
 
+
+GET        /isRepaymentBankAccountUK                        controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = NormalMode)
+POST       /isRepaymentBankAccountUK                        controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
+GET        /changeIsRepaymentBankAccountUK                  controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeIsRepaymentBankAccountUK                  controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)
