@@ -22,7 +22,7 @@ import play.api.data.FormError
 class IsRepaymentBankAccountUKFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "isRepaymentBankAccountUK.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
 
   val form = new IsRepaymentBankAccountUKFormProvider()()
 

@@ -24,21 +24,19 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object IsRepaymentBankAccountUKSummary  {
+object IsRepaymentBankAccountUKSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(IsRepaymentBankAccountUKPage).map {
-      answer =>
+    answers.get(IsRepaymentBankAccountUKPage).map { answer =>
+      val value = if (answer) "site.yes" else "site.no"
 
-        val value = if (answer) "site.yes" else "site.no"
-
-        SummaryListRowViewModel(
-          key     = "isRepaymentBankAccountUK.checkYourAnswersLabel",
-          value   = ValueViewModel(value),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.IsRepaymentBankAccountUKController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("isRepaymentBankAccountUK.change.hidden"))
-          )
+      SummaryListRowViewModel(
+        key = "isRepaymentBankAccountUK.checkYourAnswersLabel",
+        value = ValueViewModel(value),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.IsRepaymentBankAccountUKController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("isRepaymentBankAccountUK.change.hidden"))
         )
+      )
     }
 }

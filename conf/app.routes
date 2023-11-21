@@ -101,7 +101,7 @@ GET        /edit/company-liabilities                             controllers.Com
 POST       /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode)
 
 
-GET        /isRepaymentBankAccountUK                        controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = NormalMode)
-POST       /isRepaymentBankAccountUK                        controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
-GET        /changeIsRepaymentBankAccountUK                  controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeIsRepaymentBankAccountUK                  controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)
+GET        /is-repayment-bank-account-uk                         controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = NormalMode)
+POST       /is-repayment-bank-account-uk                         controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/is-repayment-bank-account-uk                    controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/is-repayment-bank-account-uk                    controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)

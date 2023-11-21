@@ -38,7 +38,7 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
   def onwardRoute = Call("GET", "/foo")
 
   val formProvider = new IsRepaymentBankAccountUKFormProvider()
-  val form = formProvider()
+  val form         = formProvider()
 
   lazy val isRepaymentBankAccountUKRoute = routes.IsRepaymentBankAccountUKController.onPageLoad(NormalMode).url
 
