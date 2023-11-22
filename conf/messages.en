@@ -268,4 +268,4 @@ isRepaymentBankAccountUK.title = Is this a UK bank account?
 isRepaymentBankAccountUK.heading = Is this a UK bank account?
 isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
 isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
-isRepaymentBankAccountUK.change.hidden = Change if this a UK bank account
+isRepaymentBankAccountUK.change.hidden = Change if this is a UK bank account
