@@ -16,4 +16,5 @@
 
 package object pages {
   val companyDetailsList: String = "company-details"
+  val companyLiabilityList: String = "company-liabilities"
 }

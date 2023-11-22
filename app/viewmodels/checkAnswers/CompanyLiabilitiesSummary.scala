@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, Index, UserAnswers}
 import pages.CompanyLiabilitiesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,13 +26,13 @@ import viewmodels.implicits._
 
 object CompanyLiabilitiesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CompanyLiabilitiesPage).map { answer =>
+  def row(answers: UserAnswers, index: Index)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(CompanyLiabilitiesPage(index)).map { answer =>
       SummaryListRowViewModel(
         key = "companyLiabilities.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CompanyLiabilitiesController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.CompanyLiabilitiesController.onPageLoad(CheckMode, index).url)
             .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
         )
       )

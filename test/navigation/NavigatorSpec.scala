@@ -239,6 +239,19 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
+
+      "must go from a IsRepaymentBankAccountUKPage to no uk bank account page when 'No' is selected" ignore {
+
+        navigator.nextPage(
+          IsRepaymentBankAccountUKPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(IsRepaymentBankAccountUKPage, false)
+            .success
+            .value
+        ) mustBe ???
+      }
+
     }
 
     "in Check mode" - {

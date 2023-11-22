@@ -18,14 +18,12 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyLiabilitiesFormProvider
-import models.registration.Period
-import models.{NormalMode, UserAnswers, formatDate}
+import models.{CompanyDetails, NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
-import pages.CompanyLiabilitiesPage
+import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -47,11 +45,33 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
   val validAnswer = BigDecimal(100.00)
 
-  lazy val companyLiabilitiesRoute = routes.CompanyLiabilitiesController.onPageLoad(NormalMode).url
+  lazy val companyLiabilitiesRoute = routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index).url
 
   "CompanyLiabilities Controller" - {
 
     "must return OK and the correct view for a GET" in {
+      val ua = emptyUserAnswers.set(CompanyDetailsPage(index), CompanyDetails("value 2", None))
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(ua)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, companyLiabilitiesRoute)
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CompanyLiabilitiesView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(form, NormalMode, index, companyName, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must redirect to 'journey recovery' page when company details is missing" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
@@ -62,17 +82,14 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
         val view = application.injector.instanceOf[CompanyLiabilitiesView]
 
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, companyName, startDate, endDate)(
-          request,
-          messages(application)
-        ).toString
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(CompanyLiabilitiesPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(CompanyLiabilitiesPage(index), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -84,7 +101,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, index, companyName, startDate, endDate)(
           request,
           messages(application)
         ).toString
@@ -133,7 +150,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, index, companyName, startDate, endDate)(
           request,
           messages(application)
         ).toString

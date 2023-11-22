@@ -95,10 +95,10 @@ POST       /uk-bank-details                                      controllers.UKB
 GET        /edit/uk-bank-details                                 controllers.UKBankDetailsController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/uk-bank-details                                 controllers.UKBankDetailsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /company-liabilities                                  controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = NormalMode)
-POST       /company-liabilities                                  controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/company-liabilities                             controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode)
+GET        /company-liabilities-/:index                          controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = NormalMode, index:Index)
+POST       /company-liabilities-/:index                          controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = NormalMode, index:Index)
+GET        /edit/company-liabilities-/:index                     controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode, index:Index)
+POST       /edit/company-liabilities-/:index                     controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode, index:Index)
 
 
 GET        /is-repayment-bank-account-uk                         controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = NormalMode)

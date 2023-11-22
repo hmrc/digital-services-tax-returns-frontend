@@ -34,7 +34,8 @@ class Navigator @Inject() () {
     case ReportMediaAlternativeChargePage => ua => reportMediaAlternative(ua)
     case ReportCrossBorderReliefPage      => ua => reportCrossBorderRelief(ua)(NormalMode)
     case IsRepaymentBankAccountUKPage     => ua => repaymentBankAccount(ua)(NormalMode)
-    case _                                => _ => routes.ReturnsDashboardController.onPageLoad
+    case CompanyLiabilitiesPage(_)        => ua  => companyLiability(ua)(NormalMode)
+    case _                                => _  => routes.ReturnsDashboardController.onPageLoad
   }
 
   private val checkRouteMap: Page => UserAnswers => Call = {
@@ -107,12 +108,23 @@ class Navigator @Inject() () {
         routes.ReturnsDashboardController.onPageLoad
     }
 
-  private def repaymentBankAccount(ua: UserAnswers)(mode: Mode) =
+  private def repaymentBankAccount(ua: UserAnswers)(mode: Mode): Call =
     ua.get(IsRepaymentBankAccountUKPage)
       .map {
         case true  => routes.UKBankDetailsController.onPageLoad(mode)
         case false => ??? // TODO nonUK
       }
       .getOrElse(routes.JourneyRecoveryController.onPageLoad())
+
+  private def companyLiability(ua: UserAnswers)(mode: Mode): Call = {
+    val companyDetailsCount: Int = ua.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
+    val liabilityCount: Int = ua.get(CompanyLiabilityListPage).map(_.size).getOrElse(0)
+    val index: Index = Index(liabilityCount)
+    if(liabilityCount < companyDetailsCount) {
+      routes.CompanyLiabilitiesController.onPageLoad(mode, index)
+    } else {
+      ??? //TODO next page
+    }
+  }
 
 }
