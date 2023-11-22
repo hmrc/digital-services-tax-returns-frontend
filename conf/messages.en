@@ -263,3 +263,9 @@ companyLiabilities.error.invalid = The liability for {0} must be an amount of mo
 companyLiabilities.error.exceeded = The liability for {0} must be 15 numbers or fewer
 companyLiabilities.change.hidden = Company liabilities
 
+
+isRepaymentBankAccountUK.title = Is this a UK bank account?
+isRepaymentBankAccountUK.heading = Is this a UK bank account?
+isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
+isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
+isRepaymentBankAccountUK.change.hidden = Change if this is a UK bank account

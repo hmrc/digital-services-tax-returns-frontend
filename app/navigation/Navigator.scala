@@ -33,6 +33,7 @@ class Navigator @Inject() () {
     case ReportAlternativeChargePage      => ua => reportAlternativeChargeNavigation(NormalMode)(ua)
     case ReportMediaAlternativeChargePage => ua => reportMediaAlternative(ua)
     case ReportCrossBorderReliefPage      => ua => reportCrossBorderRelief(ua)(NormalMode)
+    case IsRepaymentBankAccountUKPage     => ua => repaymentBankAccount(ua)(NormalMode)
     case _                                => _ => routes.ReturnsDashboardController.onPageLoad
   }
 
@@ -105,4 +106,13 @@ class Navigator @Inject() () {
       case _                                     =>
         routes.ReturnsDashboardController.onPageLoad
     }
+
+  private def repaymentBankAccount(ua: UserAnswers)(mode: Mode) =
+    ua.get(IsRepaymentBankAccountUKPage)
+      .map {
+        case true  => routes.UKBankDetailsController.onPageLoad(mode)
+        case false => ??? // TODO nonUK
+      }
+      .getOrElse(routes.JourneyRecoveryController.onPageLoad())
+
 }
