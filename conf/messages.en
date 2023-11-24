@@ -269,3 +269,11 @@ isRepaymentBankAccountUK.heading = Is this a UK bank account?
 isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
 isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
 isRepaymentBankAccountUK.change.hidden = Change if this a UK bank account
+
+groupLiability.title = GroupLiability
+groupLiability.heading = GroupLiability
+groupLiability.checkYourAnswersLabel = GroupLiability
+groupLiability.error.required = Enter your groupLiability
+groupLiability.error.invalid = Enter your groupLiability using numbers
+groupLiability.error.exceeded = GroupLiability must be {0} characters or fewer
+groupLiability.change.hidden = GroupLiability

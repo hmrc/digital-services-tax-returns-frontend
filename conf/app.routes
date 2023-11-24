@@ -104,3 +104,8 @@ GET        /is-repayment-bank-account-uk                        controllers.IsRe
 POST       /is-repayment-bank-account-uk                        controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)
+
+GET        /groupLiability                  controllers.GroupLiabilityController.onPageLoad(mode: Mode = NormalMode)
+POST       /groupLiability                  controllers.GroupLiabilityController.onSubmit(mode: Mode = NormalMode)
+GET        /changeGroupLiability                        controllers.GroupLiabilityController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeGroupLiability                        controllers.GroupLiabilityController.onSubmit(mode: Mode = CheckMode)
