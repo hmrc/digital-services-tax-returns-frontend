@@ -17,7 +17,6 @@
 package forms
 
 import forms.behaviours.StringFieldBehaviours
-import org.apache.commons.validator.routines.IBANValidator
 import play.api.data.FormError
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -30,6 +29,7 @@ class BankDetailsForRepaymentFormProviderSpec extends StringFieldBehaviours {
     val fieldName   = "accountName"
     val requiredKey = "bankDetailsForRepayment.error.accountName.required"
     val lengthKey   = "bankDetailsForRepayment.error.accountName.length"
+    val invalid     = "bankDetailsForRepayment.error.accountName.invalid"
     val maxLength   = 35
     val regex       = """^[a-zA-Z&^]{1,35}$"""
 
@@ -50,6 +50,13 @@ class BankDetailsForRepaymentFormProviderSpec extends StringFieldBehaviours {
       form,
       fieldName,
       requiredError = FormError(fieldName, requiredKey)
+    )
+
+    behave like fieldWithInValidData(
+      form,
+      fieldName,
+      RegexpGen.from("1111111"),
+      FormError(fieldName, invalid, Seq(regex))
     )
   }
 

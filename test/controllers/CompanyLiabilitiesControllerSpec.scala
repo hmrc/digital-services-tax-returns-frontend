@@ -18,12 +18,10 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyLiabilitiesFormProvider
-import models.registration.Period
 import models.{NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CompanyLiabilitiesPage
 import play.api.inject.bind
