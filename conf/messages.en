@@ -285,5 +285,4 @@ bankDetailsForRepayment.error.internationalBankAccountNumber.invalid = Enter a v
 bankDetailsForRepayment.error.accountName.invalid = The name on the account must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
 bankDetailsForRepayment.accountName.change.hidden = Account Name
 bankDetailsForRepayment.internationalBankAccountNumber.change.hidden = IBAN
-bankDetailsForRepayment.internationalBankAccountNumber.hint = The IBAN can be found on your bank statement, or you can ask your bank
 
