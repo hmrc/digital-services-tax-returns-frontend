@@ -50,7 +50,8 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
   "CompanyLiabilities Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val ua = emptyUserAnswers.set(CompanyDetailsPage(index), CompanyDetails("value 2", None))
+      val ua = emptyUserAnswers
+        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
         .success
         .value
 
@@ -89,7 +90,13 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(CompanyLiabilitiesPage(index), validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId)
+        .set(CompanyLiabilitiesPage(index), validAnswer)
+        .success
+        .value
+        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -101,7 +108,14 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, index, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(
+          form.fill(validAnswer),
+          NormalMode,
+          index,
+          companyName,
+          startDate,
+          endDate
+        )(
           request,
           messages(application)
         ).toString
@@ -111,11 +125,15 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
+      val userAnswers           = emptyUserAnswers
+        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .success
+        .value
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        applicationBuilder(userAnswers = Some(userAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -135,8 +153,12 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
+      val userAnswers = emptyUserAnswers
+        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .success
+        .value
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request =

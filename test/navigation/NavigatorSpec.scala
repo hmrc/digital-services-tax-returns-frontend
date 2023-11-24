@@ -215,6 +215,113 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
+      "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
+
+        navigator.nextPage(
+          ReportSearchAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportSearchAlternativeChargePage, true)
+            .success
+            .value
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .success
+            .value
+        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'No' is selected" ignore {
+
+        navigator.nextPage(
+          ReportSearchAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportSearchAlternativeChargePage, false)
+            .success
+            .value
+        ) mustBe ???
+      }
+
+      "must go from a SocialMediaLossPage to ReportSearchAlternativeCharge page when 'Yes' is selected and selected activity is 'SearchEngine'" in {
+
+        navigator.nextPage(
+          SocialMediaLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SocialMediaLossPage, true)
+            .success
+            .value
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .success
+            .value
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+      }
+
+      "must go from a SocialMediaLossPage to report-search-engine-operating-margin page when 'No' is selected" ignore {
+
+        navigator.nextPage(
+          SocialMediaLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SocialMediaLossPage, false)
+            .success
+            .value
+        ) mustBe ???
+      }
+
+      "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
+        "is selected and selected activity is 'OnlineMarketplace'" in {
+
+          navigator.nextPage(
+            SearchEngineLossPage,
+            NormalMode,
+            UserAnswers("id")
+              .set(SearchEngineLossPage, true)
+              .success
+              .value
+              .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+              .success
+              .value
+          ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        }
+
+      "must go from a SearchEngineLossPage to report-search-engine-operating-margin page when 'No' is selected" ignore {
+
+        navigator.nextPage(
+          SearchEngineLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SearchEngineLossPage, false)
+            .success
+            .value
+        ) mustBe ???
+      }
+
+      "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-online-marketplace-loss page" +
+        " when 'Yes' is selected" ignore {
+
+          navigator.nextPage(
+            ReportOnlineMarketplaceAlternativeChargePage,
+            NormalMode,
+            UserAnswers("id")
+              .set(ReportOnlineMarketplaceAlternativeChargePage, true)
+              .success
+              .value
+          ) mustBe ???
+        }
+
+      "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-search-engine-operating-margin page when 'No' is selected" ignore {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceAlternativeChargePage, false)
+            .success
+            .value
+        ) mustBe ???
+      }
+
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage page when 'Yes' is selected" in {
 
         navigator.nextPage(
@@ -239,19 +346,56 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-
-      "must go from a IsRepaymentBankAccountUKPage to no uk bank account page when 'No' is selected" ignore {
+      "must go to CompanyLiabilitiesPage0 index" in {
 
         navigator.nextPage(
-          IsRepaymentBankAccountUKPage,
+          CompanyLiabilitiesPage(index),
           NormalMode,
           UserAnswers("id")
-            .set(IsRepaymentBankAccountUKPage, false)
+            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe ???
+            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .success
+            .value
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
       }
 
+      "must go from a CompanyLiabilitiesPage0 index to CompanyLiabilitiesPage1 when there are 2 CompanyDetails data exists" in {
+
+        navigator.nextPage(
+          CompanyLiabilitiesPage(Index(1)),
+          NormalMode,
+          UserAnswers("id")
+            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .success
+            .value
+            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .success
+            .value
+            .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
+            .success
+            .value
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, Index(1))
+      }
+
+      "must go from a CompanyLiabilitiesPage to the next when user filled the pages for both the companies mentioned in manage companies page" in {
+
+        navigator.nextPage(
+          CompanyLiabilitiesPage(Index(1)),
+          NormalMode,
+          UserAnswers("id")
+            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .success
+            .value
+            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .success
+            .value
+            .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
+            .success
+            .value
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, Index(1))
+      }
     }
 
     "in Check mode" - {

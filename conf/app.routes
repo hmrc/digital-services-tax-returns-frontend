@@ -1,46 +1,46 @@
 # microservice specific routes
 
-->         /hmrc-frontend                                      hmrcfrontend.Routes
+->         /hmrc-frontend                                       hmrcfrontend.Routes
 
-GET        /                                                   controllers.ReturnsDashboardController.onPageLoad
+GET        /                                                    controllers.ReturnsDashboardController.onPageLoad
 
-GET        /assets/*file                                       controllers.Assets.versioned(path="/public", file: Asset)
+GET        /assets/*file                                        controllers.Assets.versioned(path="/public", file: Asset)
 
-GET        /sign-in                                            controllers.auth.AuthenticationController.signIn()
-GET        /sign-out                                           controllers.auth.AuthenticationController.signOut()
+GET        /sign-in                                             controllers.auth.AuthenticationController.signIn()
+GET        /sign-out                                            controllers.auth.AuthenticationController.signOut()
 
 GET        /time-out                                            controllers.auth.AuthenticationController.timeOut()
 
-GET        /refresh-session                                    controllers.KeepAliveController.keepAlive
+GET        /refresh-session                                     controllers.KeepAliveController.keepAlive
 
-GET        /there-is-a-problem                                 controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
+GET        /there-is-a-problem                                  controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /check-your-answers                                 controllers.CheckYourAnswersController.onPageLoad
+GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad
 
-GET        /unauthorised                                       controllers.UnauthorisedController.onPageLoad
+GET        /unauthorised                                        controllers.UnauthorisedController.onPageLoad
 
-GET        /returnsDashboard                                   controllers.ReturnsDashboardController.onPageLoad()
+GET        /returnsDashboard                                    controllers.ReturnsDashboardController.onPageLoad()
 
-GET        /pay-your-digital-services-tax                      controllers.PayYourDigitalServiceTaxController.onPageLoad()
+GET        /pay-your-digital-services-tax                       controllers.PayYourDigitalServiceTaxController.onPageLoad()
 
-GET        /manage-companies/add/:index/company                controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
-POST       /manage-companies/add/:index/company                controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
-GET        /manage-companies/delete/:index/company             controllers.CompanyDetailsController.onDelete(index: Index, mode: Mode = NormalMode)
+GET        /manage-companies/add/:index/company                 controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = NormalMode)
+POST       /manage-companies/add/:index/company                 controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = NormalMode)
+GET        /manage-companies/delete/:index/company              controllers.CompanyDetailsController.onDelete(index: Index, mode: Mode = NormalMode)
 
-GET        /manage-companies/edit/:index/company               controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
-POST       /manage-companies/edit/:index/company               controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
-GET        /manage-companies/delete/:index/company             controllers.CompanyDetailsController.onDelete(index: Index, mode: Mode = CheckMode)
+GET        /manage-companies/edit/:index/company                controllers.CompanyDetailsController.onPageLoad(index: Index, mode: Mode = CheckMode)
+POST       /manage-companies/edit/:index/company                controllers.CompanyDetailsController.onSubmit(index: Index, mode: Mode = CheckMode)
+GET        /manage-companies/delete/:index/company              controllers.CompanyDetailsController.onDelete(index: Index, mode: Mode = CheckMode)
 
-GET        /manage-companies                                   controllers.ManageCompaniesController.onPageLoad(mode: Mode = NormalMode)
-POST       /manage-companies                                   controllers.ManageCompaniesController.onSubmit(mode: Mode = NormalMode)
-GET        /manage-companies                                   controllers.ManageCompaniesController.onPageLoad(mode: Mode = CheckMode)
-POST       /manage-companies                                   controllers.ManageCompaniesController.onSubmit(mode: Mode = CheckMode)
-GET        /manage-companies/redirect                          controllers.ManageCompaniesController.redirectToOnLoadPage()
+GET        /manage-companies                                    controllers.ManageCompaniesController.onPageLoad(mode: Mode = NormalMode)
+POST       /manage-companies                                    controllers.ManageCompaniesController.onSubmit(mode: Mode = NormalMode)
+GET        /manage-companies                                    controllers.ManageCompaniesController.onPageLoad(mode: Mode = CheckMode)
+POST       /manage-companies                                    controllers.ManageCompaniesController.onSubmit(mode: Mode = CheckMode)
+GET        /manage-companies/redirect                           controllers.ManageCompaniesController.redirectToOnLoadPage()
 
-GET        /select-activities                                  controllers.SelectActivitiesController.onPageLoad(mode: Mode = NormalMode)
-POST       /select-activities                                  controllers.SelectActivitiesController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/select-activities                             controllers.SelectActivitiesController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/select-activities                             controllers.SelectActivitiesController.onSubmit(mode: Mode = CheckMode)
+GET        /select-activities                                   controllers.SelectActivitiesController.onPageLoad(mode: Mode = NormalMode)
+POST       /select-activities                                   controllers.SelectActivitiesController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/select-activities                              controllers.SelectActivitiesController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/select-activities                              controllers.SelectActivitiesController.onSubmit(mode: Mode = CheckMode)
 
 GET        /report-social-media-alternative-charge              controllers.ReportMediaAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
 POST       /report-social-media-alternative-charge              controllers.ReportMediaAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
@@ -90,18 +90,17 @@ POST       /allowance-deducted                                  controllers.Allo
 GET        /edit/allowance-deducted                             controllers.AllowanceDeductedController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/allowance-deducted                             controllers.AllowanceDeductedController.onSubmit(mode: Mode = CheckMode)
 
-GET        /uk-bank-details                                      controllers.UKBankDetailsController.onPageLoad(mode: Mode = NormalMode)
-POST       /uk-bank-details                                      controllers.UKBankDetailsController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/uk-bank-details                                 controllers.UKBankDetailsController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/uk-bank-details                                 controllers.UKBankDetailsController.onSubmit(mode: Mode = CheckMode)
+GET        /uk-bank-details                                     controllers.UKBankDetailsController.onPageLoad(mode: Mode = NormalMode)
+POST       /uk-bank-details                                     controllers.UKBankDetailsController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/uk-bank-details                                controllers.UKBankDetailsController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/uk-bank-details                                controllers.UKBankDetailsController.onSubmit(mode: Mode = CheckMode)
 
-GET        /company-liabilities-/:index                          controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = NormalMode, index:Index)
-POST       /company-liabilities-/:index                          controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = NormalMode, index:Index)
-GET        /edit/company-liabilities-/:index                     controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode, index:Index)
-POST       /edit/company-liabilities-/:index                     controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode, index:Index)
+GET        /:index/company-liabilities                          controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = NormalMode, index:Index)
+POST       /:index/company-liabilities                          controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = NormalMode, index:Index)
+GET        /:index/edit/company-liabilities                     controllers.CompanyLiabilitiesController.onPageLoad(mode: Mode = CheckMode, index:Index)
+POST       /:index/edit/company-liabilities                     controllers.CompanyLiabilitiesController.onSubmit(mode: Mode = CheckMode, index:Index)
 
-
-GET        /is-repayment-bank-account-uk                         controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = NormalMode)
-POST       /is-repayment-bank-account-uk                         controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/is-repayment-bank-account-uk                    controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/is-repayment-bank-account-uk                    controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)
+GET        /is-repayment-bank-account-uk                        controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = NormalMode)
+POST       /is-repayment-bank-account-uk                        controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)

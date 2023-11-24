@@ -69,13 +69,12 @@ class CompanyLiabilitiesController @Inject() (
 
   def onSubmit(mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
       request.userAnswers.get(CompanyDetailsPage(index)) match {
-        case Some(companyDetails) => {
+        case Some(companyDetails) =>
           val companyName = companyDetails.companyName
-          val startDate = formatDate(request.period.start)
-          val endDate = formatDate(request.period.end)
-          val form = formProvider(companyName)
+          val startDate   = formatDate(request.period.start)
+          val endDate     = formatDate(request.period.end)
+          val form        = formProvider(companyName)
 
           form
             .bindFromRequest()
@@ -85,11 +84,10 @@ class CompanyLiabilitiesController @Inject() (
               value =>
                 for {
                   updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(index), value))
-                  _ <- sessionRepository.set(updatedAnswers)
+                  _              <- sessionRepository.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage(index), mode, updatedAnswers))
             )
-        }
-        case _ =>
+        case _                    =>
           logger.logger.info("CompanyDetailsPage is missing data")
           Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       }
