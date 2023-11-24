@@ -215,7 +215,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage page when 'Yes' is selected" in {
+      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
 
         navigator.nextPage(
           IsRepaymentBankAccountUKPage,
@@ -227,7 +227,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.UKBankDetailsController.onPageLoad(NormalMode)
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to no uk bank account page when 'No' is selected" ignore {
+      "must go from a IsRepaymentBankAccountUKPage to BankDetailsForRepaymentPage when 'No' is selected" ignore {
 
         navigator.nextPage(
           IsRepaymentBankAccountUKPage,
@@ -236,7 +236,7 @@ class NavigatorSpec extends SpecBase {
             .set(IsRepaymentBankAccountUKPage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(NormalMode)
       }
 
     }
