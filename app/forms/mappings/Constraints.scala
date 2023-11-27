@@ -16,6 +16,7 @@
 
 package forms.mappings
 
+import fr.marcwrobel.jbanking.iban.Iban
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import java.time.LocalDate
@@ -69,6 +70,14 @@ trait Constraints {
         Valid
       case _                         =>
         Invalid(errorKey, regex)
+    }
+
+  protected def ibanCheck(errorKey: String): Constraint[String] =
+    Constraint {
+      case s if Iban.isValid(s) =>
+        Valid
+      case _                    =>
+        Invalid(errorKey)
     }
 
   protected def maxLength(maximum: Int, errorKey: String): Constraint[String] =

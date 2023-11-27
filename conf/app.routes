@@ -105,3 +105,8 @@ GET        /is-repayment-bank-account-uk                         controllers.IsR
 POST       /is-repayment-bank-account-uk                         controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/is-repayment-bank-account-uk                    controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/is-repayment-bank-account-uk                    controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)
+
+GET        /bank-details-for-repayment                           controllers.BankDetailsForRepaymentController.onPageLoad(mode: Mode = NormalMode)
+POST       /bank-details-for-repayment                           controllers.BankDetailsForRepaymentController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/bank-details-for-repayment                      controllers.BankDetailsForRepaymentController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/bank-details-for-repayment                      controllers.BankDetailsForRepaymentController.onSubmit(mode: Mode = CheckMode)

@@ -111,7 +111,7 @@ class Navigator @Inject() () {
     ua.get(IsRepaymentBankAccountUKPage)
       .map {
         case true  => routes.UKBankDetailsController.onPageLoad(mode)
-        case false => ??? // TODO nonUK
+        case false => routes.BankDetailsForRepaymentController.onPageLoad(mode)
       }
       .getOrElse(routes.JourneyRecoveryController.onPageLoad())
 

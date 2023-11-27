@@ -17,72 +17,74 @@
 package controllers
 
 import base.SpecBase
-import forms.CompanyLiabilitiesFormProvider
-import models.{NormalMode, UserAnswers, formatDate}
+import forms.BankDetailsForRepaymentFormProvider
+import models.{BankDetailsForRepayment, NormalMode, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.CompanyLiabilitiesPage
+import pages.BankDetailsForRepaymentPage
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.CompanyLiabilitiesView
+import views.html.BankDetailsForRepaymentView
 
 import scala.concurrent.Future
 
-class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
-
-  val formProvider = new CompanyLiabilitiesFormProvider()
-  val companyName  = registration.companyReg.company.name
-  val startDate    = formatDate(updatedPeriod.start)
-  val endDate      = formatDate(updatedPeriod.end)
-  val form         = formProvider(companyName)
+class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(100.00)
+  val formProvider = new BankDetailsForRepaymentFormProvider()
+  val form         = formProvider()
 
-  lazy val companyLiabilitiesRoute = routes.CompanyLiabilitiesController.onPageLoad(NormalMode).url
+  lazy val bankDetailsForRepaymentRoute = routes.BankDetailsForRepaymentController.onPageLoad(NormalMode).url
+  val iban                              = "GB36BARC20051773152391"
 
-  "CompanyLiabilities Controller" - {
+  val userAnswers = UserAnswers(
+    userAnswersId,
+    Json.obj(
+      BankDetailsForRepaymentPage.toString -> Json.obj(
+        "accountName"                    -> "Name",
+        "internationalBankAccountNumber" -> iban
+      )
+    )
+  )
+
+  "BankDetailsForRepayment Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
+        val request = FakeRequest(GET, bankDetailsForRepaymentRoute)
+
+        val view = application.injector.instanceOf[BankDetailsForRepaymentView]
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
-
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, companyName, startDate, endDate)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(CompanyLiabilitiesPage, validAnswer).success.value
-
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
+        val request = FakeRequest(GET, bankDetailsForRepaymentRoute)
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
+        val view = application.injector.instanceOf[BankDetailsForRepaymentView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(form.fill(BankDetailsForRepayment("Name", iban)), NormalMode)(
           request,
           messages(application)
         ).toString
@@ -105,8 +107,8 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, companyLiabilitiesRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+          FakeRequest(POST, bankDetailsForRepaymentRoute)
+            .withFormUrlEncodedBody(("accountName", "Name"), ("internationalBankAccountNumber", iban))
 
         val result = route(application, request).value
 
@@ -121,20 +123,17 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, companyLiabilitiesRoute)
+          FakeRequest(POST, bankDetailsForRepaymentRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
+        val view = application.injector.instanceOf[BankDetailsForRepaymentView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, companyName, startDate, endDate)(
-          request,
-          messages(application)
-        ).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -143,7 +142,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
+        val request = FakeRequest(GET, bankDetailsForRepaymentRoute)
 
         val result = route(application, request).value
 
@@ -158,13 +157,12 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, companyLiabilitiesRoute)
-            .withFormUrlEncodedBody(("value", validAnswer.toString))
+          FakeRequest(POST, bankDetailsForRepaymentRoute)
+            .withFormUrlEncodedBody(("accountName", "value 1"), ("internationalBankAccountNumber", "value 2"))
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
     }
