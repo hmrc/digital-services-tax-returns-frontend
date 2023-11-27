@@ -30,7 +30,7 @@ class Navigator @Inject() () {
     case CompanyDetailsPage(_)                        => _ => Some(routes.ManageCompaniesController.onPageLoad(NormalMode))
     case ManageCompaniesPage                          => ua => addCompanyDetails(NormalMode)(ua)
     case SelectActivitiesPage                         => _ => Some(routes.ReportAlternativeChargeController.onPageLoad(NormalMode))
-    case ReportAlternativeChargePage                  => ua => Some(reportAlternativeChargeNavigation(NormalMode)(ua))
+    case ReportAlternativeChargePage                  => ua => reportAlternativeChargeNavigation(NormalMode)(ua)
     case ReportMediaAlternativeChargePage             => ua => reportMediaAlternative(ua)
     case ReportCrossBorderReliefPage                  => ua => reportCrossBorderRelief(ua)(NormalMode)
     case ReportSearchAlternativeChargePage            => ua => reportSearchAlternativeCharge(ua)(NormalMode)
@@ -44,7 +44,7 @@ class Navigator @Inject() () {
 
   private val checkRouteMap: Page => UserAnswers => Option[Call] = {
     case CompanyDetailsPage(_) => _ => Some(routes.ManageCompaniesController.onPageLoad(CheckMode))
-    case SelectActivitiesPage  => ua => Some(reportAlternativeChargeNavigation(CheckMode)(ua))
+    case SelectActivitiesPage  => ua => reportAlternativeChargeNavigation(CheckMode)(ua)
     case _                     => _ => Some(routes.CheckYourAnswersController.onPageLoad)
   }
 
@@ -100,10 +100,11 @@ class Navigator @Inject() () {
         routes.AllowanceDeductedController.onPageLoad(mode)
     }
 
-  private def reportAlternativeChargeNavigation(mode: Mode)(userAnswers: UserAnswers): Call =
+  private def reportAlternativeChargeNavigation(mode: Mode)(userAnswers: UserAnswers): Option[Call] =
     (userAnswers.get(SelectActivitiesPage), userAnswers.get(ReportAlternativeChargePage)) match {
-      case (Some(selectActivities), Some(true))  => navigationForSelectedActivitiesYes(selectActivities, mode)
-      case (Some(selectActivities), Some(false)) => navigationForSelectedActivitiesNo(selectActivities, mode)
+      case (Some(selectActivities), Some(true))  => Some(navigationForSelectedActivitiesYes(selectActivities, mode))
+      case (Some(selectActivities), Some(false)) => Some(navigationForSelectedActivitiesNo(selectActivities, mode))
+      case _                                     => None
     }
 
   private def repaymentBankAccount(ua: UserAnswers)(mode: Mode): Option[Call] =
@@ -121,7 +122,7 @@ class Navigator @Inject() () {
     if (liabilityCount < companyDetailsCount) {
       routes.CompanyLiabilitiesController.onPageLoad(mode, index)
     } else {
-      ??? // TODO group-liability
+      routes.GroupLiabilityController.onPageLoad(mode)
     }
   }
 

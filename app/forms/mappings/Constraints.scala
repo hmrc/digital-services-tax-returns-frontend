@@ -16,7 +16,6 @@
 
 package forms.mappings
 
-import fr.marcwrobel.jbanking.iban.Iban
 import play.api.data.validation.{Constraint, Invalid, Valid}
 
 import java.time.LocalDate

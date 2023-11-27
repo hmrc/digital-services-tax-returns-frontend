@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.GroupLiabilityFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -36,7 +36,10 @@ import scala.concurrent.Future
 class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new GroupLiabilityFormProvider()
-  val form = formProvider()
+  val company      = "company"
+  val startDate    = formatDate(updatedPeriod.start)
+  val endDate      = formatDate(updatedPeriod.end)
+  val form         = formProvider(Seq(company, startDate, endDate))
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -58,7 +61,10 @@ class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[GroupLiabilityView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, company, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -76,7 +82,10 @@ class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, company, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -122,7 +131,10 @@ class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, company, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

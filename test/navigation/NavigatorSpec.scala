@@ -379,7 +379,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, Index(1))
       }
 
-      "must go from a CompanyLiabilitiesPage to the next when user filled the pages for both the companies mentioned in manage companies page" in {
+      "must go from a CompanyLiabilitiesPage to GroupLiability page when user filled the pages for both the companies mentioned in manage companies page" in {
 
         navigator.nextPage(
           CompanyLiabilitiesPage(Index(1)),
@@ -388,13 +388,10 @@ class NavigatorSpec extends SpecBase {
             .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
-            .success
-            .value
             .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, Index(1))
+        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
       }
     }
 

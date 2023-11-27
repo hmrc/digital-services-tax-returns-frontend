@@ -18,8 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.GroupLiabilityFormProvider
-import javax.inject.Inject
-import models.Mode
+import models.{Mode, formatDate}
 import navigation.Navigator
 import pages.GroupLiabilityPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -28,45 +27,56 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.GroupLiabilityView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class GroupLiabilityController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: GroupLiabilityFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: GroupLiabilityView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class GroupLiabilityController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: GroupLiabilityFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: GroupLiabilityView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  val form = formProvider()
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val startDate = formatDate(request.period.start)
+    val endDate   = formatDate(request.period.end)
+    val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
+    val form      = formProvider(args)
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+    val preparedForm = request.userAnswers.get(GroupLiabilityPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(GroupLiabilityPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode, request.registration.isGroupMessage, startDate, endDate))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val startDate = formatDate(request.period.start)
+      val endDate   = formatDate(request.period.end)
+      val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
+      val form      = formProvider(args)
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(GroupLiabilityPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(GroupLiabilityPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors =>
+            Future.successful(
+              BadRequest(view(formWithErrors, mode, request.registration.isGroupMessage, startDate, endDate))
+            ),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(GroupLiabilityPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(GroupLiabilityPage, mode, updatedAnswers))
+        )
   }
 }

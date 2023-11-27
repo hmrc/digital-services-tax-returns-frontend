@@ -263,17 +263,17 @@ companyLiabilities.error.invalid = The liability for {0} must be an amount of mo
 companyLiabilities.error.exceeded = The liability for {0} must be 15 numbers or fewer
 companyLiabilities.change.hidden = Company liabilities
 
-
 isRepaymentBankAccountUK.title = Is this a UK bank account?
 isRepaymentBankAccountUK.heading = Is this a UK bank account?
 isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
 isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
 isRepaymentBankAccountUK.change.hidden = Change if this a UK bank account
 
-groupLiability.title = GroupLiability
-groupLiability.heading = GroupLiability
-groupLiability.checkYourAnswersLabel = GroupLiability
-groupLiability.error.required = Enter your groupLiability
-groupLiability.error.invalid = Enter your groupLiability using numbers
-groupLiability.error.exceeded = GroupLiability must be {0} characters or fewer
-groupLiability.change.hidden = GroupLiability
+groupLiability.title = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
+groupLiability.heading = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
+groupLiability.hint = This is the total amount of liability after applying any deductions and allowances
+groupLiability.checkYourAnswersLabel = Group’s total Digital Services Tax liability
+groupLiability.error.required = Enter the {0}’s total Digital Services Tax liability for {1} to {2} in pounds or pounds and pence
+groupLiability.error.invalid = The {0}’s total liability must be an amount of money, like 1,234.56 or 1,560.00
+groupLiability.error.exceeded = The {0}’s total liability must be 15 numbers or fewer
+groupLiability.change.hidden = Change the group’s total Digital Services Tax liability

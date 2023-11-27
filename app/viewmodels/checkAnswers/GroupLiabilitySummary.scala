@@ -24,19 +24,17 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object GroupLiabilitySummary  {
+object GroupLiabilitySummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GroupLiabilityPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "groupLiability.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.GroupLiabilityController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("groupLiability.change.hidden"))
-          )
+    answers.get(GroupLiabilityPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "groupLiability.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel("site.change", routes.GroupLiabilityController.onPageLoad(CheckMode).url)
+            .withVisuallyHiddenText(messages("groupLiability.change.hidden"))
         )
+      )
     }
 }

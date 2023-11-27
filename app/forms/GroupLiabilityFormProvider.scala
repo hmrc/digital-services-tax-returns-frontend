@@ -22,12 +22,13 @@ import play.api.data.Form
 
 class GroupLiabilityFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[BigDecimal] =
+  def apply(args: Seq[String]): Form[BigDecimal] =
     Form(
       "value" -> currency(
         "groupLiability.error.required",
         "groupLiability.error.invalid",
-        "groupLiability.error.exceeded"
+        "groupLiability.error.exceeded",
+        args = args
       )
     )
 

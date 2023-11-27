@@ -21,7 +21,8 @@ import play.api.data.FormError
 
 class GroupLiabilityFormProviderSpec extends CurrencyFieldBehaviours {
 
-  val form = new GroupLiabilityFormProvider()()
+  val args = Seq("group", "date1")
+  val form = new GroupLiabilityFormProvider()(args)
 
   ".value" - {
 
@@ -36,14 +37,14 @@ class GroupLiabilityFormProviderSpec extends CurrencyFieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "groupLiability.error.required")
+      requiredError = FormError(fieldName, "groupLiability.error.required", args)
     )
 
     behave like currencyField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, "groupLiability.error.invalid"),
-      exceededError = FormError(fieldName, "groupLiability.error.exceeded")
+      invalidError = FormError(fieldName, "groupLiability.error.invalid", args),
+      exceededError = FormError(fieldName, "groupLiability.error.exceeded", args)
     )
 
   }
