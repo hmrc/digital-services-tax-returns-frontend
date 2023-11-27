@@ -267,7 +267,24 @@ isRepaymentBankAccountUK.title = Is this a UK bank account?
 isRepaymentBankAccountUK.heading = Is this a UK bank account?
 isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
 isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
-isRepaymentBankAccountUK.change.hidden = Change if this a UK bank account
+isRepaymentBankAccountUK.change.hidden = Change if this is a UK bank account
+
+bankDetailsForRepayment.title = Your bank details for repayment
+bankDetailsForRepayment.heading = Your bank details for repayment
+bankDetailsForRepayment.accountName = Name on the account
+bankDetailsForRepayment.enter.the.details = Enter the details of the international bank account that repayments should be made into.
+bankDetailsForRepayment.internationalBankAccountNumber = International Bank Account Number (IBAN)
+bankDetailsForRepayment.internationalBankAccountNumber.hint = The IBAN can be found on your bank statement, or you can ask your bank
+bankDetailsForRepayment.checkYourAnswersLabel = Bank details for repayment
+bankDetailsForRepayment.error.accountName.required = Enter the name on the account
+bankDetailsForRepayment.error.internationalBankAccountNumber.required = Enter an IBAN
+bankDetailsForRepayment.error.accountName.length = The name on the account must be 35 characters or less
+bankDetailsForRepayment.error.internationalBankAccountNumber.length = IBAN must be 34 characters or less
+bankDetailsForRepayment.error.internationalBankAccountNumber.invalid = Enter a valid IBAN
+bankDetailsForRepayment.error.accountName.invalid = The name on the account must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
+bankDetailsForRepayment.accountName.change.hidden = Account Name
+bankDetailsForRepayment.internationalBankAccountNumber.change.hidden = IBAN
+
 
 groupLiability.title = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
 groupLiability.heading = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
