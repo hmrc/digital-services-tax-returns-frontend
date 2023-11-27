@@ -215,7 +215,6 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
       "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
 
         navigator.nextPage(
@@ -395,7 +394,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage page when 'Yes' is selected" in {
+      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
 
         navigator.nextPage(
           IsRepaymentBankAccountUKPage,
