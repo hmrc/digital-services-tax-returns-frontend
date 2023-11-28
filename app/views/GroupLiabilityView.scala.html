@@ -26,11 +26,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, index: Index, companyName: String,startDate: String, endDate: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, groupOrCompanyName: String,startDate: String, endDate: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("companyLiabilities.title"))) {
+@layout(pageTitle = title(form, messages("groupLiability.title",groupOrCompanyName,startDate,endDate))) {
 
-    @formHelper(action = routes.CompanyLiabilitiesController.onSubmit(mode, index), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.GroupLiabilityController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -39,7 +39,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("companyLiabilities.heading",companyName,startDate,endDate)).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(messages("groupLiability.heading",groupOrCompanyName,startDate,endDate)).asPageHeading(LabelSize.Large)
             )
             .withPrefix(PrefixOrSuffix(content = Text("£")))
             .withInputMode("decimal")

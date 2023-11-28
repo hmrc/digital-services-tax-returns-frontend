@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package pages
+package forms
 
-import models.Index
-import play.api.libs.json.JsPath
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-case class CompanyLiabilitiesPage(index: Index) extends QuestionPage[BigDecimal] {
+class GroupLiabilityFormProvider @Inject() extends Mappings {
 
-  override def path: JsPath = JsPath \ companyLiabilityList \ index.position
+  def apply(args: Seq[String]): Form[BigDecimal] =
+    Form(
+      "value" -> currency(
+        "groupLiability.error.required",
+        "groupLiability.error.invalid",
+        "groupLiability.error.exceeded",
+        args = args
+      )
+    )
 
 }

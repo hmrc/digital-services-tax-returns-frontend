@@ -17,105 +17,72 @@
 package controllers
 
 import base.SpecBase
-import forms.CompanyLiabilitiesFormProvider
-import models.{CompanyDetails, NormalMode, UserAnswers, formatDate}
+import forms.GroupLiabilityFormProvider
+import models.{NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
+import pages.GroupLiabilityPage
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
-import views.html.CompanyLiabilitiesView
+import views.html.GroupLiabilityView
 
 import scala.concurrent.Future
 
-class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
+class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new CompanyLiabilitiesFormProvider()
-  val companyName  = registration.companyReg.company.name
+  val formProvider = new GroupLiabilityFormProvider()
+  val company      = "company"
   val startDate    = formatDate(updatedPeriod.start)
   val endDate      = formatDate(updatedPeriod.end)
-  val form         = formProvider(companyName)
+  val form         = formProvider(Seq(company, startDate, endDate))
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = BigDecimal(100.00)
 
-  lazy val companyLiabilitiesRoute = routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index).url
+  lazy val groupLiabilityRoute = routes.GroupLiabilityController.onPageLoad(NormalMode).url
 
-  "CompanyLiabilities Controller" - {
+  "GroupLiability Controller" - {
 
     "must return OK and the correct view for a GET" in {
-      val ua = emptyUserAnswers
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
-        .success
-        .value
 
-      val application = applicationBuilder(userAnswers = Some(ua)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
+        val request = FakeRequest(GET, groupLiabilityRoute)
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
+        val view = application.injector.instanceOf[GroupLiabilityView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, index, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(form, NormalMode, company, startDate, endDate)(
           request,
           messages(application)
         ).toString
       }
     }
 
-    "must redirect to 'journey recovery' page when company details is missing" in {
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
-
-        val result = route(application, request).value
-
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId)
-        .set(CompanyLiabilitiesPage(index), validAnswer)
-        .success
-        .value
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
-        .success
-        .value
+      val userAnswers = UserAnswers(userAnswersId).set(GroupLiabilityPage, validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
+        val request = FakeRequest(GET, groupLiabilityRoute)
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
+        val view = application.injector.instanceOf[GroupLiabilityView]
 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(
-          form.fill(validAnswer),
-          NormalMode,
-          index,
-          companyName,
-          startDate,
-          endDate
-        )(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, company, startDate, endDate)(
           request,
           messages(application)
         ).toString
@@ -125,15 +92,11 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = emptyUserAnswers
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
-        .success
-        .value
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
       val application =
-        applicationBuilder(userAnswers = Some(userAnswers))
+        applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
             bind[SessionRepository].toInstance(mockSessionRepository)
@@ -142,7 +105,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, companyLiabilitiesRoute)
+          FakeRequest(POST, groupLiabilityRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value
@@ -153,26 +116,22 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
     }
 
     "must return a Bad Request and errors when invalid data is submitted" in {
-      val userAnswers = emptyUserAnswers
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
-        .success
-        .value
 
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
 
       running(application) {
         val request =
-          FakeRequest(POST, companyLiabilitiesRoute)
+          FakeRequest(POST, groupLiabilityRoute)
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
+        val view = application.injector.instanceOf[GroupLiabilityView]
 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, index, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, company, startDate, endDate)(
           request,
           messages(application)
         ).toString
@@ -184,7 +143,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
       val application = applicationBuilder(userAnswers = None).build()
 
       running(application) {
-        val request = FakeRequest(GET, companyLiabilitiesRoute)
+        val request = FakeRequest(GET, groupLiabilityRoute)
 
         val result = route(application, request).value
 
@@ -199,7 +158,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
       running(application) {
         val request =
-          FakeRequest(POST, companyLiabilitiesRoute)
+          FakeRequest(POST, groupLiabilityRoute)
             .withFormUrlEncodedBody(("value", validAnswer.toString))
 
         val result = route(application, request).value

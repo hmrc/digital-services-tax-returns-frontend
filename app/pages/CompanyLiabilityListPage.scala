@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package pages
 
-import models.Index
 import play.api.libs.json.JsPath
+import queries.Gettable
 
-case class CompanyLiabilitiesPage(index: Index) extends QuestionPage[BigDecimal] {
+case object CompanyLiabilityListPage extends Gettable[List[BigDecimal]] {
 
-  override def path: JsPath = JsPath \ companyLiabilityList \ index.position
+  override def path: JsPath = JsPath \ toString
 
+  override def toString: String = companyLiabilityList
 }

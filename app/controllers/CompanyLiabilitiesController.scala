@@ -18,9 +18,10 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyLiabilitiesFormProvider
-import models.{Mode, formatDate}
+import models.{Index, Mode, formatDate}
 import navigation.Navigator
-import pages.CompanyLiabilitiesPage
+import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
+import play.api.Logging
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -42,38 +43,53 @@ class CompanyLiabilitiesController @Inject() (
   view: CompanyLiabilitiesView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
-    with I18nSupport {
+    with I18nSupport
+    with Logging {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val companyName  = request.registration.companyReg.company.name
-    val startDate    = formatDate(request.period.start)
-    val endDate      = formatDate(request.period.end)
-    val form         = formProvider(companyName)
-    val preparedForm = request.userAnswers.get(CompanyLiabilitiesPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      request.userAnswers.get(CompanyDetailsPage(index)) match {
+        case Some(companyDetails) =>
+          val startDate = formatDate(request.period.start)
+          val endDate   = formatDate(request.period.end)
 
-    Ok(view(preparedForm, mode, companyName, startDate, endDate))
+          val form         = formProvider(companyDetails.companyName)
+          val preparedForm = request.userAnswers.get(CompanyLiabilitiesPage(index)) match {
+            case None        => form
+            case Some(value) => form.fill(value)
+          }
+
+          Ok(view(preparedForm, mode, index, companyDetails.companyName, startDate, endDate))
+        case _                    =>
+          logger.logger.info("CompanyDetailsPage is missing data")
+          Redirect(routes.JourneyRecoveryController.onPageLoad())
+      }
+
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val companyName = request.registration.companyReg.company.name
-      val startDate   = formatDate(request.period.start)
-      val endDate     = formatDate(request.period.end)
+      request.userAnswers.get(CompanyDetailsPage(index)) match {
+        case Some(companyDetails) =>
+          val companyName = companyDetails.companyName
+          val startDate   = formatDate(request.period.start)
+          val endDate     = formatDate(request.period.end)
+          val form        = formProvider(companyName)
 
-      val form = formProvider(companyName)
-
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, companyName, startDate, endDate))),
-          value =>
-            for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage, value))
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage, mode, updatedAnswers))
-        )
+          form
+            .bindFromRequest()
+            .fold(
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, mode, index, companyName, startDate, endDate))),
+              value =>
+                for {
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(index), value))
+                  _              <- sessionRepository.set(updatedAnswers)
+                } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage(index), mode, updatedAnswers))
+            )
+        case _                    =>
+          logger.logger.info("CompanyDetailsPage is missing data")
+          Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      }
   }
 }
