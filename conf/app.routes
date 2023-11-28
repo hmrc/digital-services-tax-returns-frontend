@@ -114,3 +114,8 @@ GET        /group-liability                                     controllers.Grou
 POST       /group-liability                                     controllers.GroupLiabilityController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/group-liability                                controllers.GroupLiabilityController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/group-liability                                controllers.GroupLiabilityController.onSubmit(mode: Mode = CheckMode)
+
+GET        /repayment                        controllers.RepaymentController.onPageLoad(mode: Mode = NormalMode)
+POST       /repayment                        controllers.RepaymentController.onSubmit(mode: Mode = NormalMode)
+GET        /changeRepayment                  controllers.RepaymentController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeRepayment                  controllers.RepaymentController.onSubmit(mode: Mode = CheckMode)

@@ -294,3 +294,9 @@ groupLiability.error.required = Enter the {0}’s total Digital Services Tax lia
 groupLiability.error.invalid = The {0}’s total liability must be an amount of money, like 1,234.56 or 1,560.00
 groupLiability.error.exceeded = The {0}’s total liability must be 15 numbers or fewer
 groupLiability.change.hidden = Change the group’s total Digital Services Tax liability
+
+repayment.title = repayment
+repayment.heading = repayment
+repayment.checkYourAnswersLabel = repayment
+repayment.error.required = Select yes if repayment
+repayment.change.hidden = Repayment
