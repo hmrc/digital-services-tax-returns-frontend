@@ -23,8 +23,9 @@ class ReportOnlineMarketplaceLossFormProviderSpec extends BooleanFieldBehaviours
 
   val requiredKey = "reportOnlineMarketplaceLoss.error.required"
   val invalidKey  = "error.boolean"
+  val groupName   = "group"
 
-  val form = new ReportOnlineMarketplaceLossFormProvider()()
+  val form = new ReportOnlineMarketplaceLossFormProvider()(groupName)
 
   ".value" - {
 
@@ -33,13 +34,13 @@ class ReportOnlineMarketplaceLossFormProviderSpec extends BooleanFieldBehaviours
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, Seq(groupName))
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, Seq(groupName))
     )
   }
 }

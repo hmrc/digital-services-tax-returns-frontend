@@ -23,8 +23,8 @@ import play.api.data.Form
 
 class ReportOnlineMarketplaceLossFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(groupMessage: String): Form[Boolean] =
     Form(
-      "value" -> boolean("reportOnlineMarketplaceLoss.error.required")
+      "value" -> boolean("reportOnlineMarketplaceLoss.error.required", args = Seq(groupMessage))
     )
 }

@@ -44,23 +44,24 @@ class ReportOnlineMarketplaceLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val form         = formProvider(request.registration.isGroupMessage)
     val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode, request.registration))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val form         = formProvider(request.registration.isGroupMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.registration))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceLossPage, value))
