@@ -74,7 +74,10 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode, registration)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, registration)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +123,10 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, registration)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, registration)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
