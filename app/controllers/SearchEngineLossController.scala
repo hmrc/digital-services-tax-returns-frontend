@@ -45,22 +45,24 @@ class SearchEngineLossController @Inject() (
     with I18nSupport {
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val form         = formProvider(request.registration.isGroupMessage)
-    val preparedForm = request.userAnswers.get(SearchEngineLossPage) match {
+    val isGoupMessage = request.registration.isGroupMessage
+    val form          = formProvider(isGoupMessage)
+    val preparedForm  = request.userAnswers.get(SearchEngineLossPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, request.registration))
+    Ok(view(preparedForm, mode, isGoupMessage))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val form = formProvider(request.registration.isGroupMessage)
+      val isGroupMessage = request.registration.isGroupMessage
+      val form           = formProvider(isGroupMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.registration))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isGroupMessage))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(SearchEngineLossPage, value))
