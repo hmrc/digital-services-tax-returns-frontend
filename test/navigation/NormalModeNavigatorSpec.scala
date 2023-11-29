@@ -118,6 +118,24 @@ class NormalModeNavigatorSpec extends SpecBase {
       ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
     }
 
+    "must go from a ReportAlternativeChargePage to SocialMediaLossPage when Social media activity option is selected" in {
+
+      navigator.nextPage(
+        ReportAlternativeChargePage,
+        NormalMode,
+        UserAnswers("id")
+          .set(
+            SelectActivitiesPage,
+            Set[SelectActivities](SelectActivities.SocialMedia)
+          )
+          .success
+          .value
+          .set(ReportAlternativeChargePage, true)
+          .success
+          .value
+      ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+    }
+
     "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
       navigator.nextPage(
