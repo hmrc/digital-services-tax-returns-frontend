@@ -39,6 +39,8 @@ class Navigator @Inject() () {
     case CompanyLiabilitiesPage(index)                => ua => Some(companyLiability(index, ua)(NormalMode))
     case SocialMediaLossPage                          => ua => socialMediaLoss(ua)(NormalMode)
     case SearchEngineLossPage                         => ua => searchEngineLoss(ua)(NormalMode)
+    case GroupLiabilityPage                           => ua => Some(routes.RepaymentController.onPageLoad(NormalMode))
+    case RepaymentPage                                => ua => repayment(ua)(NormalMode)
     case _                                            => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 
@@ -146,7 +148,7 @@ class Navigator @Inject() () {
         case false                                                                                  => ??? // TODO report-social-media-operating-margin
       }
 
-  def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(SearchEngineLossPage)
       .map {
         case true if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
@@ -156,11 +158,18 @@ class Navigator @Inject() () {
         case false                                                                                       => ??? // TODO report-social-media-operating-margin
       }
 
-  def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage)
       .map {
         case true  => ??? // TODO report-online-marketplace-loss
         case false => ??? // TODO report-social-media-operating-margin
+      }
+
+  private def repayment(ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(RepaymentPage)
+      .map {
+        case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
+        case false => routes.CheckYourAnswersController.onPageLoad
       }
 
 }
