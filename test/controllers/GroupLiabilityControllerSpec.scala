@@ -37,8 +37,8 @@ class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new GroupLiabilityFormProvider()
   val company      = "company"
-  val startDate    = formatDate(updatedPeriod.start)
-  val endDate      = formatDate(updatedPeriod.end)
+  val startDate    = formatDate(period.start)
+  val endDate      = formatDate(period.end)
   val form         = formProvider(Seq(company, startDate, endDate))
 
   def onwardRoute = Call("GET", "/foo")

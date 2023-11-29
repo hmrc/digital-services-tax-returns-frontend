@@ -23,8 +23,8 @@ import play.api.data.Form
 
 class RepaymentFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Boolean] =
+  def apply(startDate: String, endDate: String): Form[Boolean] =
     Form(
-      "value" -> boolean("repayment.error.required")
+      "value" -> boolean(requiredKey = "repayment.error.required", args = Seq(startDate, endDate))
     )
 }

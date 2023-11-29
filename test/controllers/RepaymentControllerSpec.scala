@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.RepaymentFormProvider
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -37,8 +37,11 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
+  val startDate = formatDate(period.start)
+  val endDate   = formatDate(period.end)
+
   val formProvider = new RepaymentFormProvider()
-  val form = formProvider()
+  val form         = formProvider(startDate, endDate)
 
   lazy val repaymentRoute = routes.RepaymentController.onPageLoad(NormalMode).url
 
@@ -56,7 +59,10 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[RepaymentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -74,7 +80,10 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), NormalMode, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +129,10 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, startDate, endDate)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

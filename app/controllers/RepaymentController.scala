@@ -18,8 +18,9 @@ package controllers
 
 import controllers.actions._
 import forms.RepaymentFormProvider
+
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, formatDate}
 import navigation.Navigator
 import pages.RepaymentPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -30,43 +31,48 @@ import views.html.RepaymentView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RepaymentController @Inject()(
-                                         override val messagesApi: MessagesApi,
-                                         sessionRepository: SessionRepository,
-                                         navigator: Navigator,
-                                         identify: IdentifierAction,
-                                         getData: DataRetrievalAction,
-                                         requireData: DataRequiredAction,
-                                         formProvider: RepaymentFormProvider,
-                                         val controllerComponents: MessagesControllerComponents,
-                                         view: RepaymentView
-                                 )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class RepaymentController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: RepaymentFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: RepaymentView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  val form = formProvider()
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val startDate = formatDate(request.period.start)
+    val endDate   = formatDate(request.period.end)
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+    val form         = formProvider(startDate, endDate)
+    val preparedForm = request.userAnswers.get(RepaymentPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(RepaymentPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode, startDate, endDate))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val startDate = formatDate(request.period.start)
+      val endDate   = formatDate(request.period.end)
+      val form      = formProvider(startDate, endDate)
 
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(RepaymentPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(RepaymentPage, mode, updatedAnswers))
-      )
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, startDate, endDate))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(RepaymentPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(RepaymentPage, mode, updatedAnswers))
+        )
   }
 }

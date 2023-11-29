@@ -22,9 +22,12 @@ import play.api.data.FormError
 class RepaymentFormProviderSpec extends BooleanFieldBehaviours {
 
   val requiredKey = "repayment.error.required"
-  val invalidKey = "error.boolean"
+  val invalidKey  = "error.boolean"
+  val startDate   = "startDate"
+  val endDate     = "endDate"
+  val args        = Seq(startDate, endDate)
 
-  val form = new RepaymentFormProvider()()
+  val form = new RepaymentFormProvider()(startDate, endDate)
 
   ".value" - {
 
@@ -33,13 +36,13 @@ class RepaymentFormProviderSpec extends BooleanFieldBehaviours {
     behave like booleanField(
       form,
       fieldName,
-      invalidError = FormError(fieldName, invalidKey)
+      invalidError = FormError(fieldName, invalidKey, args)
     )
 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, requiredKey)
+      requiredError = FormError(fieldName, requiredKey, args)
     )
   }
 }
