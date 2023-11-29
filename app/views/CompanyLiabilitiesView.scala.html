@@ -28,7 +28,7 @@
 
 @(form: Form[_], mode: Mode, index: Index, companyName: String,startDate: String, endDate: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("companyLiabilities.title"))) {
+@layout(pageTitle = title(form, messages("companyLiabilities.title",companyName,startDate,endDate))) {
 
     @formHelper(action = routes.CompanyLiabilitiesController.onSubmit(mode, index), Symbol("autoComplete") -> "off") {
 
