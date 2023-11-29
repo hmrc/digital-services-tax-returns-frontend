@@ -16,11 +16,7 @@
 
 package controllers.actions
 
-import generators.ModelGenerators._
-import models.registration.{Address, Company, CompanyRegWrapper, Registration}
 import models.requests.IdentifierRequest
-import models.{CompanyName, DSTRegNumber}
-import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues
 import play.api.mvc._
 
@@ -29,17 +25,8 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues {
 
-  val registration: Registration = Arbitrary.arbitrary[Registration].sample.value
-  val address                    = Arbitrary.arbitrary[Address].sample.value
-
-  val updatedRegistration: Registration = registration.copy(
-    registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
-    companyReg = CompanyRegWrapper(company = Company(CompanyName("Some Corporation"), address)),
-    ultimateParent = None
-  )
-
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id", updatedRegistration))
+    block(IdentifierRequest(request, "id", updatedRegistration, updatedPeriod))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

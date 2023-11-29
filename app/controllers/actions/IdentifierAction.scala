@@ -71,7 +71,15 @@ class AuthenticatedIdentifierAction @Inject() (
   )(implicit hc: HeaderCarrier): Future[Result] =
     dstConnector.lookupRegistration().flatMap {
       case Some(reg) if reg.registrationNumber.isDefined =>
-        block(IdentifierRequest(request, internalId, reg))
+        dstConnector.lookupAllReturns().flatMap { periods =>
+          periods.toList match {
+            case Nil     => Future.successful(NotFound)
+            case periods =>
+              val latest =
+                periods.sortBy(_.start).head // TODO instead of head it should compare it with periodKey from url
+              block(IdentifierRequest(request, internalId, reg, latest))
+          }
+        }
       case _                                             =>
         Future.successful(Redirect(config.dstFrontendRegistrationUrl))
     }

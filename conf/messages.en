@@ -197,8 +197,110 @@ reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge a
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
 #Report online marketplace loss
-reportOnlineMarketplaceLoss.title = Has the group made a loss on its online marketplace activity?
-reportOnlineMarketplaceLoss.heading = Has the group made a loss on its online marketplace activity?
+reportOnlineMarketplaceLoss.title = Has the {0}} made a loss on its online marketplace activity?
+reportOnlineMarketplaceLoss.heading = Has the {0} made a loss on its online marketplace activity?
 reportOnlineMarketplaceLoss.checkYourAnswersLabel = Loss made
-reportOnlineMarketplaceLoss.error.required = Select yes if the group made a loss on its online marketplace activity
+reportOnlineMarketplaceLoss.error.required = Select yes if the {0} made a loss on its online marketplace activity
 reportOnlineMarketplaceLoss.change.hidden = Change loss made
+
+#Report cross border transactions relief
+reportCrossBorderRelief.title = Are you claiming any relief on cross-border transactions for this return period?
+reportCrossBorderRelief.heading = Are you claiming any relief on cross-border transactions for this return period?
+reportCrossBorderRelief.details=What we mean by ‘relief on cross-border transactions’
+reportCrossBorderRelief.details.text=<p> If a transaction involves a UK user and a non-UK user who is in a country \
+  that also operates a Digital Services Tax, only 50% of the revenues from that transaction will be taxable as UK revenues.</p>
+reportCrossBorderRelief.checkYourAnswersLabel = Are you claiming any relief on cross-border transactions for this period?
+
+reportCrossBorderRelief.error.required = Select yes if you are claiming any relief on cross-border transactions for this return period
+reportCrossBorderRelief.change.hidden = Change is you are claiming any relief on cross-border transactions for this period
+
+allowanceDeducted.title = How much of the £25m annual allowance have you deducted from revenues in this return?
+allowanceDeducted.heading = How much of the £25m annual allowance have you deducted from revenues in this return?
+allowanceDeducted.details=What we mean by ‘£25m annual allowance’
+allowanceDeducted.details.text=<p>The £25m annual allowance means the first £25m of revenues derived \
+from UK users will not be subject to Digital Services Tax.</p><p>The allowance is pro-rated for accounting \
+periods less than 12 months.</p>
+allowanceDeducted.checkYourAnswersLabel = Amount of £25m annual allowance claimed
+allowanceDeducted.error.required = Enter how much of the £25m annual allowance you have deducted from revenues in this return
+allowanceDeducted.error.invalid = The amount of the £25m annual allowance you have deducted from revenues must be an amount \
+of money, like 1,234.56 or 1,560.00
+allowanceDeducted.error.exceeded = The amount of the £25m annual allowance you have deducted from revenues must be 15 numbers or fewer
+allowanceDeducted.error.minimum-money=The amount of the £25m annual allowance you have deducted from revenues must be £1 or more
+allowanceDeducted.error.max-money=The amount of the £25m annual allowance you have deducted from revenues must be £25m or less
+allowanceDeducted.change.hidden = Change the amount of £25m annual allowance claimed
+
+searchEngineLoss.title = Has the group made a loss on its search engine activity?
+searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
+searchEngineLoss.checkYourAnswersLabel = Loss made
+searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
+searchEngineLoss.change.hidden = Loss made
+
+uKBankDetails.title = Your bank details for repayment
+uKBankDetails.heading = Your bank details for repayment
+uKBankDetails.enter.the.details = Enter the details of the international bank account that repayments should be made into.
+uKBankDetails.accountName = Name on the account
+uKBankDetails.sortCode = Sort code
+uKBankDetails.sortCode.hint = The sort code must be 6 digits long
+uKBankDetails.accountNumber = Account number
+uKBankDetails.accountNumber.hint = The account number must be between 6 and 8 digits long
+uKBankDetails.buildingNumber = Building society roll number (if you have one)
+uKBankDetails.buildingNumber.hint = You can find the building society roll number on your card, statement or passbook
+
+uKBankDetails.checkYourAnswersLabel = Return repayments
+uKBankDetails.error.accountName.required = Enter the account name
+uKBankDetails.error.accountName.invalid= Account name must only include letters a to z
+uKBankDetails.error.accountName.length = Account name must be 35 characters or less
+
+uKBankDetails.error.sortCode.required = Enter the sort code
+uKBankDetails.error.sortCode.invalid = Enter the sort code in the correct format, like 123456
+
+uKBankDetails.error.accountNumber.required = Enter the account number
+uKBankDetails.error.accountNumber.invalid  = Enter the account number in the correct format, like 123456 or 12345678
+
+uKBankDetails.error.buildingNumber.length  = Building society roll number must be 18 characters or fewer
+uKBankDetails.error.buildingNumber.invalid  = Building society roll number must only include letters a to z, numbers, hyphens and spaces
+
+uKBankDetails.accountName.change.hidden = Account name
+uKBankDetails.sortCode.change.hidden = Sort code
+uKBankDetails.accountNumber.change.hidden = Account number
+uKBankDetails.buildingRollNumber.change.hidden = Building society roll number (if you have one)
+
+companyLiabilities.title = What are your UK Digital Services Tax liabilities for {0} from {1} to {2}?
+companyLiabilities.heading = What are your UK Digital Services Tax liabilities for {0} from {1} to {2}?
+companyLiabilities.checkYourAnswersLabel = Company liabilities
+companyLiabilities.error.required = Enter the Digital Services Tax liability for {0} in pounds or pounds and pence
+companyLiabilities.error.invalid = The liability for {0} must be an amount of money, like 1,234.56 or 1,560.00
+companyLiabilities.error.exceeded = The liability for {0} must be 15 numbers or fewer
+companyLiabilities.change.hidden = Company liabilities
+
+isRepaymentBankAccountUK.title = Is this a UK bank account?
+isRepaymentBankAccountUK.heading = Is this a UK bank account?
+isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
+isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
+isRepaymentBankAccountUK.change.hidden = Change if this is a UK bank account
+
+bankDetailsForRepayment.title = Your bank details for repayment
+bankDetailsForRepayment.heading = Your bank details for repayment
+bankDetailsForRepayment.accountName = Name on the account
+bankDetailsForRepayment.enter.the.details = Enter the details of the international bank account that repayments should be made into.
+bankDetailsForRepayment.internationalBankAccountNumber = International Bank Account Number (IBAN)
+bankDetailsForRepayment.internationalBankAccountNumber.hint = The IBAN can be found on your bank statement, or you can ask your bank
+bankDetailsForRepayment.checkYourAnswersLabel = Bank details for repayment
+bankDetailsForRepayment.error.accountName.required = Enter the name on the account
+bankDetailsForRepayment.error.internationalBankAccountNumber.required = Enter an IBAN
+bankDetailsForRepayment.error.accountName.length = The name on the account must be 35 characters or less
+bankDetailsForRepayment.error.internationalBankAccountNumber.length = IBAN must be 34 characters or less
+bankDetailsForRepayment.error.internationalBankAccountNumber.invalid = Enter a valid IBAN
+bankDetailsForRepayment.error.accountName.invalid = The name on the account must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
+bankDetailsForRepayment.accountName.change.hidden = Account Name
+bankDetailsForRepayment.internationalBankAccountNumber.change.hidden = IBAN
+
+
+groupLiability.title = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
+groupLiability.heading = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
+groupLiability.hint = This is the total amount of liability after applying any deductions and allowances
+groupLiability.checkYourAnswersLabel = Group’s total Digital Services Tax liability
+groupLiability.error.required = Enter the {0}’s total Digital Services Tax liability for {1} to {2} in pounds or pounds and pence
+groupLiability.error.invalid = The {0}’s total liability must be an amount of money, like 1,234.56 or 1,560.00
+groupLiability.error.exceeded = The {0}’s total liability must be 15 numbers or fewer
+groupLiability.change.hidden = Change the group’s total Digital Services Tax liability

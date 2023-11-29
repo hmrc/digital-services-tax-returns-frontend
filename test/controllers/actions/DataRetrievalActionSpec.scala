@@ -43,7 +43,8 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         when(sessionRepository.get("id")) thenReturn Future(None)
         val action            = new Harness(sessionRepository)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", registration)).futureValue
+        val result =
+          action.callTransform(IdentifierRequest(FakeRequest(), "id", registration, updatedPeriod)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -57,7 +58,8 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         when(sessionRepository.get("id")) thenReturn Future(Some(UserAnswers("id")))
         val action            = new Harness(sessionRepository)
 
-        val result = action.callTransform(IdentifierRequest(FakeRequest(), "id", registration)).futureValue
+        val result =
+          action.callTransform(IdentifierRequest(FakeRequest(), "id", registration, updatedPeriod)).futureValue
 
         result.userAnswers mustBe defined
       }

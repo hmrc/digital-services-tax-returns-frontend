@@ -22,14 +22,13 @@ import play.api.data.Form
 import javax.inject.Inject
 
 class CrossBorderTransactionReliefFormProvider @Inject() extends Mappings {
-  val maxLen                    = 15
   def apply(): Form[BigDecimal] =
     Form(
       "value" -> currency(
         "crossBorderTransactionRelief.error.required",
         "crossBorderTransactionRelief.error.invalid",
-        "crossBorderTransactionRelief.error.exceeded",
-        maxLen
+        "crossBorderTransactionRelief.error.exceeded"
       )
     )
+
 }

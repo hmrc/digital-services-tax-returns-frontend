@@ -18,7 +18,7 @@ package base
 
 import controllers.actions._
 import generators.ModelGenerators._
-import models.registration.{Address, Company, CompanyRegWrapper, Registration}
+import models.registration.{Address, Company, CompanyRegWrapper, Period, Registration}
 import models.{CompanyName, DSTRegNumber, Index, UserAnswers}
 import org.scalacheck.Arbitrary
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -30,6 +30,8 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
+
+import java.time.LocalDate
 
 trait SpecBase
     extends AnyFreeSpec
@@ -50,6 +52,14 @@ trait SpecBase
 
   private val reg: Registration = Arbitrary.arbitrary[Registration].sample.value
   private val address           = Arbitrary.arbitrary[Address].sample.value
+  private val period: Period    = Arbitrary.arbitrary[Period].sample.value
+
+  val updatedPeriod = period.copy(
+    start = LocalDate.of(2020, 2, 28),
+    end = LocalDate.of(2021, 2, 28),
+    returnDue = LocalDate.of(2023, 2, 28),
+    key = Period.Key("001")
+  )
 
   val registration: Registration = reg.copy(
     registrationNumber = Some(DSTRegNumber("AMDST0799721562")),

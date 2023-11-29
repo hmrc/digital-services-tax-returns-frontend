@@ -18,12 +18,10 @@ package forms
 
 import forms.behaviours.CurrencyFieldBehaviours
 import play.api.data.FormError
-import wolfendale.scalacheck.regexp.RegexpGen
 
 class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviours {
 
-  val form          = new CrossBorderTransactionReliefFormProvider()()
-  val currencyRegex = "^\\d{1,15}(\\.\\d{2})?$"
+  val form = new CrossBorderTransactionReliefFormProvider()()
 
   ".value" - {
 
@@ -32,7 +30,7 @@ class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviou
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      RegexpGen.from(currencyRegex)
+      validCurrencyDataGenerator
     )
 
     behave like mandatoryField(
@@ -44,7 +42,8 @@ class CrossBorderTransactionReliefFormProviderSpec extends CurrencyFieldBehaviou
     behave like currencyField(
       form,
       fieldName,
-      FormError(fieldName, "crossBorderTransactionRelief.error.invalid")
+      FormError(fieldName, "crossBorderTransactionRelief.error.invalid"),
+      FormError(fieldName, "crossBorderTransactionRelief.error.exceeded")
     )
   }
 }

@@ -34,7 +34,6 @@ import repositories.SessionRepository
 import views.html.SelectActivitiesView
 
 import scala.concurrent.Future
-import scala.language.postfixOps
 
 class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
