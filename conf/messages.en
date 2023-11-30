@@ -161,6 +161,7 @@ socialMediaLoss.error.required=Select yes if the group made a loss on its social
 socialMediaLoss.checkYourAnswersLabel=Loss made
 socialMediaLoss.change.hidden=Change loss made
 
+#Report online marketplace alternative charge
 reportOnlineMarketplaceAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
 reportOnlineMarketplaceAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
 reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel = Loss made
@@ -174,7 +175,7 @@ reportSearchAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportSearchAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your search engine activity
 reportSearchAlternativeCharge.change.hidden = Alternative charge applied
 
-
+#Cross-border transactions relief
 crossBorderTransactionRelief.title = How much cross-border transactions relief have you deducted from revenues in this return?
 crossBorderTransactionRelief.heading = How much cross-border transactions relief have you deducted from revenues in this return?
 crossBorderTransactionRelief.checkYourAnswersLabel = Amount of relief claimed on cross-border transactions
@@ -184,6 +185,7 @@ crossBorderTransactionRelief.error.exceeded = The amount of cross-border transac
 crossBorderTransactionRelief.error.required = Enter the amount of cross-border transactions relief you have deducted from revenues in this return in pounds or pounds and pence
 crossBorderTransactionRelief.change.hidden = Change the amount of relief claimed on cross-border transactions
 
+#Report alternative charge
 reportAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins in this return?
 reportAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins in this return?
 reportAlternativeCharge.details=What we mean by ‘alternative charge’
@@ -194,6 +196,14 @@ reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
+#Report online marketplace loss
+reportOnlineMarketplaceLoss.title = Has the {0} made a loss on its online marketplace activity?
+reportOnlineMarketplaceLoss.heading = Has the {0} made a loss on its online marketplace activity?
+reportOnlineMarketplaceLoss.checkYourAnswersLabel = Loss made
+reportOnlineMarketplaceLoss.error.required = Select yes if the {0} made a loss on its online marketplace activity
+reportOnlineMarketplaceLoss.change.hidden = Change loss made
+
+#Report cross border transactions relief
 reportCrossBorderRelief.title = Are you claiming any relief on cross-border transactions for this return period?
 reportCrossBorderRelief.heading = Are you claiming any relief on cross-border transactions for this return period?
 reportCrossBorderRelief.details=What we mean by ‘relief on cross-border transactions’
@@ -219,7 +229,7 @@ allowanceDeducted.error.minimum-money=The amount of the £25m annual allowance y
 allowanceDeducted.error.max-money=The amount of the £25m annual allowance you have deducted from revenues must be £25m or less
 allowanceDeducted.change.hidden = Change the amount of £25m annual allowance claimed
 
-searchEngineLoss.title = Has the group made a loss on its search engine activity?
+searchEngineLoss.title = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.checkYourAnswersLabel = Loss made
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity

@@ -17,57 +17,55 @@
 package controllers
 
 import controllers.actions._
-import forms.SearchEngineLossFormProvider
+import forms.ReportOnlineMarketplaceLossFormProvider
 import javax.inject.Inject
 import models.Mode
 import navigation.Navigator
-import pages.SearchEngineLossPage
+import pages.ReportOnlineMarketplaceLossPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.SearchEngineLossView
+import views.html.ReportOnlineMarketplaceLossView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class SearchEngineLossController @Inject() (
+class ReportOnlineMarketplaceLossController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
-  formProvider: SearchEngineLossFormProvider,
+  formProvider: ReportOnlineMarketplaceLossFormProvider,
   val controllerComponents: MessagesControllerComponents,
-  view: SearchEngineLossView
+  view: ReportOnlineMarketplaceLossView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val isGoupMessage = request.registration.isGroupMessage
-    val form          = formProvider(isGoupMessage)
-    val preparedForm  = request.userAnswers.get(SearchEngineLossPage) match {
+    val form         = formProvider(request.registration.isGroupMessage)
+    val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, isGoupMessage))
+    Ok(view(preparedForm, mode, request.registration))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      val isGroupMessage = request.registration.isGroupMessage
-      val form           = formProvider(isGroupMessage)
+      val form = formProvider(request.registration.isGroupMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isGroupMessage))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.registration))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SearchEngineLossPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceLossPage, value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SearchEngineLossPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceLossPage, mode, updatedAnswers))
         )
   }
 }

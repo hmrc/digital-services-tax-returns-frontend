@@ -15,6 +15,7 @@
  *@
 
 @import viewmodels.LegendSize
+@import models.registration.Registration
 
 @this(
     layout: templates.Layout,
@@ -24,11 +25,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode,isGroupMessage: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, reg: Registration)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("searchEngineLoss.title",isGroupMessage))) {
+@layout(pageTitle = title(form, messages("reportOnlineMarketplaceLoss.title", reg.isGroupMessage))) {
 
-    @formHelper(action = routes.SearchEngineLossController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ReportOnlineMarketplaceLossController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))
@@ -37,7 +38,7 @@
         @govukRadios(
             RadiosViewModel.yesNo(
                 field = form("value"),
-                legend = LegendViewModel(messages("searchEngineLoss.heading",isGroupMessage)).asPageHeading(LegendSize.Large)
+                legend = LegendViewModel(messages("reportOnlineMarketplaceLoss.heading", reg.isGroupMessage)).asPageHeading(LegendSize.Large)
             )
              .inline()
         )

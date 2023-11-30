@@ -174,6 +174,24 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
+      "must go from a ReportAlternativeChargePage to ReportOnlineMarketplaceLossPage when Online marketplace activity option is selected" in {
+
+        navigator.nextPage(
+          ReportAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage,
+              Set[SelectActivities](SelectActivities.OnlineMarketplace)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
+      }
+
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {
 
         navigator.nextPage(
