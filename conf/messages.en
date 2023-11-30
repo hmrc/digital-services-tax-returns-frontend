@@ -229,7 +229,7 @@ allowanceDeducted.error.minimum-money=The amount of the £25m annual allowance y
 allowanceDeducted.error.max-money=The amount of the £25m annual allowance you have deducted from revenues must be £25m or less
 allowanceDeducted.change.hidden = Change the amount of £25m annual allowance claimed
 
-searchEngineLoss.title = Has the group made a loss on its search engine activity?
+searchEngineLoss.title = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.checkYourAnswersLabel = Loss made
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
