@@ -78,6 +78,16 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
       val result = testForm.fill("foobar")
       result.apply("value").value.value mustEqual "foobar"
     }
+
+    "must bind a valid string with leading and trailing spaces" in {
+      val result = testForm.bind(Map("value" -> "  foobar     "))
+      result.get mustEqual "foobar"
+    }
+
+    "must not bind a string with spaces" in {
+      val result = testForm.bind(Map("value" -> "      "))
+      result.errors must contain(FormError("value", "error.required"))
+    }
   }
 
   "boolean" - {
