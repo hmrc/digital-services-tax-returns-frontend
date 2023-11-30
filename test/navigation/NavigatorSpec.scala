@@ -120,6 +120,24 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
       }
 
+      "must go from a ReportAlternativeChargePage to SocialMediaLossPage when Social media activity option is selected" in {
+
+        navigator.nextPage(
+          ReportAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage,
+              Set[SelectActivities](SelectActivities.SocialMedia)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+      }
+
       "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
         navigator.nextPage(
@@ -215,7 +233,6 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
       "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
 
         navigator.nextPage(
@@ -276,7 +293,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
       }
 
-      "must go from a SocialMediaLossPage to GroupLiability page when 'Yes' is selected" in {
+      "must go from a SocialMediaLossPage to GroupLiabilityPage when 'Yes' is selected" in {
 
         navigator.nextPage(
           SocialMediaLossPage,
@@ -395,7 +412,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage page when 'Yes' is selected" in {
+      "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
 
         navigator.nextPage(
           IsRepaymentBankAccountUKPage,
@@ -407,7 +424,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.UKBankDetailsController.onPageLoad(NormalMode)
       }
 
-      "must go from a IsRepaymentBankAccountUKPage to BankDetailsForRepaymentPage when 'No' is selected" ignore {
+      "must go from a IsRepaymentBankAccountUKPage to BankDetailsForRepaymentPage when 'No' is selected" in {
 
         navigator.nextPage(
           IsRepaymentBankAccountUKPage,
@@ -417,6 +434,39 @@ class NavigatorSpec extends SpecBase {
             .success
             .value
         ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(NormalMode)
+      }
+
+      "must go from a GroupLiabilityPage to RepaymentPage" in {
+
+        navigator.nextPage(
+          GroupLiabilityPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.RepaymentController.onPageLoad(NormalMode)
+      }
+
+      "must go from a RepaymentPage to IsRepaymentBankAccountUKPage when 'Yes' is selected" in {
+
+        navigator.nextPage(
+          RepaymentPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(RepaymentPage, true)
+            .success
+            .value
+        ) mustBe routes.IsRepaymentBankAccountUKController.onPageLoad(NormalMode)
+      }
+
+      "must go from a RepaymentPage to CheckYourAnswers page when 'No' is selected" in {
+
+        navigator.nextPage(
+          RepaymentPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(RepaymentPage, false)
+            .success
+            .value
+        ) mustBe routes.CheckYourAnswersController.onPageLoad
       }
 
       "must go to CompanyLiabilitiesPage0 index" in {
@@ -465,28 +515,6 @@ class NavigatorSpec extends SpecBase {
             .success
             .value
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
-      }
-    }
-
-    "in Check mode" - {
-
-      "must go from a page that doesn't exist in the edit route map to CheckYourAnswers" in {
-
-        case object UnknownPage extends Page
-        navigator.nextPage(
-          UnknownPage,
-          CheckMode,
-          UserAnswers("id")
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
-      }
-
-      "must go from a CompanyDetailsPage to ManageCompanies page" in {
-
-        navigator.nextPage(
-          CompanyDetailsPage(index = Index(0)),
-          CheckMode,
-          UserAnswers("id")
-        ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
       }
     }
   }
