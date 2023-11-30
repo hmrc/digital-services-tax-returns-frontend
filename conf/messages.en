@@ -197,7 +197,7 @@ reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge a
 reportAlternativeCharge.change.hidden = Alternative charge applied
 
 #Report online marketplace loss
-reportOnlineMarketplaceLoss.title = Has the {0}} made a loss on its online marketplace activity?
+reportOnlineMarketplaceLoss.title = Has the {0} made a loss on its online marketplace activity?
 reportOnlineMarketplaceLoss.heading = Has the {0} made a loss on its online marketplace activity?
 reportOnlineMarketplaceLoss.checkYourAnswersLabel = Loss made
 reportOnlineMarketplaceLoss.error.required = Select yes if the {0} made a loss on its online marketplace activity
