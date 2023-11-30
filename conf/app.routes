@@ -75,6 +75,11 @@ GET        /edit/report-alternative-charge                      controllers.Repo
 POST       /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
+GET        /report-online-marketplace-loss                        controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-online-marketplace-loss                        controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-online-marketplace-loss                  controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-online-marketplace-loss                  controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = CheckMode)
+
 GET        /report-cross-border-transaction-relief              controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = NormalMode)
 POST       /report-cross-border-transaction-relief              controllers.ReportCrossBorderReliefController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-cross-border-transaction-relief         controllers.ReportCrossBorderReliefController.onPageLoad(mode: Mode = CheckMode)
