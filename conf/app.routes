@@ -110,12 +110,17 @@ POST       /is-repayment-bank-account-uk                        controllers.IsRe
 GET        /edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onSubmit(mode: Mode = CheckMode)
 
-GET        /bank-details-for-repayment                           controllers.BankDetailsForRepaymentController.onPageLoad(mode: Mode = NormalMode)
-POST       /bank-details-for-repayment                           controllers.BankDetailsForRepaymentController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/bank-details-for-repayment                      controllers.BankDetailsForRepaymentController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/bank-details-for-repayment                      controllers.BankDetailsForRepaymentController.onSubmit(mode: Mode = CheckMode)
+GET        /bank-details-for-repayment                          controllers.BankDetailsForRepaymentController.onPageLoad(mode: Mode = NormalMode)
+POST       /bank-details-for-repayment                          controllers.BankDetailsForRepaymentController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/bank-details-for-repayment                     controllers.BankDetailsForRepaymentController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/bank-details-for-repayment                     controllers.BankDetailsForRepaymentController.onSubmit(mode: Mode = CheckMode)
 
 GET        /group-liability                                     controllers.GroupLiabilityController.onPageLoad(mode: Mode = NormalMode)
 POST       /group-liability                                     controllers.GroupLiabilityController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/group-liability                                controllers.GroupLiabilityController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/group-liability                                controllers.GroupLiabilityController.onSubmit(mode: Mode = CheckMode)
+
+GET        /repayment                                           controllers.RepaymentController.onPageLoad(mode: Mode = NormalMode)
+POST       /repayment                                           controllers.RepaymentController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/repayment                                      controllers.RepaymentController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/repayment                                      controllers.RepaymentController.onSubmit(mode: Mode = CheckMode)

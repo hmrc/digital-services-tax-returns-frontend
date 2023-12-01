@@ -36,9 +36,11 @@ class Navigator @Inject() () {
     case ReportSearchAlternativeChargePage            => ua => reportSearchAlternativeCharge(ua)(NormalMode)
     case ReportOnlineMarketplaceAlternativeChargePage => ua => reportOnlineMarketplaceCharge(ua)(NormalMode)
     case IsRepaymentBankAccountUKPage                 => ua => repaymentBankAccount(ua)(NormalMode)
-    case CompanyLiabilitiesPage(_)                    => ua => Some(companyLiability(ua)(NormalMode))
+    case CompanyLiabilitiesPage(index)                => ua => Some(companyLiability(index, ua)(NormalMode))
     case SocialMediaLossPage                          => ua => socialMediaLoss(ua)(NormalMode)
     case SearchEngineLossPage                         => ua => searchEngineLoss(ua)(NormalMode)
+    case GroupLiabilityPage                           => ua => Some(routes.RepaymentController.onPageLoad(NormalMode))
+    case RepaymentPage                                => ua => repayment(ua)(NormalMode)
     case _                                            => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 
@@ -114,12 +116,16 @@ class Navigator @Inject() () {
         case false => routes.BankDetailsForRepaymentController.onPageLoad(mode)
       }
 
-  private def companyLiability(ua: UserAnswers)(mode: Mode): Call = {
+  private def companyLiability(pageIndex: Index, ua: UserAnswers)(mode: Mode): Call = {
     val companyDetailsCount: Int = ua.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
     val liabilityCount: Int      = ua.get(CompanyLiabilityListPage).map(_.size).getOrElse(0)
-    val index: Index             = Index(liabilityCount)
 
-    if (liabilityCount < companyDetailsCount) {
+    val preCond      = liabilityCount == companyDetailsCount && pageIndex.position < liabilityCount
+    val index: Index = if (preCond) Index(pageIndex.position + 1) else Index(liabilityCount)
+
+    if (
+      liabilityCount < companyDetailsCount || liabilityCount == companyDetailsCount && index.position < liabilityCount
+    ) {
       routes.CompanyLiabilitiesController.onPageLoad(mode, index)
     } else {
       routes.GroupLiabilityController.onPageLoad(mode)
@@ -138,25 +144,32 @@ class Navigator @Inject() () {
         case true if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine)) =>
           routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
         case true                                                                                   =>
-          companyLiability(ua)(mode)
+          companyLiability(Index(0), ua)(mode)
         case false                                                                                  => ??? // TODO report-social-media-operating-margin
       }
 
-  def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(SearchEngineLossPage)
       .map {
         case true if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
         case true                                                                                        =>
-          companyLiability(ua)(mode)
+          companyLiability(Index(0), ua)(mode)
         case false                                                                                       => ??? // TODO report-social-media-operating-margin
       }
 
-  def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage)
       .map {
         case true  => ??? // TODO report-online-marketplace-loss
         case false => ??? // TODO report-social-media-operating-margin
+      }
+
+  private def repayment(ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(RepaymentPage)
+      .map {
+        case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
+        case false => routes.CheckYourAnswersController.onPageLoad
       }
 
 }

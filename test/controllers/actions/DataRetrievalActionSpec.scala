@@ -17,6 +17,7 @@
 package controllers.actions
 
 import base.SpecBase
+import controllers.{period, registration}
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.mockito.Mockito._
@@ -44,7 +45,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         val action            = new Harness(sessionRepository)
 
         val result =
-          action.callTransform(IdentifierRequest(FakeRequest(), "id", registration, updatedPeriod)).futureValue
+          action.callTransform(IdentifierRequest(FakeRequest(), "id", registration, period)).futureValue
 
         result.userAnswers must not be defined
       }
@@ -59,7 +60,7 @@ class DataRetrievalActionSpec extends SpecBase with MockitoSugar {
         val action            = new Harness(sessionRepository)
 
         val result =
-          action.callTransform(IdentifierRequest(FakeRequest(), "id", registration, updatedPeriod)).futureValue
+          action.callTransform(IdentifierRequest(FakeRequest(), "id", registration, period)).futureValue
 
         result.userAnswers mustBe defined
       }

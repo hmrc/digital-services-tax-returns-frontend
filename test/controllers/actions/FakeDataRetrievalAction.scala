@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import controllers.registration
 import models.UserAnswers
 import models.requests.{IdentifierRequest, OptionalDataRequest}
 import org.scalatest.OptionValues
@@ -25,7 +26,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FakeDataRetrievalAction(dataToReturn: Option[UserAnswers]) extends DataRetrievalAction with OptionValues {
 
   override protected def transform[A](request: IdentifierRequest[A]): Future[OptionalDataRequest[A]] =
-    Future(OptionalDataRequest(request.request, request.userId, updatedRegistration, request.period, dataToReturn))
+    Future(OptionalDataRequest(request.request, request.userId, registration, request.period, dataToReturn))
 
   override protected implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global

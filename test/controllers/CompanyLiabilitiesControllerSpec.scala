@@ -37,8 +37,8 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new CompanyLiabilitiesFormProvider()
   val companyName  = registration.companyReg.company.name
-  val startDate    = formatDate(updatedPeriod.start)
-  val endDate      = formatDate(updatedPeriod.end)
+  val startDate    = formatDate(period.start)
+  val endDate      = formatDate(period.end)
   val form         = formProvider(companyName)
 
   def onwardRoute = Call("GET", "/foo")
@@ -51,7 +51,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
     "must return OK and the correct view for a GET" in {
       val ua = emptyUserAnswers
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .set(CompanyDetailsPage(index), CompanyDetails(companyName, None))
         .success
         .value
 
@@ -81,8 +81,6 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[CompanyLiabilitiesView]
-
         status(result) mustEqual SEE_OTHER
         redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
       }
@@ -94,7 +92,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         .set(CompanyLiabilitiesPage(index), validAnswer)
         .success
         .value
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .set(CompanyDetailsPage(index), CompanyDetails(companyName, None))
         .success
         .value
 
@@ -126,7 +124,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
       val userAnswers           = emptyUserAnswers
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .set(CompanyDetailsPage(index), CompanyDetails(companyName, None))
         .success
         .value
 
@@ -154,7 +152,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
       val userAnswers = emptyUserAnswers
-        .set(CompanyDetailsPage(index), CompanyDetails("Some Corporation", None))
+        .set(CompanyDetailsPage(index), CompanyDetails(companyName, None))
         .success
         .value
 

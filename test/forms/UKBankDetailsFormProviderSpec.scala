@@ -119,7 +119,7 @@ class UKBankDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      RegexpGen.from(regex)
+      RegexpGen.from(regex).filter(_.trim.nonEmpty)
     )
 
     behave like fieldWithMaxLength(

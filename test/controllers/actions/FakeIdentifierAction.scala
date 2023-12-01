@@ -16,6 +16,7 @@
 
 package controllers.actions
 
+import controllers.{period, registration}
 import models.requests.IdentifierRequest
 import org.scalatest.OptionValues
 import play.api.mvc._
@@ -26,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id", updatedRegistration, updatedPeriod))
+    block(IdentifierRequest(request, "id", registration, period))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

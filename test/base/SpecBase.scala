@@ -17,10 +17,7 @@
 package base
 
 import controllers.actions._
-import generators.ModelGenerators._
-import models.registration.{Address, Company, CompanyRegWrapper, Period, Registration}
-import models.{CompanyName, DSTRegNumber, Index, UserAnswers}
-import org.scalacheck.Arbitrary
+import models.{DSTRegNumber, Index, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -30,8 +27,7 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-
-import java.time.LocalDate
+import shapeless.tag.@@
 
 trait SpecBase
     extends AnyFreeSpec
@@ -47,25 +43,8 @@ trait SpecBase
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  val dstRegNumber = Some(DSTRegNumber("AMDST0799721562"))
-  val index: Index = Index(0)
-
-  private val reg: Registration = Arbitrary.arbitrary[Registration].sample.value
-  private val address           = Arbitrary.arbitrary[Address].sample.value
-  private val period: Period    = Arbitrary.arbitrary[Period].sample.value
-
-  val updatedPeriod = period.copy(
-    start = LocalDate.of(2020, 2, 28),
-    end = LocalDate.of(2021, 2, 28),
-    returnDue = LocalDate.of(2023, 2, 28),
-    key = Period.Key("001")
-  )
-
-  val registration: Registration = reg.copy(
-    registrationNumber = Some(DSTRegNumber("AMDST0799721562")),
-    companyReg = CompanyRegWrapper(company = Company(CompanyName("Some Corporation"), address)),
-    ultimateParent = None
-  )
+  val dstRegNumber: Option[String @@ models.DSTRegNumber.Tag] = Some(DSTRegNumber("AMDST0799721562"))
+  val index: Index                                            = Index(0)
 
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
