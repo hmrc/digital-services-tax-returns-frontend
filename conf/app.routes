@@ -124,3 +124,5 @@ GET        /repayment                                           controllers.Repa
 POST       /repayment                                           controllers.RepaymentController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/repayment                                      controllers.RepaymentController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/repayment                                      controllers.RepaymentController.onSubmit(mode: Mode = CheckMode)
+
+GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad()
