@@ -39,6 +39,6 @@ class CheckYourAnswersController @Inject() (
       rows = Seq.empty
     )
 
-    Ok(view(list, true))
+    Ok(view(list, isPrint = false))
   }
 }
