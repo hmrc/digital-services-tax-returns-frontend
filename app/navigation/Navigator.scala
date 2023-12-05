@@ -161,7 +161,7 @@ class Navigator @Inject() () {
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage)
       .map {
-        case true  => ??? // TODO report-online-marketplace-loss
+        case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         case false => ??? // TODO report-social-media-operating-margin
       }
 

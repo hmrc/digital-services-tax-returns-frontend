@@ -89,6 +89,30 @@ trait Formatters {
         baseFormatter.unbind(key, value.toString)
     }
 
+  private[mappings] def percentageFormatter(
+                                      requiredKey: String,
+                                      invalidKey: String,
+                                      args: Seq[String] = Seq.empty
+                                    ): Formatter[Double] =
+    new Formatter[Double] {
+
+      val decimalRegexp = "^(100|\\d)(\\.\\d{1,3})?$"
+
+      private val baseFormatter = stringFormatter(requiredKey, args)
+
+      override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Double] =
+        baseFormatter
+          .bind(key, data)
+          .map(_.replace(",", ""))
+          .flatMap {
+            case s if s.matches(decimalRegexp) =>
+              Right(s.toDouble)
+            case _ =>
+               Left(Seq(FormError(key, invalidKey, args)))
+          }
+      override def unbind(key: String, value: Double) = baseFormatter.unbind(key, value.toString.replace(".0", ""))
+    }
+
   private[mappings] def currencyFormatter(
     requiredKey: String,
     invalidKey: String,
