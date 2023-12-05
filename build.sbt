@@ -40,8 +40,8 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
       ".*javascript.*;.*Routes.*;.*viewmodels.*;.*ViewUtils.*;.*GuiceInjector;.*views.*;" +
       ".*Routes.*;.*viewmodels.govuk.*;app.*;prod.*",
-    ScoverageKeys.coverageMinimumStmtTotal := 95,
-    ScoverageKeys.coverageMinimumBranchTotal := 88, // Once we resolve navigator TODO's It will reach 90%
+    ScoverageKeys.coverageMinimumStmtTotal := 97,
+    ScoverageKeys.coverageMinimumBranchTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,
     scalacOptions ++= Seq(
