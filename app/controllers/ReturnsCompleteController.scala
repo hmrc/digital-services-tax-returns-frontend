@@ -16,29 +16,36 @@
 
 package controllers
 
-import com.google.inject.Inject
-import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import connectors.DSTConnector
+import controllers.actions._
+import models.formatDate
+
+import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.govuk.summarylist._
-import views.html.CheckYourAnswersView
+import views.html.ReturnsCompleteView
 
-class CheckYourAnswersController @Inject() (
+import scala.concurrent.ExecutionContext
+
+class ReturnsCompleteController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
-  getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
+  dstConnector: DSTConnector,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView
-) extends FrontendBaseController
+  view: ReturnsCompleteView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val list = SummaryListViewModel(
-      rows = Seq.empty
+  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
+    val submittedPeriodStart = formatDate(request.period.start)
+    val submittedPeriodEnd   = formatDate(request.period.end)
+    val companyName          = request.registration.companyReg.company.name
+    for {
+      outstandingPeriod <- dstConnector.lookupOutstandingReturns()
+    } yield Ok(
+      view(companyName, submittedPeriodStart, submittedPeriodEnd, outstandingPeriod.toList.minBy(_.start))
     )
-
-    Ok(view(list, true))
   }
 }

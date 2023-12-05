@@ -16,14 +16,20 @@
 
 @this(
     layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList,isPrint: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
 
     <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
 
     @govukSummaryList(list)
+    @if(isPrint) {
+        @govukButton(
+            ButtonViewModel(messages("checkYourAnswers.save-continue"))
+        )
+    }
 }
