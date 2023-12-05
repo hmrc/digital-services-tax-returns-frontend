@@ -47,7 +47,7 @@ class Navigator @Inject() () {
   private val checkRouteMap: Page => UserAnswers => Option[Call] = {
     case CompanyDetailsPage(_) => _ => Some(routes.ManageCompaniesController.onPageLoad(CheckMode))
     case SelectActivitiesPage  => ua => reportAlternativeChargeNavigation(CheckMode)(ua)
-    case _                     => _ => Some(routes.CheckYourAnswersController.onPageLoad)
+    case _                     => _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -169,7 +169,7 @@ class Navigator @Inject() () {
     ua.get(RepaymentPage)
       .map {
         case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
-        case false => routes.CheckYourAnswersController.onPageLoad
+        case false => routes.CheckYourAnswersController.onPageLoad(false)
       }
 
 }

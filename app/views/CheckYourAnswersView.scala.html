@@ -30,6 +30,7 @@
     @if(!isPrint) {
         @govukButton(
             ButtonViewModel(messages("checkYourAnswers.save-continue"))
+            .asLink(routes.ReturnsCompleteController.onPageLoad().url)
         )
     }
 }

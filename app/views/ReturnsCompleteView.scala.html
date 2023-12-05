@@ -31,7 +31,7 @@ title = HtmlContent(messages("returnsComplete.title")),
 content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPeriodStart))
 ))
 <p class="govuk-body">
-    <a href="@routes.CheckYourAnswersController.onPageLoad()" class="govuk-link print-icon">
+    <a href="@routes.CheckYourAnswersController.onPageLoad(isPrint = true)" class="govuk-link print-icon">
         @messages("returnsComplete.print")
     </a>
 </p>

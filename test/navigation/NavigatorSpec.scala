@@ -484,7 +484,7 @@ class NavigatorSpec extends SpecBase {
             .set(RepaymentPage, false)
             .success
             .value
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
+        ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
       }
 
       "must go to CompanyLiabilitiesPage0 index" in {
