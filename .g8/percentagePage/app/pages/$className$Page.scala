@@ -2,7 +2,7 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object $className$Page extends QuestionPage[BigDecimal] {
+case object $className$Page extends QuestionPage[Double] {
   
   override def path: JsPath = JsPath \ toString
   

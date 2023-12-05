@@ -10,8 +10,7 @@ class $className$FormProvider @Inject() extends Mappings {
     Form(
       "value" -> percentage(
         "$className;format="decap"$.error.required",
-        "$className;format="decap"$.error.invalid",
-        "$className;format="decap"$.error.exceeded"
+        "$className;format="decap"$.error.invalid"
       )
     )
 

@@ -1,9 +1,9 @@
 package forms
 
-import forms.behaviours.CurrencyFieldBehaviours
+import forms.behaviours.FieldBehaviours
 import play.api.data.FormError
 
-class $className$FormProviderSpec extends CurrencyFieldBehaviours {
+class $className$FormProviderSpec extends FieldBehaviours {
 
   val form = new $className$FormProvider()()
 
@@ -14,7 +14,7 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validCurrencyDataGenerator
+      validPercentageDataGenerator
     )
 
     behave like mandatoryField(
@@ -22,13 +22,5 @@ class $className$FormProviderSpec extends CurrencyFieldBehaviours {
       fieldName,
       requiredError = FormError(fieldName, "$className;format="decap"$.error.required")
     )
-
-    behave like currencyField(
-      form,
-      fieldName,
-      invalidError = FormError(fieldName, "$className;format="decap"$.error.invalid"),
-      exceededError = FormError(fieldName, "$className;format="decap"$.error.exceeded")
-    )
-
   }
 }
