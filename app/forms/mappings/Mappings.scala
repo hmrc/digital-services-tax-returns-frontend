@@ -35,6 +35,13 @@ trait Mappings extends Formatters with Constraints {
   )(): FieldMapping[Int] =
     of(intFormatter(requiredKey, wholeNumberKey, nonNumericKey, args))
 
+  protected def percentage(
+    requiredKey: String = "error.required",
+    invalidKey: String = "error.invalid",
+    args: Seq[String] = Seq.empty
+  ): FieldMapping[Double] =
+    of(percentageFormatter(requiredKey, invalidKey, args))
+
   protected def currency(
     requiredKey: String = "error.required",
     invalidKey: String = "error.invalid",

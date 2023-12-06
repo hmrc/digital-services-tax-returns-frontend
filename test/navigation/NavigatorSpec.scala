@@ -406,7 +406,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-online-marketplace-loss page" +
-        " when 'Yes' is selected" ignore {
+        " when 'Yes' is selected" in {
 
           navigator.nextPage(
             ReportOnlineMarketplaceAlternativeChargePage,
@@ -415,7 +415,7 @@ class NavigatorSpec extends SpecBase {
               .set(ReportOnlineMarketplaceAlternativeChargePage, true)
               .success
               .value
-          ) mustBe ???
+          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
         }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-search-engine-operating-margin page when 'No' is selected" ignore {
