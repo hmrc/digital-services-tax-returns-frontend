@@ -76,7 +76,7 @@ class Navigator @Inject() () {
   private def reportMediaAlternative(ua: UserAnswers): Option[Call] =
     ua.get(ReportMediaAlternativeChargePage) map {
       case true  => routes.SocialMediaLossController.onPageLoad(NormalMode)
-      case false => ??? // TODO report-search-engine-alternative-charge
+      case false => routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
     }
 
   private def navigationForSelectedActivitiesYes(selectedActivities: Set[SelectActivities], mode: Mode): Call =
@@ -161,7 +161,7 @@ class Navigator @Inject() () {
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage)
       .map {
-        case true  => ??? // TODO report-online-marketplace-loss
+        case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         case false => ??? // TODO report-social-media-operating-margin
       }
 

@@ -207,8 +207,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
       }
 
-      // TODO
-      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" ignore {
+      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" in {
 
         navigator.nextPage(
           ReportMediaAlternativeChargePage,
@@ -220,7 +219,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportMediaAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to AllowanceDeducted page when 'No' is selected" in {
@@ -266,7 +265,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
       }
 
-      "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'No' is selected" ignore {
+      "must go from a ReportSearchAlternativeChargePage to AllowanceDeducted page when 'No' is selected" ignore {
 
         navigator.nextPage(
           ReportSearchAlternativeChargePage,
@@ -275,7 +274,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportSearchAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
       "must go from a SocialMediaLossPage to ReportSearchAlternativeCharge page when 'Yes' is selected and selected activity is 'SearchEngine'" in {
@@ -406,7 +405,7 @@ class NavigatorSpec extends SpecBase {
       }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-online-marketplace-loss page" +
-        " when 'Yes' is selected" ignore {
+        " when 'Yes' is selected" in {
 
           navigator.nextPage(
             ReportOnlineMarketplaceAlternativeChargePage,
@@ -415,7 +414,7 @@ class NavigatorSpec extends SpecBase {
               .set(ReportOnlineMarketplaceAlternativeChargePage, true)
               .success
               .value
-          ) mustBe ???
+          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
         }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-search-engine-operating-margin page when 'No' is selected" ignore {
