@@ -51,7 +51,7 @@ trait Generators {
     RegexpGen.from("^[0-9]{1,15}(\\.[0-9]{1,2})?$")
 
   def validPercentageDataGenerator: Gen[String] =
-    RegexpGen.from("^(100|\\d)(\\.\\d{1,3})?$")
+    RegexpGen.from("^(99|\\d)(\\.\\d{1,3})?$")
 
   def intsLargerThanMaxValue: Gen[BigInt] =
     arbitrary[BigInt] suchThat (x => x > Int.MaxValue)
