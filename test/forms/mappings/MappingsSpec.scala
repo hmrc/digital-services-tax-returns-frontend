@@ -156,6 +156,49 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
     }
   }
 
+  "percentage" - {
+
+    val testForm: Form[Double] =
+      Form(
+        "value" -> percentage()
+      )
+
+    "must bind a valid percentage" in {
+      val result = testForm.bind(Map("value" -> "1.123"))
+      result.get mustEqual 1.123
+    }
+
+    "must not bind an empty value" in {
+      val result = testForm.bind(Map("value" -> ""))
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must not bind an invalid value" in {
+      val result = testForm.bind(Map("value" -> "invalid"))
+      result.errors must contain(FormError("value", "error.invalid"))
+    }
+
+    "must not bind an max value greater than 100" in {
+      val result = testForm.bind(Map("value" -> "101"))
+      result.errors must contain(FormError("value", "error.invalid"))
+    }
+
+    "must not bind an max decimal greater than 3 dp" in {
+      val result = testForm.bind(Map("value" -> "99.1234"))
+      result.errors must contain(FormError("value", "error.invalid"))
+    }
+
+    "must not bind an empty map" in {
+      val result = testForm.bind(Map.empty[String, String])
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must unbind a valid value" in {
+      val result = testForm.fill(100.123)
+      result.apply("value").value.value mustEqual "100.123"
+    }
+  }
+
   "enumerable" - {
 
     val testForm = Form(
