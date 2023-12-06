@@ -156,7 +156,7 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
     }
   }
 
-  "float" - {
+  "percentage" - {
 
     val testForm: Form[Double] =
       Form(
