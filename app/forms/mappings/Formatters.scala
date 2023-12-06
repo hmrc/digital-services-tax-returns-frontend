@@ -96,7 +96,7 @@ trait Formatters {
                                     ): Formatter[Double] =
     new Formatter[Double] {
 
-      val decimalRegexp = "^(100|\\d)(\\.\\d{1,3})?$"
+      val decimalRegexp = "^[0-9]+(\\.[0-9]{1,3})?$"
 
       private val baseFormatter = stringFormatter(requiredKey, args)
 
@@ -105,7 +105,7 @@ trait Formatters {
           .bind(key, data)
           .map(_.replace(",", ""))
           .flatMap {
-            case s if s.matches(decimalRegexp) =>
+            case s if s.matches(decimalRegexp) && (s.toDouble >= 0 && s.toDouble <= 100) =>
               Right(s.toDouble)
             case _ =>
                Left(Seq(FormError(key, invalidKey, args)))

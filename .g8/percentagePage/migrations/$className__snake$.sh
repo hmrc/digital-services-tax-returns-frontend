@@ -16,7 +16,6 @@ echo "Adding messages to conf.messages"
 echo "" >> ../conf/messages.en
 echo "$className;format="decap"$.title = $className$" >> ../conf/messages.en
 echo "$className;format="decap"$.heading = $className$" >> ../conf/messages.en
-echo "$className;format="decap"$.hint = $className$" >> ../conf/messages.en
 echo "$className;format="decap"$.checkYourAnswersLabel = $className$" >> ../conf/messages.en
 echo "$className;format="decap"$.error.required = Enter the $className;format="decap"$" >> ../conf/messages.en
 echo "$className;format="decap"$.error.invalid = Enter the $className;format="decap"$ in the correct format" >> ../conf/messages.en
