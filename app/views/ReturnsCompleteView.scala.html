@@ -16,6 +16,7 @@
 
 @import models.registration.Period
 @import models.formatDate
+@import views.html.helper.CSPNonce
 
 @this(
         layout: templates.Layout,
@@ -25,16 +26,23 @@
 
 @(companyName: String,submittedPeriodStart: String, submittedPeriodEnd:String, nextPeriod: Period)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("returnsComplete.title"))) {
+@layout(pageTitle = titleNoForm(messages("returnsComplete.title")), showBackLink = false) {
 @govukPanel(Panel(
 title = HtmlContent(messages("returnsComplete.title")),
-content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPeriodStart))
+content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPeriodStart,submittedPeriodEnd))
 ))
-<p class="govuk-body">
-    <a href="@routes.CheckYourAnswersController.onPageLoad(isPrint = true)" class="govuk-link print-icon">
+<p class="govuk-body jsonly">
+    <a id ="printId" href="#" class="govuk-link print-icon">
         @messages("returnsComplete.print")
     </a>
 </p>
+<script @CSPNonce.attr>
+    document.getElementById("printId").addEventListener("click", function() {
+     if(window.print) {
+         window.print()
+         }
+      });
+</script>
 <h2 class="govuk-heading-m">@messages("returnsComplete.what-you-do-next.title")</h2>
 <p class="govuk-body">@messages("returnsComplete.what-you-do-next.p1",formatDate(nextPeriod.start),formatDate(nextPeriod.end))</p>
 <p class="govuk-body">@messages("returnsComplete.what-you-do-next.p2", formatDate(nextPeriod.paymentDue), formatDate(nextPeriod.returnDue))</p>
@@ -45,12 +53,12 @@ content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPer
     </a>
 </p>
 
+<h2 class="govuk-heading-m">@messages("returnsComplete.before-you-go")</h2>
+<p class="govuk-body">@messages("common.feedback.p1")</p>
 <p class="govuk-body">
-    <a href="@controllers.auth.routes.AuthenticationController.signOut.url" class="govuk-link">
-        @messages("common.feedback")
-    </a>
-    @messages("common.thirty-seconds")
+    <a href="#" class="govuk-link">@messages("common.feedback.survey")</a> @messages("common.feedback.survey.p1")
 </p>
+
 }
 
 
