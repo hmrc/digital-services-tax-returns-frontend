@@ -22,7 +22,7 @@
 
 @(list: SummaryList,isPrint: Boolean = false, showBackLink : Boolean = true)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"), showBackLink = showBackLink)) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title")), showBackLink = showBackLink) {
 
     <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
 

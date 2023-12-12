@@ -26,11 +26,13 @@ import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
-import views.html.ReturnsCompleteView
+import viewmodels.govuk.SummaryListFluency
+
+import views.html.{CheckYourAnswersView, ReturnsCompleteView}
 
 import scala.concurrent.Future
 
-class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar {
+class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with SummaryListFluency {
   implicit val hc: HeaderCarrier     = HeaderCarrier()
   val mockDstConnector: DSTConnector = mock[DSTConnector]
   val companyName                    = registration.companyReg.company.name
@@ -53,10 +55,13 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ReturnsCompleteView]
+        val view         = application.injector.instanceOf[ReturnsCompleteView]
+        val cya          = application.injector.instanceOf[CheckYourAnswersView]
+        val list         = SummaryListViewModel(Seq.empty)
+        val printableCYA = Some(cya(list = list, isPrint = true, showBackLink = false)(request, messages(application)))
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(companyName, startDate, endDate, period)(
+        contentAsString(result) mustEqual view(companyName, startDate, endDate, period, printableCYA)(
           request,
           messages(application)
         ).toString
