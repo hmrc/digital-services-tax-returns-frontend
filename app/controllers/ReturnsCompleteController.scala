@@ -19,13 +19,14 @@ package controllers
 import connectors.DSTConnector
 import controllers.actions._
 import models.formatDate
-
-import javax.inject.Inject
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import views.html.ReturnsCompleteView
+import viewmodels.govuk.summarylist._
+import views.html.{CheckYourAnswersView, ReturnsCompleteView}
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class ReturnsCompleteController @Inject() (
@@ -33,7 +34,8 @@ class ReturnsCompleteController @Inject() (
   identify: IdentifierAction,
   dstConnector: DSTConnector,
   val controllerComponents: MessagesControllerComponents,
-  view: ReturnsCompleteView
+  view: ReturnsCompleteView,
+  cyaView: CheckYourAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -42,10 +44,16 @@ class ReturnsCompleteController @Inject() (
     val submittedPeriodStart = formatDate(request.period.start)
     val submittedPeriodEnd   = formatDate(request.period.end)
     val companyName          = request.registration.companyReg.company.name
+
+    val list                       = SummaryListViewModel(
+      rows = Seq.empty
+    )
+    val printableCYA: Option[Html] = Some(cyaView(list, isPrint = true, showBackLink = false))
+
     for {
       outstandingPeriod <- dstConnector.lookupOutstandingReturns()
     } yield Ok(
-      view(companyName, submittedPeriodStart, submittedPeriodEnd, outstandingPeriod.toList.minBy(_.start))
+      view(companyName, submittedPeriodStart, submittedPeriodEnd, outstandingPeriod.toList.minBy(_.start), printableCYA)
     )
   }
 }

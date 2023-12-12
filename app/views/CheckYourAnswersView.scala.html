@@ -20,9 +20,9 @@
     govukButton: GovukButton
 )
 
-@(list: SummaryList,isPrint: Boolean = false)(implicit request: Request[_], messages: Messages)
+@(list: SummaryList,isPrint: Boolean = false, showBackLink : Boolean = true)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"), showBackLink = showBackLink)) {
 
     <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
 

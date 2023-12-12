@@ -55,7 +55,7 @@ class RepaymentController @Inject() (
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, startDate, endDate))
+    Ok(view(preparedForm, mode, startDate, endDate)(request, messagesApi.preferred(request)))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {

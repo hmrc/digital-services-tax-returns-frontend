@@ -24,41 +24,50 @@
         govukPanel: GovukPanel
 )
 
-@(companyName: String,submittedPeriodStart: String, submittedPeriodEnd:String, nextPeriod: Period)(implicit request: Request[_], messages: Messages)
+@(companyName: String,submittedPeriodStart: String, submittedPeriodEnd:String, nextPeriod: Period, printableCYA: Option[Html])(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("returnsComplete.title")), showBackLink = false) {
-@govukPanel(Panel(
-title = HtmlContent(messages("returnsComplete.title")),
-content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPeriodStart,submittedPeriodEnd))
-))
-<p class="govuk-body jsonly">
-    <a id ="printId" href="#" class="govuk-link print-icon">
-        @messages("returnsComplete.print")
-    </a>
-</p>
-<script @CSPNonce.attr>
-    document.getElementById("printId").addEventListener("click", function() {
-     if(window.print) {
-         window.print()
-         }
-      });
-</script>
-<h2 class="govuk-heading-m">@messages("returnsComplete.what-you-do-next.title")</h2>
-<p class="govuk-body">@messages("returnsComplete.what-you-do-next.p1",formatDate(nextPeriod.start),formatDate(nextPeriod.end))</p>
-<p class="govuk-body">@messages("returnsComplete.what-you-do-next.p2", formatDate(nextPeriod.paymentDue), formatDate(nextPeriod.returnDue))</p>
+<div id="print-submission">
+    @printableCYA.map { printable =>
+        <div class="print-only">@printable</div>
+    }
 
-<p class="govuk-body">
-    <a href="@routes.ReturnsDashboardController.onPageLoad.url" class="govuk-link">
-        @messages("returnsComplete.index")
-    </a>
-</p>
+    @govukPanel(Panel(
+        title = HtmlContent(messages("returnsComplete.title")),
+        content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPeriodStart,submittedPeriodEnd))
+    ))
 
-<h2 class="govuk-heading-m">@messages("returnsComplete.before-you-go")</h2>
-<p class="govuk-body">@messages("common.feedback.p1")</p>
-<p class="govuk-body">
-    <a href="#" class="govuk-link">@messages("common.feedback.survey")</a> @messages("common.feedback.survey.p1")
-</p>
+    @printableCYA.map { _ =>
+        <p class="govuk-body jsonly">
+            <a id ="printId" href="#" class="govuk-link print-icon">
+                @messages("returnsComplete.print")
+            </a>
+        </p>
 
+        <script @CSPNonce.attr>
+              document.getElementById("printId").addEventListener("click", function() {
+               if(window.print) {
+                   window.print()
+                   }
+                });
+        </script>
+    }
+    <h2 class="govuk-heading-m">@messages("returnsComplete.what-you-do-next.title")</h2>
+    <p class="govuk-body">@messages("returnsComplete.what-you-do-next.p1",formatDate(nextPeriod.start),formatDate(nextPeriod.end))</p>
+    <p class="govuk-body">@messages("returnsComplete.what-you-do-next.p2", formatDate(nextPeriod.paymentDue), formatDate(nextPeriod.returnDue))</p>
+
+    <p class="govuk-body">
+        <a href="@routes.ReturnsDashboardController.onPageLoad.url" class="govuk-link">
+            @messages("returnsComplete.index")
+        </a>
+    </p>
+
+    <h2 class="govuk-heading-m">@messages("returnsComplete.before-you-go")</h2>
+    <p class="govuk-body">@messages("common.feedback.p1")</p>
+    <p class="govuk-body">
+        <a href="#" class="govuk-link">@messages("common.feedback.survey")</a> @messages("common.feedback.survey.p1")
+    </p>
+</div>
 }
 
 
