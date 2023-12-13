@@ -14,16 +14,30 @@
  * limitations under the License.
  *@
 
+@import viewmodels.Section
+@import models.registration.Registration
+
 @this(
     layout: templates.Layout,
-    govukSummaryList: GovukSummaryList
+    govukSummaryList: GovukSummaryList,
+    govukButton: GovukButton
 )
 
-@(list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(list: Seq[Section], startDate: String, endDate: String, reg: Registration)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title"))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title", startDate, endDate))) {
 
-    <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading")</h1>
-
-    @govukSummaryList(list)
+    <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading", startDate, endDate)</h1>
+@list.map{section=>
+@section.title.map {title=>
+    <h2 class="govuk-heading-m">@messages(title, reg.isGroupMessage)</h2>
 }
+
+    @govukSummaryList(section.rows)
+}
+    @govukButton(
+        ButtonViewModel(messages("site.submit"))
+    )
+
+}
+

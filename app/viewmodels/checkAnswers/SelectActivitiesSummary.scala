@@ -21,24 +21,17 @@ import models.{CheckMode, UserAnswers}
 import pages.SelectActivitiesPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object SelectActivitiesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SelectActivitiesPage).map { answers =>
-      val value = ValueViewModel(
-        HtmlContent(
-          answers
-            .map { answer =>
-              HtmlFormat.escape(messages(s"$answer")).toString
-            }
-            .mkString(",<br>")
-        )
-      )
+  def row(answers: UserAnswers, selectedValue: Boolean = false)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(SelectActivitiesPage).map { _ =>
+      val yesOrNo = if(selectedValue) "site.yes" else "site.no"
+      val value = ValueViewModel(Text(messages(yesOrNo)))
 
       SummaryListRowViewModel(
         key = "selectActivities.checkYourAnswersLabel",

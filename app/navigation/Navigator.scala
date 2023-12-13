@@ -36,6 +36,8 @@ class Navigator @Inject() () {
     case ReportSearchAlternativeChargePage            => ua => reportSearchAlternativeCharge(ua)(NormalMode)
     case ReportOnlineMarketplaceAlternativeChargePage => ua => reportOnlineMarketplaceCharge(ua)(NormalMode)
     case IsRepaymentBankAccountUKPage                 => ua => repaymentBankAccount(ua)(NormalMode)
+    case UKBankDetailsPage                            => ua => Some(routes.CheckYourAnswersController.onPageLoad())
+    case BankDetailsForRepaymentPage                  => ua => Some(routes.CheckYourAnswersController.onPageLoad())
     case CompanyLiabilitiesPage(index)                => ua => Some(companyLiability(index, ua)(NormalMode))
     case SocialMediaLossPage                          => ua => socialMediaLoss(ua)(NormalMode)
     case SearchEngineLossPage                         => ua => searchEngineLoss(ua)(NormalMode)
@@ -47,7 +49,7 @@ class Navigator @Inject() () {
   private val checkRouteMap: Page => UserAnswers => Option[Call] = {
     case CompanyDetailsPage(_) => _ => Some(routes.ManageCompaniesController.onPageLoad(CheckMode))
     case SelectActivitiesPage  => ua => reportAlternativeChargeNavigation(CheckMode)(ua)
-    case _                     => _ => Some(routes.CheckYourAnswersController.onPageLoad)
+    case _                     => _ => Some(routes.CheckYourAnswersController.onPageLoad())
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -76,7 +78,7 @@ class Navigator @Inject() () {
   private def reportMediaAlternative(ua: UserAnswers): Option[Call] =
     ua.get(ReportMediaAlternativeChargePage) map {
       case true  => routes.SocialMediaLossController.onPageLoad(NormalMode)
-      case false => ??? // TODO report-search-engine-alternative-charge
+      case false => routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
     }
 
   private def navigationForSelectedActivitiesYes(selectedActivities: Set[SelectActivities], mode: Mode): Call =
@@ -169,7 +171,7 @@ class Navigator @Inject() () {
     ua.get(RepaymentPage)
       .map {
         case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
-        case false => routes.CheckYourAnswersController.onPageLoad
+        case false => routes.CheckYourAnswersController.onPageLoad()
       }
 
 }

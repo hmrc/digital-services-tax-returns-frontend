@@ -7,6 +7,7 @@ site.change = Change
 site.no = No
 site.yes = Yes
 site.continue = Continue
+site.submit = Accept and send
 site.start = Start now
 site.startAgain = Start again
 site.signIn = Sign in
@@ -158,12 +159,14 @@ reportMediaAlternativeCharge.change.hidden = Alternative charge applied
 socialMediaLoss.title=Has the group made a loss on its social media activity?
 socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
+socialMediaLoss.checkYourAnswersLabel.heading = Social Media Activity
 socialMediaLoss.checkYourAnswersLabel=Loss made
 socialMediaLoss.change.hidden=Change loss made
 
 #Report online marketplace alternative charge
 reportOnlineMarketplaceAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
 reportOnlineMarketplaceAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
+reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading = Online Marketplace Activity
 reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel = Loss made
 reportOnlineMarketplaceAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your online marketplace activity
 reportOnlineMarketplaceAlternativeCharge.change.hidden = Online marketplace alternative charge applied
@@ -232,6 +235,7 @@ allowanceDeducted.change.hidden = Change the amount of £25m annual allowance cl
 searchEngineLoss.title = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.checkYourAnswersLabel = Loss made
+searchEngineLoss.checkYourAnswersLabel.heading = Search Engine Activity
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
 searchEngineLoss.change.hidden = Loss made
 
@@ -299,6 +303,7 @@ bankDetailsForRepayment.internationalBankAccountNumber.change.hidden = IBAN
 groupLiability.title = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
 groupLiability.heading = What is the {0}’s total UK Digital Services Tax liability for {1} to {2}?
 groupLiability.hint = This is the total amount of liability after applying any deductions and allowances
+groupLiability.checkYourAnswersLabel.heading = Digital Services Tax return details for {0}
 groupLiability.checkYourAnswersLabel = Group’s total Digital Services Tax liability
 groupLiability.error.required = Enter the {0}’s total Digital Services Tax liability for {1} to {2} in pounds or pounds and pence
 groupLiability.error.invalid = The {0}’s total liability must be an amount of money, like 1,234.56 or 1,560.00
@@ -307,9 +312,12 @@ groupLiability.change.hidden = Change the group’s total Digital Services Tax l
 
 repayment.title = Do you need to be repaid any Digital Services Tax for {0} to {1}?
 repayment.heading = Do you need to be repaid any Digital Services Tax for {0} to {1}?
-repayment.checkYourAnswersLabel = Return repayments
+repayment.checkYourAnswersLabel.heading = Return repayments
+repayment.checkYourAnswersLabel = Do you need to be repaid any Digital Services Tax for this period?
 repayment.error.required = Select yes if you need to be repaid any Digital Services Tax for {0} to {1}
 repayment.change.hidden = Change if you need to be repaid any Digital Services Tax for this period
 
-checkYourAnswers.title = checkYourAnswers
-checkYourAnswers.heading = checkYourAnswers
+checkYourAnswers.title = Check your answers before sending your return for {0} to {1}
+checkYourAnswers.title.print = Digital Services Tax return details for {0} (for the period {1} to {2})
+checkYourAnswers.heading = Check your answers before sending your return for {0} to {1}
+

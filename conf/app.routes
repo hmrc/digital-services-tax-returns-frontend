@@ -15,8 +15,6 @@ GET        /refresh-session                                     controllers.Keep
 
 GET        /there-is-a-problem                                  controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad
-
 GET        /unauthorised                                        controllers.UnauthorisedController.onPageLoad
 
 GET        /returnsDashboard                                    controllers.ReturnsDashboardController.onPageLoad()
