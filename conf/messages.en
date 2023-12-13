@@ -310,3 +310,10 @@ repayment.heading = Do you need to be repaid any Digital Services Tax for {0} to
 repayment.checkYourAnswersLabel = Return repayments
 repayment.error.required = Select yes if you need to be repaid any Digital Services Tax for {0} to {1}
 repayment.change.hidden = Change if you need to be repaid any Digital Services Tax for this period
+
+reportOnlineMarketplaceOperatingMargin.title = ReportOnlineMarketplaceOperatingMargin
+reportOnlineMarketplaceOperatingMargin.heading = ReportOnlineMarketplaceOperatingMargin
+reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = ReportOnlineMarketplaceOperatingMargin
+reportOnlineMarketplaceOperatingMargin.error.required = Enter the reportOnlineMarketplaceOperatingMargin
+reportOnlineMarketplaceOperatingMargin.error.invalid = Enter the reportOnlineMarketplaceOperatingMargin in the correct format
+reportOnlineMarketplaceOperatingMargin.change.hidden = ReportOnlineMarketplaceOperatingMargin
