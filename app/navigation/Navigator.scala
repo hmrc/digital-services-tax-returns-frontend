@@ -41,6 +41,9 @@ class Navigator @Inject() () {
     case SearchEngineLossPage                         => ua => searchEngineLoss(ua)(NormalMode)
     case GroupLiabilityPage                           => ua => Some(routes.RepaymentController.onPageLoad(NormalMode))
     case RepaymentPage                                => ua => repayment(ua)(NormalMode)
+    case ReportOnlineMarketplaceLossPage              => ua => reportOnlineMarketplaceLoss(ua)(NormalMode)
+    case ReportOnlineMarketplaceOperatingMarginPage   =>
+      ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
     case _                                            => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 
@@ -163,6 +166,13 @@ class Navigator @Inject() () {
       .map {
         case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         case false => ??? // TODO report-social-media-operating-margin
+      }
+
+  def reportOnlineMarketplaceLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(ReportOnlineMarketplaceLossPage)
+      .map {
+        case true  => routes.ReportCrossBorderReliefController.onPageLoad(mode)
+        case false => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode)
       }
 
   private def repayment(ua: UserAnswers)(mode: Mode): Option[Call] =

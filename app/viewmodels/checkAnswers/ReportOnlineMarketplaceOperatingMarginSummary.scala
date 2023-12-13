@@ -24,19 +24,20 @@ import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
-object ReportOnlineMarketplaceOperatingMarginSummary  {
+object ReportOnlineMarketplaceOperatingMarginSummary {
 
   def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportOnlineMarketplaceOperatingMarginPage).map {
-      answer =>
-
-        SummaryListRowViewModel(
-          key     = "reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel",
-          value   = ValueViewModel(answer.toString),
-          actions = Seq(
-            ActionItemViewModel("site.change", routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(CheckMode).url)
-              .withVisuallyHiddenText(messages("reportOnlineMarketplaceOperatingMargin.change.hidden"))
+    answers.get(ReportOnlineMarketplaceOperatingMarginPage).map { answer =>
+      SummaryListRowViewModel(
+        key = "reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel",
+        value = ValueViewModel(answer.toString),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(CheckMode).url
           )
+            .withVisuallyHiddenText(messages("reportOnlineMarketplaceOperatingMargin.change.hidden"))
         )
+      )
     }
 }

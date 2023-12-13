@@ -207,7 +207,6 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
       }
 
-      // TODO
       "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" ignore {
 
         navigator.nextPage(
@@ -235,7 +234,6 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
-      // TODO
       "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" ignore {
 
         navigator.nextPage(
@@ -428,6 +426,39 @@ class NavigatorSpec extends SpecBase {
             .success
             .value
         ) mustBe ???
+      }
+
+      "must go from a ReportOnlineMarketplaceLossPage to ReportCrossBorderReliefPage when 'Yes' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceLossPage, true)
+            .success
+            .value
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceLossPage to ReportOnlineMarketplaceOperatingMarginPage when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceLossPage, false)
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceOperatingMarginPage to ReportCrossBorderReliefPage when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceOperatingMarginPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {

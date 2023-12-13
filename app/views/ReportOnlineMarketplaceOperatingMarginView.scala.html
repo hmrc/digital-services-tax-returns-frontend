@@ -26,9 +26,9 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, groupOrCompany: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("reportOnlineMarketplaceOperatingMargin.title"))) {
+@layout(pageTitle = title(form, messages("reportOnlineMarketplaceOperatingMargin.title", groupOrCompany))) {
 
     @formHelper(action = routes.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -39,11 +39,13 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("reportOnlineMarketplaceOperatingMargin.heading")).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(messages("reportOnlineMarketplaceOperatingMargin.heading", groupOrCompany)).asPageHeading(LabelSize.Large)
             )
-            .withPrefix(PrefixOrSuffix(content = Text("%")))
-            .withInputMode("decimal")
-            .withWidth(Fixed10)
+            .withPattern("[0-9]*")
+            .withSuffix(PrefixOrSuffix(content = Text("%")))
+            .withInputMode("numeric")
+            .withWidth(Fixed4)
+            .withHint(HintViewModel(messages("common.margin.hint")))
         )
 
         @govukButton(
