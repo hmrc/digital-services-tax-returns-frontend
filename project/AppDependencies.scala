@@ -18,18 +18,18 @@ object AppDependencies {
   )
 
   val test = Seq(
-    "uk.gov.hmrc"            %% "bootstrap-test-play-30"        % bootstrapVersion,
-    "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-30"       % hmrcMongoVersion,
-    "org.scalacheck"         %% "scalacheck"                    % "1.17.0",
-    "org.scalatestplus.play" %% "scalatestplus-play"            % "5.1.0",
-    "org.scalatestplus"      %% "scalacheck-1-15"               % "3.2.11.0",
-    "org.scalatestplus"      %% "mockito-3-12"                  % "3.2.10.0",
-    "wolfendale"             %% "scalacheck-gen-regexp"         % "0.1.2",
-    "org.mockito"            %% "mockito-scala"                 % "1.17.12",
-    "org.jsoup"               % "jsoup"                         % "1.15.4",
-    "com.beachape"           %% "enumeratum-scalacheck"         % "1.7.2",
-    "org.mockito"             % "mockito-core"                  % "5.2.0",
-    "io.chrisdavenport"      %% "cats-scalacheck"               % "0.3.2"
+    "uk.gov.hmrc"            %% "bootstrap-test-play-30"  % bootstrapVersion,
+    "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
+    "org.scalacheck"         %% "scalacheck"              % "1.17.0",
+    "org.scalatestplus.play" %% "scalatestplus-play"      % "5.1.0",
+    "org.scalatestplus"      %% "scalacheck-1-15"         % "3.2.11.0",
+    "org.scalatestplus"      %% "mockito-3-12"            % "3.2.10.0",
+    "wolfendale"             %% "scalacheck-gen-regexp"   % "0.1.2",
+    "org.mockito"            %% "mockito-scala"           % "1.17.12",
+    "org.jsoup"               % "jsoup"                   % "1.15.4",
+    "com.beachape"           %% "enumeratum-scalacheck"   % "1.7.2",
+    "org.mockito"             % "mockito-core"            % "5.2.0",
+    "io.chrisdavenport"      %% "cats-scalacheck"         % "0.3.2"
   ).map(_ % "test")
 
   def apply(): Seq[ModuleID] = compile ++ test
