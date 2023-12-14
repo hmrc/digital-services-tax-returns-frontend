@@ -2,15 +2,15 @@ import sbt._
 
 object AppDependencies {
 
-  private val bootstrapVersion = "7.22.0"
-  private val hmrcMongoVersion = "1.3.0"
+  private val bootstrapVersion = "8.2.0"
+  private val hmrcMongoVersion = "1.6.0"
 
   val compile = Seq(
     play.sbt.PlayImport.ws,
     "uk.gov.hmrc"       %% "play-frontend-hmrc"            % "7.21.0-play-28",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping" % "1.13.0-play-28",
-    "uk.gov.hmrc"       %% "bootstrap-frontend-play-28"    % bootstrapVersion,
-    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-28"            % hmrcMongoVersion,
+    "uk.gov.hmrc"       %% "bootstrap-frontend-play-30"    % bootstrapVersion,
+    "uk.gov.hmrc.mongo" %% "hmrc-mongo-play-30"            % hmrcMongoVersion,
     "com.chuusai"       %% "shapeless"                     % "2.4.0-M1",
     "commons-validator"  % "commons-validator"             % "1.7",
     "org.typelevel"     %% "cats-core"                     % "2.10.0",
