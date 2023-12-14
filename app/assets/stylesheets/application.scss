@@ -38,3 +38,26 @@
 .dst-listing .govuk-summary-list__value {
   display: none;
 }
+
+.print-only {
+    display: none;
+}
+
+@media print {
+    .govuk-header {
+        display: none;
+    }
+    .print-hide, .govuk-footer a {
+        display: none;
+    }
+    .phase-banner a {
+        display: inline;
+    }
+    .govuk-grid-column-two-thirds #print-submission > div.print-only {
+        display: block;
+    }
+    .govuk-grid-column-two-thirds #print-submission > :not(.print-only),
+    .govuk-grid-column-two-thirds #print-submission a {
+        display: none;
+    }
+}

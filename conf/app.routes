@@ -15,7 +15,7 @@ GET        /refresh-session                                     controllers.Keep
 
 GET        /there-is-a-problem                                  controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad
+GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad(isPrint: Boolean)
 
 GET        /unauthorised                                        controllers.UnauthorisedController.onPageLoad
 
@@ -124,6 +124,8 @@ GET        /repayment                                           controllers.Repa
 POST       /repayment                                           controllers.RepaymentController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/repayment                                      controllers.RepaymentController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/repayment                                      controllers.RepaymentController.onSubmit(mode: Mode = CheckMode)
+
+GET        /returns/complete                                    controllers.ReturnsCompleteController.onPageLoad()
 
 GET        /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
 POST       /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = NormalMode)

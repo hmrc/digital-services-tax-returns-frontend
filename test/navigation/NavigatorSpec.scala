@@ -207,7 +207,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
       }
 
-      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" ignore {
+      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" in {
 
         navigator.nextPage(
           ReportMediaAlternativeChargePage,
@@ -219,7 +219,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportMediaAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to AllowanceDeducted page when 'No' is selected" in {
@@ -234,6 +234,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
+      // TODO
       "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" ignore {
 
         navigator.nextPage(
@@ -264,7 +265,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
       }
 
-      "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'No' is selected" ignore {
+      "must go from a ReportSearchAlternativeChargePage to AllowanceDeducted page when 'No' is selected" ignore {
 
         navigator.nextPage(
           ReportSearchAlternativeChargePage,
@@ -273,7 +274,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportSearchAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
       "must go from a SocialMediaLossPage to ReportSearchAlternativeCharge page when 'Yes' is selected and selected activity is 'SearchEngine'" in {
@@ -515,7 +516,7 @@ class NavigatorSpec extends SpecBase {
             .set(RepaymentPage, false)
             .success
             .value
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
+        ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
       }
 
       "must go to CompanyLiabilitiesPage0 index" in {

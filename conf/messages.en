@@ -47,6 +47,8 @@ index.guidance = Welcome to your new frontend. Please see the README file for a 
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
+checkYourAnswers.save-continue = Accept and send
+
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
@@ -311,6 +313,19 @@ repayment.heading = Do you need to be repaid any Digital Services Tax for {0} to
 repayment.checkYourAnswersLabel = Return repayments
 repayment.error.required = Select yes if you need to be repaid any Digital Services Tax for {0} to {1}
 repayment.change.hidden = Change if you need to be repaid any Digital Services Tax for this period
+
+returnsComplete.title = Return complete
+returnsComplete.detail = We received your Digital Services Tax return for {0} for {1} to {2}
+returnsComplete.heading = Return complete
+returnsComplete.print = Print or save your return
+returnsComplete.what-you-do-next.title = What you must do next
+returnsComplete.what-you-do-next.p1 = Your next return will be for {0} to {1}.
+returnsComplete.what-you-do-next.p2 = You must pay any Digital Services Tax you owe for your next return period by {0} and submit a return by {1}.
+returnsComplete.index = Go to your Digital Services Tax details
+returnsComplete.before-you-go= Before you go
+common.feedback.p1 = Your feedback helps us make our service better.
+common.feedback.survey = Take our survey
+common.feedback.survey.p1 = to share your feedback on this service. It takes about 1 minute to complete.
 
 reportOnlineMarketplaceOperatingMargin.title = What was the {0}’s operating margin on its online marketplace activity?
 reportOnlineMarketplaceOperatingMargin.heading = What was the {0}’s operating margin on its online marketplace activity?
