@@ -23,6 +23,7 @@ time-out.messageSuffix=GOV.UK
 common.title=Digital Services Tax
 common.title.short=Digital Services Tax
 common.title.suffix=GOV.UK
+common.margin.hint=Enter a percentage value with decimals, like 27.55%
 
 #Error
 error.browser.title.prefix = Error:
@@ -325,3 +326,11 @@ returnsComplete.before-you-go= Before you go
 common.feedback.p1 = Your feedback helps us make our service better.
 common.feedback.survey = Take our survey
 common.feedback.survey.p1 = to share your feedback on this service. It takes about 1 minute to complete.
+
+reportOnlineMarketplaceOperatingMargin.title = What was the {0}’s operating margin on its online marketplace activity?
+reportOnlineMarketplaceOperatingMargin.heading = What was the {0}’s operating margin on its online marketplace activity?
+reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = Group’s profit margin on activity
+reportOnlineMarketplaceOperatingMargin.error.required = Enter the {0}’s operating margin on its online marketplace activity
+reportOnlineMarketplaceOperatingMargin.error.invalid = Enter the {0}’s operating margin on its online marketplace activity \
+                                                         in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
+reportOnlineMarketplaceOperatingMargin.change.hidden = Change group’s profit margin on activity

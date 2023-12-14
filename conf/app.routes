@@ -126,3 +126,8 @@ GET        /edit/repayment                                      controllers.Repa
 POST       /edit/repayment                                      controllers.RepaymentController.onSubmit(mode: Mode = CheckMode)
 
 GET        /returns/complete                                    controllers.ReturnsCompleteController.onPageLoad()
+
+GET        /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = CheckMode)

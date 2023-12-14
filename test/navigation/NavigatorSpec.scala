@@ -429,6 +429,39 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
+      "must go from a ReportOnlineMarketplaceLossPage to ReportCrossBorderReliefPage when 'Yes' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceLossPage, true)
+            .success
+            .value
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceLossPage to ReportOnlineMarketplaceOperatingMarginPage when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceLossPage, false)
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceOperatingMarginPage to ReportCrossBorderReliefPage when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceOperatingMarginPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
 
         navigator.nextPage(
