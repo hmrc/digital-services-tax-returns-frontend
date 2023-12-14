@@ -37,7 +37,7 @@ This will start all the required services
 
 ## Running the tests
 
-    sbt test
+    sbt test it/test
 
 ## Running scalafmt
 
