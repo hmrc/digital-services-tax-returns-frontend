@@ -66,7 +66,7 @@ lazy val root = (project in file("."))
     uglifyCompressOptions := Seq("unused=false", "dead_code=false"),
     pipelineStages := Seq(digest),
     // below line required to force asset pipeline to operate in dev rather than only prod
-    Assets / pipelineStages := Seq(concat, uglify),
+    Assets / pipelineStages := Seq(uglify),
     // only compress files genrated by concat
     uglify / includeFilter := GlobFilter("application.js")
   )
