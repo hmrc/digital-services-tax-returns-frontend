@@ -1,6 +1,8 @@
 
 # digital-services-tax-returns-frontend
+![](https://img.shields.io/github/v/release/hmrc/digital-services-tax-returns-frontend)
 
+## About
 The Digital Services Tax (DST) digital service is split into a number of different microservices all serving specific functions which are listed below:
 
 **Frontend** - The main frontend for the service which includes the pages for returns and an account home page.
