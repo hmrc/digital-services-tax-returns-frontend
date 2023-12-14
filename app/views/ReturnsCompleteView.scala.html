@@ -1,0 +1,76 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.registration.Period
+@import models.formatDate
+@import views.html.helper.CSPNonce
+
+@this(
+        layout: templates.Layout,
+        govukButton: GovukButton,
+        govukPanel: GovukPanel
+)
+
+@(companyName: String,submittedPeriodStart: String, submittedPeriodEnd:String, nextPeriod: Period, printableCYA: Option[Html])(implicit request: Request[_], messages: Messages)
+
+@layout(pageTitle = titleNoForm(messages("returnsComplete.title")), showBackLink = false) {
+<div id="print-submission">
+    @printableCYA.map { printable =>
+        <div class="print-only">@printable</div>
+    }
+
+    @govukPanel(Panel(
+        title = HtmlContent(messages("returnsComplete.title")),
+        content = HtmlContent(messages("returnsComplete.detail",companyName,submittedPeriodStart,submittedPeriodEnd))
+    ))
+
+    @printableCYA.map { _ =>
+        <p class="govuk-body jsonly">
+            <a id ="printId" href="#" class="govuk-link print-icon">
+                @messages("returnsComplete.print")
+            </a>
+        </p>
+
+        <script @CSPNonce.attr>
+              document.getElementById("printId").addEventListener("click", function() {
+               if(window.print) {
+                   window.print()
+                   }
+                });
+        </script>
+    }
+    <h2 class="govuk-heading-m">@messages("returnsComplete.what-you-do-next.title")</h2>
+    <p class="govuk-body">@messages("returnsComplete.what-you-do-next.p1",formatDate(nextPeriod.start),formatDate(nextPeriod.end))</p>
+    <p class="govuk-body">@messages("returnsComplete.what-you-do-next.p2", formatDate(nextPeriod.paymentDue), formatDate(nextPeriod.returnDue))</p>
+
+    <p class="govuk-body">
+        <a href="@routes.ReturnsDashboardController.onPageLoad.url" class="govuk-link">
+            @messages("returnsComplete.index")
+        </a>
+    </p>
+
+    <h2 class="govuk-heading-m">@messages("returnsComplete.before-you-go")</h2>
+    <p class="govuk-body">@messages("common.feedback.p1")</p>
+    <p class="govuk-body">
+        <a href="#" class="govuk-link">@messages("common.feedback.survey")</a> @messages("common.feedback.survey.p1")
+    </p>
+</div>
+}
+
+
+
+
+
