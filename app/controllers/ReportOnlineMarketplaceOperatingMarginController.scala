@@ -44,24 +44,26 @@ class ReportOnlineMarketplaceOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
-
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+    val groupOrCompany = request.registration.isGroupMessage
+
+    val form         = formProvider(groupOrCompany)
     val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceOperatingMarginPage) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, request.registration.isGroupMessage))
+    Ok(view(preparedForm, mode, groupOrCompany))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
+      val groupOrCompany = request.registration.isGroupMessage
+      val form           = formProvider(groupOrCompany)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors =>
-            Future.successful(BadRequest(view(formWithErrors, mode, request.registration.isGroupMessage))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, groupOrCompany))),
           value =>
             for {
               updatedAnswers <-

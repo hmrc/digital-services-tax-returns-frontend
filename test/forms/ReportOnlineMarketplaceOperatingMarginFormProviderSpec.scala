@@ -21,7 +21,8 @@ import play.api.data.FormError
 
 class ReportOnlineMarketplaceOperatingMarginFormProviderSpec extends FieldBehaviours {
 
-  val form = new ReportOnlineMarketplaceOperatingMarginFormProvider()()
+  val group = "group"
+  val form  = new ReportOnlineMarketplaceOperatingMarginFormProvider()(group)
 
   ".value" - {
 
@@ -36,7 +37,7 @@ class ReportOnlineMarketplaceOperatingMarginFormProviderSpec extends FieldBehavi
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "reportOnlineMarketplaceOperatingMargin.error.required")
+      requiredError = FormError(fieldName, "reportOnlineMarketplaceOperatingMargin.error.required", Seq(group))
     )
   }
 }

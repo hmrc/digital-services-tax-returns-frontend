@@ -36,7 +36,8 @@ import scala.concurrent.Future
 class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new ReportOnlineMarketplaceOperatingMarginFormProvider()
-  val form         = formProvider()
+  val company      = registration.isGroupMessage
+  val form         = formProvider(company)
 
   def onwardRoute = Call("GET", "/foo")
 
@@ -59,7 +60,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
         val view = application.injector.instanceOf[ReportOnlineMarketplaceOperatingMarginView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, registration.isGroupMessage)(
+        contentAsString(result) mustEqual view(form, NormalMode, company)(
           request,
           messages(application)
         ).toString
@@ -81,7 +82,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, registration.isGroupMessage)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, company)(
           request,
           messages(application)
         ).toString
@@ -130,7 +131,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, registration.isGroupMessage)(
+        contentAsString(result) mustEqual view(boundForm, NormalMode, company)(
           request,
           messages(application)
         ).toString
