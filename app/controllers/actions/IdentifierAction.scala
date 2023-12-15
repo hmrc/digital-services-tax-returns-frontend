@@ -24,7 +24,7 @@ import models.requests.IdentifierRequest
 import play.api.mvc.Results._
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.AffinityGroup.Organisation
-import uk.gov.hmrc.auth.core.AuthProvider.{GovernmentGateway, Verify}
+import uk.gov.hmrc.auth.core.AuthProvider.GovernmentGateway
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
@@ -48,7 +48,7 @@ class AuthenticatedIdentifierAction @Inject() (
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    authorised(AuthProviders(GovernmentGateway, Verify) and Organisation and User).retrieve(Retrievals.internalId) {
+    authorised(AuthProviders(GovernmentGateway) and Organisation and User).retrieve(Retrievals.internalId) {
       case Some(internalId) =>
         if (config.dstNewReturnsFrontendEnableFlag) {
           lookupRegistration(request, internalId, block)
