@@ -334,3 +334,10 @@ reportOnlineMarketplaceOperatingMargin.error.required = Enter the {0}’s operat
 reportOnlineMarketplaceOperatingMargin.error.invalid = Enter the {0}’s operating margin on its online marketplace activity \
                                                          in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
 reportOnlineMarketplaceOperatingMargin.change.hidden = Change group’s profit margin on activity
+
+reportSocialMediaOperatingMargin.title = ReportSocialMediaOperatingMargin
+reportSocialMediaOperatingMargin.heading = ReportSocialMediaOperatingMargin
+reportSocialMediaOperatingMargin.checkYourAnswersLabel = ReportSocialMediaOperatingMargin
+reportSocialMediaOperatingMargin.error.required = Enter the reportSocialMediaOperatingMargin
+reportSocialMediaOperatingMargin.error.invalid = Enter the reportSocialMediaOperatingMargin in the correct format
+reportSocialMediaOperatingMargin.change.hidden = ReportSocialMediaOperatingMargin

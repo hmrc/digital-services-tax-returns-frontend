@@ -65,7 +65,7 @@ lazy val root = (project in file("."))
         )
     ),
     // below line required to force asset pipeline to operate in dev rather than only prod
-    Assets / pipelineStages := Seq(concat, digest),
+    Assets / pipelineStages := Seq(concat, digest)
   )
 
 lazy val testSettings: Seq[Def.Setting[_]] = Seq(

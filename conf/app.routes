@@ -131,3 +131,8 @@ GET        /report-online-marketplace-operating-margin          controllers.Repo
 POST       /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = CheckMode)
+
+GET        /reportSocialMediaOperatingMargin                    controllers.ReportSocialMediaOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
+POST       /reportSocialMediaOperatingMargin                    controllers.ReportSocialMediaOperatingMarginController.onSubmit(mode: Mode = NormalMode)
+GET        /changeReportSocialMediaOperatingMargin              controllers.ReportSocialMediaOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
+POST       /changeReportSocialMediaOperatingMargin              controllers.ReportSocialMediaOperatingMarginController.onSubmit(mode: Mode = CheckMode)
