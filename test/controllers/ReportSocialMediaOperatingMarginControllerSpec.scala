@@ -20,13 +20,15 @@ import scala.concurrent.Future
 class ReportSocialMediaOperatingMarginControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new ReportSocialMediaOperatingMarginFormProvider()
-  val form = formProvider()
+  val company      = registration.isGroupMessage
+  val form         = formProvider()
 
   def onwardRoute = Call("GET", "/foo")
 
   val validAnswer = 100.00
 
-  lazy val reportSocialMediaOperatingMarginRoute = routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode).url
+  lazy val reportSocialMediaOperatingMarginRoute =
+    routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode).url
 
   "ReportSocialMediaOperatingMargin Controller" - {
 
@@ -42,7 +44,7 @@ class ReportSocialMediaOperatingMarginControllerSpec extends SpecBase with Mocki
         val view = application.injector.instanceOf[ReportSocialMediaOperatingMarginView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, NormalMode, company)(request, messages(application)).toString
       }
     }
 
@@ -60,7 +62,10 @@ class ReportSocialMediaOperatingMarginControllerSpec extends SpecBase with Mocki
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, company)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -106,7 +111,7 @@ class ReportSocialMediaOperatingMarginControllerSpec extends SpecBase with Mocki
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, NormalMode, company)(request, messages(application)).toString
       }
     }
 

@@ -5,7 +5,8 @@ import play.api.data.FormError
 
 class ReportSocialMediaOperatingMarginFormProviderSpec extends FieldBehaviours {
 
-  val form = new ReportSocialMediaOperatingMarginFormProvider()()
+  val group = "group"
+  val form  = new ReportSocialMediaOperatingMarginFormProvider()(group)
 
   ".value" - {
 
@@ -20,7 +21,7 @@ class ReportSocialMediaOperatingMarginFormProviderSpec extends FieldBehaviours {
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "reportSocialMediaOperatingMargin.error.required")
+      requiredError = FormError(fieldName, "reportSocialMediaOperatingMargin.error.required", Seq(group))
     )
   }
 }

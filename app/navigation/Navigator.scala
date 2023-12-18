@@ -148,7 +148,8 @@ class Navigator @Inject() () {
           routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
         case true                                                                                   =>
           companyLiability(Index(0), ua)(mode)
-        case false                                                                                  => ??? // TODO report-social-media-operating-margin
+        case false                                                                                  =>
+          routes.ReportSocialMediaOperatingMarginController.onPageLoad(mode)
       }
 
   private def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
@@ -158,7 +159,7 @@ class Navigator @Inject() () {
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
         case true                                                                                        =>
           companyLiability(Index(0), ua)(mode)
-        case false                                                                                       => ??? // TODO report-social-media-operating-margin
+        case false                                                                                       => ??? // TODO report-search-engine-operating-margin
       }
 
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =

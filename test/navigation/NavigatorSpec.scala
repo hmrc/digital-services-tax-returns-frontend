@@ -331,7 +331,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
       }
 
-      "must go from a SocialMediaLossPage to report-search-engine-operating-margin page when 'No' is selected" ignore {
+      "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
 
         navigator.nextPage(
           SocialMediaLossPage,
@@ -340,7 +340,7 @@ class NavigatorSpec extends SpecBase {
             .set(SocialMediaLossPage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode)
       }
 
       "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
