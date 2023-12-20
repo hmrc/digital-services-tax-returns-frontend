@@ -16,11 +16,9 @@
 
 package utils
 
-import models.SelectActivities
-import models.requests.DataRequest
+import models.{SelectActivities, UserAnswers}
 import pages.SelectActivitiesPage
 import play.api.i18n.Messages
-import play.api.mvc.AnyContent
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
 import viewmodels.checkAnswers._
@@ -30,74 +28,74 @@ import javax.inject.Inject
 
 class CYAHelper @Inject()() {
 
-  def createSectionList()(implicit request: DataRequest[AnyContent], messages: Messages): Seq[Section] = {
+  def createSectionList(userAnswers: UserAnswers)(implicit messages: Messages): Seq[Section] = {
     Seq(
-      createGroupLiabilitySection(),
-      createSocialMediaSection(),
-      createSearchEngineSection(),
-      createOnlineMarketPlaceSection(),
-      createReturnRepaymentsSection()
+      createGroupLiabilitySection(userAnswers),
+      createSocialMediaSection(userAnswers),
+      createSearchEngineSection(userAnswers),
+      createOnlineMarketPlaceSection(userAnswers),
+      createReturnRepaymentsSection(userAnswers)
     ).flatten
   }
 
-  private def createGroupLiabilitySection()(implicit request: DataRequest[AnyContent], messages: Messages): Option[Section] = {
+  private def createGroupLiabilitySection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
     buildSection("groupLiability.checkYourAnswersLabel.heading", Seq(
-      GroupLiabilitySummary.row(request.userAnswers),
-      ReportCrossBorderReliefSummary.row(request.userAnswers),
-      CrossBorderTransactionReliefSummary.row(request.userAnswers),
-      AllowanceDeductedSummary.row(request.userAnswers)
+      GroupLiabilitySummary.row(userAnswers),
+      ReportCrossBorderReliefSummary.row(userAnswers),
+      CrossBorderTransactionReliefSummary.row(userAnswers),
+      AllowanceDeductedSummary.row(userAnswers)
     ))
   }
 
-  private def createSocialMediaSection()(implicit request: DataRequest[AnyContent], messages: Messages): Option[Section] = {
-    val selectedValue = request.userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.SocialMedia))
+  private def createSocialMediaSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+    val selectedValue = userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.SocialMedia))
     if (selectedValue)
     {
       buildSection("socialMediaLoss.checkYourAnswersLabel.heading", Seq(
-        SelectActivitiesSummary.row(request.userAnswers, selectedValue),
-        ReportAlternativeChargeSummary.row(request.userAnswers),
-        ReportMediaAlternativeChargeSummary.row(request.userAnswers),
-        SocialMediaLossSummary.row(request.userAnswers)
+        SelectActivitiesSummary.row(userAnswers, selectedValue),
+        ReportAlternativeChargeSummary.row(userAnswers),
+        ReportMediaAlternativeChargeSummary.row(userAnswers),
+        SocialMediaLossSummary.row(userAnswers)
       ))
     } else {
       None
     }
   }
 
-  private def createSearchEngineSection()(implicit request: DataRequest[AnyContent], messages: Messages): Option[Section] = {
-    val selectedValue = request.userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.SearchEngine))
+  private def createSearchEngineSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+    val selectedValue = userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.SearchEngine))
     if (selectedValue) {
       buildSection("searchEngineLoss.checkYourAnswersLabel.heading", Seq(
-        SelectActivitiesSummary.row(request.userAnswers),
-        SearchEngineLossSummary.row(request.userAnswers),
-        ReportSearchAlternativeChargeSummary.row(request.userAnswers)
+        SelectActivitiesSummary.row(userAnswers),
+        SearchEngineLossSummary.row(userAnswers),
+        ReportSearchAlternativeChargeSummary.row(userAnswers)
       ))
     } else {
       None
     }
   }
 
-  private def createOnlineMarketPlaceSection()(implicit request: DataRequest[AnyContent], messages: Messages): Option[Section] = {
-    val selectedValue = request.userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
+  private def createOnlineMarketPlaceSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+    val selectedValue = userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
     if (selectedValue) {
       buildSection("reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading", Seq(
-        SelectActivitiesSummary.row(request.userAnswers),
-        ReportOnlineMarketplaceLossSummary.row(request.userAnswers)
+        SelectActivitiesSummary.row(userAnswers),
+        ReportOnlineMarketplaceLossSummary.row(userAnswers)
       ))
     } else {
       None
     }
   }
 
-  private def createReturnRepaymentsSection()(implicit request: DataRequest[AnyContent], messages: Messages): Option[Section] = {
+  private def createReturnRepaymentsSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
     buildSection("repayment.checkYourAnswersLabel.heading", Seq(
-      RepaymentSummary.row(request.userAnswers),
-      IsRepaymentBankAccountUKSummary.row(request.userAnswers),
-      UKBankDetailsSummary.row(request.userAnswers)
+      RepaymentSummary.row(userAnswers),
+      IsRepaymentBankAccountUKSummary.row(userAnswers),
+      UKBankDetailsSummary.row(userAnswers)
     ))
   }
 
-  private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]])(implicit request: DataRequest[AnyContent]): Option[Section] = {
+  private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {
     val nonEmptyRows = rows.flatten
     if (nonEmptyRows.nonEmpty) Some(Section(Some(heading), SummaryListViewModel(nonEmptyRows))) else None
   }

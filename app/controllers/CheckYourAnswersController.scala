@@ -41,7 +41,8 @@ class CheckYourAnswersController @Inject() (
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val startDate = formatDate(request.period.start)
     val endDate = formatDate(request.period.end)
-    val sectionList = cyaHelper.createSectionList()(request, implicitly[Messages])
+    val sectionList = cyaHelper.createSectionList(request.userAnswers)
+    println(sectionList + "===================")
 
     Ok(view(sectionList, startDate, endDate, request.registration))
   }
