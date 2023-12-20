@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.FrontendAppConfig
-@this(
-    layout: templates.Layout,
-    appConfig: FrontendAppConfig
-)
+package pages
 
-@()(implicit request: Request[_], messages: Messages)
+import play.api.libs.json.JsPath
 
-@layout(pageTitle = messages("time-out.title").toString(), showBackLink = false) {
-    <h1 class="govuk-heading-l">@messages("time-out.title")</h1>
+case object ReportSocialMediaOperatingMarginPage extends QuestionPage[Double] {
 
-    <p class="govuk-body">
-        <a href="@controllers.auth.routes.AuthenticationController.signIn.url" class="govuk-button" role="button">
-            @messages("site.signIn")
-        </a>
-    </p>
+  override def path: JsPath = JsPath \ toString
+
+  override def toString: String = "reportSocialMediaOperatingMargin"
 }

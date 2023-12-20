@@ -17,7 +17,6 @@ lazy val root = (project in file("."))
     // To resolve a bug with version 2.x.x of the scoverage plugin - https://github.com/sbt/sbt/issues/6997
     libraryDependencySchemes ++= Seq("org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always)
   )
-  .settings(majorVersion := 0)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
     scalaVersion := "2.13.12",
@@ -65,7 +64,7 @@ lazy val root = (project in file("."))
         )
     ),
     // below line required to force asset pipeline to operate in dev rather than only prod
-    Assets / pipelineStages := Seq(concat, digest),
+    Assets / pipelineStages := Seq(concat, digest)
   )
 
 lazy val testSettings: Seq[Def.Setting[_]] = Seq(

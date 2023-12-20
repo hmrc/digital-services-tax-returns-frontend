@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,22 +12,23 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import config.FrontendAppConfig
-@this(
-    layout: templates.Layout,
-    appConfig: FrontendAppConfig
-)
+package forms
 
-@()(implicit request: Request[_], messages: Messages)
+import forms.mappings.Mappings
+import javax.inject.Inject
+import play.api.data.Form
 
-@layout(pageTitle = messages("time-out.title").toString(), showBackLink = false) {
-    <h1 class="govuk-heading-l">@messages("time-out.title")</h1>
+class ReportSocialMediaOperatingMarginFormProvider @Inject() extends Mappings {
 
-    <p class="govuk-body">
-        <a href="@controllers.auth.routes.AuthenticationController.signIn.url" class="govuk-button" role="button">
-            @messages("site.signIn")
-        </a>
-    </p>
+  def apply(groupOrCompany: String): Form[Double] =
+    Form(
+      "value" -> percentage(
+        "reportSocialMediaOperatingMargin.error.required",
+        "reportSocialMediaOperatingMargin.error.invalid",
+        args = Seq(groupOrCompany)
+      )
+    )
+
 }

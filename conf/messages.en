@@ -329,8 +329,15 @@ common.feedback.survey.p1 = to share your feedback on this service. It takes abo
 
 reportOnlineMarketplaceOperatingMargin.title = What was the {0}’s operating margin on its online marketplace activity?
 reportOnlineMarketplaceOperatingMargin.heading = What was the {0}’s operating margin on its online marketplace activity?
-reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = Group’s profit margin on activity
+reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity
 reportOnlineMarketplaceOperatingMargin.error.required = Enter the {0}’s operating margin on its online marketplace activity
 reportOnlineMarketplaceOperatingMargin.error.invalid = Enter the {0}’s operating margin on its online marketplace activity \
                                                          in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
-reportOnlineMarketplaceOperatingMargin.change.hidden = Change group’s profit margin on activity
+reportOnlineMarketplaceOperatingMargin.change.hidden = Change {0}’s profit margin on activity
+
+reportSocialMediaOperatingMargin.title = What was the {0}’s operating margin on its social media activity?
+reportSocialMediaOperatingMargin.heading = What was the {0}’s operating margin on its social media activity?
+reportSocialMediaOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity
+reportSocialMediaOperatingMargin.error.required = Enter the {0}’s operating margin on its social media activity
+reportSocialMediaOperatingMargin.error.invalid = Enter the {0}’s operating margin on its social media activity in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
+reportSocialMediaOperatingMargin.change.hidden = Change {0}’s profit margin on activity
