@@ -23,56 +23,56 @@ import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
 
-
 @Singleton
 class Navigator @Inject() () {
 
   private val normalRoutes: Page => UserAnswers => Option[Call] = {
-    case CompanyDetailsPage(_) => _ => Some(routes.ManageCompaniesController.onPageLoad(NormalMode))
-    case ManageCompaniesPage => ua => addCompanyDetails(NormalMode)(ua)
-    case SelectActivitiesPage => _ => Some(routes.ReportAlternativeChargeController.onPageLoad(NormalMode))
-    case ReportAlternativeChargePage => ua => reportAlternativeChargeNavigation(NormalMode)(ua)
-    case ReportMediaAlternativeChargePage => ua => reportMediaAlternative(ua)
-    case ReportCrossBorderReliefPage => ua => reportCrossBorderRelief(ua)(NormalMode)
-    case ReportSearchAlternativeChargePage => ua => reportSearchAlternativeCharge(ua)(NormalMode)
-    case ReportOnlineMarketplaceAlternativeChargePage => ua => reportOnlineMarketplaceCharge(ua)(NormalMode)
-    case IsRepaymentBankAccountUKPage => ua => repaymentBankAccount(ua)(NormalMode)
-    case CompanyLiabilitiesPage(index) => ua => Some(companyLiability(index, ua)(NormalMode))
-    case SocialMediaLossPage => ua => socialMediaLoss(ua)(NormalMode)
-    case SearchEngineLossPage => ua => searchEngineLoss(ua)(NormalMode)
-    case GroupLiabilityPage => ua => Some(routes.RepaymentController.onPageLoad(NormalMode))
-    case RepaymentPage => ua => repayment(ua)(NormalMode)
-    case ReportOnlineMarketplaceLossPage => ua => reportOnlineMarketplaceLoss(ua)(NormalMode)
-    case ReportOnlineMarketplaceOperatingMarginPage =>
+    case CompanyDetailsPage(_)                           => _ => Some(routes.ManageCompaniesController.onPageLoad(NormalMode))
+    case ManageCompaniesPage                             => ua => addCompanyDetails(NormalMode)(ua)
+    case SelectActivitiesPage                            => _ => Some(routes.ReportAlternativeChargeController.onPageLoad(NormalMode))
+    case ReportAlternativeChargePage                     => ua => reportAlternativeChargeNavigation(NormalMode)(ua)
+    case ReportMediaAlternativeChargePage                => ua => reportMediaAlternative(ua)
+    case ReportCrossBorderReliefPage                     => ua => reportCrossBorderRelief(ua)(NormalMode)
+    case ReportSearchAlternativeChargePage               => ua => reportSearchAlternativeCharge(ua)(NormalMode)
+    case ReportOnlineMarketplaceAlternativeChargePage    => ua => reportOnlineMarketplaceCharge(ua)(NormalMode)
+    case IsRepaymentBankAccountUKPage                    => ua => repaymentBankAccount(ua)(NormalMode)
+    case CompanyLiabilitiesPage(index)                   => ua => Some(companyLiability(index, ua)(NormalMode))
+    case SocialMediaLossPage                             => ua => socialMediaLoss(ua)(NormalMode)
+    case SearchEngineLossPage                            => ua => searchEngineLoss(ua)(NormalMode)
+    case GroupLiabilityPage                              => ua => Some(routes.RepaymentController.onPageLoad(NormalMode))
+    case RepaymentPage                                   => ua => repayment(ua)(NormalMode)
+    case ReportOnlineMarketplaceLossPage                 => ua => reportOnlineMarketplaceLoss(ua)(NormalMode)
+    case ReportOnlineMarketplaceOperatingMarginPage      =>
       ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
-    case ReportSocialMediaOperatingMarginPage => ua => socialMediaOperatingMargin(ua)(NormalMode)
-    case UKBankDetailsPage | BankDetailsForRepaymentPage => _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
-    case _ => _ => Some(routes.ReturnsDashboardController.onPageLoad)
+    case ReportSocialMediaOperatingMarginPage            => ua => socialMediaOperatingMargin(ua)(NormalMode)
+    case UKBankDetailsPage | BankDetailsForRepaymentPage =>
+      _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
+    case _                                               => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 
   private val checkRouteMap: Page => UserAnswers => Option[Call] = {
     case CompanyDetailsPage(_) => _ => Some(routes.ManageCompaniesController.onPageLoad(CheckMode))
-    case SelectActivitiesPage => ua => reportAlternativeChargeNavigation(CheckMode)(ua)
-    case _ => _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
+    case SelectActivitiesPage  => ua => reportAlternativeChargeNavigation(CheckMode)(ua)
+    case _                     => _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
     case NormalMode =>
       normalRoutes(page)(userAnswers).getOrElse(routes.JourneyRecoveryController.onPageLoad())
-    case CheckMode =>
+    case CheckMode  =>
       checkRouteMap(page)(userAnswers).getOrElse(routes.JourneyRecoveryController.onPageLoad())
   }
 
   def reportCrossBorderRelief(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportCrossBorderReliefPage) map {
-      case true => ??? // TODO /relief-deducted page
+      case true  => ??? // TODO /relief-deducted page
       case false => routes.AllowanceDeductedController.onPageLoad(mode)
     }
 
   private def addCompanyDetails(mode: Mode)(userAnswers: UserAnswers): Option[Call] =
     userAnswers.get(ManageCompaniesPage) map {
-      case true =>
-        val count: Int = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
+      case true  =>
+        val count: Int   = userAnswers.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
         val index: Index = Index(count)
         routes.CompanyDetailsController.onPageLoad(index, mode)
       case false =>
@@ -81,7 +81,7 @@ class Navigator @Inject() () {
 
   private def reportMediaAlternative(ua: UserAnswers): Option[Call] =
     ua.get(ReportMediaAlternativeChargePage) map {
-      case true => routes.SocialMediaLossController.onPageLoad(NormalMode)
+      case true                                                                                    => routes.SocialMediaLossController.onPageLoad(NormalMode)
       case false if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine)) =>
         routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
       case false if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine)) =>
@@ -93,21 +93,21 @@ class Navigator @Inject() () {
     selectedActivities match {
       case activities if activities.size == 1 =>
         activities.head match {
-          case SelectActivities.SocialMedia => routes.SocialMediaLossController.onPageLoad(mode)
-          case SelectActivities.SearchEngine => routes.SearchEngineLossController.onPageLoad(mode)
+          case SelectActivities.SocialMedia       => routes.SocialMediaLossController.onPageLoad(mode)
+          case SelectActivities.SearchEngine      => routes.SearchEngineLossController.onPageLoad(mode)
           case SelectActivities.OnlineMarketplace => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         }
       case selectActivities
-        if selectActivities
-          .contains(SelectActivities.SocialMedia) && selectActivities.size > 1 =>
+          if selectActivities
+            .contains(SelectActivities.SocialMedia) && selectActivities.size > 1 =>
         routes.ReportMediaAlternativeChargeController.onPageLoad(mode)
       case selectActivities
-        if selectActivities
-          .contains(SelectActivities.SearchEngine) && selectActivities.size > 1 =>
+          if selectActivities
+            .contains(SelectActivities.SearchEngine) && selectActivities.size > 1 =>
         routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
       case selectActivities
-        if selectActivities
-          .contains(SelectActivities.OnlineMarketplace) && selectActivities.size > 1 =>
+          if selectActivities
+            .contains(SelectActivities.OnlineMarketplace) && selectActivities.size > 1 =>
         routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
     }
   // scalastyle:on
@@ -116,29 +116,29 @@ class Navigator @Inject() () {
     selectActivities match {
       case activities if activities.contains(SelectActivities.OnlineMarketplace) =>
         routes.ReportCrossBorderReliefController.onPageLoad(mode)
-      case _ =>
+      case _                                                                     =>
         routes.AllowanceDeductedController.onPageLoad(mode)
     }
 
   private def reportAlternativeChargeNavigation(mode: Mode)(userAnswers: UserAnswers): Option[Call] =
     (userAnswers.get(SelectActivitiesPage), userAnswers.get(ReportAlternativeChargePage)) match {
-      case (Some(selectActivities), Some(true)) => Some(navigationForSelectedActivitiesYes(selectActivities, mode))
+      case (Some(selectActivities), Some(true))  => Some(navigationForSelectedActivitiesYes(selectActivities, mode))
       case (Some(selectActivities), Some(false)) => Some(navigationForSelectedActivitiesNo(selectActivities, mode))
-      case _ => None
+      case _                                     => None
     }
 
   private def repaymentBankAccount(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(IsRepaymentBankAccountUKPage)
       .map {
-        case true => routes.UKBankDetailsController.onPageLoad(mode)
+        case true  => routes.UKBankDetailsController.onPageLoad(mode)
         case false => routes.BankDetailsForRepaymentController.onPageLoad(mode)
       }
 
   private def companyLiability(pageIndex: Index, ua: UserAnswers)(mode: Mode): Call = {
     val companyDetailsCount: Int = ua.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
-    val liabilityCount: Int = ua.get(CompanyLiabilityListPage).map(_.size).getOrElse(0)
+    val liabilityCount: Int      = ua.get(CompanyLiabilityListPage).map(_.size).getOrElse(0)
 
-    val preCond = liabilityCount == companyDetailsCount && pageIndex.position < liabilityCount
+    val preCond      = liabilityCount == companyDetailsCount && pageIndex.position < liabilityCount
     val index: Index = if (preCond) Index(pageIndex.position + 1) else Index(liabilityCount)
 
     if (
@@ -152,7 +152,7 @@ class Navigator @Inject() () {
 
   private def reportSearchAlternativeCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportSearchAlternativeChargePage) map {
-      case true => routes.SearchEngineLossController.onPageLoad(mode)
+      case true  => routes.SearchEngineLossController.onPageLoad(mode)
       case false => routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
     }
 
@@ -161,9 +161,9 @@ class Navigator @Inject() () {
       .map {
         case true if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine)) =>
           routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
-        case true =>
+        case true                                                                                   =>
           companyLiability(Index(0), ua)(mode)
-        case false =>
+        case false                                                                                  =>
           routes.ReportSocialMediaOperatingMarginController.onPageLoad(mode)
       }
 
@@ -172,40 +172,39 @@ class Navigator @Inject() () {
       .map {
         case true if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
-        case true =>
+        case true                                                                                        =>
           companyLiability(Index(0), ua)(mode)
-        case false => ??? // TODO report-search-engine-operating-margin
+        case false                                                                                       => ??? // TODO report-search-engine-operating-margin
       }
 
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage)
       .map {
-        case true => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
+        case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         case false => routes.ReportCrossBorderReliefController.onPageLoad(mode)
       }
 
   def reportOnlineMarketplaceLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceLossPage)
       .map {
-        case true => routes.ReportCrossBorderReliefController.onPageLoad(mode)
+        case true  => routes.ReportCrossBorderReliefController.onPageLoad(mode)
         case false => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode)
       }
 
   private def repayment(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(RepaymentPage)
       .map {
-        case true => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
+        case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
         case false => routes.CheckYourAnswersController.onPageLoad(false)
       }
 
-  private def socialMediaOperatingMargin(ua: UserAnswers)(mode: Mode): Option[Call] = {
-     if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine))) {
-       Some(routes.ReportSearchAlternativeChargeController.onPageLoad(mode))
-     } else if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace))) {
-       Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode))
-     } else {
-       Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))
-     }
-  }
+  private def socialMediaOperatingMargin(ua: UserAnswers)(mode: Mode): Option[Call] =
+    if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine))) {
+      Some(routes.ReportSearchAlternativeChargeController.onPageLoad(mode))
+    } else if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace))) {
+      Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode))
+    } else {
+      Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))
+    }
 
 }
