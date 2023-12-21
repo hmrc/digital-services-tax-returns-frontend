@@ -81,36 +81,36 @@ class Navigator @Inject() () {
 
   private def reportMediaAlternative(ua: UserAnswers): Option[Call] =
     ua.get(ReportMediaAlternativeChargePage) map {
-      case true                                                                                    => routes.SocialMediaLossController.onPageLoad(NormalMode)
-      case false if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine)) =>
+      case true                                                                                         =>
+        routes.SocialMediaLossController.onPageLoad(NormalMode)
+      case false if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine))      =>
         routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
-      case false if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine)) =>
+      case false if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
         routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
     }
 
-  // scalastyle:off
   private def navigationForSelectedActivitiesYes(selectedActivities: Set[SelectActivities], mode: Mode): Call =
     selectedActivities match {
-      case activities if activities.size == 1 =>
+      case activities if activities.size == 1            =>
         activities.head match {
           case SelectActivities.SocialMedia       => routes.SocialMediaLossController.onPageLoad(mode)
           case SelectActivities.SearchEngine      => routes.SearchEngineLossController.onPageLoad(mode)
           case SelectActivities.OnlineMarketplace => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
         }
-      case selectActivities
-          if selectActivities
-            .contains(SelectActivities.SocialMedia) && selectActivities.size > 1 =>
-        routes.ReportMediaAlternativeChargeController.onPageLoad(mode)
-      case selectActivities
-          if selectActivities
-            .contains(SelectActivities.SearchEngine) && selectActivities.size > 1 =>
-        routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
-      case selectActivities
-          if selectActivities
-            .contains(SelectActivities.OnlineMarketplace) && selectActivities.size > 1 =>
-        routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
+      case selectActivities if selectActivities.size > 1 =>
+        redirectToAlternateChargesPage(selectActivities)(mode)
     }
-  // scalastyle:on
+
+  private def redirectToAlternateChargesPage(selectActivities: Set[SelectActivities])(mode: Mode): Call =
+    if (selectActivities.contains(SelectActivities.SocialMedia)) {
+      routes.ReportMediaAlternativeChargeController.onPageLoad(mode)
+    } else if (selectActivities.contains(SelectActivities.SearchEngine)) {
+      routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
+    } else if (selectActivities.contains(SelectActivities.SearchEngine)) {
+      routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
+    } else {
+      routes.JourneyRecoveryController.onPageLoad()
+    }
 
   private def navigationForSelectedActivitiesNo(selectActivities: Set[SelectActivities], mode: Mode): Call =
     selectActivities match {
@@ -138,12 +138,10 @@ class Navigator @Inject() () {
     val companyDetailsCount: Int = ua.get(CompanyDetailsListPage).map(_.size).getOrElse(0)
     val liabilityCount: Int      = ua.get(CompanyLiabilityListPage).map(_.size).getOrElse(0)
 
-    val preCond      = liabilityCount == companyDetailsCount && pageIndex.position < liabilityCount
-    val index: Index = if (preCond) Index(pageIndex.position + 1) else Index(liabilityCount)
+    def preCond(index: Index) = liabilityCount == companyDetailsCount && index.position < liabilityCount
+    val index: Index          = if (preCond(pageIndex)) Index(pageIndex.position + 1) else Index(liabilityCount)
 
-    if (
-      liabilityCount < companyDetailsCount || liabilityCount == companyDetailsCount && index.position < liabilityCount
-    ) {
+    if (liabilityCount < companyDetailsCount || preCond(index)) {
       routes.CompanyLiabilitiesController.onPageLoad(mode, index)
     } else {
       routes.GroupLiabilityController.onPageLoad(mode)

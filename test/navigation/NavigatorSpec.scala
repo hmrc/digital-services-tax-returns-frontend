@@ -346,18 +346,18 @@ class NavigatorSpec extends SpecBase {
       "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
         "is selected and selected activity is 'OnlineMarketplace'" in {
 
-          navigator.nextPage(
-            SearchEngineLossPage,
-            NormalMode,
-            UserAnswers("id")
-              .set(SearchEngineLossPage, true)
-              .success
-              .value
-              .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
-              .success
-              .value
-          ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
-        }
+        navigator.nextPage(
+          SearchEngineLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SearchEngineLossPage, true)
+            .success
+            .value
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+      }
 
       "must go from a SearchEngineLossPage to CompanyLiability page when 'Yes' is selected" in {
 
@@ -407,15 +407,15 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportOnlineMarketplaceLossPage" +
         " when 'Yes' is selected" in {
 
-          navigator.nextPage(
-            ReportOnlineMarketplaceAlternativeChargePage,
-            NormalMode,
-            UserAnswers("id")
-              .set(ReportOnlineMarketplaceAlternativeChargePage, true)
-              .success
-              .value
-          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
-        }
+        navigator.nextPage(
+          ReportOnlineMarketplaceAlternativeChargePage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceAlternativeChargePage, true)
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
+      }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportCrossBorderTransactionReliefPage when 'No' is selected" in {
 
@@ -585,5 +585,24 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
       }
     }
+
+    "must go from a UKBankDetailsPage to CheckYourAnswers page" in {
+
+      navigator.nextPage(
+        UKBankDetailsPage,
+        NormalMode,
+        UserAnswers("id")
+      ) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
+
+    "must go from a BankDetailsForRepaymentPage to CheckYourAnswers page" in {
+
+      navigator.nextPage(
+        BankDetailsForRepaymentPage,
+        NormalMode,
+        UserAnswers("id")
+      ) mustBe routes.CheckYourAnswersController.onPageLoad
+    }
   }
+
 }
