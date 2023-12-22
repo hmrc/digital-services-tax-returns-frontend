@@ -341,3 +341,10 @@ reportSocialMediaOperatingMargin.checkYourAnswersLabel = {0}’s profit margin o
 reportSocialMediaOperatingMargin.error.required = Enter the {0}’s operating margin on its social media activity
 reportSocialMediaOperatingMargin.error.invalid = Enter the {0}’s operating margin on its social media activity in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
 reportSocialMediaOperatingMargin.change.hidden = Change {0}’s profit margin on activity
+
+reportSearchEngineOperatingMargin.title = ReportSearchEngineOperatingMargin
+reportSearchEngineOperatingMargin.heading = ReportSearchEngineOperatingMargin
+reportSearchEngineOperatingMargin.checkYourAnswersLabel = ReportSearchEngineOperatingMargin
+reportSearchEngineOperatingMargin.error.required = Enter the reportSearchEngineOperatingMargin
+reportSearchEngineOperatingMargin.error.invalid = Enter the reportSearchEngineOperatingMargin in the correct format
+reportSearchEngineOperatingMargin.change.hidden = ReportSearchEngineOperatingMargin

@@ -592,7 +592,7 @@ class NavigatorSpec extends SpecBase {
         UKBankDetailsPage,
         NormalMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
     }
 
     "must go from a BankDetailsForRepaymentPage to CheckYourAnswers page" in {
@@ -601,7 +601,7 @@ class NavigatorSpec extends SpecBase {
         BankDetailsForRepaymentPage,
         NormalMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
     }
   }
 
