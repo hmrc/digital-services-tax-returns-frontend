@@ -342,9 +342,10 @@ reportSocialMediaOperatingMargin.error.required = Enter the {0}’s operating ma
 reportSocialMediaOperatingMargin.error.invalid = Enter the {0}’s operating margin on its social media activity in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
 reportSocialMediaOperatingMargin.change.hidden = Change {0}’s profit margin on activity
 
-reportSearchEngineOperatingMargin.title = ReportSearchEngineOperatingMargin
-reportSearchEngineOperatingMargin.heading = ReportSearchEngineOperatingMargin
-reportSearchEngineOperatingMargin.checkYourAnswersLabel = ReportSearchEngineOperatingMargin
-reportSearchEngineOperatingMargin.error.required = Enter the reportSearchEngineOperatingMargin
-reportSearchEngineOperatingMargin.error.invalid = Enter the reportSearchEngineOperatingMargin in the correct format
-reportSearchEngineOperatingMargin.change.hidden = ReportSearchEngineOperatingMargin
+reportSearchEngineOperatingMargin.title = What was the {0}’s operating margin on its search engine activity?
+reportSearchEngineOperatingMargin.heading = Enter the {0}’s operating margin on its search engine activity
+reportSearchEngineOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity
+reportSearchEngineOperatingMargin.error.required = Enter the {0}’s operating margin on its search engine activity
+reportSearchEngineOperatingMargin.error.invalid = Enter the {0}’s operating margin on its search engine activity \
+                                                    in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
+reportSearchEngineOperatingMargin.change.hidden = Change group’s profit margin on activity

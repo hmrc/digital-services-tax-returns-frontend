@@ -21,7 +21,7 @@ import play.api.data.FormError
 
 class ReportSearchEngineOperatingMarginFormProviderSpec extends FieldBehaviours {
 
-  val form = new ReportSearchEngineOperatingMarginFormProvider()()
+  val form = new ReportSearchEngineOperatingMarginFormProvider()("group")
 
   ".value" - {
 
@@ -36,7 +36,7 @@ class ReportSearchEngineOperatingMarginFormProviderSpec extends FieldBehaviours 
     behave like mandatoryField(
       form,
       fieldName,
-      requiredError = FormError(fieldName, "reportSearchEngineOperatingMargin.error.required")
+      requiredError = FormError(fieldName, "reportSearchEngineOperatingMargin.error.required", Seq("group"))
     )
   }
 }

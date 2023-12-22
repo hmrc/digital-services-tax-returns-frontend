@@ -137,7 +137,7 @@ POST       /report-social-media-operating-margin                controllers.Repo
 GET        /edit/report-social-media-operating-margin           controllers.ReportSocialMediaOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-social-media-operating-margin           controllers.ReportSocialMediaOperatingMarginController.onSubmit(mode: Mode = CheckMode)
 
-GET        /reportSearchEngineOperatingMargin                  controllers.ReportSearchEngineOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
-POST       /reportSearchEngineOperatingMargin                  controllers.ReportSearchEngineOperatingMarginController.onSubmit(mode: Mode = NormalMode)
-GET        /changeReportSearchEngineOperatingMargin                           controllers.ReportSearchEngineOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
-POST       /changeReportSearchEngineOperatingMargin                           controllers.ReportSearchEngineOperatingMarginController.onSubmit(mode: Mode = CheckMode)
+GET        /report-search-engine-operating-margin               controllers.ReportSearchEngineOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-search-engine-operating-margin               controllers.ReportSearchEngineOperatingMarginController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-search-engine-operating-margin          controllers.ReportSearchEngineOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-search-engine-operating-margin          controllers.ReportSearchEngineOperatingMarginController.onSubmit(mode: Mode = CheckMode)

@@ -22,11 +22,12 @@ import play.api.data.Form
 
 class ReportSearchEngineOperatingMarginFormProvider @Inject() extends Mappings {
 
-  def apply(): Form[Double] =
+  def apply(groupOrCompany: String): Form[Double] =
     Form(
       "value" -> percentage(
         "reportSearchEngineOperatingMargin.error.required",
-        "reportSearchEngineOperatingMargin.error.invalid"
+        "reportSearchEngineOperatingMargin.error.invalid",
+        Seq(groupOrCompany)
       )
     )
 

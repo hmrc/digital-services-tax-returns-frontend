@@ -106,7 +106,7 @@ class Navigator @Inject() () {
       routes.ReportMediaAlternativeChargeController.onPageLoad(mode)
     } else if (selectActivities.contains(SelectActivities.SearchEngine)) {
       routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
-    } else if (selectActivities.contains(SelectActivities.SearchEngine)) {
+    } else if (selectActivities.contains(SelectActivities.OnlineMarketplace)) {
       routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
     } else {
       routes.JourneyRecoveryController.onPageLoad()
@@ -172,7 +172,8 @@ class Navigator @Inject() () {
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
         case true                                                                                        =>
           companyLiability(Index(0), ua)(mode)
-        case false                                                                                       => ??? // TODO report-search-engine-operating-margin
+        case false                                                                                       =>
+          routes.ReportSearchEngineOperatingMarginController.onPageLoad(mode)
       }
 
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =

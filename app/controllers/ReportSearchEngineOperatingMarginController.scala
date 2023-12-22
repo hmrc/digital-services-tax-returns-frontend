@@ -30,43 +30,45 @@ import views.html.ReportSearchEngineOperatingMarginView
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ReportSearchEngineOperatingMarginController @Inject()(
-                                        override val messagesApi: MessagesApi,
-                                        sessionRepository: SessionRepository,
-                                        navigator: Navigator,
-                                        identify: IdentifierAction,
-                                        getData: DataRetrievalAction,
-                                        requireData: DataRequiredAction,
-                                        formProvider: ReportSearchEngineOperatingMarginFormProvider,
-                                        val controllerComponents: MessagesControllerComponents,
-                                        view: ReportSearchEngineOperatingMarginView
-                                      )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class ReportSearchEngineOperatingMarginController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: ReportSearchEngineOperatingMarginFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ReportSearchEngineOperatingMarginView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
-  val form = formProvider()
+  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+    val grpMessage = request.registration.isGroupMessage
+    val form = formProvider(grpMessage)
+    val preparedForm = request.userAnswers.get(ReportSearchEngineOperatingMarginPage) match {
+      case None        => form
+      case Some(value) => form.fill(value)
+    }
 
-      val preparedForm = request.userAnswers.get(ReportSearchEngineOperatingMarginPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
-      }
-
-      Ok(view(preparedForm, mode))
+    Ok(view(preparedForm, mode, grpMessage))
   }
 
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-
-      form.bindFromRequest().fold(
-        formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
-        value =>
-          for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportSearchEngineOperatingMarginPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ReportSearchEngineOperatingMarginPage, mode, updatedAnswers))
-      )
+      val grpMessage = request.registration.isGroupMessage
+      val form = formProvider(grpMessage)
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, grpMessage))),
+          value =>
+            for {
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportSearchEngineOperatingMarginPage, value))
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(ReportSearchEngineOperatingMarginPage, mode, updatedAnswers))
+        )
   }
 }

@@ -26,9 +26,9 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], mode: Mode, groupName: String)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = title(form, messages("reportSearchEngineOperatingMargin.title"))) {
+@layout(pageTitle = title(form, messages("reportSearchEngineOperatingMargin.title", groupName))) {
 
     @formHelper(action = routes.ReportSearchEngineOperatingMarginController.onSubmit(mode), Symbol("autoComplete") -> "off") {
 
@@ -39,7 +39,7 @@
         @govukInput(
             InputViewModel(
                 field = form("value"),
-                label = LabelViewModel(messages("reportSearchEngineOperatingMargin.heading")).asPageHeading(LabelSize.Large)
+                label = LabelViewModel(messages("reportSearchEngineOperatingMargin.heading", groupName)).asPageHeading(LabelSize.Large)
             )
             .withPattern("[0-9]*")
             .withSuffix(PrefixOrSuffix(content = Text("%")))
