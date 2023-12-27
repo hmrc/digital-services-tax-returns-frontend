@@ -16,7 +16,7 @@
 
 package connectors
 
-import models.BackendAndFrontendJson._
+import models.SimpleJson._
 import models.registration.{Period, Registration}
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}

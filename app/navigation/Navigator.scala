@@ -45,6 +45,7 @@ class Navigator @Inject() () {
     case ReportOnlineMarketplaceOperatingMarginPage      =>
       ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
     case ReportSocialMediaOperatingMarginPage            => ua => socialMediaOperatingMargin(ua)(NormalMode)
+    case ReportSearchEngineOperatingMarginPage           => ua => searchEnginOperatingMargin(ua)(NormalMode)
     case UKBankDetailsPage | BankDetailsForRepaymentPage =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
     case _                                               => _ => Some(routes.ReturnsDashboardController.onPageLoad)
@@ -165,7 +166,7 @@ class Navigator @Inject() () {
           routes.ReportSocialMediaOperatingMarginController.onPageLoad(mode)
       }
 
-  private def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def searchEngineLoss(ua: UserAnswers)(mode: Mode): Option[Call]              =
     ua.get(SearchEngineLossPage)
       .map {
         case true if ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
@@ -175,7 +176,6 @@ class Navigator @Inject() () {
         case false                                                                                       =>
           routes.ReportSearchEngineOperatingMarginController.onPageLoad(mode)
       }
-
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage)
       .map {
@@ -201,6 +201,13 @@ class Navigator @Inject() () {
     if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.SearchEngine))) {
       Some(routes.ReportSearchAlternativeChargeController.onPageLoad(mode))
     } else if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace))) {
+      Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode))
+    } else {
+      Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))
+    }
+
+  private def searchEnginOperatingMargin(ua: UserAnswers)(mode: Mode): Option[Call] =
+    if (ua.get(SelectActivitiesPage).exists(_.contains(SelectActivities.OnlineMarketplace))) {
       Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode))
     } else {
       Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))

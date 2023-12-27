@@ -36,8 +36,8 @@ import scala.concurrent.Future
 class ReportSearchEngineOperatingMarginControllerSpec extends SpecBase with MockitoSugar {
 
   val formProvider = new ReportSearchEngineOperatingMarginFormProvider()
-  val company = registration.isGroupMessage
-  val form = formProvider(company)
+  val company      = registration.isGroupMessage
+  val form         = formProvider(company)
 
   def onwardRoute = Call("GET", "/foo")
 

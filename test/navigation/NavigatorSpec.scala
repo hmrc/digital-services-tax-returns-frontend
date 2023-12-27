@@ -518,8 +518,32 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           ReportSocialMediaOperatingMarginPage,
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace)).success.value
+          emptyUserAnswers
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .success
+            .value
         ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportSearchEngineOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
+
+        navigator.nextPage(
+          ReportSearchEngineOperatingMarginPage,
+          NormalMode,
+          emptyUserAnswers
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportSearchEngineOperatingMarginPage to AllowanceDeductedPage" in {
+
+        navigator.nextPage(
+          ReportSearchEngineOperatingMarginPage,
+          NormalMode,
+          emptyUserAnswers
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {

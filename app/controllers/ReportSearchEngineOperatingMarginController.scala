@@ -45,9 +45,8 @@ class ReportSearchEngineOperatingMarginController @Inject() (
     with I18nSupport {
 
   def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-
-    val grpMessage = request.registration.isGroupMessage
-    val form = formProvider(grpMessage)
+    val grpMessage   = request.registration.isGroupMessage
+    val form         = formProvider(grpMessage)
     val preparedForm = request.userAnswers.get(ReportSearchEngineOperatingMarginPage) match {
       case None        => form
       case Some(value) => form.fill(value)
@@ -59,7 +58,7 @@ class ReportSearchEngineOperatingMarginController @Inject() (
   def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val grpMessage = request.registration.isGroupMessage
-      val form = formProvider(grpMessage)
+      val form       = formProvider(grpMessage)
       form
         .bindFromRequest()
         .fold(
