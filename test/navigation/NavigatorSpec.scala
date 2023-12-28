@@ -234,20 +234,16 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
-      // TODO
-      "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" ignore {
+      "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportCrossBorderReliefPage,
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
-            .success
-            .value
             .set(ReportCrossBorderReliefPage, true)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReliefDeductedController.onPageLoad(NormalMode)
       }
 
       "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
