@@ -306,6 +306,21 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
       }
 
+      "must go from a AllowanceDeductedPage to CompanyLiabilities page" in {
+
+        navigator.nextPage(
+          AllowanceDeductedPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .success
+            .value
+            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .success
+            .value
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+      }
+
       "must go from a SocialMediaLossPage to GroupLiabilityPage when 'Yes' is selected" in {
 
         navigator.nextPage(

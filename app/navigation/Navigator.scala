@@ -45,6 +45,8 @@ class Navigator @Inject() () {
     case ReportOnlineMarketplaceOperatingMarginPage      =>
       ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
     case ReportSocialMediaOperatingMarginPage            => ua => socialMediaOperatingMargin(ua)(NormalMode)
+    case ReliefDeductedPage                              => _ => Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))
+    case AllowanceDeductedPage                           => ua => Some(companyLiability(Index(0), ua)(NormalMode))
     case UKBankDetailsPage | BankDetailsForRepaymentPage =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
     case _                                               => _ => Some(routes.ReturnsDashboardController.onPageLoad)
