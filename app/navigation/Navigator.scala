@@ -45,6 +45,8 @@ class Navigator @Inject() () {
     case ReportOnlineMarketplaceOperatingMarginPage      =>
       ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
     case ReportSocialMediaOperatingMarginPage            => ua => socialMediaOperatingMargin(ua)(NormalMode)
+    case ReliefDeductedPage                              => _ => Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))
+    case AllowanceDeductedPage                           => ua => Some(companyLiability(Index(0), ua)(NormalMode))
     case UKBankDetailsPage | BankDetailsForRepaymentPage =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
     case _                                               => _ => Some(routes.ReturnsDashboardController.onPageLoad)
@@ -65,7 +67,7 @@ class Navigator @Inject() () {
 
   def reportCrossBorderRelief(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportCrossBorderReliefPage) map {
-      case true  => ??? // TODO /relief-deducted page
+      case true  => routes.ReliefDeductedController.onPageLoad(mode)
       case false => routes.AllowanceDeductedController.onPageLoad(mode)
     }
 
@@ -174,7 +176,8 @@ class Navigator @Inject() () {
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
         case true                                                                                        =>
           companyLiability(Index(0), ua)(mode)
-        case false                                                                                       => ??? // TODO report-search-engine-operating-margin
+        case false                                                                                       =>
+          ??? // TODO report-search-engine-operating-margin
       }
 
   private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
