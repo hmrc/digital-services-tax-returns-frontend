@@ -17,7 +17,7 @@
 package models.registration
 
 import generators.ModelGenerators._
-import models.BackendAndFrontendJson._
+import models.SimpleJson._
 import models.{AddressLine, CompanyName, DSTRegNumber, Email, PhoneNumber, Postcode, RestrictiveString, SafeId}
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues

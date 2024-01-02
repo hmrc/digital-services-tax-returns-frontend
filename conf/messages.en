@@ -350,3 +350,11 @@ reliefDeducted.error.invalid = The amount of cross-border transactions relief yo
                                  money, like 1,234.56 or 1,560.00
 reliefDeducted.error.exceeded = The amount of cross-border transactions relief you deducted from revenues must be 15 numbers or fewer
 reliefDeducted.change.hidden = Change the amount of relief claimed on cross-border transactions
+
+reportSearchEngineOperatingMargin.title = What was the {0}’s operating margin on its search engine activity?
+reportSearchEngineOperatingMargin.heading = Enter the {0}’s operating margin on its search engine activity
+reportSearchEngineOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity
+reportSearchEngineOperatingMargin.error.required = Enter the {0}’s operating margin on its search engine activity
+reportSearchEngineOperatingMargin.error.invalid = Enter the {0}’s operating margin on its search engine activity \
+                                                    in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
+reportSearchEngineOperatingMargin.change.hidden = Change group’s profit margin on activity

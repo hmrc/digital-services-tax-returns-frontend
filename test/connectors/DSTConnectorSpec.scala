@@ -18,7 +18,7 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.ModelGenerators._
-import models.BackendAndFrontendJson._
+import models.SimpleJson._
 import models.registration.{Period, Registration}
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
