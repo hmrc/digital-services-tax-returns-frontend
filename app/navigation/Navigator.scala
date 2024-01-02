@@ -46,6 +46,8 @@ class Navigator @Inject() () {
       ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
     case ReportSocialMediaOperatingMarginPage            => ua => socialMediaOperatingMargin(ua)(NormalMode)
     case ReportSearchEngineOperatingMarginPage           => ua => searchEnginOperatingMargin(ua)(NormalMode)
+    case ReliefDeductedPage                              => _ => Some(routes.AllowanceDeductedController.onPageLoad(NormalMode))
+    case AllowanceDeductedPage                           => ua => Some(companyLiability(Index(0), ua)(NormalMode))
     case UKBankDetailsPage | BankDetailsForRepaymentPage =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
     case _                                               => _ => Some(routes.ReturnsDashboardController.onPageLoad)
@@ -66,7 +68,7 @@ class Navigator @Inject() () {
 
   def reportCrossBorderRelief(ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportCrossBorderReliefPage) map {
-      case true  => ??? // TODO /relief-deducted page
+      case true  => routes.ReliefDeductedController.onPageLoad(mode)
       case false => routes.AllowanceDeductedController.onPageLoad(mode)
     }
 

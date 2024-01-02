@@ -342,6 +342,15 @@ reportSocialMediaOperatingMargin.error.required = Enter the {0}’s operating ma
 reportSocialMediaOperatingMargin.error.invalid = Enter the {0}’s operating margin on its social media activity in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
 reportSocialMediaOperatingMargin.change.hidden = Change {0}’s profit margin on activity
 
+reliefDeducted.title = How much cross-border transactions relief have you deducted from revenues in this return?
+reliefDeducted.heading = How much cross-border transactions relief have you deducted from revenues in this return?
+reliefDeducted.checkYourAnswersLabel = Amount of relief claimed on cross-border transactions
+reliefDeducted.error.required = Enter the amount of cross-border transactions relief you have deducted from revenues in this return in pounds or pounds and pence
+reliefDeducted.error.invalid = The amount of cross-border transactions relief you deducted from revenues must be an amount of \
+                                 money, like 1,234.56 or 1,560.00
+reliefDeducted.error.exceeded = The amount of cross-border transactions relief you deducted from revenues must be 15 numbers or fewer
+reliefDeducted.change.hidden = Change the amount of relief claimed on cross-border transactions
+
 reportSearchEngineOperatingMargin.title = What was the {0}’s operating margin on its search engine activity?
 reportSearchEngineOperatingMargin.heading = Enter the {0}’s operating margin on its search engine activity
 reportSearchEngineOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity

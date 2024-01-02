@@ -267,20 +267,16 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
       }
 
-      // TODO
-      "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" ignore {
+      "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportCrossBorderReliefPage,
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
-            .success
-            .value
             .set(ReportCrossBorderReliefPage, true)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReliefDeductedController.onPageLoad(NormalMode)
       }
 
       "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
@@ -335,6 +331,21 @@ class NavigatorSpec extends SpecBase {
             .success
             .value
             .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .success
+            .value
+            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .success
+            .value
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+      }
+
+      "must go from a AllowanceDeductedPage to CompanyLiabilities page" in {
+
+        navigator.nextPage(
+          AllowanceDeductedPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
             .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
