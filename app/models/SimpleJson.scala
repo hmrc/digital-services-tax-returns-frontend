@@ -17,7 +17,7 @@
 package models
 
 import cats.implicits._
-import models.registration._
+import models.registration.{Period, _}
 import play.api.libs.json._
 import shapeless.tag.@@
 
@@ -26,41 +26,52 @@ import java.time.format.DateTimeParseException
 
 trait SimpleJson {
 
-  def validatedStringFormat(A: ValidatedType[String], name: String) = new Format[String @@ A.Tag] {
-    override def reads(json: JsValue): JsResult[String @@ A.Tag] = json match {
-      case JsString(value) =>
-        A.validateAndTransform(value) match {
-          case Some(v) => JsSuccess(A(v))
-          case None    => JsError(s"Expected a valid $name, got $value instead")
-        }
-      case xs: JsValue     => JsError(JsPath -> JsonValidationError(Seq(s"""Expected a valid $name, got $xs instead""")))
+  def validatedStringFormat(A: ValidatedType[String], name: String): Format[String @@ A.Tag] =
+    new Format[String @@ A.Tag] {
+      override def reads(json: JsValue): JsResult[String @@ A.Tag] = json match {
+        case JsString(value) =>
+          A.validateAndTransform(value) match {
+            case Some(v) => JsSuccess(A(v))
+            case None    => JsError(s"Expected a valid $name, got $value instead")
+          }
+        case xs: JsValue     => JsError(JsPath -> JsonValidationError(Seq(s"""Expected a valid $name, got $xs instead""")))
+      }
+
+      override def writes(o: String @@ A.Tag): JsValue = JsString(o)
     }
 
-    override def writes(o: String @@ A.Tag): JsValue = JsString(o)
-  }
-
-  implicit val postcodeFormat                  = validatedStringFormat(Postcode, "postcode")
-  implicit val phoneNumberFormat               = validatedStringFormat(PhoneNumber, "phone number")
-  implicit val utrFormat                       = validatedStringFormat(UTR, "UTR")
-  implicit val safeIfFormat                    = validatedStringFormat(SafeId, "SafeId")
-  implicit val formBundleNoFormat              = validatedStringFormat(FormBundleNumber, "FormBundleNumber")
-  implicit val internalIdFormat                = validatedStringFormat(InternalId, "internal id")
-  implicit val emailFormat                     = validatedStringFormat(Email, "email")
-  implicit val countryCodeFormat               = validatedStringFormat(CountryCode, "country code")
-  implicit val sortCodeFormat                  = validatedStringFormat(SortCode, "sort code")
-  implicit val accountNumberFormat             = validatedStringFormat(AccountNumber, "account number")
-  implicit val buildingSocietyRollNumberFormat =
+  implicit val postcodeFormat: Format[String @@ models.Postcode.Tag]                                   = validatedStringFormat(Postcode, "postcode")
+  implicit val phoneNumberFormat: Format[String @@ models.PhoneNumber.Tag]                             =
+    validatedStringFormat(PhoneNumber, "phone number")
+  implicit val utrFormat: Format[String @@ models.UTR.Tag]                                             = validatedStringFormat(UTR, "UTR")
+  implicit val safeIfFormat: Format[String @@ models.SafeId.Tag]                                       = validatedStringFormat(SafeId, "SafeId")
+  implicit val formBundleNoFormat: Format[String @@ models.FormBundleNumber.Tag]                       =
+    validatedStringFormat(FormBundleNumber, "FormBundleNumber")
+  implicit val internalIdFormat: Format[String @@ models.InternalId.Tag]                               =
+    validatedStringFormat(InternalId, "internal id")
+  implicit val emailFormat: Format[String @@ models.Email.Tag]                                         = validatedStringFormat(Email, "email")
+  implicit val countryCodeFormat: Format[String @@ models.CountryCode.Tag]                             =
+    validatedStringFormat(CountryCode, "country code")
+  implicit val sortCodeFormat: Format[String @@ models.SortCode.Tag]                                   = validatedStringFormat(SortCode, "sort code")
+  implicit val accountNumberFormat: Format[String @@ models.AccountNumber.Tag]                         =
+    validatedStringFormat(AccountNumber, "account number")
+  implicit val buildingSocietyRollNumberFormat: Format[String @@ models.BuildingSocietyRollNumber.Tag] =
     validatedStringFormat(BuildingSocietyRollNumber, "building society roll number")
-  implicit val accountNameFormat               = validatedStringFormat(AccountName, "account name")
-  implicit val periodKeyFormat                 = validatedStringFormat(Period.Key, "Period Key")
-  implicit val restrictiveFormat               = validatedStringFormat(RestrictiveString, "name")
-  implicit val companyNameFormat               = validatedStringFormat(CompanyName, "company name")
-  implicit val mandatoryAddressLineFormat      = validatedStringFormat(AddressLine, "address line")
-  implicit val dstRegNoFormat                  = validatedStringFormat(DSTRegNumber, "Digital Services Tax Registration Number")
+  implicit val accountNameFormat: Format[String @@ models.AccountName.Tag]                             =
+    validatedStringFormat(AccountName, "account name")
+  implicit val periodKeyFormat: Format[String @@ Period.Key.Tag]                                       = validatedStringFormat(Period.Key, "Period Key")
+  implicit val restrictiveFormat: Format[String @@ models.RestrictiveString.Tag]                       =
+    validatedStringFormat(RestrictiveString, "name")
+  implicit val companyNameFormat: Format[String @@ models.CompanyName.Tag]                             =
+    validatedStringFormat(CompanyName, "company name")
+  implicit val mandatoryAddressLineFormat: Format[String @@ models.AddressLine.Tag]                    =
+    validatedStringFormat(AddressLine, "address line")
+  implicit val dstRegNoFormat: Format[String @@ models.DSTRegNumber.Tag]                               =
+    validatedStringFormat(DSTRegNumber, "Digital Services Tax Registration Number")
 
 }
 
-object BackendAndFrontendJson extends SimpleJson {
+object SimpleJson extends SimpleJson {
   implicit val companyFormat: OFormat[Company]                     = Json.format[Company]
   implicit val contactDetailsFormat: OFormat[ContactDetails]       = Json.format[ContactDetails]
   implicit val companyRegWrapperFormat: OFormat[CompanyRegWrapper] = Json.format[CompanyRegWrapper]
@@ -84,56 +95,62 @@ object BackendAndFrontendJson extends SimpleJson {
   }
 
   implicit lazy val writePeriods: Writes[List[(Period, Option[LocalDate])]] =
-    new Writes[List[(Period, Option[LocalDate])]] {
-      override def writes(o: List[(Period, Option[LocalDate])]): JsValue = {
+    (o: List[(Period, Option[LocalDate])]) => {
 
-        val details = o.map { case (period, mapping) =>
-          JsObject(
-            Seq(
-              "inboundCorrespondenceFromDate"     -> Json.toJson(period.start),
-              "inboundCorrespondenceToDate"       -> Json.toJson(period.end),
-              "inboundCorrespondenceDueDate"      -> Json.toJson(period.returnDue),
-              "periodKey"                         -> Json.toJson(period.key),
-              "inboundCorrespondenceDateReceived" -> Json.toJson(mapping)
-            )
-          )
-
-        }
-
+      val details = o.map { case (period, mapping) =>
         JsObject(
           Seq(
-            "obligations" -> JsArray(details.map { dt =>
-              JsObject(
-                Seq(
-                  "obligationDetails" -> dt
-                )
-              )
-            })
+            "inboundCorrespondenceFromDate"     -> Json.toJson(period.start),
+            "inboundCorrespondenceToDate"       -> Json.toJson(period.end),
+            "inboundCorrespondenceDueDate"      -> Json.toJson(period.returnDue),
+            "periodKey"                         -> Json.toJson(period.key),
+            "inboundCorrespondenceDateReceived" -> Json.toJson(mapping)
           )
         )
+
       }
+
+      JsObject(
+        Seq {
+          "obligations" -> JsArray(details.map { dt =>
+            JsObject(
+              Seq(
+                "obligationDetails" -> dt
+              )
+            )
+          })
+        }
+      )
     }
 
   implicit lazy val readPeriods: Reads[List[(Period, Option[LocalDate])]] =
-    new Reads[List[(Period, Option[LocalDate])]] {
-      def reads(jsonOuter: JsValue): JsResult[List[(Period, Option[LocalDate])]] = {
-        val JsArray(obligations) = { jsonOuter \ "obligations" }.as[JsArray]
-        val periods              = obligations.toList.flatMap { j =>
-          val JsArray(elems) = { j \ "obligationDetails" }.as[JsArray]
-          elems.toList
-        }
-        JsSuccess(periods.map { json =>
-          (
-            Period(
-              { json \ "inboundCorrespondenceFromDate" }.as[LocalDate],
-              { json \ "inboundCorrespondenceToDate" }.as[LocalDate],
-              { json \ "inboundCorrespondenceDueDate" }.as[LocalDate],
-              { json \ "periodKey" }.as[Period.Key]
-            ),
-            { json \ "inboundCorrespondenceDateReceived" }.asOpt[LocalDate]
-          )
-        })
+    (jsonOuter: JsValue) => {
+      val JsArray(obligations) = {
+        jsonOuter \ "obligations"
+      }.as[JsArray]
+      val periods              = obligations.toList.flatMap { j =>
+        val JsArray(elems) = {
+          j \ "obligationDetails"
+        }.as[JsArray]
+        elems.toList
       }
+      JsSuccess(periods.map { json =>
+        (
+          Period(
+            {
+              json \ "inboundCorrespondenceFromDate"
+            }.as[LocalDate], {
+              json \ "inboundCorrespondenceToDate"
+            }.as[LocalDate], {
+              json \ "inboundCorrespondenceDueDate"
+            }.as[LocalDate], {
+              json \ "periodKey"
+            }.as[Period.Key]
+          ), {
+            json \ "inboundCorrespondenceDateReceived"
+          }.asOpt[LocalDate]
+        )
+      })
     }
 
 }

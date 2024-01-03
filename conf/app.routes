@@ -135,4 +135,12 @@ POST       /report-social-media-operating-margin                controllers.Repo
 GET        /edit/report-social-media-operating-margin           controllers.ReportSocialMediaOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-social-media-operating-margin           controllers.ReportSocialMediaOperatingMarginController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad(isPrint: Boolean)
+GET        /relief-deducted                                     controllers.ReliefDeductedController.onPageLoad(mode: Mode = NormalMode)
+POST       /relief-deducted                                     controllers.ReliefDeductedController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/relief-deducted                                controllers.ReliefDeductedController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/relief-deducted                                controllers.ReliefDeductedController.onSubmit(mode: Mode = CheckMode)
+
+GET        /report-search-engine-operating-margin               controllers.ReportSearchEngineOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-search-engine-operating-margin               controllers.ReportSearchEngineOperatingMarginController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-search-engine-operating-margin          controllers.ReportSearchEngineOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-search-engine-operating-margin          controllers.ReportSearchEngineOperatingMarginController.onSubmit(mode: Mode = CheckMode)
