@@ -56,10 +56,10 @@ GET        /edit/report-online-marketplace-alternative-charge   controllers.Repo
 POST       /edit/report-online-marketplace-alternative-charge   controllers.ReportOnlineMarketplaceAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
-GET        /report-search-alternative-charge                    controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
-POST       /report-search-alternative-charge                    controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
-GET        /edit/report-search-alternative-charge               controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
-POST       /edit/report-search-alternative-charge               controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
+GET        /report-search-engine-alternative-charge             controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-search-engine-alternative-charge             controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-search-engine-alternative-charge        controllers.ReportSearchAlternativeChargeController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-search-engine-alternative-charge        controllers.ReportSearchAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
 GET        /cross-border-transaction-relief-amount              controllers.CrossBorderTransactionReliefController.onPageLoad(mode: Mode = NormalMode)
@@ -73,8 +73,8 @@ GET        /edit/report-alternative-charge                      controllers.Repo
 POST       /edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onSubmit(mode: Mode = CheckMode)
 
 
-GET        /report-online-marketplace-loss                        controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = NormalMode)
-POST       /report-online-marketplace-loss                        controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = NormalMode)
+GET        /report-online-marketplace-loss                       controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-online-marketplace-loss                       controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = NormalMode)
 GET        /edit/report-online-marketplace-loss                  controllers.ReportOnlineMarketplaceLossController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/report-online-marketplace-loss                  controllers.ReportOnlineMarketplaceLossController.onSubmit(mode: Mode = CheckMode)
 
@@ -123,4 +123,16 @@ POST       /repayment                                           controllers.Repa
 GET        /edit/repayment                                      controllers.RepaymentController.onPageLoad(mode: Mode = CheckMode)
 POST       /edit/repayment                                      controllers.RepaymentController.onSubmit(mode: Mode = CheckMode)
 
-GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad()
+GET        /returns/complete                                    controllers.ReturnsCompleteController.onPageLoad()
+
+GET        /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode: Mode = CheckMode)
+
+GET        /report-social-media-operating-margin                controllers.ReportSocialMediaOperatingMarginController.onPageLoad(mode: Mode = NormalMode)
+POST       /report-social-media-operating-margin                controllers.ReportSocialMediaOperatingMarginController.onSubmit(mode: Mode = NormalMode)
+GET        /edit/report-social-media-operating-margin           controllers.ReportSocialMediaOperatingMarginController.onPageLoad(mode: Mode = CheckMode)
+POST       /edit/report-social-media-operating-margin           controllers.ReportSocialMediaOperatingMarginController.onSubmit(mode: Mode = CheckMode)
+
+GET        /check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad(isPrint: Boolean)

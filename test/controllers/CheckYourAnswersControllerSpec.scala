@@ -34,7 +34,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
   val endDate   = formatDate(period.end)
   val sectionList = Seq()
 
-  lazy val checkYourAnswersRoute = routes.CheckYourAnswersController.onPageLoad().url
+  lazy val checkYourAnswersRoute = routes.CheckYourAnswersController.onPageLoad(false).url
 
   "CheckYourAnswers Controller" - {
 

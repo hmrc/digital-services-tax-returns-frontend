@@ -36,7 +36,7 @@ class CompanyDetailsFormProviderSpec extends StringFieldBehaviours {
     behave like fieldThatBindsValidData(
       form,
       fieldName,
-      RegexpGen.from(companyNameRegex)
+      RegexpGen.from(companyNameRegex).filter(_.trim.nonEmpty)
     )
 
     behave like fieldWithMaxLength(

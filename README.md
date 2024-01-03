@@ -1,7 +1,6 @@
 
 # digital-services-tax-returns-frontend
-
-[ ![Download](https://api.bintray.com/packages/hmrc/releases/digital-services-tax-frontend/images/download.svg) ](https://bintray.com/hmrc/releases/digital-services-tax-frontend/_latestVersion)
+![](https://img.shields.io/github/v/release/hmrc/digital-services-tax-returns-frontend)
 
 ## About
 The Digital Services Tax (DST) digital service is split into a number of different microservices all serving specific functions which are listed below:
@@ -37,7 +36,7 @@ This will start all the required services
 
 ## Running the tests
 
-    sbt test
+    sbt test it/test
 
 ## Running scalafmt
 

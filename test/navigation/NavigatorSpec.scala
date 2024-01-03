@@ -207,20 +207,19 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
       }
 
-      // TODO
-      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" ignore {
+      "must go from a ReportMediaAlternativeChargePage to report-social-media-loss page when 'No'" in {
 
         navigator.nextPage(
           ReportMediaAlternativeChargePage,
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
             .set(ReportMediaAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to AllowanceDeducted page when 'No' is selected" in {
@@ -266,7 +265,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
       }
 
-      "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'No' is selected" ignore {
+      "must go from a ReportSearchAlternativeChargePage to report-search-engine-operating-margin page when 'No' is selected" ignore {
 
         navigator.nextPage(
           ReportSearchAlternativeChargePage,
@@ -332,7 +331,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
       }
 
-      "must go from a SocialMediaLossPage to report-search-engine-operating-margin page when 'No' is selected" ignore {
+      "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
 
         navigator.nextPage(
           SocialMediaLossPage,
@@ -341,7 +340,7 @@ class NavigatorSpec extends SpecBase {
             .set(SocialMediaLossPage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode)
       }
 
       "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
@@ -405,8 +404,8 @@ class NavigatorSpec extends SpecBase {
         ) mustBe ???
       }
 
-      "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-online-marketplace-loss page" +
-        " when 'Yes' is selected" ignore {
+      "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportOnlineMarketplaceLossPage" +
+        " when 'Yes' is selected" in {
 
           navigator.nextPage(
             ReportOnlineMarketplaceAlternativeChargePage,
@@ -415,10 +414,10 @@ class NavigatorSpec extends SpecBase {
               .set(ReportOnlineMarketplaceAlternativeChargePage, true)
               .success
               .value
-          ) mustBe ???
+          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
         }
 
-      "must go from a ReportOnlineMarketplaceAlternativeChargePage to report-search-engine-operating-margin page when 'No' is selected" ignore {
+      "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportCrossBorderTransactionReliefPage when 'No' is selected" in {
 
         navigator.nextPage(
           ReportOnlineMarketplaceAlternativeChargePage,
@@ -427,7 +426,58 @@ class NavigatorSpec extends SpecBase {
             .set(ReportOnlineMarketplaceAlternativeChargePage, false)
             .success
             .value
-        ) mustBe ???
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceLossPage to ReportCrossBorderReliefPage when 'Yes' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceLossPage, true)
+            .success
+            .value
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceLossPage to ReportOnlineMarketplaceOperatingMarginPage when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceLossPage,
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportOnlineMarketplaceLossPage, false)
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportOnlineMarketplaceOperatingMarginPage to ReportCrossBorderReliefPage when 'No' is selected" in {
+
+        navigator.nextPage(
+          ReportOnlineMarketplaceOperatingMarginPage,
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportSocialMediaOperatingMarginPage to AllowanceDeductedPage" in {
+
+        navigator.nextPage(
+          ReportSocialMediaOperatingMarginPage,
+          NormalMode,
+          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia)).success.value
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+      }
+
+      "must go from a ReportSocialMediaOperatingMarginPage to AllowanceDeductedPage when selectedActivities is SearchEngine" in {
+
+        navigator.nextPage(
+          ReportSocialMediaOperatingMarginPage,
+          NormalMode,
+          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine)).success.value
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
@@ -484,7 +534,7 @@ class NavigatorSpec extends SpecBase {
             .set(RepaymentPage, false)
             .success
             .value
-        ) mustBe routes.CheckYourAnswersController.onPageLoad
+        ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
       }
 
       "must go to CompanyLiabilitiesPage0 index" in {

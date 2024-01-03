@@ -24,6 +24,7 @@ time-out.messageSuffix=GOV.UK
 common.title=Digital Services Tax
 common.title.short=Digital Services Tax
 common.title.suffix=GOV.UK
+common.margin.hint=Enter a percentage value with decimals, like 27.55%
 
 #Error
 error.browser.title.prefix = Error:
@@ -47,6 +48,8 @@ index.guidance = Welcome to your new frontend. Please see the README file for a 
 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
+checkYourAnswers.save-continue = Accept and send
+
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service
 journeyRecovery.continue.heading = Sorry, there is a problem with the service
@@ -321,3 +324,31 @@ checkYourAnswers.title = Check your answers before sending your return for {0} t
 checkYourAnswers.title.print = Digital Services Tax return details for {0} (for the period {1} to {2})
 checkYourAnswers.heading = Check your answers before sending your return for {0} to {1}
 
+
+returnsComplete.title = Return complete
+returnsComplete.detail = We received your Digital Services Tax return for {0} for {1} to {2}
+returnsComplete.heading = Return complete
+returnsComplete.print = Print or save your return
+returnsComplete.what-you-do-next.title = What you must do next
+returnsComplete.what-you-do-next.p1 = Your next return will be for {0} to {1}.
+returnsComplete.what-you-do-next.p2 = You must pay any Digital Services Tax you owe for your next return period by {0} and submit a return by {1}.
+returnsComplete.index = Go to your Digital Services Tax details
+returnsComplete.before-you-go= Before you go
+common.feedback.p1 = Your feedback helps us make our service better.
+common.feedback.survey = Take our survey
+common.feedback.survey.p1 = to share your feedback on this service. It takes about 1 minute to complete.
+
+reportOnlineMarketplaceOperatingMargin.title = What was the {0}’s operating margin on its online marketplace activity?
+reportOnlineMarketplaceOperatingMargin.heading = What was the {0}’s operating margin on its online marketplace activity?
+reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity
+reportOnlineMarketplaceOperatingMargin.error.required = Enter the {0}’s operating margin on its online marketplace activity
+reportOnlineMarketplaceOperatingMargin.error.invalid = Enter the {0}’s operating margin on its online marketplace activity \
+                                                         in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
+reportOnlineMarketplaceOperatingMargin.change.hidden = Change {0}’s profit margin on activity
+
+reportSocialMediaOperatingMargin.title = What was the {0}’s operating margin on its social media activity?
+reportSocialMediaOperatingMargin.heading = What was the {0}’s operating margin on its social media activity?
+reportSocialMediaOperatingMargin.checkYourAnswersLabel = {0}’s profit margin on activity
+reportSocialMediaOperatingMargin.error.required = Enter the {0}’s operating margin on its social media activity
+reportSocialMediaOperatingMargin.error.invalid = Enter the {0}’s operating margin on its social media activity in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
+reportSocialMediaOperatingMargin.change.hidden = Change {0}’s profit margin on activity

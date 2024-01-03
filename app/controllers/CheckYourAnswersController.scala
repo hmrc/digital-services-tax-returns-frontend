@@ -20,7 +20,7 @@ import com.google.inject.Inject
 import connectors.DSTConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
 import models.formatDate
-import play.api.i18n.{I18nSupport, Messages, MessagesApi}
+import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.CYAHelper
@@ -38,13 +38,12 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(isPrint: Boolean = false): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val startDate = formatDate(request.period.start)
     val endDate = formatDate(request.period.end)
     val sectionList = cyaHelper.createSectionList(request.userAnswers)
-    println(sectionList + "===================")
 
-    Ok(view(sectionList, startDate, endDate, request.registration))
+    Ok(view(sectionList, startDate, endDate, request.registration, isPrint))
   }
 }
 

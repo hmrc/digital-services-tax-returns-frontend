@@ -23,9 +23,9 @@
     govukButton: GovukButton
 )
 
-@(list: Seq[Section], startDate: String, endDate: String, reg: Registration)(implicit request: Request[_], messages: Messages)
+@(list: Seq[Section], startDate: String, endDate: String, reg: Registration, isPrint: Boolean = false, showBackLink: Boolean = true)(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title", startDate, endDate))) {
+@layout(pageTitle = titleNoForm(messages("checkYourAnswers.title", startDate, endDate)), showBackLink = showBackLink) {
 
     <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading", startDate, endDate)</h1>
 @list.map{section=>
@@ -34,9 +34,11 @@
 }
 
     @govukSummaryList(section.rows)
+@if(!isPrint) {
+@govukButton(
+ButtonViewModel(messages("site.submit"))
+.asLink(routes.ReturnsCompleteController.onPageLoad().url)
+)
 }
-    @govukButton(
-        ButtonViewModel(messages("site.submit"))
-    )
-
+}
 }
