@@ -17,9 +17,8 @@
 package controllers
 
 import base.SpecBase
+import models.formatDate
 import models.registration.Registration
-import models.{NormalMode, formatDate}
-import org.mockito.ArgumentMatchers.any
 import org.scalatestplus.mockito.MockitoSugar.mock
 import pages.GroupLiabilityPage
 import play.api.test.FakeRequest
@@ -30,9 +29,9 @@ import views.html.CheckYourAnswersView
 class CheckYourAnswersControllerSpec extends SpecBase {
 
   val mockRegistration = mock[Registration]
-  val startDate = formatDate(period.start)
-  val endDate   = formatDate(period.end)
-  val sectionList = Seq()
+  val startDate        = formatDate(period.start)
+  val endDate          = formatDate(period.end)
+  val sectionList      = Seq()
 
   lazy val checkYourAnswersRoute = routes.CheckYourAnswersController.onPageLoad(false).url
 
@@ -45,7 +44,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, checkYourAnswersRoute)
+        val request     = FakeRequest(GET, checkYourAnswersRoute)
         val sectionList = new CYAHelper().createSectionList(userAnswers)(messages(application))
 
         val result = route(application, request).value

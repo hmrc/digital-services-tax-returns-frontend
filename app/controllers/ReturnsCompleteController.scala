@@ -45,8 +45,8 @@ class ReturnsCompleteController @Inject() (
 
   def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
     val submittedPeriodStart = formatDate(request.period.start)
-    val submittedPeriodEnd = formatDate(request.period.end)
-    val companyName = request.registration.companyReg.company.name
+    val submittedPeriodEnd   = formatDate(request.period.end)
+    val companyName          = request.registration.companyReg.company.name
 
     val sectionList = cyaHelper.createSectionList(request.userAnswers)
 

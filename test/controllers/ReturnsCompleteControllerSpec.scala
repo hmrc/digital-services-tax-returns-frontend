@@ -52,15 +52,20 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
 
         when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-        val request = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad().url)
+        val request     = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad().url)
         val sectionList = new CYAHelper().createSectionList(emptyUserAnswers)(messages(application))
 
         val result = route(application, request).value
 
-        val view         = application.injector.instanceOf[ReturnsCompleteView]
-        val cya          = application.injector.instanceOf[CheckYourAnswersView]
+        val view = application.injector.instanceOf[ReturnsCompleteView]
+        val cya  = application.injector.instanceOf[CheckYourAnswersView]
 
-        val printableCYA = Some(cya(sectionList, startDate, endDate, registration, isPrint = true, showBackLink = false)(request, messages(application)))
+        val printableCYA = Some(
+          cya(sectionList, startDate, endDate, registration, isPrint = true, showBackLink = false)(
+            request,
+            messages(application)
+          )
+        )
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(companyName, startDate, endDate, period, printableCYA)(

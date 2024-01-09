@@ -30,8 +30,8 @@ object SelectActivitiesSummary {
 
   def row(answers: UserAnswers, selectedValue: Boolean = false)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(SelectActivitiesPage).map { _ =>
-      val yesOrNo = if(selectedValue) "site.yes" else "site.no"
-      val value = ValueViewModel(Text(messages(yesOrNo)))
+      val yesOrNo = if (selectedValue) "site.yes" else "site.no"
+      val value   = ValueViewModel(Text(messages(yesOrNo)))
 
       SummaryListRowViewModel(
         key = "selectActivities.checkYourAnswersLabel",
