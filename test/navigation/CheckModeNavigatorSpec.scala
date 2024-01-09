@@ -40,10 +40,10 @@ class CheckModeNavigatorSpec extends SpecBase {
     "must go from a CompanyDetailsPage to ManageCompanies page" in {
 
       navigator.nextPage(
-        CompanyDetailsPage(index = Index(0)),
+        CompanyDetailsPage(periodKey, index = Index(0)),
         CheckMode,
         UserAnswers("id")
-      ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
+      ) mustBe routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode)
     }
   }
 }

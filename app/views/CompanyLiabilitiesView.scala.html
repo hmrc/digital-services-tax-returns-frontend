@@ -26,11 +26,12 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, index: Index, companyName: String,startDate: String, endDate: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], periodKey: String, mode: Mode, index: Index, companyName: String,startDate: String, endDate: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("companyLiabilities.title",companyName,startDate,endDate))) {
 
-    @formHelper(action = routes.CompanyLiabilitiesController.onSubmit(mode, index), Symbol("autoComplete") -> "off") {
+
+    @formHelper(action = routes.CompanyLiabilitiesController.onSubmit(periodKey, mode, index), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

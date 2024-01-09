@@ -28,17 +28,17 @@ import viewmodels.implicits._
 
 object CompanyDetailsSummary {
 
-  def row(index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CompanyDetailsPage(index)).map { answer =>
+  def row(periodKey: String, index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(CompanyDetailsPage(periodKey, index)).map { answer =>
       val value = HtmlFormat.escape(answer.companyName).toString
 
       SummaryListRowViewModel(
         key = Key(HtmlContent(value)),
         value = ValueViewModel(Empty),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
+          ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(periodKey, index, CheckMode).url)
             .withVisuallyHiddenText(messages("companyDetails.change.hidden")),
-          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(index, CheckMode).url)
+          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(periodKey, index, CheckMode).url)
             .withVisuallyHiddenText(messages("companyDetails.remove.hidden"))
             .withCssClass("")
         )

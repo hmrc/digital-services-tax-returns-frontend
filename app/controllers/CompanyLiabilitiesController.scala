@@ -46,20 +46,20 @@ class CompanyLiabilitiesController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
+  def onPageLoad(periodKey: String, mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      request.userAnswers.get(CompanyDetailsPage(index)) match {
+      request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
           val startDate = formatDate(request.period.start)
           val endDate   = formatDate(request.period.end)
 
           val form         = formProvider(companyDetails.companyName)
-          val preparedForm = request.userAnswers.get(CompanyLiabilitiesPage(index)) match {
+          val preparedForm = request.userAnswers.get(CompanyLiabilitiesPage(periodKey, index)) match {
             case None        => form
             case Some(value) => form.fill(value)
           }
 
-          Ok(view(preparedForm, mode, index, companyDetails.companyName, startDate, endDate))
+          Ok(view(preparedForm, periodKey, mode, index, companyDetails.companyName, startDate, endDate))
         case _                    =>
           logger.logger.info("CompanyDetailsPage is missing data")
           Redirect(routes.JourneyRecoveryController.onPageLoad())
@@ -67,9 +67,9 @@ class CompanyLiabilitiesController @Inject() (
 
   }
 
-  def onSubmit(mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(periodKey: String, mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
-      request.userAnswers.get(CompanyDetailsPage(index)) match {
+      request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
           val companyName = companyDetails.companyName
           val startDate   = formatDate(request.period.start)
@@ -80,12 +80,12 @@ class CompanyLiabilitiesController @Inject() (
             .bindFromRequest()
             .fold(
               formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, mode, index, companyName, startDate, endDate))),
+                Future.successful(BadRequest(view(formWithErrors, periodKey, mode, index, companyName, startDate, endDate))),
               value =>
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(index), value))
+                  updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(periodKey, index), value))
                   _              <- sessionRepository.set(updatedAnswers)
-                } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage(index), mode, updatedAnswers))
+                } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage(periodKey, index), mode, updatedAnswers))
             )
         case _                    =>
           logger.logger.info("CompanyDetailsPage is missing data")

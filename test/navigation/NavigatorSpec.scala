@@ -42,34 +42,34 @@ class NavigatorSpec extends SpecBase {
       "must go from a CompanyDetailsPage to ManageCompanies page" in {
 
         navigator.nextPage(
-          CompanyDetailsPage(index = Index(0)),
+          CompanyDetailsPage(periodKey, index = Index(0)),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
+        ) mustBe routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ManageCompaniesPage with option 'yes' to ManageCompanies page" in {
 
         navigator.nextPage(
-          ManageCompaniesPage,
+          ManageCompaniesPage(periodKey),
           NormalMode,
-          UserAnswers("id").set(ManageCompaniesPage, true).success.value
-        ) mustBe routes.CompanyDetailsController.onPageLoad(index, NormalMode)
+          UserAnswers("id").set(ManageCompaniesPage(periodKey), true).success.value
+        ) mustBe routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode)
       }
 
       "must go from a ManageCompaniesPage with option 'false' to Select activities page" in {
 
         navigator.nextPage(
-          ManageCompaniesPage,
+          ManageCompaniesPage(periodKey),
           NormalMode,
-          UserAnswers("id").set(ManageCompaniesPage, false).success.value
+          UserAnswers("id").set(ManageCompaniesPage(periodKey), false).success.value
         ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
       }
 
       "must go from a ManageCompaniesPage to Journey recovery page when data is missing" in {
 
         navigator.nextPage(
-          ManageCompaniesPage,
+          ManageCompaniesPage(periodKey),
           NormalMode,
           emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
@@ -135,7 +135,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportAlternativeChargePage, true)
             .success
             .value
-        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to SocialMediaLossPage when Social media activity option is selected" in {
@@ -153,7 +153,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportAlternativeChargePage, true)
             .success
             .value
-        ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
@@ -222,7 +222,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportMediaAlternativeChargePage, true)
             .success
             .value
-        ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportMediaAlternativeChargePage to ReportSearchAlternativeChargePage when 'No'" in {
@@ -291,7 +291,7 @@ class NavigatorSpec extends SpecBase {
             .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
-        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchAlternativeChargePage to ReportOnlineMarketplaceAlternativeChargePage when 'No' is selected" in {
@@ -309,10 +309,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a SocialMediaLossPage to ReportSearchAlternativeCharge page when 'Yes' is selected and selected activity is 'SearchEngine'" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, true)
+            .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
             .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
@@ -324,19 +324,19 @@ class NavigatorSpec extends SpecBase {
       "must go from a SocialMediaLossPage to CompanyLiabilities page when 'Yes' is selected and selected activity is 'SocialMedia'" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, true)
+            .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
             .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a AllowanceDeductedPage to CompanyLiabilities page" in {
@@ -348,28 +348,28 @@ class NavigatorSpec extends SpecBase {
             .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a SocialMediaLossPage to GroupLiabilityPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, true)
+            .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
             .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(100))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
@@ -378,10 +378,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, false)
+            .set(SocialMediaLossPage(periodKey), false)
             .success
             .value
         ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode)
@@ -391,10 +391,10 @@ class NavigatorSpec extends SpecBase {
         "is selected and selected activity is 'OnlineMarketplace'" in {
 
           navigator.nextPage(
-            SearchEngineLossPage,
+            SearchEngineLossPage(periodKey),
             NormalMode,
             UserAnswers("id")
-              .set(SearchEngineLossPage, true)
+              .set(SearchEngineLossPage(periodKey), true)
               .success
               .value
               .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
@@ -406,31 +406,31 @@ class NavigatorSpec extends SpecBase {
       "must go from a SearchEngineLossPage to CompanyLiability page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          SearchEngineLossPage,
+          SearchEngineLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SearchEngineLossPage, true)
+            .set(SearchEngineLossPage(periodKey), true)
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a SearchEngineLossPage to GroupLiability page when 'Yes' is selected and user has completed the companyDetails page" in {
 
         navigator.nextPage(
-          SearchEngineLossPage,
+          SearchEngineLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SearchEngineLossPage, true)
+            .set(SearchEngineLossPage(periodKey), true)
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(100))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
@@ -439,10 +439,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a SearchEngineLossPage to report-search-engine-operating-margin page when 'No' is selected" in {
 
         navigator.nextPage(
-          SearchEngineLossPage,
+          SearchEngineLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SearchEngineLossPage, false)
+            .set(SearchEngineLossPage(periodKey), false)
             .success
             .value
         ) mustBe routes.ReportSearchEngineOperatingMarginController.onPageLoad(NormalMode)
@@ -617,46 +617,46 @@ class NavigatorSpec extends SpecBase {
       "must go to CompanyLiabilitiesPage0 index" in {
 
         navigator.nextPage(
-          CompanyLiabilitiesPage(index),
+          CompanyLiabilitiesPage(periodKey, index),
           NormalMode,
           UserAnswers("id")
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("C2", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a CompanyLiabilitiesPage0 index to CompanyLiabilitiesPage1 when there are 2 CompanyDetails data exists" in {
 
         navigator.nextPage(
-          CompanyLiabilitiesPage(Index(1)),
+          CompanyLiabilitiesPage(periodKey, Index(1)),
           NormalMode,
           UserAnswers("id")
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("C2", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(122.11))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, Index(1))
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, Index(1))
       }
 
       "must go from a CompanyLiabilitiesPage to GroupLiability page when user filled the pages for both the companies mentioned in manage companies page" in {
 
         navigator.nextPage(
-          CompanyLiabilitiesPage(Index(1)),
+          CompanyLiabilitiesPage(periodKey, Index(1)),
           NormalMode,
           UserAnswers("id")
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(122.11))
             .success
             .value
         ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)

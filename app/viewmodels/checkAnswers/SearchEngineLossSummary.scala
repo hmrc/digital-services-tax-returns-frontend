@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object SearchEngineLossSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SearchEngineLossPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(SearchEngineLossPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "searchEngineLoss.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.SearchEngineLossController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.SearchEngineLossController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("searchEngineLoss.change.hidden"))
         )
       )

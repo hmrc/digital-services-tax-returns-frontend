@@ -44,8 +44,6 @@ showBackLink = false
             @messages("returnsDashboard.heading")
         </h1>
 
-
-
         @govukSummaryList(SummaryList(
         rows = Seq(
         SummaryListRow(
@@ -95,7 +93,7 @@ showBackLink = false
             </p>
             <p class="govuk-body">@formatDate(period.paymentDue)</p>
             <p class="govuk-body">
-                <a class="govuk-link" href="@routes.PayYourDigitalServiceTaxController.onPageLoad.url" >
+                <a class="govuk-link" href="@routes.PayYourDigitalServiceTaxController.onPageLoad.url">
                     @messages("returnsDashboard.pay-tax")
                 </a>
             </p>
@@ -107,8 +105,8 @@ showBackLink = false
             <h2 class="govuk-heading-m">@messages("returnsDashboard.return-due")</h2>
             <p class="govuk-body">@{formatDate(period.returnDue)}</p>
             <p class="govuk-body">
-<!--                            This will be changed to the new repository url once it is created -->
-                <a class="govuk-link" href="@routes.ManageCompaniesController.redirectToOnLoadPage().url">
+                <!--                            This will be changed to the new repository url once it is created -->
+                <a class="govuk-link" href="@routes.ManageCompaniesController.redirectToOnLoadPage(period.key).url">
                     @messages("returnsDashboard.submit-return")
                 </a>
             </p>
@@ -124,7 +122,7 @@ showBackLink = false
                     @if(amended.nonEmpty) {
                     <li>
                         <p class="govuk-body">
-<!--                            This will be changed to the new repository url once it is created -->
+                            <!--                            This will be changed to the new repository url once it is created -->
                             <a class="govuk-link" href="@appConfig.dstFrontendShowAmendmentsPageUrl">
                                 @messages("returnsDashboard.amendments")
                             </a>

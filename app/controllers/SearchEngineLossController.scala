@@ -44,30 +44,30 @@ class SearchEngineLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val isGoupMessage = request.registration.isGroupMessage
     val form          = formProvider(isGoupMessage)
-    val preparedForm  = request.userAnswers.get(SearchEngineLossPage) match {
+    val preparedForm  = request.userAnswers.get(SearchEngineLossPage(periodKey)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, isGoupMessage))
+    Ok(view(preparedForm, periodKey, mode, isGoupMessage))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val isGroupMessage = request.registration.isGroupMessage
       val form           = formProvider(isGroupMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isGroupMessage))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, isGroupMessage))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SearchEngineLossPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(SearchEngineLossPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SearchEngineLossPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(SearchEngineLossPage(periodKey), mode, updatedAnswers))
         )
   }
 }

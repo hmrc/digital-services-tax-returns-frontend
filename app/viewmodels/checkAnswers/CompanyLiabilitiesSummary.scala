@@ -26,13 +26,13 @@ import viewmodels.implicits._
 
 object CompanyLiabilitiesSummary {
 
-  def row(answers: UserAnswers, index: Index)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CompanyLiabilitiesPage(index)).map { answer =>
+  def row(answers: UserAnswers, periodKey: String, index: Index)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(CompanyLiabilitiesPage(periodKey, index)).map { answer =>
       SummaryListRowViewModel(
         key = "companyLiabilities.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CompanyLiabilitiesController.onPageLoad(CheckMode, index).url)
+          ActionItemViewModel("site.change", routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url)
             .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
         )
       )

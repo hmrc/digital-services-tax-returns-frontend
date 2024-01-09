@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object SocialMediaLossSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SocialMediaLossPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(SocialMediaLossPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "socialMediaLoss.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.SocialMediaLossController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.SocialMediaLossController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("socialMediaLoss.change.hidden"))
         )
       )

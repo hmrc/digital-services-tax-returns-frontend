@@ -39,7 +39,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val manageCompaniesRoute = routes.ManageCompaniesController.onPageLoad(NormalMode).url
+  lazy val manageCompaniesRoute = routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode).url
 
   val formProvider = new ManageCompaniesFormProvider()
   val form         = formProvider()
@@ -49,10 +49,10 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
     "must return OK and the correct view for a GET" in {
 
       val ua = emptyUserAnswers
-        .set(CompanyDetailsPage(Index(0)), CompanyDetails("value 1", None))
+        .set(CompanyDetailsPage(periodKey, Index(0)), CompanyDetails("value 1", None))
         .success
         .value
-        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None))
+        .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("value 2", None))
         .success
         .value
 
@@ -65,11 +65,11 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
 
         val view                = application.injector.instanceOf[ManageCompaniesView]
         val expectedSummaryList = List.range(0, 2) flatMap { index =>
-          CompanyDetailsSummary.row(Index(index), ua)(messages(application))
+          CompanyDetailsSummary.row(periodKey, Index(index), ua)(messages(application))
         }
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, SummaryListViewModel(expectedSummaryList))(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, SummaryListViewModel(expectedSummaryList))(
           request,
           messages(application)
         ).toString
@@ -79,49 +79,49 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to companies details page when there is no companies details to display" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-      val manageRoute = routes.ManageCompaniesController.redirectToOnLoadPage().url
+      val manageRoute = routes.ManageCompaniesController.redirectToOnLoadPage(periodKey).url
       running(application) {
         val request = FakeRequest(GET, manageRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
+        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
       }
     }
 
     "must redirect to companies details page when there are no companies to display" in {
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
-      val manageRoute = routes.ManageCompaniesController.onPageLoad(NormalMode).url
+      val manageRoute = routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode).url
       running(application) {
         val request = FakeRequest(GET, manageRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(index, NormalMode).url
+        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
       }
     }
 
     "must redirect to manage companies page when there are companies details exists to display" in {
 
       val ua          = emptyUserAnswers
-        .set(CompanyDetailsPage(Index(0)), CompanyDetails("value 1", None))
+        .set(CompanyDetailsPage(periodKey, Index(0)), CompanyDetails("value 1", None))
         .success
         .value
-        .set(CompanyDetailsPage(Index(1)), CompanyDetails("value 2", None))
+        .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("value 2", None))
         .success
         .value
       val application = applicationBuilder(userAnswers = Some(ua)).build()
-      val manageRoute = routes.ManageCompaniesController.redirectToOnLoadPage().url
+      val manageRoute = routes.ManageCompaniesController.redirectToOnLoadPage(periodKey).url
       running(application) {
         val request = FakeRequest(GET, manageRoute)
 
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.ManageCompaniesController.onPageLoad(NormalMode).url
+        redirectLocation(result).value mustEqual routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode).url
       }
     }
 
@@ -167,7 +167,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, SummaryListViewModel(List.empty))(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, SummaryListViewModel(List.empty))(
           request,
           messages(application)
         ).toString

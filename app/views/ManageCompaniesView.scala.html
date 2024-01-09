@@ -23,11 +23,11 @@
     govukSummaryList: GovukSummaryList
 )
 
-@(form: Form[_], mode: Mode, list: SummaryList)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], periodKey: String, mode: Mode, list: SummaryList)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("manageCompanies.title"))) {
 
-    @formHelper(action = routes.ManageCompaniesController.onSubmit(mode), 'autoComplete -> "off") {
+    @formHelper(action = routes.ManageCompaniesController.onSubmit(periodKey, mode), 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

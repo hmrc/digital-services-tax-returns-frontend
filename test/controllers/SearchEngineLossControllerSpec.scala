@@ -41,7 +41,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
   val form           = formProvider("company")
   val isGroupMessage = registration.isGroupMessage
 
-  lazy val searchEngineLossRoute = routes.SearchEngineLossController.onPageLoad(NormalMode).url
+  lazy val searchEngineLossRoute = routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode).url
 
   "SearchEngineLoss Controller" - {
 
@@ -57,7 +57,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[SearchEngineLossView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, isGroupMessage)(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, isGroupMessage)(
           request,
           messages(application)
         ).toString
@@ -66,7 +66,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(SearchEngineLossPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(SearchEngineLossPage(periodKey), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -78,7 +78,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode, isGroupMessage)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, isGroupMessage)(
           request,
           messages(application)
         ).toString
@@ -127,7 +127,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, isGroupMessage)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, isGroupMessage)(
           request,
           messages(application)
         ).toString

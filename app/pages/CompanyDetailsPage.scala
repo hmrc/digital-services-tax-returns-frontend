@@ -19,7 +19,7 @@ package pages
 import models.{CompanyDetails, Index}
 import play.api.libs.json.JsPath
 
-case class CompanyDetailsPage(index: Index) extends QuestionPage[CompanyDetails] {
+case class CompanyDetailsPage(periodKey: String, index: Index) extends QuestionPage[CompanyDetails] {
 
-  override def path: JsPath = JsPath \ companyDetailsList \ index.position
+  override def path: JsPath = JsPath \ periodKey \ companyDetailsList \ index.position
 }

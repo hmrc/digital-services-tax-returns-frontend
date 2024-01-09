@@ -19,9 +19,9 @@ package pages
 import play.api.libs.json.JsPath
 import queries.Gettable
 
-case object CompanyLiabilityListPage extends Gettable[List[BigDecimal]] {
+case class CompanyLiabilityListPage(periodKey: String) extends Gettable[List[BigDecimal]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey \ toString
 
   override def toString: String = companyLiabilityList
 }

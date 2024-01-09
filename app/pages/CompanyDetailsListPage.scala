@@ -20,9 +20,9 @@ import models.CompanyDetails
 import play.api.libs.json.JsPath
 import queries.Gettable
 
-case object CompanyDetailsListPage extends Gettable[List[CompanyDetails]] {
+case class CompanyDetailsListPage(periodKey: String) extends Gettable[List[CompanyDetails]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey \ toString
 
   override def toString: String = companyDetailsList
 }

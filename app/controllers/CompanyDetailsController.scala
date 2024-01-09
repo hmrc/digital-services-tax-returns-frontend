@@ -47,47 +47,47 @@ class CompanyDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(index)) match {
+  def onPageLoad(periodKey: String, index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
+    val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(periodKey, index)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, index, mode))
+    Ok(view(preparedForm, periodKey, index, mode))
   }
 
   private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
     request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-  def onSubmit(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
+  def onSubmit(periodKey: String, index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
+        formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, index, mode))),
         value =>
           for {
             updatedAnswers <-
               Future.fromTry(
-                getUserAnswers(request).set(CompanyDetailsPage(index), value)
+                getUserAnswers(request).set(CompanyDetailsPage(periodKey, index), value)
               )
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(CompanyDetailsPage(index), mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(CompanyDetailsPage(periodKey, index), mode, updatedAnswers))
       )
   }
 
-  def onDelete(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onDelete(periodKey: String, index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       for {
         updatedAnswers <-
           Future.fromTry(
-            request.userAnswers.remove(CompanyDetailsPage(index))
+            request.userAnswers.remove(CompanyDetailsPage(periodKey, index))
           )
         _              <- sessionRepository.set(updatedAnswers)
       } yield {
-        val size = updatedAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+        val size = updatedAnswers.get(CompanyDetailsListPage(periodKey)).fold(0)(_.size)
         size match {
-          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), mode))
-          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(mode))
+          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
+          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
         }
       }
   }
