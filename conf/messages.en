@@ -49,6 +49,8 @@ index.guidance = Welcome to your new frontend. Please see the README file for a 
 checkYourAnswers.title = Check Your Answers
 checkYourAnswers.heading = Check Your Answers
 checkYourAnswers.save-continue = Accept and send
+checkYourAnswers.submit-heading = Now submit your return
+checkYourAnswers.submit-body = By submitting this notification you are confirming that, to the best of your knowledge, the details you are providing are correct.
 
 
 journeyRecovery.continue.title = Sorry, there is a problem with the service

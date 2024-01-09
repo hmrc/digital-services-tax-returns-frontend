@@ -18,27 +18,32 @@
 @import models.registration.Registration
 
 @this(
-    layout: templates.Layout,
-    govukSummaryList: GovukSummaryList,
-    govukButton: GovukButton
+layout: templates.Layout,
+govukSummaryList: GovukSummaryList,
+govukButton: GovukButton
 )
 
 @(list: Seq[Section], startDate: String, endDate: String, reg: Registration, isPrint: Boolean = false, showBackLink: Boolean = true)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title", startDate, endDate)), showBackLink = showBackLink) {
 
-    <h1 class="govuk-heading-l">@messages("checkYourAnswers.heading", startDate, endDate)</h1>
-@list.map{section=>
-@section.title.map {title=>
-    <h2 class="govuk-heading-m">@messages(title, reg.isGroupMessage)</h2>
+<h1 class="govuk-heading-l">@messages("checkYourAnswers.heading", startDate, endDate)</h1>
+
+@list.map { section =>
+ @section.title.map { title =>
+  <h2 class="govuk-heading-m">@messages(title, reg.isGroupMessage)</h2>
+ }
+
+@govukSummaryList(section.rows)
 }
 
-    @govukSummaryList(section.rows)
+<h2 class="govuk-heading-m">@messages("checkYourAnswers.submit-heading")</h2>
+<p class="govuk-body">@messages("checkYourAnswers.submit-body")</p>
+
 @if(!isPrint) {
-@govukButton(
-ButtonViewModel(messages("site.submit"))
-.asLink(routes.ReturnsCompleteController.onPageLoad().url)
-)
-}
-}
+ @govukButton(
+  ButtonViewModel(messages("site.submit"))
+   .asLink(routes.ReturnsCompleteController.onPageLoad().url)
+    )
+  }
 }
