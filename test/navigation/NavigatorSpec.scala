@@ -63,7 +63,7 @@ class NavigatorSpec extends SpecBase {
           ManageCompaniesPage(periodKey),
           NormalMode,
           UserAnswers("id").set(ManageCompaniesPage(periodKey), false).success.value
-        ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
+        ) mustBe routes.SelectActivitiesController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ManageCompaniesPage to Journey recovery page when data is missing" in {
@@ -78,43 +78,43 @@ class NavigatorSpec extends SpecBase {
       "must go from a SelectActivitiesPage to Report alternative charges page" in {
 
         navigator.nextPage(
-          SelectActivitiesPage,
+          SelectActivitiesPage(periodKey),
           NormalMode,
-          UserAnswers("id").set(SelectActivitiesPage, Set(SelectActivities.values.head)).success.value
-        ) mustBe routes.ReportAlternativeChargeController.onPageLoad(NormalMode)
+          UserAnswers("id").set(SelectActivitiesPage(periodKey), Set(SelectActivities.values.head)).success.value
+        ) mustBe routes.ReportAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportMediaAlternativeChargePage when more then one activity and option 'yes' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportSearchAlternativeChargePage when more then one activity and option 'yes' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SearchEngine, SelectActivities.OnlineMarketplace)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
         ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
@@ -123,16 +123,16 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
         ) mustBe routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode)
@@ -141,16 +141,16 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportAlternativeChargePage to SocialMediaLossPage when Social media activity option is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SocialMedia)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
         ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
@@ -159,16 +159,16 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.OnlineMarketplace, SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, false)
+            .set(ReportAlternativeChargePage(periodKey), false)
             .success
             .value
         ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
@@ -177,34 +177,34 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportAlternativeChargePage to AllowanceDeductedPage when more then one activity is selected and option 'no' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, false)
+            .set(ReportAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportOnlineMarketplaceLossPage when Online marketplace activity option is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.OnlineMarketplace)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
         ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
@@ -213,13 +213,13 @@ class NavigatorSpec extends SpecBase {
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportMediaAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
-            .set(ReportMediaAlternativeChargePage, true)
+            .set(ReportMediaAlternativeChargePage(periodKey), true)
             .success
             .value
         ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
@@ -228,13 +228,13 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportMediaAlternativeChargePage to ReportSearchAlternativeChargePage when 'No'" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportMediaAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
-            .set(ReportMediaAlternativeChargePage, false)
+            .set(ReportMediaAlternativeChargePage(periodKey), false)
             .success
             .value
         ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
@@ -243,13 +243,13 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportMediaAlternativeChargePage to ReportOnlineMarketplaceAlternativeChargePage when 'No'" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportMediaAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-            .set(ReportMediaAlternativeChargePage, false)
+            .set(ReportMediaAlternativeChargePage(periodKey), false)
             .success
             .value
         ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
@@ -264,7 +264,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportCrossBorderReliefPage, false)
             .success
             .value
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" in {
@@ -288,7 +288,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportSearchAlternativeChargePage, true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
         ) mustBe routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode)
@@ -315,7 +315,7 @@ class NavigatorSpec extends SpecBase {
             .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
         ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
@@ -330,7 +330,7 @@ class NavigatorSpec extends SpecBase {
             .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
             .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
@@ -342,10 +342,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a AllowanceDeductedPage to CompanyLiabilities page" in {
 
         navigator.nextPage(
-          AllowanceDeductedPage,
+          AllowanceDeductedPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
             .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
@@ -363,7 +363,7 @@ class NavigatorSpec extends SpecBase {
             .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
             .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
@@ -384,7 +384,7 @@ class NavigatorSpec extends SpecBase {
             .set(SocialMediaLossPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
@@ -397,7 +397,7 @@ class NavigatorSpec extends SpecBase {
               .set(SearchEngineLossPage(periodKey), true)
               .success
               .value
-              .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+              .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
               .success
               .value
           ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
@@ -445,7 +445,7 @@ class NavigatorSpec extends SpecBase {
             .set(SearchEngineLossPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportSearchEngineOperatingMarginController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportOnlineMarketplaceLossPage" +
@@ -509,28 +509,28 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportSocialMediaOperatingMarginPage to AllowanceDeductedPage" in {
 
         navigator.nextPage(
-          ReportSocialMediaOperatingMarginPage,
+          ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia)).success.value
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+          emptyUserAnswers.set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia)).success.value
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to ReportSearchAlternativeChargePage when selectedActivities is SearchEngine" in {
 
         navigator.nextPage(
-          ReportSocialMediaOperatingMarginPage,
+          ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine)).success.value
+          emptyUserAnswers.set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine)).success.value
         ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
 
         navigator.nextPage(
-          ReportSocialMediaOperatingMarginPage,
+          ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
         ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
@@ -539,10 +539,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportSearchEngineOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
 
         navigator.nextPage(
-          ReportSearchEngineOperatingMarginPage,
+          ReportSearchEngineOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
         ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
@@ -551,10 +551,10 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportSearchEngineOperatingMarginPage to AllowanceDeductedPage" in {
 
         navigator.nextPage(
-          ReportSearchEngineOperatingMarginPage,
+          ReportSearchEngineOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {

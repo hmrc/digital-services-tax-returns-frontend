@@ -28,8 +28,8 @@ import viewmodels.implicits._
 
 object SelectActivitiesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SelectActivitiesPage).map { answers =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(SelectActivitiesPage(periodKey)).map { answers =>
       val value = ValueViewModel(
         HtmlContent(
           answers
@@ -44,7 +44,7 @@ object SelectActivitiesSummary {
         key = "selectActivities.checkYourAnswersLabel",
         value = value,
         actions = Seq(
-          ActionItemViewModel("site.change", routes.SelectActivitiesController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.SelectActivitiesController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("selectActivities.change.hidden"))
         )
       )

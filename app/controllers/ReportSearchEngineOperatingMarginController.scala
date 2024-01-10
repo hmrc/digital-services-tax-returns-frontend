@@ -44,30 +44,30 @@ class ReportSearchEngineOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val grpMessage   = request.registration.isGroupMessage
     val form         = formProvider(grpMessage)
-    val preparedForm = request.userAnswers.get(ReportSearchEngineOperatingMarginPage) match {
+    val preparedForm = request.userAnswers.get(ReportSearchEngineOperatingMarginPage(periodKey)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, grpMessage))
+    Ok(view(preparedForm, periodKey, mode, grpMessage))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val grpMessage = request.registration.isGroupMessage
       val form       = formProvider(grpMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, grpMessage))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, grpMessage))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportSearchEngineOperatingMarginPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportSearchEngineOperatingMarginPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ReportSearchEngineOperatingMarginPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ReportSearchEngineOperatingMarginPage(periodKey), mode, updatedAnswers))
         )
   }
 }

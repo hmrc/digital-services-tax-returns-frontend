@@ -26,13 +26,13 @@ import viewmodels.implicits._
 
 object AllowanceDeductedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(AllowanceDeductedPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(AllowanceDeductedPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "allowanceDeducted.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.AllowanceDeductedController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.AllowanceDeductedController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("allowanceDeducted.change.hidden"))
         )
       )
