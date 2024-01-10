@@ -26,11 +26,11 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], mode: Mode, groupOrCompany: String)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], periodKey: String, mode: Mode, groupOrCompany: String)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("reportOnlineMarketplaceOperatingMargin.title", groupOrCompany))) {
 
-    @formHelper(action = routes.ReportOnlineMarketplaceOperatingMarginController.onSubmit(mode), Symbol("autoComplete") -> "off") {
+    @formHelper(action = routes.ReportOnlineMarketplaceOperatingMarginController.onSubmit(periodKey, mode), Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form))

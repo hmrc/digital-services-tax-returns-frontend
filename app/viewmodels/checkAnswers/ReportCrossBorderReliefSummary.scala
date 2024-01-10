@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object ReportCrossBorderReliefSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportCrossBorderReliefPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportCrossBorderReliefPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "reportCrossBorderRelief.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportCrossBorderReliefController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("reportCrossBorderRelief.change.hidden"))
         )
       )

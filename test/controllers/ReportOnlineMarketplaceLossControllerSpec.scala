@@ -40,7 +40,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
   val formProvider = new ReportOnlineMarketplaceLossFormProvider()
   val form         = formProvider("company")
 
-  lazy val reportOnlineMarketplaceLossRoute = routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode).url
+  lazy val reportOnlineMarketplaceLossRoute = routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode).url
 
   "ReportOnlineMarketplaceLoss Controller" - {
 
@@ -56,13 +56,13 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[ReportOnlineMarketplaceLossView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, registration)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, registration)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ReportOnlineMarketplaceLossPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ReportOnlineMarketplaceLossPage(periodKey), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +74,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode, registration)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, registration)(
           request,
           messages(application)
         ).toString
@@ -123,7 +123,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, registration)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, registration)(
           request,
           messages(application)
         ).toString

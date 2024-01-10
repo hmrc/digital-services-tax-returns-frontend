@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object ReportSearchAlternativeChargeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportSearchAlternativeChargePage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportSearchAlternativeChargePage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "reportSearchAlternativeCharge.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportSearchAlternativeChargeController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("reportSearchAlternativeCharge.change.hidden"))
         )
       )

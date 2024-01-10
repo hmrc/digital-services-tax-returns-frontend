@@ -117,7 +117,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" in {
@@ -171,7 +171,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to AllowanceDeductedPage when more then one activity is selected and option 'no' is selected" in {
@@ -207,7 +207,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {
@@ -237,7 +237,7 @@ class NavigatorSpec extends SpecBase {
             .set(ReportMediaAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportMediaAlternativeChargePage to ReportOnlineMarketplaceAlternativeChargePage when 'No'" in {
@@ -252,16 +252,16 @@ class NavigatorSpec extends SpecBase {
             .set(ReportMediaAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to AllowanceDeducted page when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportCrossBorderReliefPage,
+          ReportCrossBorderReliefPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportCrossBorderReliefPage, false)
+            .set(ReportCrossBorderReliefPage(periodKey), false)
             .success
             .value
         ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
@@ -270,22 +270,22 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportCrossBorderReliefPage,
+          ReportCrossBorderReliefPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportCrossBorderReliefPage, true)
+            .set(ReportCrossBorderReliefPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReliefDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.ReliefDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportSearchAlternativeChargePage,
+          ReportSearchAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportSearchAlternativeChargePage, true)
+            .set(ReportSearchAlternativeChargePage(periodKey), true)
             .success
             .value
             .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
@@ -297,13 +297,13 @@ class NavigatorSpec extends SpecBase {
       "must go from a ReportSearchAlternativeChargePage to ReportOnlineMarketplaceAlternativeChargePage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportSearchAlternativeChargePage,
+          ReportSearchAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportSearchAlternativeChargePage, false)
+            .set(ReportSearchAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SocialMediaLossPage to ReportSearchAlternativeCharge page when 'Yes' is selected and selected activity is 'SearchEngine'" in {
@@ -318,7 +318,7 @@ class NavigatorSpec extends SpecBase {
             .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SocialMediaLossPage to CompanyLiabilities page when 'Yes' is selected and selected activity is 'SocialMedia'" in {
@@ -372,7 +372,7 @@ class NavigatorSpec extends SpecBase {
             .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
@@ -400,7 +400,7 @@ class NavigatorSpec extends SpecBase {
               .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
               .success
               .value
-          ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+          ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
         }
 
       "must go from a SearchEngineLossPage to CompanyLiability page when 'Yes' is selected" in {
@@ -433,7 +433,7 @@ class NavigatorSpec extends SpecBase {
             .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SearchEngineLossPage to report-search-engine-operating-margin page when 'No' is selected" in {
@@ -452,58 +452,58 @@ class NavigatorSpec extends SpecBase {
         " when 'Yes' is selected" in {
 
           navigator.nextPage(
-            ReportOnlineMarketplaceAlternativeChargePage,
+            ReportOnlineMarketplaceAlternativeChargePage(periodKey),
             NormalMode,
             UserAnswers("id")
-              .set(ReportOnlineMarketplaceAlternativeChargePage, true)
+              .set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), true)
               .success
               .value
-          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
+          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode)
         }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportCrossBorderTransactionReliefPage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceAlternativeChargePage,
+          ReportOnlineMarketplaceAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportOnlineMarketplaceAlternativeChargePage, false)
+            .set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceLossPage to ReportCrossBorderReliefPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceLossPage,
+          ReportOnlineMarketplaceLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportOnlineMarketplaceLossPage, true)
+            .set(ReportOnlineMarketplaceLossPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceLossPage to ReportOnlineMarketplaceOperatingMarginPage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceLossPage,
+          ReportOnlineMarketplaceLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportOnlineMarketplaceLossPage, false)
+            .set(ReportOnlineMarketplaceLossPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceOperatingMarginPage to ReportCrossBorderReliefPage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceOperatingMarginPage,
+          ReportOnlineMarketplaceOperatingMarginPage(periodKey),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to AllowanceDeductedPage" in {
@@ -521,7 +521,7 @@ class NavigatorSpec extends SpecBase {
           ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers.set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine)).success.value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
@@ -533,7 +533,7 @@ class NavigatorSpec extends SpecBase {
             .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchEngineOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
@@ -545,7 +545,7 @@ class NavigatorSpec extends SpecBase {
             .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchEngineOperatingMarginPage to AllowanceDeductedPage" in {
@@ -560,55 +560,55 @@ class NavigatorSpec extends SpecBase {
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          IsRepaymentBankAccountUKPage,
+          IsRepaymentBankAccountUKPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(IsRepaymentBankAccountUKPage, true)
+            .set(IsRepaymentBankAccountUKPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.UKBankDetailsController.onPageLoad(NormalMode)
+        ) mustBe routes.UKBankDetailsController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to BankDetailsForRepaymentPage when 'No' is selected" in {
 
         navigator.nextPage(
-          IsRepaymentBankAccountUKPage,
+          IsRepaymentBankAccountUKPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(IsRepaymentBankAccountUKPage, false)
+            .set(IsRepaymentBankAccountUKPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(NormalMode)
+        ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a GroupLiabilityPage to RepaymentPage" in {
 
         navigator.nextPage(
-          GroupLiabilityPage,
+          GroupLiabilityPage(periodKey),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.RepaymentController.onPageLoad(NormalMode)
+        ) mustBe routes.RepaymentController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a RepaymentPage to IsRepaymentBankAccountUKPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          RepaymentPage,
+          RepaymentPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(RepaymentPage, true)
+            .set(RepaymentPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.IsRepaymentBankAccountUKController.onPageLoad(NormalMode)
+        ) mustBe routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a RepaymentPage to CheckYourAnswers page when 'No' is selected" in {
 
         navigator.nextPage(
-          RepaymentPage,
+          RepaymentPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(RepaymentPage, false)
+            .set(RepaymentPage(periodKey), false)
             .success
             .value
         ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
@@ -659,14 +659,14 @@ class NavigatorSpec extends SpecBase {
             .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(122.11))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
     }
 
     "must go from a UKBankDetailsPage to CheckYourAnswers page" in {
 
       navigator.nextPage(
-        UKBankDetailsPage,
+        UKBankDetailsPage(periodKey),
         NormalMode,
         UserAnswers("id")
       ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
@@ -675,7 +675,7 @@ class NavigatorSpec extends SpecBase {
     "must go from a BankDetailsForRepaymentPage to CheckYourAnswers page" in {
 
       navigator.nextPage(
-        BankDetailsForRepaymentPage,
+        BankDetailsForRepaymentPage(periodKey),
         NormalMode,
         UserAnswers("id")
       ) mustBe routes.CheckYourAnswersController.onPageLoad(false)

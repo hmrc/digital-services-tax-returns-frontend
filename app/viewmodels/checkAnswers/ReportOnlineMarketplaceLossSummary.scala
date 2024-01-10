@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object ReportOnlineMarketplaceLossSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportOnlineMarketplaceLossPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportOnlineMarketplaceLossPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "reportOnlineMarketplaceLoss.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportOnlineMarketplaceLossController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("reportOnlineMarketplaceLoss.change.hidden"))
         )
       )

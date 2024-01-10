@@ -26,13 +26,13 @@ import viewmodels.implicits._
 
 object GroupLiabilitySummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(GroupLiabilityPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(GroupLiabilityPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "groupLiability.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.GroupLiabilityController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.GroupLiabilityController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("groupLiability.change.hidden"))
         )
       )

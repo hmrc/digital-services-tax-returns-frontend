@@ -18,9 +18,9 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object ReportOnlineMarketplaceLossPage extends QuestionPage[Boolean] {
+case class ReportOnlineMarketplaceLossPage(periodKey: String) extends QuestionPage[Boolean] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey \ toString
 
   override def toString: String = "reportOnlineMarketplaceLoss"
 }

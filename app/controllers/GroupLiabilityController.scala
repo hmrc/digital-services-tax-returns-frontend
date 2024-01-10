@@ -44,21 +44,21 @@ class GroupLiabilityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
     val startDate = formatDate(request.period.start)
     val endDate   = formatDate(request.period.end)
     val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
     val form      = formProvider(args)
 
-    val preparedForm = request.userAnswers.get(GroupLiabilityPage) match {
+    val preparedForm = request.userAnswers.get(GroupLiabilityPage(periodKey)) match {
       case None        => form
       case Some(value) => form.fill(value)
     }
 
-    Ok(view(preparedForm, mode, request.registration.isGroupMessage, startDate, endDate))
+    Ok(view(preparedForm, periodKey, mode, request.registration.isGroupMessage, startDate, endDate))
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
     implicit request =>
       val startDate = formatDate(request.period.start)
       val endDate   = formatDate(request.period.end)
@@ -70,13 +70,13 @@ class GroupLiabilityController @Inject() (
         .fold(
           formWithErrors =>
             Future.successful(
-              BadRequest(view(formWithErrors, mode, request.registration.isGroupMessage, startDate, endDate))
+              BadRequest(view(formWithErrors, periodKey, mode, request.registration.isGroupMessage, startDate, endDate))
             ),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(GroupLiabilityPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(GroupLiabilityPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(GroupLiabilityPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(GroupLiabilityPage(periodKey), mode, updatedAnswers))
         )
   }
 }

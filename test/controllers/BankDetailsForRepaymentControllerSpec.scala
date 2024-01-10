@@ -41,7 +41,7 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new BankDetailsForRepaymentFormProvider()
   val form         = formProvider()
 
-  lazy val bankDetailsForRepaymentRoute = routes.BankDetailsForRepaymentController.onPageLoad(NormalMode).url
+  lazy val bankDetailsForRepaymentRoute = routes.BankDetailsForRepaymentController.onPageLoad(periodKey, NormalMode).url
   val iban                              = "GB36BARC20051773152391"
 
   val userAnswers = UserAnswers(
@@ -68,7 +68,7 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -84,7 +84,7 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(BankDetailsForRepayment("Name", iban)), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(BankDetailsForRepayment("Name", iban)), periodKey, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -133,7 +133,7 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 

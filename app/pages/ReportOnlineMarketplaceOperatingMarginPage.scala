@@ -18,9 +18,9 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object ReportOnlineMarketplaceOperatingMarginPage extends QuestionPage[Double] {
+case class ReportOnlineMarketplaceOperatingMarginPage(periodKey: String) extends QuestionPage[Double] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey \ toString
 
   override def toString: String = "reportOnlineMarketplaceOperatingMargin"
 }

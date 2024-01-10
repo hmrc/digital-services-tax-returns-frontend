@@ -28,8 +28,8 @@ import viewmodels.implicits._
 
 object BankDetailsForRepaymentSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(BankDetailsForRepaymentPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(BankDetailsForRepaymentPage(periodKey)).map { answer =>
       val value = HtmlFormat.escape(answer.accountName).toString + "<br/>" + HtmlFormat
         .escape(answer.internationalBankAccountNumber)
         .toString
@@ -38,7 +38,7 @@ object BankDetailsForRepaymentSummary {
         key = "bankDetailsForRepayment.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.BankDetailsForRepaymentController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.BankDetailsForRepaymentController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("bankDetailsForRepayment.change.hidden"))
         )
       )

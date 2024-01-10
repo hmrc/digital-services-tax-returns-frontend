@@ -42,7 +42,7 @@ class ReliefDeductedControllerSpec extends SpecBase with MockitoSugar {
 
   val validAnswer = BigDecimal(100.00)
 
-  lazy val reliefDeductedRoute = routes.ReliefDeductedController.onPageLoad(NormalMode).url
+  lazy val reliefDeductedRoute = routes.ReliefDeductedController.onPageLoad(periodKey, NormalMode).url
 
   "ReliefDeducted Controller" - {
 
@@ -58,13 +58,13 @@ class ReliefDeductedControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ReliefDeductedView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ReliefDeductedPage, validAnswer).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ReliefDeductedPage(periodKey), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -76,7 +76,7 @@ class ReliefDeductedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), periodKey, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -125,7 +125,7 @@ class ReliefDeductedControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 

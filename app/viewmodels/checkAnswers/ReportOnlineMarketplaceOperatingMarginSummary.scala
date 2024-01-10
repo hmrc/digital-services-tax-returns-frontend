@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object ReportOnlineMarketplaceOperatingMarginSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportOnlineMarketplaceOperatingMarginPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(CheckMode).url
+            routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, CheckMode).url
           )
             .withVisuallyHiddenText(messages("reportOnlineMarketplaceOperatingMargin.change.hidden"))
         )

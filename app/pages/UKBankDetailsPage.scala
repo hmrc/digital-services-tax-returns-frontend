@@ -19,9 +19,9 @@ package pages
 import models.UKBankDetails
 import play.api.libs.json.JsPath
 
-case object UKBankDetailsPage extends QuestionPage[UKBankDetails] {
+case class UKBankDetailsPage(periodKey: String) extends QuestionPage[UKBankDetails] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey \ toString
 
   override def toString: String = "uKBankDetails"
 }

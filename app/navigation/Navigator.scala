@@ -32,23 +32,23 @@ class Navigator @Inject() () {
     case SelectActivitiesPage(periodKey)                 => _ => Some(routes.ReportAlternativeChargeController.onPageLoad(periodKey, NormalMode))
     case ReportAlternativeChargePage(periodKey)          => ua => reportAlternativeChargeNavigation(periodKey, NormalMode)(ua)
     case ReportMediaAlternativeChargePage(periodKey)     => ua => reportMediaAlternative(periodKey, ua)
-    case ReportCrossBorderReliefPage                     => ua => reportCrossBorderRelief("periodKey", ua)(NormalMode) //TODO
-    case ReportSearchAlternativeChargePage               => ua => reportSearchAlternativeCharge(ua)(NormalMode)
-    case ReportOnlineMarketplaceAlternativeChargePage    => ua => reportOnlineMarketplaceCharge(ua)(NormalMode)
-    case IsRepaymentBankAccountUKPage                    => ua => repaymentBankAccount(ua)(NormalMode)
+    case ReportCrossBorderReliefPage(periodKey)                      => ua => reportCrossBorderRelief(periodKey, ua)(NormalMode)
+    case ReportSearchAlternativeChargePage(periodKey)                => ua => reportSearchAlternativeCharge(periodKey, ua)(NormalMode)
+    case ReportOnlineMarketplaceAlternativeChargePage(periodKey)     => ua => reportOnlineMarketplaceCharge(periodKey, ua)(NormalMode)
+    case IsRepaymentBankAccountUKPage(periodKey)                    => ua => repaymentBankAccount(periodKey, ua)(NormalMode)
     case CompanyLiabilitiesPage(periodKey, index)        => ua => Some(companyLiability(periodKey, index, ua)(NormalMode))
     case SocialMediaLossPage(periodKey)                  => ua => socialMediaLoss(periodKey, ua)(NormalMode)
     case SearchEngineLossPage(periodKey)                 => ua => searchEngineLoss(periodKey, ua)(NormalMode)
-    case GroupLiabilityPage                              => ua => Some(routes.RepaymentController.onPageLoad(NormalMode))
-    case RepaymentPage                                   => ua => repayment(ua)(NormalMode)
-    case ReportOnlineMarketplaceLossPage                 => ua => reportOnlineMarketplaceLoss(ua)(NormalMode)
-    case ReportOnlineMarketplaceOperatingMarginPage      =>
-      ua => Some(routes.ReportCrossBorderReliefController.onPageLoad(NormalMode))
+    case GroupLiabilityPage(periodKey)                              => _ => Some(routes.RepaymentController.onPageLoad(periodKey, NormalMode))
+    case RepaymentPage(periodKey)                                    => ua => repayment(periodKey, ua)(NormalMode)
+    case ReportOnlineMarketplaceLossPage(periodKey)                  => ua => reportOnlineMarketplaceLoss(periodKey, ua)(NormalMode)
+    case ReportOnlineMarketplaceOperatingMarginPage(periodKey)       =>
+      _ => Some(routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode))
     case ReportSocialMediaOperatingMarginPage(periodKey)            => ua => socialMediaOperatingMargin(periodKey, ua)(NormalMode)
     case ReportSearchEngineOperatingMarginPage(periodKey)           => ua => searchEnginOperatingMargin(periodKey, ua)(NormalMode)
-    case ReliefDeductedPage                              => _ => Some(routes.AllowanceDeductedController.onPageLoad("periodKey", NormalMode))//TODO
+    case ReliefDeductedPage(periodKey)                               => _ => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode))
     case AllowanceDeductedPage(periodKey)                => ua => Some(companyLiability(periodKey, Index(0), ua)(NormalMode))
-    case UKBankDetailsPage | BankDetailsForRepaymentPage =>
+    case UKBankDetailsPage(_)  | BankDetailsForRepaymentPage(_)  =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(false))
     case _                                               => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
@@ -67,8 +67,8 @@ class Navigator @Inject() () {
   }
 
   def reportCrossBorderRelief(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(ReportCrossBorderReliefPage) map {
-      case true  => routes.ReliefDeductedController.onPageLoad(mode)
+    ua.get(ReportCrossBorderReliefPage(periodKey)) map {
+      case true  => routes.ReliefDeductedController.onPageLoad(periodKey, mode)
       case false => routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
     }
 
@@ -87,9 +87,9 @@ class Navigator @Inject() () {
       case true                                                                                         =>
         routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
       case false if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine))      =>
-        routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       case false if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
-        routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
     }
 
   private def navigationForSelectedActivitiesYes(periodKey: String, selectedActivities: Set[SelectActivities], mode: Mode): Call =
@@ -98,7 +98,7 @@ class Navigator @Inject() () {
         activities.head match {
           case SelectActivities.SocialMedia       => routes.SocialMediaLossController.onPageLoad(periodKey, mode)
           case SelectActivities.SearchEngine      => routes.SearchEngineLossController.onPageLoad(periodKey, mode)
-          case SelectActivities.OnlineMarketplace => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
+          case SelectActivities.OnlineMarketplace => routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, mode)
         }
       case selectActivities if selectActivities.size > 1 =>
         redirectToAlternateChargesPage(periodKey, selectActivities)(mode)
@@ -108,9 +108,9 @@ class Navigator @Inject() () {
     if (selectActivities.contains(SelectActivities.SocialMedia)) {
       routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, mode)
     } else if (selectActivities.contains(SelectActivities.SearchEngine)) {
-      routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
+      routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
     } else if (selectActivities.contains(SelectActivities.OnlineMarketplace)) {
-      routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
+      routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
     } else {
       routes.JourneyRecoveryController.onPageLoad()
     }
@@ -118,7 +118,7 @@ class Navigator @Inject() () {
   private def navigationForSelectedActivitiesNo(periodKey: String, selectActivities: Set[SelectActivities], mode: Mode): Call =
     selectActivities match {
       case activities if activities.contains(SelectActivities.OnlineMarketplace) =>
-        routes.ReportCrossBorderReliefController.onPageLoad(mode)
+        routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
       case _                                                                     =>
         routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
     }
@@ -130,11 +130,11 @@ class Navigator @Inject() () {
       case _                                     => None
     }
 
-  private def repaymentBankAccount(ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(IsRepaymentBankAccountUKPage)
+  private def repaymentBankAccount(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(IsRepaymentBankAccountUKPage(periodKey))
       .map {
-        case true  => routes.UKBankDetailsController.onPageLoad(mode)
-        case false => routes.BankDetailsForRepaymentController.onPageLoad(mode)
+        case true  => routes.UKBankDetailsController.onPageLoad(periodKey, mode)
+        case false => routes.BankDetailsForRepaymentController.onPageLoad(periodKey, mode)
       }
 
   private def companyLiability(periodKey: String, pageIndex: Index, ua: UserAnswers)(mode: Mode): Call = {
@@ -147,21 +147,21 @@ class Navigator @Inject() () {
     if (liabilityCount < companyDetailsCount || preCond(index)) {
       routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, index)
     } else {
-      routes.GroupLiabilityController.onPageLoad(mode)
+      routes.GroupLiabilityController.onPageLoad(periodKey, mode)
     }
   }
 
-  private def reportSearchAlternativeCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(ReportSearchAlternativeChargePage) map {
-      case true  => routes.SearchEngineLossController.onPageLoad("001", mode) //TODO
-      case false => routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
+  private def reportSearchAlternativeCharge(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(ReportSearchAlternativeChargePage(periodKey)) map {
+      case true  => routes.SearchEngineLossController.onPageLoad(periodKey, mode)
+      case false => routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
     }
 
   private def socialMediaLoss(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(SocialMediaLossPage(periodKey))
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine)) =>
-          routes.ReportSearchAlternativeChargeController.onPageLoad(mode)
+          routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
         case true                                                                                   =>
           companyLiability(periodKey, Index(0), ua)(mode)
         case false                                                                                  =>
@@ -172,45 +172,45 @@ class Navigator @Inject() () {
     ua.get(SearchEngineLossPage(periodKey))
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
-          routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode)
+          routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
         case true                                                                                        =>
           companyLiability(periodKey, Index(0), ua)(mode)
         case false                                                                                       =>
           routes.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey, mode)
       }
-  private def reportOnlineMarketplaceCharge(ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(ReportOnlineMarketplaceAlternativeChargePage)
+  private def reportOnlineMarketplaceCharge(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey))
       .map {
-        case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(mode)
-        case false => routes.ReportCrossBorderReliefController.onPageLoad(mode)
+        case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, mode)
+        case false => routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
       }
 
-  def reportOnlineMarketplaceLoss(ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(ReportOnlineMarketplaceLossPage)
+  def reportOnlineMarketplaceLoss(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(ReportOnlineMarketplaceLossPage(periodKey))
       .map {
-        case true  => routes.ReportCrossBorderReliefController.onPageLoad(mode)
-        case false => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(mode)
+        case true  => routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
+        case false => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
-  private def repayment(ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(RepaymentPage)
+  private def repayment(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(RepaymentPage(periodKey))
       .map {
-        case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(mode)
+        case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, mode)
         case false => routes.CheckYourAnswersController.onPageLoad(false)
       }
 
   private def socialMediaOperatingMargin(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
     if (ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine))) {
-      Some(routes.ReportSearchAlternativeChargeController.onPageLoad(mode))
+      Some(routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode))
     } else if (ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace))) {
-      Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode))
+      Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode))
     } else {
       Some(routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode))
     }
 
   private def searchEnginOperatingMargin(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
     if (ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace))) {
-      Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(mode))
+      Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode))
     } else {
       Some(routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode))
     }

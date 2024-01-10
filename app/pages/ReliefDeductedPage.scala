@@ -18,9 +18,9 @@ package pages
 
 import play.api.libs.json.JsPath
 
-case object ReliefDeductedPage extends QuestionPage[BigDecimal] {
+case class ReliefDeductedPage(periodKey: String) extends QuestionPage[BigDecimal] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey \ toString
 
   override def toString: String = "reliefDeducted"
 }

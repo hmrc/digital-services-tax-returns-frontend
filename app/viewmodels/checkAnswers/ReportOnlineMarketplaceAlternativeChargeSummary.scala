@@ -26,8 +26,8 @@ import viewmodels.implicits._
 
 object ReportOnlineMarketplaceAlternativeChargeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportOnlineMarketplaceAlternativeChargePage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
@@ -36,7 +36,7 @@ object ReportOnlineMarketplaceAlternativeChargeSummary {
         Seq(
           ActionItemViewModel(
             "site.change",
-            routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(CheckMode).url
+            routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, CheckMode).url
           )
             .withVisuallyHiddenText(messages("reportOnlineMarketplaceAlternativeCharge.change.hidden"))
         )

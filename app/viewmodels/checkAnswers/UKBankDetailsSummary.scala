@@ -28,15 +28,15 @@ import viewmodels.implicits._
 
 object UKBankDetailsSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(UKBankDetailsPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(UKBankDetailsPage(periodKey)).map { answer =>
       val value = HtmlFormat.escape(answer.accountName).toString + "<br/>" + HtmlFormat.escape(answer.sortCode).toString
 
       SummaryListRowViewModel(
         key = "uKBankDetails.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.UKBankDetailsController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("uKBankDetails.change.hidden"))
         )
       )

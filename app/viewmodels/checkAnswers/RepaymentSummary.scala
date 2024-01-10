@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object RepaymentSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(RepaymentPage).map { answer =>
+  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(RepaymentPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "repayment.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.RepaymentController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.RepaymentController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("repayment.change.hidden"))
         )
       )
