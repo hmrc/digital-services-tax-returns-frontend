@@ -46,17 +46,18 @@ class BankDetailsForRepaymentController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(BankDetailsForRepaymentPage(periodKey)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      val preparedForm = request.userAnswers.get(BankDetailsForRepaymentPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, periodKey, mode))
+      Ok(view(preparedForm, periodKey, mode))
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -67,5 +68,5 @@ class BankDetailsForRepaymentController @Inject() (
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(BankDetailsForRepaymentPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

@@ -75,7 +75,10 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -121,7 +124,10 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

@@ -43,7 +43,10 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
   lazy val companyDetailsRoute = routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
 
   val userAnswers: UserAnswers =
-    emptyUserAnswers.set(CompanyDetailsPage(periodKey, index), CompanyDetails("value 1", Some("1234567890"))).success.value
+    emptyUserAnswers
+      .set(CompanyDetailsPage(periodKey, index), CompanyDetails("value 1", Some("1234567890")))
+      .success
+      .value
 
   "CompanyDetails Controller" - {
 
@@ -59,7 +62,10 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -75,7 +81,10 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -142,7 +151,10 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -166,7 +178,9 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
+        redirectLocation(result).value mustEqual routes.CompanyDetailsController
+          .onPageLoad(periodKey, index, NormalMode)
+          .url
       }
     }
 
@@ -190,7 +204,9 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
+        redirectLocation(result).value mustEqual routes.CompanyDetailsController
+          .onPageLoad(periodKey, index, NormalMode)
+          .url
       }
     }
 

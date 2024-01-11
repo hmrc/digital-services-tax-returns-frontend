@@ -82,7 +82,14 @@ class GroupLiabilityControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), periodKey, NormalMode, company, startDate, endDate)(
+        contentAsString(result) mustEqual view(
+          form.fill(validAnswer),
+          periodKey,
+          NormalMode,
+          company,
+          startDate,
+          endDate
+        )(
           request,
           messages(application)
         ).toString

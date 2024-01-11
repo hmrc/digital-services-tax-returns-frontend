@@ -36,7 +36,10 @@ object CompanyDetailsSummary {
         key = Key(HtmlContent(value)),
         value = ValueViewModel(Empty),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(periodKey, index, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.CompanyDetailsController.onPageLoad(periodKey, index, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("companyDetails.change.hidden")),
           ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(periodKey, index, CheckMode).url)
             .withVisuallyHiddenText(messages("companyDetails.remove.hidden"))

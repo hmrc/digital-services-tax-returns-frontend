@@ -44,18 +44,19 @@ class ReportOnlineMarketplaceLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val form         = formProvider(request.registration.isGroupMessage)
-    val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      val form         = formProvider(request.registration.isGroupMessage)
+      val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, periodKey, mode, request.registration))
+      Ok(view(preparedForm, periodKey, mode, request.registration))
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(request.registration.isGroupMessage)
       form
         .bindFromRequest()
@@ -63,9 +64,10 @@ class ReportOnlineMarketplaceLossController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, request.registration))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceLossPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

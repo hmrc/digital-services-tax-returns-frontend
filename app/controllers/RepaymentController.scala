@@ -45,21 +45,22 @@ class RepaymentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val startDate = formatDate(request.period.start)
-    val endDate   = formatDate(request.period.end)
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      val startDate = formatDate(request.period.start)
+      val endDate   = formatDate(request.period.end)
 
-    val form         = formProvider(startDate, endDate)
-    val preparedForm = request.userAnswers.get(RepaymentPage(periodKey)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+      val form         = formProvider(startDate, endDate)
+      val preparedForm = request.userAnswers.get(RepaymentPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, periodKey, mode, startDate, endDate))
+      Ok(view(preparedForm, periodKey, mode, startDate, endDate))
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       val startDate = formatDate(request.period.start)
       val endDate   = formatDate(request.period.end)
       val form      = formProvider(startDate, endDate)
@@ -74,5 +75,5 @@ class RepaymentController @Inject() (
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(RepaymentPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

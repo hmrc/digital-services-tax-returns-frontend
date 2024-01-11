@@ -34,7 +34,10 @@ object ReportOnlineMarketplaceLossSummary {
         key = "reportOnlineMarketplaceLoss.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("reportOnlineMarketplaceLoss.change.hidden"))
         )
       )

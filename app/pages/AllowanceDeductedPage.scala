@@ -18,7 +18,6 @@ package pages
 
 import play.api.libs.json.JsPath
 
-
 case class AllowanceDeductedPage(periodKey: String) extends QuestionPage[BigDecimal] {
 
   override def path: JsPath = JsPath \ periodKey \ toString

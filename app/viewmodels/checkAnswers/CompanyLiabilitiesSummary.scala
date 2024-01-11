@@ -32,7 +32,10 @@ object CompanyLiabilitiesSummary {
         key = "companyLiabilities.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url
+          )
             .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
         )
       )

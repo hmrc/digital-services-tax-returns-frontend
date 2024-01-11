@@ -34,7 +34,10 @@ object ReportSearchAlternativeChargeSummary {
         key = "reportSearchAlternativeCharge.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("reportSearchAlternativeCharge.change.hidden"))
         )
       )

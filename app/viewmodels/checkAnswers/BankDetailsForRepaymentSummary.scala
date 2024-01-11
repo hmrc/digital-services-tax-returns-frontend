@@ -38,7 +38,10 @@ object BankDetailsForRepaymentSummary {
         key = "bankDetailsForRepayment.checkYourAnswersLabel",
         value = ValueViewModel(HtmlContent(value)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.BankDetailsForRepaymentController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.BankDetailsForRepaymentController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("bankDetailsForRepayment.change.hidden"))
         )
       )

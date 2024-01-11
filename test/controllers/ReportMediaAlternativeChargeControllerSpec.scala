@@ -40,7 +40,8 @@ class ReportMediaAlternativeChargeControllerSpec extends SpecBase with MockitoSu
   val formProvider = new ReportMediaAlternativeChargeFormProvider()
   val form         = formProvider()
 
-  lazy val reportMediaAlternativeChargeRoute = routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, NormalMode).url
+  lazy val reportMediaAlternativeChargeRoute =
+    routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, NormalMode).url
 
   "ReportMediaAlternativeCharge Controller" - {
 
@@ -74,7 +75,10 @@ class ReportMediaAlternativeChargeControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +124,10 @@ class ReportMediaAlternativeChargeControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

@@ -44,20 +44,21 @@ class ReportOnlineMarketplaceOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val groupOrCompany = request.registration.isGroupMessage
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      val groupOrCompany = request.registration.isGroupMessage
 
-    val form         = formProvider(groupOrCompany)
-    val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+      val form         = formProvider(groupOrCompany)
+      val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, periodKey, mode, groupOrCompany))
+      Ok(view(preparedForm, periodKey, mode, groupOrCompany))
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       val groupOrCompany = request.registration.isGroupMessage
       val form           = formProvider(groupOrCompany)
       form
@@ -69,7 +70,9 @@ class ReportOnlineMarketplaceOperatingMarginController @Inject() (
               updatedAnswers <-
                 Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPage(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mode, updatedAnswers)
+            )
         )
-  }
+    }
 }

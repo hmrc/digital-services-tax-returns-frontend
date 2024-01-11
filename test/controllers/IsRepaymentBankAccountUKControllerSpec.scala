@@ -40,7 +40,8 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
   val formProvider = new IsRepaymentBankAccountUKFormProvider()
   val form         = formProvider()
 
-  lazy val isRepaymentBankAccountUKRoute = routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, NormalMode).url
+  lazy val isRepaymentBankAccountUKRoute =
+    routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, NormalMode).url
 
   "IsRepaymentBankAccountUK Controller" - {
 
@@ -74,7 +75,10 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +124,10 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

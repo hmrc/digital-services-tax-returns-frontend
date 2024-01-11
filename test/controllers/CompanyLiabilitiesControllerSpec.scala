@@ -171,7 +171,15 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, index, companyName, startDate, endDate)(
+        contentAsString(result) mustEqual view(
+          boundForm,
+          periodKey,
+          NormalMode,
+          index,
+          companyName,
+          startDate,
+          endDate
+        )(
           request,
           messages(application)
         ).toString

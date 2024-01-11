@@ -63,7 +63,8 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), true).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +76,10 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -121,7 +125,10 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

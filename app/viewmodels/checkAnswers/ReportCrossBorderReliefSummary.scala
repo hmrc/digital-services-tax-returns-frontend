@@ -34,7 +34,10 @@ object ReportCrossBorderReliefSummary {
         key = "reportCrossBorderRelief.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("reportCrossBorderRelief.change.hidden"))
         )
       )

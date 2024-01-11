@@ -44,19 +44,20 @@ class ReportSocialMediaOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val grpMessage   = request.registration.isGroupMessage
-    val form         = formProvider(grpMessage)
-    val preparedForm = request.userAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      val grpMessage   = request.registration.isGroupMessage
+      val form         = formProvider(grpMessage)
+      val preparedForm = request.userAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, periodKey, mode, grpMessage))
+      Ok(view(preparedForm, periodKey, mode, grpMessage))
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       val grpMessage = request.registration.isGroupMessage
       val form       = formProvider(grpMessage)
       form
@@ -65,9 +66,10 @@ class ReportSocialMediaOperatingMarginController @Inject() (
           formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, grpMessage))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportSocialMediaOperatingMarginPage(periodKey), value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(ReportSocialMediaOperatingMarginPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(ReportSocialMediaOperatingMarginPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

@@ -50,11 +50,12 @@ class ManageCompaniesController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CompanyDetailsListPage(periodKey)) match {
-      case Some(list) if list.nonEmpty => Ok(view(form, periodKey, mode, getSummaryList(periodKey)))
-      case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
-    }
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      request.userAnswers.get(CompanyDetailsListPage(periodKey)) match {
+        case Some(list) if list.nonEmpty => Ok(view(form, periodKey, mode, getSummaryList(periodKey)))
+        case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
+      }
   }
 
   private def getSummaryList(periodKey: String)(implicit request: DataRequest[AnyContent]): SummaryList = {
@@ -65,18 +66,19 @@ class ManageCompaniesController @Inject() (
     SummaryListViewModel(summaryListRow)
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, getSummaryList(periodKey)))),
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, periodKey, mode, getSummaryList(periodKey)))),
           value =>
             for {
               updatedAnswers <- Future.fromTry(request.userAnswers.set(ManageCompaniesPage(periodKey), value))
             } yield Redirect(navigator.nextPage(ManageCompaniesPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 
   def redirectToOnLoadPage(periodKey: String): Action[AnyContent] = (identify andThen getData) { implicit request =>
     request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage(periodKey)) match {

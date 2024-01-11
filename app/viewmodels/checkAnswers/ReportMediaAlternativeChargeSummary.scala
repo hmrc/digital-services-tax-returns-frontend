@@ -34,7 +34,10 @@ object ReportMediaAlternativeChargeSummary {
         key = "reportMediaAlternativeCharge.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("reportMediaAlternativeCharge.change.hidden"))
         )
       )

@@ -511,7 +511,10 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia)).success.value
+          emptyUserAnswers
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
+            .success
+            .value
         ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
@@ -520,7 +523,10 @@ class NavigatorSpec extends SpecBase {
         navigator.nextPage(
           ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine)).success.value
+          emptyUserAnswers
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
+            .success
+            .value
         ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 

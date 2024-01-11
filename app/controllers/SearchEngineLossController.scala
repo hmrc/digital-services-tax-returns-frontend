@@ -44,19 +44,20 @@ class SearchEngineLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val isGoupMessage = request.registration.isGroupMessage
-    val form          = formProvider(isGoupMessage)
-    val preparedForm  = request.userAnswers.get(SearchEngineLossPage(periodKey)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
+    implicit request =>
+      val isGoupMessage = request.registration.isGroupMessage
+      val form          = formProvider(isGoupMessage)
+      val preparedForm  = request.userAnswers.get(SearchEngineLossPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, periodKey, mode, isGoupMessage))
+      Ok(view(preparedForm, periodKey, mode, isGoupMessage))
   }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       val isGroupMessage = request.registration.isGroupMessage
       val form           = formProvider(isGroupMessage)
       form
@@ -69,5 +70,5 @@ class SearchEngineLossController @Inject() (
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(SearchEngineLossPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

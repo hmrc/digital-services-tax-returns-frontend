@@ -40,7 +40,8 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
   val formProvider = new ReportOnlineMarketplaceLossFormProvider()
   val form         = formProvider("company")
 
-  lazy val reportOnlineMarketplaceLossRoute = routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode).url
+  lazy val reportOnlineMarketplaceLossRoute =
+    routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode).url
 
   "ReportOnlineMarketplaceLoss Controller" - {
 
@@ -56,7 +57,10 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[ReportOnlineMarketplaceLossView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode, registration)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, registration)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

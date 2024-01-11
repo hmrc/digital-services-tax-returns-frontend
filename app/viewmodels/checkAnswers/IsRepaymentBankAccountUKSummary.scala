@@ -34,7 +34,10 @@ object IsRepaymentBankAccountUKSummary {
         key = "isRepaymentBankAccountUK.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("isRepaymentBankAccountUK.change.hidden"))
         )
       )

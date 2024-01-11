@@ -40,7 +40,8 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val crossBorderTransactionReliefRoute = routes.CrossBorderTransactionReliefController.onPageLoad(periodKey, NormalMode).url
+  lazy val crossBorderTransactionReliefRoute =
+    routes.CrossBorderTransactionReliefController.onPageLoad(periodKey, NormalMode).url
 
   "CrossBorderTransactionRelief Controller" - {
 
@@ -75,7 +76,10 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(100.00), periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(100.00), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -121,7 +125,10 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

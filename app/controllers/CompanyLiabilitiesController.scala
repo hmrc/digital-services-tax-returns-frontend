@@ -46,8 +46,8 @@ class CompanyLiabilitiesController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(periodKey: String, mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode, index: Index): Action[AnyContent] =
+    (identify andThen getData andThen requireData) { implicit request =>
       request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
           val startDate = formatDate(request.period.start)
@@ -65,10 +65,10 @@ class CompanyLiabilitiesController @Inject() (
           Redirect(routes.JourneyRecoveryController.onPageLoad())
       }
 
-  }
+    }
 
-  def onSubmit(periodKey: String, mode: Mode, index: Index): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, mode: Mode, index: Index): Action[AnyContent] =
+    (identify andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
           val companyName = companyDetails.companyName
@@ -80,10 +80,13 @@ class CompanyLiabilitiesController @Inject() (
             .bindFromRequest()
             .fold(
               formWithErrors =>
-                Future.successful(BadRequest(view(formWithErrors, periodKey, mode, index, companyName, startDate, endDate))),
+                Future.successful(
+                  BadRequest(view(formWithErrors, periodKey, mode, index, companyName, startDate, endDate))
+                ),
               value =>
                 for {
-                  updatedAnswers <- Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(periodKey, index), value))
+                  updatedAnswers <-
+                    Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(periodKey, index), value))
                   _              <- sessionRepository.set(updatedAnswers)
                 } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage(periodKey, index), mode, updatedAnswers))
             )
@@ -91,5 +94,5 @@ class CompanyLiabilitiesController @Inject() (
           logger.logger.info("CompanyDetailsPage is missing data")
           Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       }
-  }
+    }
 }

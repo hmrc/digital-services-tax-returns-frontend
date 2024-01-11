@@ -60,13 +60,17 @@ class ReportSocialMediaOperatingMarginControllerSpec extends SpecBase with Mocki
         val view = application.injector.instanceOf[ReportSocialMediaOperatingMarginView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode, company)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, company)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ReportSocialMediaOperatingMarginPage(periodKey), validAnswer).success.value
+      val userAnswers =
+        UserAnswers(userAnswersId).set(ReportSocialMediaOperatingMarginPage(periodKey), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -127,7 +131,10 @@ class ReportSocialMediaOperatingMarginControllerSpec extends SpecBase with Mocki
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, company)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, company)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

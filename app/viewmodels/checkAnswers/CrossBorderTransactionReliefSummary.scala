@@ -32,7 +32,10 @@ object CrossBorderTransactionReliefSummary {
         key = "crossBorderTransactionRelief.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CrossBorderTransactionReliefController.onPageLoad(periodKey, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.CrossBorderTransactionReliefController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("crossBorderTransactionRelief.change.hidden"))
         )
       )
