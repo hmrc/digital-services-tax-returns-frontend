@@ -30,7 +30,7 @@ object GroupLiabilitySummary {
     answers.get(GroupLiabilityPage).map { answer =>
       SummaryListRowViewModel(
         key = "groupLiability.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"£${answer.toString}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.GroupLiabilityController.onPageLoad(CheckMode).url)
             .withVisuallyHiddenText(messages("groupLiability.change.hidden"))

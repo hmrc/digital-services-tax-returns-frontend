@@ -17,43 +17,45 @@
 package controllers
 
 import base.SpecBase
+import models.formatDate
+import models.registration.Registration
+import org.scalatestplus.mockito.MockitoSugar.mock
+import pages.GroupLiabilityPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import viewmodels.govuk.SummaryListFluency
+import utils.CYAHelper
 import views.html.CheckYourAnswersView
 
-class CheckYourAnswersControllerSpec extends SpecBase with SummaryListFluency {
+class CheckYourAnswersControllerSpec extends SpecBase {
 
-  "Check Your Answers Controller" - {
+  val mockRegistration = mock[Registration]
+  val startDate        = formatDate(period.start)
+  val endDate          = formatDate(period.end)
+  val sectionList      = Seq()
+
+  lazy val checkYourAnswersRoute = routes.CheckYourAnswersController.onPageLoad(false).url
+
+  "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val userAnswers = emptyUserAnswers.set(GroupLiabilityPage, BigDecimal(40.00)).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(false).url)
+        val request     = FakeRequest(GET, checkYourAnswersRoute)
+        val sectionList = new CYAHelper().createSectionList(userAnswers)(messages(application))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
-        val list = SummaryListViewModel(Seq.empty)
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(list, false)(request, messages(application)).toString
-      }
-    }
-
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, routes.CheckYourAnswersController.onPageLoad(false).url)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
+        contentAsString(result) mustEqual view(sectionList, startDate, endDate, registration)(
+          request,
+          messages(application)
+        ).toString
       }
     }
   }

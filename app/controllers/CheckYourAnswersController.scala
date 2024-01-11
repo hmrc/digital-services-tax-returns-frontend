@@ -17,11 +17,13 @@
 package controllers
 
 import com.google.inject.Inject
+import connectors.DSTConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.formatDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.govuk.summarylist._
+import utils.CYAHelper
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersController @Inject() (
@@ -29,6 +31,8 @@ class CheckYourAnswersController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  dstConnector: DSTConnector,
+  cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
 ) extends FrontendBaseController
@@ -36,10 +40,10 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(isPrint: Boolean = false): Action[AnyContent] = (identify andThen getData andThen requireData) {
     implicit request =>
-      val list = SummaryListViewModel(
-        rows = Seq.empty
-      )
+      val startDate   = formatDate(request.period.start)
+      val endDate     = formatDate(request.period.end)
+      val sectionList = cyaHelper.createSectionList(request.userAnswers)
 
-      Ok(view(list, isPrint))
+      Ok(view(sectionList, startDate, endDate, request.registration, isPrint))
   }
 }
