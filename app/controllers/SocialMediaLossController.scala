@@ -46,18 +46,18 @@ class SocialMediaLossController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val preparedForm = request.userAnswers.get(SocialMediaLossPage(periodKey)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, periodKey, mode))
-  }
+    }
 
   def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(

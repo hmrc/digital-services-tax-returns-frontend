@@ -27,7 +27,6 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import viewmodels.govuk.SummaryListFluency
-
 import views.html.{CheckYourAnswersView, ReturnsCompleteView}
 
 import scala.concurrent.Future
@@ -51,14 +50,15 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
 
         when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-        val request = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad().url)
+        val request = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad(periodKey).url)
 
         val result = route(application, request).value
 
         val view         = application.injector.instanceOf[ReturnsCompleteView]
         val cya          = application.injector.instanceOf[CheckYourAnswersView]
         val list         = SummaryListViewModel(Seq.empty)
-        val printableCYA = Some(cya(list = list, isPrint = true, showBackLink = false)(request, messages(application)))
+        val printableCYA =
+          Some(cya(periodKey, list = list, isPrint = true, showBackLink = false)(request, messages(application)))
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(companyName, startDate, endDate, period, printableCYA)(

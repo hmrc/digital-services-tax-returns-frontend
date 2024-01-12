@@ -32,17 +32,36 @@ import uk.gov.hmrc.play.http.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait IdentifierAction
-    extends ActionBuilder[IdentifierRequest, AnyContent]
-    with ActionFunction[Request, IdentifierRequest]
+trait IdentifierAction {
+  def apply(
+    periodKey: Option[String] = None
+  ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
+}
 
-class AuthenticatedIdentifierAction @Inject() (
-  override val authConnector: AuthConnector,
+class AuthIdentifierAction @Inject() (
+  val authConnector: AuthConnector,
   dstConnector: DSTConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default
 )(implicit val executionContext: ExecutionContext)
     extends IdentifierAction
+    with AuthorisedFunctions {
+
+  override def apply(
+    periodKey: Option[String] = None
+  ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] =
+    new AuthenticatedIdentifierAction(authConnector, dstConnector, config, parser, periodKey)
+}
+
+class AuthenticatedIdentifierAction @Inject() (
+  override val authConnector: AuthConnector,
+  dstConnector: DSTConnector,
+  config: FrontendAppConfig,
+  val parser: BodyParsers.Default,
+  periodKey: Option[String]
+)(implicit val executionContext: ExecutionContext)
+    extends ActionBuilder[IdentifierRequest, AnyContent]
+    with ActionFunction[Request, IdentifierRequest]
     with AuthorisedFunctions {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
@@ -51,7 +70,7 @@ class AuthenticatedIdentifierAction @Inject() (
     authorised(AuthProviders(GovernmentGateway) and Organisation and User).retrieve(Retrievals.internalId) {
       case Some(internalId) =>
         if (config.dstNewReturnsFrontendEnableFlag) {
-          lookupRegistration(request, internalId, block)
+          lookupRegistration(request, periodKey, internalId, block)
         } else {
           Future.successful(Redirect(config.dstFrontendRegistrationUrl))
         }
@@ -66,19 +85,22 @@ class AuthenticatedIdentifierAction @Inject() (
 
   private def lookupRegistration[A](
     request: Request[A],
+    periodKeyOpt: Option[String],
     internalId: String,
     block: IdentifierRequest[A] => Future[Result]
   )(implicit hc: HeaderCarrier): Future[Result] =
     dstConnector.lookupRegistration().flatMap {
       case Some(reg) if reg.registrationNumber.isDefined =>
-        dstConnector.lookupAllReturns().flatMap { periods =>
-          periods.toList match {
-            case Nil     => Future.successful(NotFound)
-            case periods =>
-              val latest =
-                periods.sortBy(_.start).head // TODO instead of head it should compare it with periodKey from url
-              block(IdentifierRequest(request, internalId, reg, latest))
-          }
+        periodKeyOpt match {
+          case Some(periodKey) =>
+            dstConnector.lookupAllReturns().flatMap { periods =>
+              periods.find(_.key == periodKey) match {
+                case None         => Future.successful(NotFound)
+                case Some(period) =>
+                  block(IdentifierRequest(request, internalId, reg, Some(period)))
+              }
+            }
+          case _               => block(IdentifierRequest(request, internalId, reg, None))
         }
       case _                                             =>
         Future.successful(Redirect(config.dstFrontendRegistrationUrl))

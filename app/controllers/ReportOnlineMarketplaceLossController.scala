@@ -44,8 +44,8 @@ class ReportOnlineMarketplaceLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val form         = formProvider(request.registration.isGroupMessage)
       val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) match {
         case None        => form
@@ -53,10 +53,10 @@ class ReportOnlineMarketplaceLossController @Inject() (
       }
 
       Ok(view(preparedForm, periodKey, mode, request.registration))
-  }
+    }
 
   def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(request.registration.isGroupMessage)
       form
         .bindFromRequest()

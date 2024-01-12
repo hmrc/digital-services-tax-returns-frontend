@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.GroupLiabilityFormProvider
-import models.{Mode, formatDate}
+import models.Mode
 import navigation.Navigator
 import pages.GroupLiabilityPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,10 +44,10 @@ class GroupLiabilityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val startDate = formatDate(request.period.start)
-      val endDate   = formatDate(request.period.end)
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
       val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
       val form      = formProvider(args)
 
@@ -57,12 +57,12 @@ class GroupLiabilityController @Inject() (
       }
 
       Ok(view(preparedForm, periodKey, mode, request.registration.isGroupMessage, startDate, endDate))
-  }
+    }
 
   def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
-      val startDate = formatDate(request.period.start)
-      val endDate   = formatDate(request.period.end)
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
       val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
       val form      = formProvider(args)
 

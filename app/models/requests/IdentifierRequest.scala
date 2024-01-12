@@ -16,8 +16,12 @@
 
 package models.requests
 
+import models.formatDate
 import models.registration.{Period, Registration}
 import play.api.mvc.{Request, WrappedRequest}
 
-case class IdentifierRequest[A](request: Request[A], userId: String, registration: Registration, period: Period)
-    extends WrappedRequest[A](request)
+case class IdentifierRequest[A](request: Request[A], userId: String, registration: Registration, period: Option[Period])
+    extends WrappedRequest[A](request) {
+  lazy val submittedPeriodStart: String = period.fold("Failed to get the start date")(date => formatDate(date.start))
+  lazy val submittedPeriodEnd: String   = period.fold("Failed to get the end date")(date => formatDate(date.end))
+}

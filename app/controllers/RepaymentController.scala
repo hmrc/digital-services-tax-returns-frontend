@@ -18,9 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.RepaymentFormProvider
-
-import javax.inject.Inject
-import models.{Mode, formatDate}
+import models.Mode
 import navigation.Navigator
 import pages.RepaymentPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -29,6 +27,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RepaymentView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class RepaymentController @Inject() (
@@ -45,10 +44,10 @@ class RepaymentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
-      val startDate = formatDate(request.period.start)
-      val endDate   = formatDate(request.period.end)
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
 
       val form         = formProvider(startDate, endDate)
       val preparedForm = request.userAnswers.get(RepaymentPage(periodKey)) match {
@@ -57,12 +56,12 @@ class RepaymentController @Inject() (
       }
 
       Ok(view(preparedForm, periodKey, mode, startDate, endDate))
-  }
+    }
 
   def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
-      val startDate = formatDate(request.period.start)
-      val endDate   = formatDate(request.period.end)
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
       val form      = formProvider(startDate, endDate)
 
       form

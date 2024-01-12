@@ -42,7 +42,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
   val mockDstConnector: DSTConnector = mock[DSTConnector]
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad() = authAction(_ => Results.Ok)
+    def onPageLoad() = authAction()(_ => Results.Ok)
   }
 
   "Auth Action" - {
@@ -57,7 +57,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new MissingBearerToken),
             mockDstConnector,
             appConfig,
@@ -82,7 +82,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new BearerTokenExpired),
             mockDstConnector,
             appConfig,
@@ -107,7 +107,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientEnrolments),
             mockDstConnector,
             appConfig,
@@ -132,7 +132,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new InsufficientConfidenceLevel),
             mockDstConnector,
             appConfig,
@@ -157,7 +157,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAuthProvider),
             mockDstConnector,
             appConfig,
@@ -182,7 +182,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedAffinityGroup),
             mockDstConnector,
             appConfig,
@@ -207,7 +207,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
           val appConfig   = application.injector.instanceOf[FrontendAppConfig]
 
-          val authAction = new AuthenticatedIdentifierAction(
+          val authAction = new AuthIdentifierAction(
             new FakeFailingAuthConnector(new UnsupportedCredentialRole),
             mockDstConnector,
             appConfig,
@@ -247,7 +247,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
           when(mockDstConnector.lookupAllReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
           val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe OK
@@ -277,7 +277,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
 
-          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
           val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe SEE_OTHER
@@ -302,7 +302,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
             retrieval
           )
 
-          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
 
           val result = intercept[UnauthorizedException] {
@@ -332,7 +332,7 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           )
           when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(None))
 
-          val action     = new AuthenticatedIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
           val result     = controller.onPageLoad()(FakeRequest("", ""))
           status(result) mustBe SEE_OTHER

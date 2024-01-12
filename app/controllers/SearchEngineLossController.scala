@@ -44,8 +44,8 @@ class SearchEngineLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val isGoupMessage = request.registration.isGroupMessage
       val form          = formProvider(isGoupMessage)
       val preparedForm  = request.userAnswers.get(SearchEngineLossPage(periodKey)) match {
@@ -54,10 +54,10 @@ class SearchEngineLossController @Inject() (
       }
 
       Ok(view(preparedForm, periodKey, mode, isGoupMessage))
-  }
+    }
 
   def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val isGroupMessage = request.registration.isGroupMessage
       val form           = formProvider(isGroupMessage)
       form

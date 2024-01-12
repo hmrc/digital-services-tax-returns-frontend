@@ -47,21 +47,21 @@ class CompanyDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(periodKey: String, index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, index: Index, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData) { implicit request =>
       val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(periodKey, index)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
 
       Ok(view(preparedForm, periodKey, index, mode))
-  }
+    }
 
   private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
     request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-  def onSubmit(periodKey: String, index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async {
-    implicit request =>
+  def onSubmit(periodKey: String, index: Index, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -75,10 +75,10 @@ class CompanyDetailsController @Inject() (
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(CompanyDetailsPage(periodKey, index), mode, updatedAnswers))
         )
-  }
+    }
 
   def onDelete(periodKey: String, index: Index, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       for {
         updatedAnswers <-
           Future.fromTry(

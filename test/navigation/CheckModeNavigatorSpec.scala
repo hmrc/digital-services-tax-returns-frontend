@@ -34,7 +34,7 @@ class CheckModeNavigatorSpec extends SpecBase {
         UnknownPage,
         CheckMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
     }
 
     "must go from a CompanyDetailsPage to ManageCompanies page" in {

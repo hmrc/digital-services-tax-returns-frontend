@@ -50,13 +50,13 @@ class ManageCompaniesController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       request.userAnswers.get(CompanyDetailsListPage(periodKey)) match {
         case Some(list) if list.nonEmpty => Ok(view(form, periodKey, mode, getSummaryList(periodKey)))
         case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
       }
-  }
+    }
 
   private def getSummaryList(periodKey: String)(implicit request: DataRequest[AnyContent]): SummaryList = {
     val numberOfCompanies: Int              = request.userAnswers.get(CompanyDetailsListPage(periodKey)).fold(0)(_.size)
@@ -67,7 +67,7 @@ class ManageCompaniesController @Inject() (
   }
 
   def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -80,7 +80,7 @@ class ManageCompaniesController @Inject() (
         )
     }
 
-  def redirectToOnLoadPage(periodKey: String): Action[AnyContent] = (identify andThen getData) { implicit request =>
+  def redirectToOnLoadPage(periodKey: String): Action[AnyContent] = (identify() andThen getData) { implicit request =>
     request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage(periodKey)) match {
       case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
       case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), NormalMode))

@@ -20,7 +20,7 @@
     govukButton: GovukButton
 )
 
-@(list: SummaryList,isPrint: Boolean = false, showBackLink : Boolean = true)(implicit request: Request[_], messages: Messages)
+@(periodKey: String, list: SummaryList,isPrint: Boolean = false, showBackLink : Boolean = true)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title")), showBackLink = showBackLink) {
 
@@ -30,7 +30,7 @@
     @if(!isPrint) {
         @govukButton(
             ButtonViewModel(messages("checkYourAnswers.save-continue"))
-            .asLink(routes.ReturnsCompleteController.onPageLoad().url)
+            .asLink(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
         )
     }
 }

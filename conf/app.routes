@@ -15,7 +15,7 @@ GET        /refresh-session                                                contr
 
 GET        /there-is-a-problem                                             controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /check-your-answers                                             controllers.CheckYourAnswersController.onPageLoad(isPrint: Boolean)
+GET        /:periodKey/check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad(periodKey: String, isPrint: Boolean)
 
 GET        /unauthorised                                                   controllers.UnauthorisedController.onPageLoad
 
@@ -122,7 +122,7 @@ POST       /:periodKey/repayment                                           contr
 GET        /:periodKey/edit/repayment                                      controllers.RepaymentController.onPageLoad(periodKey: String, mode: Mode = CheckMode)
 POST       /:periodKey/edit/repayment                                      controllers.RepaymentController.onSubmit(periodKey: String, mode: Mode = CheckMode)
 
-GET        /returns/complete                                               controllers.ReturnsCompleteController.onPageLoad()
+GET        /:periodKey/returns/complete                                    controllers.ReturnsCompleteController.onPageLoad(periodKey: String)
 
 GET        /:periodKey/report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey: String, mode: Mode = NormalMode)
 POST       /:periodKey/report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(periodKey: String, mode: Mode = NormalMode)

@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyLiabilitiesFormProvider
-import models.{Index, Mode, formatDate}
+import models.{Index, Mode}
 import navigation.Navigator
 import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
 import play.api.Logging
@@ -47,11 +47,11 @@ class CompanyLiabilitiesController @Inject() (
     with Logging {
 
   def onPageLoad(periodKey: String, mode: Mode, index: Index): Action[AnyContent] =
-    (identify andThen getData andThen requireData) { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
-          val startDate = formatDate(request.period.start)
-          val endDate   = formatDate(request.period.end)
+          val startDate = request.periodStartDate
+          val endDate   = request.periodEndDate
 
           val form         = formProvider(companyDetails.companyName)
           val preparedForm = request.userAnswers.get(CompanyLiabilitiesPage(periodKey, index)) match {
@@ -68,12 +68,12 @@ class CompanyLiabilitiesController @Inject() (
     }
 
   def onSubmit(periodKey: String, mode: Mode, index: Index): Action[AnyContent] =
-    (identify andThen getData andThen requireData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
           val companyName = companyDetails.companyName
-          val startDate   = formatDate(request.period.start)
-          val endDate     = formatDate(request.period.end)
+          val startDate   = request.periodStartDate
+          val endDate     = request.periodEndDate
           val form        = formProvider(companyName)
 
           form

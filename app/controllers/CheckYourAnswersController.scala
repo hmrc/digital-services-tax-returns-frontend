@@ -34,12 +34,12 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(isPrint: Boolean = false): Action[AnyContent] = (identify andThen getData andThen requireData) {
-    implicit request =>
+  def onPageLoad(periodKey: String, isPrint: Boolean = false): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val list = SummaryListViewModel(
         rows = Seq.empty
       )
 
-      Ok(view(list, isPrint))
-  }
+      Ok(view(periodKey, list, isPrint))
+    }
 }

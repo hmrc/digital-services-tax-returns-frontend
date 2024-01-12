@@ -24,10 +24,23 @@ import play.api.mvc._
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class FakeIdentifierAction @Inject() (bodyParsers: PlayBodyParsers) extends IdentifierAction with OptionValues {
+class FakeIdentifierAction @Inject() (
+  val parser: PlayBodyParsers
+)(implicit val executionContext: ExecutionContext)
+    extends IdentifierAction {
+
+  override def apply(
+    periodKey: Option[String] = None
+  ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] =
+    new FakeAuthIdentifierAction(parser)
+}
+class FakeAuthIdentifierAction @Inject() (bodyParsers: PlayBodyParsers)
+    extends ActionBuilder[IdentifierRequest, AnyContent]
+    with ActionFunction[Request, IdentifierRequest]
+    with OptionValues {
 
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] =
-    block(IdentifierRequest(request, "id", registration, period))
+    block(IdentifierRequest(request, "id", registration, Some(period)))
 
   override def parser: BodyParser[AnyContent] =
     bodyParsers.default

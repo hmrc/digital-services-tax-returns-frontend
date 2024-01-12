@@ -43,7 +43,7 @@ class ReturnsDashboardController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = identify().async { implicit request =>
     for {
       outstandingPeriods <- dstConnector.lookupOutstandingReturns()
       amendedPeriods     <- dstConnector.lookupAmendableReturns()

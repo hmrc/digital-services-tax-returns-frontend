@@ -18,7 +18,6 @@ package controllers
 
 import connectors.DSTConnector
 import controllers.actions._
-import models.formatDate
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
@@ -40,15 +39,15 @@ class ReturnsCompleteController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = identify.async { implicit request =>
-    val submittedPeriodStart = formatDate(request.period.start)
-    val submittedPeriodEnd   = formatDate(request.period.end)
+  def onPageLoad(periodKey: String): Action[AnyContent] = identify(Some(periodKey)).async { implicit request =>
+    val submittedPeriodStart = request.submittedPeriodStart
+    val submittedPeriodEnd   = request.submittedPeriodEnd
     val companyName          = request.registration.companyReg.company.name
 
     val list                       = SummaryListViewModel(
       rows = Seq.empty
     )
-    val printableCYA: Option[Html] = Some(cyaView(list, isPrint = true, showBackLink = false))
+    val printableCYA: Option[Html] = Some(cyaView(periodKey, list, isPrint = true, showBackLink = false))
 
     for {
       outstandingPeriod <- dstConnector.lookupOutstandingReturns()

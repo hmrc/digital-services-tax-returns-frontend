@@ -24,8 +24,8 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.BankDetailsForRepaymentPage
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -36,15 +36,16 @@ import scala.concurrent.Future
 
 class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new BankDetailsForRepaymentFormProvider()
-  val form         = formProvider()
+  val formProvider                        = new BankDetailsForRepaymentFormProvider()
+  val form: Form[BankDetailsForRepayment] = formProvider()
 
-  lazy val bankDetailsForRepaymentRoute = routes.BankDetailsForRepaymentController.onPageLoad(periodKey, NormalMode).url
-  val iban                              = "GB36BARC20051773152391"
+  lazy val bankDetailsForRepaymentRoute: String =
+    routes.BankDetailsForRepaymentController.onPageLoad(periodKey, NormalMode).url
+  val iban                                      = "GB36BARC20051773152391"
 
-  val userAnswers = emptyUserAnswers
+  val userAnswers: UserAnswers = emptyUserAnswers
     .set(BankDetailsForRepaymentPage(periodKey), BankDetailsForRepayment("Name", iban))
     .success
     .value
