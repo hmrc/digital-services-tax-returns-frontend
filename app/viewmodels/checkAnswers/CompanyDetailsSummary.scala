@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, Index, UserAnswers}
+import models.{CheckMode, Index, PeriodKey, UserAnswers}
 import pages.CompanyDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object CompanyDetailsSummary {
 
-  def row(periodKey: String, index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(periodKey: PeriodKey, index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(CompanyDetailsPage(periodKey, index)).map { answer =>
       val value = HtmlFormat.escape(answer.companyName).toString
 

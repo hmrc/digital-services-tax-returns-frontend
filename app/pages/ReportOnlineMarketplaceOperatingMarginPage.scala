@@ -16,11 +16,12 @@
 
 package pages
 
+import models.PeriodKey
 import play.api.libs.json.JsPath
 
-case class ReportOnlineMarketplaceOperatingMarginPage(periodKey: String) extends QuestionPage[Double] {
+case class ReportOnlineMarketplaceOperatingMarginPage(periodKey: PeriodKey) extends QuestionPage[Double] {
 
-  override def path: JsPath = JsPath \ periodKey \ toString
+  override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = "reportOnlineMarketplaceOperatingMargin"
 }

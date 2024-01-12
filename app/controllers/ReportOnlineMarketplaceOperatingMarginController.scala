@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ReportOnlineMarketplaceOperatingMarginFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.ReportOnlineMarketplaceOperatingMarginPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,7 +44,7 @@ class ReportOnlineMarketplaceOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val groupOrCompany = request.registration.isGroupMessage
 
@@ -57,7 +57,7 @@ class ReportOnlineMarketplaceOperatingMarginController @Inject() (
       Ok(view(preparedForm, periodKey, mode, groupOrCompany))
     }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val groupOrCompany = request.registration.isGroupMessage
       val form           = formProvider(groupOrCompany)

@@ -20,7 +20,7 @@
     govukButton: GovukButton
 )
 
-@(periodKey: String, list: SummaryList,isPrint: Boolean = false, showBackLink : Boolean = true)(implicit request: Request[_], messages: Messages)
+@(periodKey: PeriodKey, list: SummaryList,isPrint: Boolean = false, showBackLink : Boolean = true)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title")), showBackLink = showBackLink) {
 

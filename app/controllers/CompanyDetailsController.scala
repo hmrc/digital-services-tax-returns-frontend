@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
 import models.requests.OptionalDataRequest
-import models.{Index, Mode, UserAnswers}
+import models.{Index, Mode, PeriodKey, UserAnswers}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -47,7 +47,7 @@ class CompanyDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(periodKey: String, index: Index, mode: Mode): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData) { implicit request =>
       val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(periodKey, index)) match {
         case None        => form
@@ -60,7 +60,7 @@ class CompanyDetailsController @Inject() (
   private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
     request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-  def onSubmit(periodKey: String, index: Index, mode: Mode): Action[AnyContent] =
+  def onSubmit(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData).async { implicit request =>
       form
         .bindFromRequest()
@@ -77,7 +77,7 @@ class CompanyDetailsController @Inject() (
         )
     }
 
-  def onDelete(periodKey: String, index: Index, mode: Mode): Action[AnyContent] =
+  def onDelete(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       for {
         updatedAnswers <-

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.BankDetailsForRepaymentPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object BankDetailsForRepaymentSummary {
 
-  def row(periodKey: String, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(BankDetailsForRepaymentPage(periodKey)).map { answer =>
       val value = HtmlFormat.escape(answer.accountName).toString + "<br/>" + HtmlFormat
         .escape(answer.internationalBankAccountNumber)

@@ -18,6 +18,7 @@ package controllers
 
 import connectors.DSTConnector
 import controllers.actions._
+import models.PeriodKey
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
@@ -39,7 +40,7 @@ class ReturnsCompleteController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String): Action[AnyContent] = identify(Some(periodKey)).async { implicit request =>
+  def onPageLoad(periodKey: PeriodKey): Action[AnyContent] = identify(Some(periodKey)).async { implicit request =>
     val submittedPeriodStart = request.submittedPeriodStart
     val submittedPeriodEnd   = request.submittedPeriodEnd
     val companyName          = request.registration.companyReg.company.name

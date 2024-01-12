@@ -20,6 +20,7 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.DSTConnector
 import controllers.routes
+import models.PeriodKey
 import models.requests.IdentifierRequest
 import play.api.mvc.Results._
 import play.api.mvc._
@@ -34,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait IdentifierAction {
   def apply(
-    periodKey: Option[String] = None
+    periodKey: Option[PeriodKey] = None
   ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
 }
 
@@ -48,7 +49,7 @@ class AuthIdentifierAction @Inject() (
     with AuthorisedFunctions {
 
   override def apply(
-    periodKey: Option[String] = None
+    periodKey: Option[PeriodKey] = None
   ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] =
     new AuthenticatedIdentifierAction(authConnector, dstConnector, config, parser, periodKey)
 }
@@ -58,7 +59,7 @@ class AuthenticatedIdentifierAction @Inject() (
   dstConnector: DSTConnector,
   config: FrontendAppConfig,
   val parser: BodyParsers.Default,
-  periodKey: Option[String]
+  periodKey: Option[PeriodKey]
 )(implicit val executionContext: ExecutionContext)
     extends ActionBuilder[IdentifierRequest, AnyContent]
     with ActionFunction[Request, IdentifierRequest]
@@ -85,7 +86,7 @@ class AuthenticatedIdentifierAction @Inject() (
 
   private def lookupRegistration[A](
     request: Request[A],
-    periodKeyOpt: Option[String],
+    periodKeyOpt: Option[PeriodKey],
     internalId: String,
     block: IdentifierRequest[A] => Future[Result]
   )(implicit hc: HeaderCarrier): Future[Result] =
@@ -94,7 +95,7 @@ class AuthenticatedIdentifierAction @Inject() (
         periodKeyOpt match {
           case Some(periodKey) =>
             dstConnector.lookupAllReturns().flatMap { periods =>
-              periods.find(_.key == periodKey) match {
+              periods.find(_.key == periodKey.value) match {
                 case None         => Future.successful(NotFound)
                 case Some(period) =>
                   block(IdentifierRequest(request, internalId, reg, Some(period)))

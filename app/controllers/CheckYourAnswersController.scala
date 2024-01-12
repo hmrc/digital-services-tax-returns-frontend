@@ -18,6 +18,7 @@ package controllers
 
 import com.google.inject.Inject
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.PeriodKey
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
@@ -34,7 +35,7 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, isPrint: Boolean = false): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey, isPrint: Boolean = false): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val list = SummaryListViewModel(
         rows = Seq.empty

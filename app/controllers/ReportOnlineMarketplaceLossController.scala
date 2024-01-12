@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ReportOnlineMarketplaceLossFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.ReportOnlineMarketplaceLossPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,7 +44,7 @@ class ReportOnlineMarketplaceLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val form         = formProvider(request.registration.isGroupMessage)
       val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) match {
@@ -55,7 +55,7 @@ class ReportOnlineMarketplaceLossController @Inject() (
       Ok(view(preparedForm, periodKey, mode, request.registration))
     }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(request.registration.isGroupMessage)
       form

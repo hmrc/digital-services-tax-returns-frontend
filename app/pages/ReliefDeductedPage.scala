@@ -16,11 +16,12 @@
 
 package pages
 
+import models.PeriodKey
 import play.api.libs.json.JsPath
 
-case class ReliefDeductedPage(periodKey: String) extends QuestionPage[BigDecimal] {
+case class ReliefDeductedPage(periodKey: PeriodKey) extends QuestionPage[BigDecimal] {
 
-  override def path: JsPath = JsPath \ periodKey \ toString
+  override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = "reliefDeducted"
 }

@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], periodKey: String, mode: Mode)(implicit request: Request[_], messages: Messages)
+@(form: Form[_], periodKey: PeriodKey, mode: Mode)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = title(form, messages("select-activities.title"))) {
 

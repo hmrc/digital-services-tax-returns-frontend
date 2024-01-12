@@ -63,7 +63,7 @@ class Navigator @Inject() () {
     case CompanyDetailsPage(periodKey, _) =>
       _ => Some(routes.ManageCompaniesController.onPageLoad(periodKey, CheckMode))
     case SelectActivitiesPage(periodKey)  => ua => reportAlternativeChargeNavigation(periodKey, CheckMode)(ua)
-    case _                                => _ => Some(routes.CheckYourAnswersController.onPageLoad("001", isPrint = false)) // TODO period key
+    case _                                => _ => Some(routes.CheckYourAnswersController.onPageLoad(PeriodKey("001"), isPrint = false)) // TODO period key
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -73,13 +73,13 @@ class Navigator @Inject() () {
       checkRouteMap(page)(userAnswers).getOrElse(routes.JourneyRecoveryController.onPageLoad())
   }
 
-  def reportCrossBorderRelief(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  def reportCrossBorderRelief(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportCrossBorderReliefPage(periodKey)) map {
       case true  => routes.ReliefDeductedController.onPageLoad(periodKey, mode)
       case false => routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
     }
 
-  private def addCompanyDetails(periodKey: String, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
+  private def addCompanyDetails(periodKey: PeriodKey, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
     userAnswers.get(ManageCompaniesPage(periodKey)) map {
       case true  =>
         val count: Int   = userAnswers.get(CompanyDetailsListPage(periodKey)).map(_.size).getOrElse(0)
@@ -89,7 +89,7 @@ class Navigator @Inject() () {
         routes.SelectActivitiesController.onPageLoad(periodKey, mode)
     }
 
-  private def reportMediaAlternative(periodKey: String, ua: UserAnswers): Option[Call] =
+  private def reportMediaAlternative(periodKey: PeriodKey, ua: UserAnswers): Option[Call] =
     ua.get(ReportMediaAlternativeChargePage(periodKey)) map {
       case true                                                                                                    =>
         routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
@@ -100,7 +100,7 @@ class Navigator @Inject() () {
     }
 
   private def navigationForSelectedActivitiesYes(
-    periodKey: String,
+    periodKey: PeriodKey,
     selectedActivities: Set[SelectActivities],
     mode: Mode
   ): Call =
@@ -116,7 +116,7 @@ class Navigator @Inject() () {
         redirectToAlternateChargesPage(periodKey, selectActivities)(mode)
     }
 
-  private def redirectToAlternateChargesPage(periodKey: String, selectActivities: Set[SelectActivities])(
+  private def redirectToAlternateChargesPage(periodKey: PeriodKey, selectActivities: Set[SelectActivities])(
     mode: Mode
   ): Call =
     if (selectActivities.contains(SelectActivities.SocialMedia)) {
@@ -130,7 +130,7 @@ class Navigator @Inject() () {
     }
 
   private def navigationForSelectedActivitiesNo(
-    periodKey: String,
+    periodKey: PeriodKey,
     selectActivities: Set[SelectActivities],
     mode: Mode
   ): Call =
@@ -141,7 +141,7 @@ class Navigator @Inject() () {
         routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
     }
 
-  private def reportAlternativeChargeNavigation(periodKey: String, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
+  private def reportAlternativeChargeNavigation(periodKey: PeriodKey, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
     (userAnswers.get(SelectActivitiesPage(periodKey)), userAnswers.get(ReportAlternativeChargePage(periodKey))) match {
       case (Some(selectActivities), Some(true))  =>
         Some(navigationForSelectedActivitiesYes(periodKey, selectActivities, mode))
@@ -150,14 +150,14 @@ class Navigator @Inject() () {
       case _                                     => None
     }
 
-  private def repaymentBankAccount(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def repaymentBankAccount(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(IsRepaymentBankAccountUKPage(periodKey))
       .map {
         case true  => routes.UKBankDetailsController.onPageLoad(periodKey, mode)
         case false => routes.BankDetailsForRepaymentController.onPageLoad(periodKey, mode)
       }
 
-  private def companyLiability(periodKey: String, pageIndex: Index, ua: UserAnswers)(mode: Mode): Call = {
+  private def companyLiability(periodKey: PeriodKey, pageIndex: Index, ua: UserAnswers)(mode: Mode): Call = {
     val companyDetailsCount: Int = ua.get(CompanyDetailsListPage(periodKey)).map(_.size).getOrElse(0)
     val liabilityCount: Int      = ua.get(CompanyLiabilityListPage(periodKey)).map(_.size).getOrElse(0)
 
@@ -171,13 +171,13 @@ class Navigator @Inject() () {
     }
   }
 
-  private def reportSearchAlternativeCharge(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def reportSearchAlternativeCharge(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportSearchAlternativeChargePage(periodKey)) map {
       case true  => routes.SearchEngineLossController.onPageLoad(periodKey, mode)
       case false => routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
     }
 
-  private def socialMediaLoss(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def socialMediaLoss(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(SocialMediaLossPage(periodKey))
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine)) =>
@@ -188,7 +188,7 @@ class Navigator @Inject() () {
           routes.ReportSocialMediaOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
-  private def searchEngineLoss(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call]              =
+  private def searchEngineLoss(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call]              =
     ua.get(SearchEngineLossPage(periodKey))
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
@@ -198,28 +198,28 @@ class Navigator @Inject() () {
         case false                                                                                                  =>
           routes.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey, mode)
       }
-  private def reportOnlineMarketplaceCharge(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def reportOnlineMarketplaceCharge(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey))
       .map {
         case true  => routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, mode)
         case false => routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
       }
 
-  def reportOnlineMarketplaceLoss(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  def reportOnlineMarketplaceLoss(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportOnlineMarketplaceLossPage(periodKey))
       .map {
         case true  => routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
         case false => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
-  private def repayment(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def repayment(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(RepaymentPage(periodKey))
       .map {
         case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, mode)
         case false => routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false)
       }
 
-  private def socialMediaOperatingMargin(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def socialMediaOperatingMargin(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     if (ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine))) {
       Some(routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode))
     } else if (ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace))) {
@@ -228,7 +228,7 @@ class Navigator @Inject() () {
       Some(routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode))
     }
 
-  private def searchEnginOperatingMargin(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
+  private def searchEnginOperatingMargin(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     if (ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace))) {
       Some(routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode))
     } else {

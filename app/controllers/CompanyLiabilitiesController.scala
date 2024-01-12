@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyLiabilitiesFormProvider
-import models.{Index, Mode}
+import models.{Index, Mode, PeriodKey}
 import navigation.Navigator
 import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
 import play.api.Logging
@@ -46,7 +46,7 @@ class CompanyLiabilitiesController @Inject() (
     with I18nSupport
     with Logging {
 
-  def onPageLoad(periodKey: String, mode: Mode, index: Index): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey, mode: Mode, index: Index): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>
@@ -67,7 +67,7 @@ class CompanyLiabilitiesController @Inject() (
 
     }
 
-  def onSubmit(periodKey: String, mode: Mode, index: Index): Action[AnyContent] =
+  def onSubmit(periodKey: PeriodKey, mode: Mode, index: Index): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case Some(companyDetails) =>

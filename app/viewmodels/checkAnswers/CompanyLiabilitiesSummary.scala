@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, Index, UserAnswers}
+import models.{CheckMode, Index, PeriodKey, UserAnswers}
 import pages.CompanyLiabilitiesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,7 +26,7 @@ import viewmodels.implicits._
 
 object CompanyLiabilitiesSummary {
 
-  def row(answers: UserAnswers, periodKey: String, index: Index)(implicit messages: Messages): Option[SummaryListRow] =
+  def row( periodKey: PeriodKey, answers: UserAnswers, index: Index)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(CompanyLiabilitiesPage(periodKey, index)).map { answer =>
       SummaryListRowViewModel(
         key = "companyLiabilities.checkYourAnswersLabel",

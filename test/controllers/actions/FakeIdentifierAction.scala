@@ -17,6 +17,7 @@
 package controllers.actions
 
 import controllers.{period, registration}
+import models.PeriodKey
 import models.requests.IdentifierRequest
 import org.scalatest.OptionValues
 import play.api.mvc._
@@ -30,7 +31,7 @@ class FakeIdentifierAction @Inject() (
     extends IdentifierAction {
 
   override def apply(
-    periodKey: Option[String] = None
+    periodKey: Option[PeriodKey] = None
   ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] =
     new FakeAuthIdentifierAction(parser)
 }

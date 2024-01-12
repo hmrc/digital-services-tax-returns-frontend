@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.RepaymentFormProvider
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.RepaymentPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,7 +44,7 @@ class RepaymentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: String, mode: Mode): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val startDate = request.periodStartDate
       val endDate   = request.periodEndDate
@@ -58,7 +58,7 @@ class RepaymentController @Inject() (
       Ok(view(preparedForm, periodKey, mode, startDate, endDate))
     }
 
-  def onSubmit(periodKey: String, mode: Mode): Action[AnyContent] =
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val startDate = request.periodStartDate
       val endDate   = request.periodEndDate
