@@ -53,9 +53,9 @@ class Navigator @Inject() () {
       _ => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode))
     case AllowanceDeductedPage(periodKey)                        => ua => Some(companyLiability(periodKey, Index(0), ua)(NormalMode))
     case UKBankDetailsPage(periodKey)                            =>
-      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey, false))
+      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false))
     case BankDetailsForRepaymentPage(periodKey)                  =>
-      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey, false))
+      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false))
     case _                                                       => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 
@@ -63,7 +63,7 @@ class Navigator @Inject() () {
     case CompanyDetailsPage(periodKey, _) =>
       _ => Some(routes.ManageCompaniesController.onPageLoad(periodKey, CheckMode))
     case SelectActivitiesPage(periodKey)  => ua => reportAlternativeChargeNavigation(periodKey, CheckMode)(ua)
-    case x                                => _ => Some(routes.CheckYourAnswersController.onPageLoad("001", false)) // TODO period key
+    case _                                => _ => Some(routes.CheckYourAnswersController.onPageLoad("001", isPrint = false)) // TODO period key
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
@@ -216,7 +216,7 @@ class Navigator @Inject() () {
     ua.get(RepaymentPage(periodKey))
       .map {
         case true  => routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, mode)
-        case false => routes.CheckYourAnswersController.onPageLoad(periodKey, false)
+        case false => routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false)
       }
 
   private def socialMediaOperatingMargin(periodKey: String, ua: UserAnswers)(mode: Mode): Option[Call] =
