@@ -22,10 +22,12 @@ import models.formatDate
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
+import pages.GroupLiabilityPage
 import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.CYAHelper
 import viewmodels.govuk.SummaryListFluency
 import views.html.{CheckYourAnswersView, ReturnsCompleteView}
 
@@ -50,15 +52,20 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
 
         when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-        val request = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+        val request     = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad().url)
+        val sectionList = new CYAHelper().createSectionList(emptyUserAnswers)(messages(application))
 
         val result = route(application, request).value
 
-        val view         = application.injector.instanceOf[ReturnsCompleteView]
-        val cya          = application.injector.instanceOf[CheckYourAnswersView]
-        val list         = SummaryListViewModel(Seq.empty)
-        val printableCYA =
-          Some(cya(periodKey, list = list, isPrint = true, showBackLink = false)(request, messages(application)))
+        val view = application.injector.instanceOf[ReturnsCompleteView]
+        val cya  = application.injector.instanceOf[CheckYourAnswersView]
+
+        val printableCYA = Some(
+          cya(sectionList, startDate, endDate, registration, isPrint = true, showBackLink = false)(
+            request,
+            messages(application)
+          )
+        )
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(companyName, startDate, endDate, period, printableCYA)(

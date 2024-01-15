@@ -23,7 +23,7 @@ import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
-import viewmodels.govuk.summarylist._
+import utils.CYAHelper
 import views.html.{CheckYourAnswersView, ReturnsCompleteView}
 
 import javax.inject.Inject
@@ -32,7 +32,10 @@ import scala.concurrent.ExecutionContext
 class ReturnsCompleteController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
   dstConnector: DSTConnector,
+  cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnsCompleteView,
   cyaView: CheckYourAnswersView
@@ -45,10 +48,19 @@ class ReturnsCompleteController @Inject() (
     val submittedPeriodEnd   = request.submittedPeriodEnd
     val companyName          = request.registration.companyReg.company.name
 
-    val list                       = SummaryListViewModel(
-      rows = Seq.empty
+    val sectionList = cyaHelper.createSectionList(request.userAnswers)
+
+    val printableCYA: Option[Html] = Some(
+      cyaView(
+        periodKey,
+        sectionList,
+        submittedPeriodStart,
+        submittedPeriodEnd,
+        request.registration,
+        isPrint = true,
+        showBackLink = false
+      )
     )
-    val printableCYA: Option[Html] = Some(cyaView(periodKey, list, isPrint = true, showBackLink = false))
 
     for {
       outstandingPeriod <- dstConnector.lookupOutstandingReturns()
