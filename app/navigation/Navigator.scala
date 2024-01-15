@@ -63,7 +63,7 @@ class Navigator @Inject() () {
     case CompanyDetailsPage(periodKey, _) =>
       _ => Some(routes.ManageCompaniesController.onPageLoad(periodKey, CheckMode))
     case SelectActivitiesPage(periodKey)  => ua => reportAlternativeChargeNavigation(periodKey, CheckMode)(ua)
-    case _                                => _ => Some(routes.CheckYourAnswersController.onPageLoad(PeriodKey("001"), isPrint = false)) // TODO period key
+    case _                                => _ => Some(routes.CheckYourAnswersController.onPageLoad(PeriodKey("003"), isPrint = false)) // TODO period key will be looked at when we implement navigation for Check mode navigation
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
