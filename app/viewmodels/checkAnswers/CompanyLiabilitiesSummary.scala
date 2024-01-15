@@ -26,7 +26,9 @@ import viewmodels.implicits._
 
 object CompanyLiabilitiesSummary {
 
-  def row( periodKey: PeriodKey, answers: UserAnswers, index: Index)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(periodKey: PeriodKey, answers: UserAnswers, index: Index)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
     answers.get(CompanyLiabilitiesPage(periodKey, index)).map { answer =>
       SummaryListRowViewModel(
         key = "companyLiabilities.checkYourAnswersLabel",

@@ -22,15 +22,16 @@ case class PeriodKey(value: String)
 
 object PeriodKey {
 
-  implicit def pathBindable(implicit stringBinder: PathBindable[String]): PathBindable[PeriodKey] = new PathBindable[PeriodKey] {
+  implicit def pathBindable(implicit stringBinder: PathBindable[String]): PathBindable[PeriodKey] =
+    new PathBindable[PeriodKey] {
 
-    override def bind(key: String, value: String): Either[String, PeriodKey] =
-      stringBinder.bind(key, value) match {
-        case Right(x) if x.nonEmpty && x.length <= 4 => Right(PeriodKey(x))
-        case _                 => Left("PeriodKey binding failed")
-      }
+      override def bind(key: String, value: String): Either[String, PeriodKey] =
+        stringBinder.bind(key, value) match {
+          case Right(x) if x.nonEmpty && x.length <= 4 => Right(PeriodKey(x))
+          case _                                       => Left("PeriodKey binding failed")
+        }
 
-    override def unbind(key: String, value: PeriodKey): String =
-      stringBinder.unbind(key, value.value)
-  }
+      override def unbind(key: String, value: PeriodKey): String =
+        stringBinder.unbind(key, value.value)
+    }
 }

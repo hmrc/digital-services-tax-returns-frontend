@@ -28,7 +28,9 @@ import viewmodels.implicits._
 
 object CompanyDetailsSummary {
 
-  def row(periodKey: PeriodKey, index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(periodKey: PeriodKey, index: Index, answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
     answers.get(CompanyDetailsPage(periodKey, index)).map { answer =>
       val value = HtmlFormat.escape(answer.companyName).toString
 

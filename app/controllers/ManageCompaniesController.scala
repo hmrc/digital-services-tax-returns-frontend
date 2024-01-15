@@ -80,11 +80,12 @@ class ManageCompaniesController @Inject() (
         )
     }
 
-  def redirectToOnLoadPage(periodKey: PeriodKey): Action[AnyContent] = (identify() andThen getData) { implicit request =>
-    request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage(periodKey)) match {
-      case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
-      case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), NormalMode))
-    }
+  def redirectToOnLoadPage(periodKey: PeriodKey): Action[AnyContent] = (identify() andThen getData) {
+    implicit request =>
+      request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage(periodKey)) match {
+        case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
+        case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), NormalMode))
+      }
   }
 
 }

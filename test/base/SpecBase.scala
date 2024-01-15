@@ -45,7 +45,7 @@ trait SpecBase
 
   val dstRegNumber: Option[String @@ models.DSTRegNumber.Tag]                                        = Some(DSTRegNumber("AMDST0799721562"))
   val index: Index                                                                                   = Index(0)
-  val periodKey: PeriodKey                                                                              = PeriodKey("001")
+  val periodKey: PeriodKey                                                                           = PeriodKey("001")
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(
