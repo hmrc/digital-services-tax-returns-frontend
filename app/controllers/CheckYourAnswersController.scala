@@ -40,9 +40,9 @@ class CheckYourAnswersController @Inject() (
 
   def onPageLoad(periodKey: PeriodKey, isPrint: Boolean = false): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
-      val startDate = request.periodStartDate
-      val endDate = request.periodEndDate
-      val sectionList = cyaHelper.createSectionList(request.userAnswers)
+      val startDate   = request.periodStartDate
+      val endDate     = request.periodEndDate
+      val sectionList = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
       Ok(view(periodKey, sectionList, startDate, endDate, request.registration, isPrint))
     }

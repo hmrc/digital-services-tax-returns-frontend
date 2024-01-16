@@ -43,12 +43,12 @@ class ReturnsCompleteController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: PeriodKey): Action[AnyContent] = identify(Some(periodKey)).async { implicit request =>
-    val submittedPeriodStart = request.submittedPeriodStart
-    val submittedPeriodEnd   = request.submittedPeriodEnd
+  def onPageLoad(periodKey: PeriodKey): Action[AnyContent] = (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+    val submittedPeriodStart = request.periodStartDate
+    val submittedPeriodEnd   = request.periodEndDate
     val companyName          = request.registration.companyReg.company.name
 
-    val sectionList = cyaHelper.createSectionList(request.userAnswers)
+    val sectionList = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
     val printableCYA: Option[Html] = Some(
       cyaView(

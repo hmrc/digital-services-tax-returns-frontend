@@ -16,7 +16,7 @@
 
 package utils
 
-import models.{SelectActivities, UserAnswers}
+import models.{PeriodKey, SelectActivities, UserAnswers}
 import pages.SelectActivitiesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -28,36 +28,36 @@ import javax.inject.Inject
 
 class CYAHelper @Inject() () {
 
-  def createSectionList(userAnswers: UserAnswers)(implicit messages: Messages): Seq[Section] =
+  def createSectionList(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Seq[Section] =
     Seq(
-      createGroupLiabilitySection(userAnswers),
-      createSocialMediaSection(userAnswers),
-      createSearchEngineSection(userAnswers),
-      createOnlineMarketPlaceSection(userAnswers),
-      createReturnRepaymentsSection(userAnswers)
+      createGroupLiabilitySection(periodKey, userAnswers),
+      createSocialMediaSection(periodKey, userAnswers),
+      createSearchEngineSection(periodKey, userAnswers),
+      createOnlineMarketPlaceSection(periodKey, userAnswers),
+      createReturnRepaymentsSection(periodKey, userAnswers)
     ).flatten
 
-  private def createGroupLiabilitySection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] =
+  private def createGroupLiabilitySection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] =
     buildSection(
       "groupLiability.checkYourAnswersLabel.heading",
       Seq(
-        GroupLiabilitySummary.row(userAnswers),
-        ReportCrossBorderReliefSummary.row(userAnswers),
-        CrossBorderTransactionReliefSummary.row(userAnswers),
-        AllowanceDeductedSummary.row(userAnswers)
+        GroupLiabilitySummary.row(periodKey, userAnswers),
+        ReportCrossBorderReliefSummary.row(periodKey, userAnswers),
+        CrossBorderTransactionReliefSummary.row(periodKey, userAnswers),
+        AllowanceDeductedSummary.row(periodKey, userAnswers)
       )
     )
 
-  private def createSocialMediaSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
-    val selectedValue = userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.SocialMedia))
+  private def createSocialMediaSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+    val selectedValue = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SocialMedia))
     if (selectedValue) {
       buildSection(
         "socialMediaLoss.checkYourAnswersLabel.heading",
         Seq(
-          SelectActivitiesSummary.row(userAnswers, selectedValue),
-          ReportAlternativeChargeSummary.row(userAnswers),
-          ReportMediaAlternativeChargeSummary.row(userAnswers),
-          SocialMediaLossSummary.row(userAnswers)
+          SelectActivitiesSummary.row(periodKey, userAnswers, selectedValue),
+          ReportAlternativeChargeSummary.row(periodKey, userAnswers),
+          ReportMediaAlternativeChargeSummary.row(periodKey, userAnswers),
+          SocialMediaLossSummary.row(periodKey, userAnswers)
         )
       )
     } else {
@@ -65,15 +65,15 @@ class CYAHelper @Inject() () {
     }
   }
 
-  private def createSearchEngineSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
-    val selectedValue = userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.SearchEngine))
+  private def createSearchEngineSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+    val selectedValue = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SearchEngine))
     if (selectedValue) {
       buildSection(
         "searchEngineLoss.checkYourAnswersLabel.heading",
         Seq(
-          SelectActivitiesSummary.row(userAnswers),
-          SearchEngineLossSummary.row(userAnswers),
-          ReportSearchAlternativeChargeSummary.row(userAnswers)
+          SelectActivitiesSummary.row(periodKey, userAnswers),
+          SearchEngineLossSummary.row(periodKey, userAnswers),
+          ReportSearchAlternativeChargeSummary.row(periodKey, userAnswers)
         )
       )
     } else {
@@ -81,15 +81,15 @@ class CYAHelper @Inject() () {
     }
   }
 
-  private def createOnlineMarketPlaceSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+  private def createOnlineMarketPlaceSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
     val selectedValue =
-      userAnswers.get(SelectActivitiesPage).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
+      userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
     if (selectedValue) {
       buildSection(
         "reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading",
         Seq(
-          SelectActivitiesSummary.row(userAnswers),
-          ReportOnlineMarketplaceLossSummary.row(userAnswers)
+          SelectActivitiesSummary.row(periodKey, userAnswers),
+          ReportOnlineMarketplaceLossSummary.row(periodKey, userAnswers)
         )
       )
     } else {
@@ -97,13 +97,13 @@ class CYAHelper @Inject() () {
     }
   }
 
-  private def createReturnRepaymentsSection(userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] =
+  private def createReturnRepaymentsSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] =
     buildSection(
       "repayment.checkYourAnswersLabel.heading",
       Seq(
-        RepaymentSummary.row(userAnswers),
-        IsRepaymentBankAccountUKSummary.row(userAnswers),
-        UKBankDetailsSummary.row(userAnswers)
+        RepaymentSummary.row(periodKey, userAnswers),
+        IsRepaymentBankAccountUKSummary.row(periodKey, userAnswers),
+        UKBankDetailsSummary.row(periodKey, userAnswers)
       )
     )
 

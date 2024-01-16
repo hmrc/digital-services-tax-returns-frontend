@@ -20,16 +20,15 @@ import controllers.routes
 import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.SelectActivitiesPage
 import play.api.i18n.Messages
-import play.twirl.api.HtmlFormat
-import uk.gov.hmrc.govukfrontend.views.viewmodels.content.{HtmlContent, Text}
+import uk.gov.hmrc.govukfrontend.views.viewmodels.content.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
 import viewmodels.implicits._
 
 object SelectActivitiesSummary {
 
-  def row(answers: UserAnswers, selectedValue: Boolean = false)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SelectActivitiesPage).map { _ =>
+  def row(periodKey: PeriodKey, answers: UserAnswers, selectedValue: Boolean = false)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(SelectActivitiesPage(periodKey)).map { _ =>
       val yesOrNo = if (selectedValue) "site.yes" else "site.no"
       val value   = ValueViewModel(Text(messages(yesOrNo)))
 
