@@ -37,7 +37,9 @@ class CYAHelper @Inject() () {
       createReturnRepaymentsSection(periodKey, userAnswers)
     ).flatten
 
-  private def createGroupLiabilitySection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] =
+  private def createGroupLiabilitySection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[Section] =
     buildSection(
       "groupLiability.checkYourAnswersLabel.heading",
       Seq(
@@ -48,8 +50,11 @@ class CYAHelper @Inject() () {
       )
     )
 
-  private def createSocialMediaSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
-    val selectedValue = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SocialMedia))
+  private def createSocialMediaSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[Section] = {
+    val selectedValue =
+      userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SocialMedia))
     if (selectedValue) {
       buildSection(
         "socialMediaLoss.checkYourAnswersLabel.heading",
@@ -65,8 +70,11 @@ class CYAHelper @Inject() () {
     }
   }
 
-  private def createSearchEngineSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
-    val selectedValue = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SearchEngine))
+  private def createSearchEngineSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[Section] = {
+    val selectedValue =
+      userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SearchEngine))
     if (selectedValue) {
       buildSection(
         "searchEngineLoss.checkYourAnswersLabel.heading",
@@ -81,7 +89,9 @@ class CYAHelper @Inject() () {
     }
   }
 
-  private def createOnlineMarketPlaceSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] = {
+  private def createOnlineMarketPlaceSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[Section] = {
     val selectedValue =
       userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
     if (selectedValue) {
@@ -97,7 +107,9 @@ class CYAHelper @Inject() () {
     }
   }
 
-  private def createReturnRepaymentsSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit messages: Messages): Option[Section] =
+  private def createReturnRepaymentsSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[Section] =
     buildSection(
       "repayment.checkYourAnswersLabel.heading",
       Seq(

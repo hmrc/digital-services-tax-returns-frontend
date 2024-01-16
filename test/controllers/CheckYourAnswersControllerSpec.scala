@@ -29,9 +29,9 @@ import views.html.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends SpecBase {
 
-  val mockRegistration: Registration = mock[Registration]
-  val startDate: String = formatDate(period.start)
-  val endDate: String = formatDate(period.end)
+  val mockRegistration: Registration   = mock[Registration]
+  val startDate: String                = formatDate(period.start)
+  val endDate: String                  = formatDate(period.end)
   val sectionList: Seq[SummaryListRow] = Seq()
 
   lazy val checkYourAnswersRoute: String = routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false).url

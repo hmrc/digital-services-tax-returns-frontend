@@ -27,7 +27,9 @@ import viewmodels.implicits._
 
 object SelectActivitiesSummary {
 
-  def row(periodKey: PeriodKey, answers: UserAnswers, selectedValue: Boolean = false)(implicit messages: Messages): Option[SummaryListRow] =
+  def row(periodKey: PeriodKey, answers: UserAnswers, selectedValue: Boolean = false)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
     answers.get(SelectActivitiesPage(periodKey)).map { _ =>
       val yesOrNo = if (selectedValue) "site.yes" else "site.no"
       val value   = ValueViewModel(Text(messages(yesOrNo)))
