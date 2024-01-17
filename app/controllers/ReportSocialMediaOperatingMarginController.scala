@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ReportSocialMediaOperatingMarginFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.ReportSocialMediaOperatingMarginPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,30 +44,32 @@ class ReportSocialMediaOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val grpMessage   = request.registration.isGroupMessage
-    val form         = formProvider(grpMessage)
-    val preparedForm = request.userAnswers.get(ReportSocialMediaOperatingMarginPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val grpMessage   = request.registration.isGroupMessage
+      val form         = formProvider(grpMessage)
+      val preparedForm = request.userAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode, grpMessage))
     }
 
-    Ok(view(preparedForm, mode, grpMessage))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val grpMessage = request.registration.isGroupMessage
       val form       = formProvider(grpMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, grpMessage))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, grpMessage))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportSocialMediaOperatingMarginPage, value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(ReportSocialMediaOperatingMarginPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ReportSocialMediaOperatingMarginPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ReportSocialMediaOperatingMarginPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

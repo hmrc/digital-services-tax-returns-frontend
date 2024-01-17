@@ -18,14 +18,13 @@ package controllers
 
 import base.SpecBase
 import forms.UKBankDetailsFormProvider
-import models.{NormalMode, UKBankDetails, UserAnswers}
+import models.{NormalMode, UKBankDetails}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.UKBankDetailsPage
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -41,18 +40,12 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new UKBankDetailsFormProvider()
   val form         = formProvider()
 
-  lazy val uKBankDetailsRoute = routes.UKBankDetailsController.onPageLoad(NormalMode).url
+  lazy val uKBankDetailsRoute = routes.UKBankDetailsController.onPageLoad(periodKey, NormalMode).url
 
-  val userAnswers = UserAnswers(
-    userAnswersId,
-    Json.obj(
-      UKBankDetailsPage.toString -> Json.obj(
-        "accountName"   -> "Name",
-        "sortCode"      -> "123456",
-        "accountNumber" -> "12345678"
-      )
-    )
-  )
+  val userAnswers = emptyUserAnswers
+    .set(UKBankDetailsPage(periodKey), UKBankDetails("Name", "123456", "12345678", None))
+    .success
+    .value
 
   "UKBankDetails Controller" - {
 
@@ -68,7 +61,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -86,6 +79,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(
           form.fill(UKBankDetails("Name", "123456", "12345678", None)),
+          periodKey,
           NormalMode
         )(request, messages(application)).toString
       }
@@ -133,7 +127,10 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

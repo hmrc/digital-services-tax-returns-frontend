@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.ReportCrossBorderReliefPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,15 +26,18 @@ import viewmodels.implicits._
 
 object ReportCrossBorderReliefSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportCrossBorderReliefPage).map { answer =>
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportCrossBorderReliefPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "reportCrossBorderRelief.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReportCrossBorderReliefController.onPageLoad(CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("reportCrossBorderRelief.change.hidden"))
         )
       )

@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.SearchEngineLossPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object SearchEngineLossSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(SearchEngineLossPage).map { answer =>
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(SearchEngineLossPage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
         key = "searchEngineLoss.checkYourAnswersLabel",
         value = ValueViewModel(value),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.SearchEngineLossController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.SearchEngineLossController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("searchEngineLoss.change.hidden"))
         )
       )

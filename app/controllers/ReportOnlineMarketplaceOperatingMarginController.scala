@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ReportOnlineMarketplaceOperatingMarginFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.ReportOnlineMarketplaceOperatingMarginPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,32 +44,35 @@ class ReportOnlineMarketplaceOperatingMarginController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val groupOrCompany = request.registration.isGroupMessage
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val groupOrCompany = request.registration.isGroupMessage
 
-    val form         = formProvider(groupOrCompany)
-    val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceOperatingMarginPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+      val form         = formProvider(groupOrCompany)
+      val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode, groupOrCompany))
     }
 
-    Ok(view(preparedForm, mode, groupOrCompany))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val groupOrCompany = request.registration.isGroupMessage
       val form           = formProvider(groupOrCompany)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, groupOrCompany))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, groupOrCompany))),
           value =>
             for {
               updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage, value))
+                Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceOperatingMarginPage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPage(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mode, updatedAnswers)
+            )
         )
-  }
+    }
 }

@@ -17,7 +17,7 @@
 package base
 
 import controllers.actions._
-import models.{DSTRegNumber, Index, UserAnswers}
+import models.{DSTRegNumber, Index, PeriodKey, UserAnswers}
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
@@ -43,9 +43,9 @@ trait SpecBase
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  val dstRegNumber: Option[String @@ models.DSTRegNumber.Tag] = Some(DSTRegNumber("AMDST0799721562"))
-  val index: Index                                            = Index(0)
-
+  val dstRegNumber: Option[String @@ models.DSTRegNumber.Tag]                                        = Some(DSTRegNumber("AMDST0799721562"))
+  val index: Index                                                                                   = Index(0)
+  val periodKey: PeriodKey                                                                           = PeriodKey("003")
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =
     new GuiceApplicationBuilder()
       .overrides(

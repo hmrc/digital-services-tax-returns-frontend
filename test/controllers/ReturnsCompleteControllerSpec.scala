@@ -22,7 +22,6 @@ import models.formatDate
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.GroupLiabilityPage
 import play.api.inject
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -52,8 +51,8 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
 
         when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
 
-        val request     = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad().url)
-        val sectionList = new CYAHelper().createSectionList(emptyUserAnswers)(messages(application))
+        val request     = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+        val sectionList = new CYAHelper().createSectionList(periodKey, emptyUserAnswers)(messages(application))
 
         val result = route(application, request).value
 
@@ -61,7 +60,7 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
         val cya  = application.injector.instanceOf[CheckYourAnswersView]
 
         val printableCYA = Some(
-          cya(sectionList, startDate, endDate, registration, isPrint = true, showBackLink = false)(
+          cya(periodKey, sectionList, startDate, endDate, registration, isPrint = true, showBackLink = false)(
             request,
             messages(application)
           )

@@ -42,34 +42,34 @@ class NavigatorSpec extends SpecBase {
       "must go from a CompanyDetailsPage to ManageCompanies page" in {
 
         navigator.nextPage(
-          CompanyDetailsPage(index = Index(0)),
+          CompanyDetailsPage(periodKey, index = Index(0)),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ManageCompaniesController.onPageLoad(NormalMode)
+        ) mustBe routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ManageCompaniesPage with option 'yes' to ManageCompanies page" in {
 
         navigator.nextPage(
-          ManageCompaniesPage,
+          ManageCompaniesPage(periodKey),
           NormalMode,
-          UserAnswers("id").set(ManageCompaniesPage, true).success.value
-        ) mustBe routes.CompanyDetailsController.onPageLoad(index, NormalMode)
+          UserAnswers("id").set(ManageCompaniesPage(periodKey), true).success.value
+        ) mustBe routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode)
       }
 
       "must go from a ManageCompaniesPage with option 'false' to Select activities page" in {
 
         navigator.nextPage(
-          ManageCompaniesPage,
+          ManageCompaniesPage(periodKey),
           NormalMode,
-          UserAnswers("id").set(ManageCompaniesPage, false).success.value
-        ) mustBe routes.SelectActivitiesController.onPageLoad(NormalMode)
+          UserAnswers("id").set(ManageCompaniesPage(periodKey), false).success.value
+        ) mustBe routes.SelectActivitiesController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ManageCompaniesPage to Journey recovery page when data is missing" in {
 
         navigator.nextPage(
-          ManageCompaniesPage,
+          ManageCompaniesPage(periodKey),
           NormalMode,
           emptyUserAnswers
         ) mustBe routes.JourneyRecoveryController.onPageLoad()
@@ -78,607 +78,613 @@ class NavigatorSpec extends SpecBase {
       "must go from a SelectActivitiesPage to Report alternative charges page" in {
 
         navigator.nextPage(
-          SelectActivitiesPage,
+          SelectActivitiesPage(periodKey),
           NormalMode,
-          UserAnswers("id").set(SelectActivitiesPage, Set(SelectActivities.values.head)).success.value
-        ) mustBe routes.ReportAlternativeChargeController.onPageLoad(NormalMode)
+          UserAnswers("id").set(SelectActivitiesPage(periodKey), Set(SelectActivities.values.head)).success.value
+        ) mustBe routes.ReportAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportMediaAlternativeChargePage when more then one activity and option 'yes' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.OnlineMarketplace)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportSearchAlternativeChargePage when more then one activity and option 'yes' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SearchEngine, SelectActivities.OnlineMarketplace)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to SearchEngineLossPage when Search engine activity option is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to SocialMediaLossPage when Social media activity option is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SocialMedia)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.OnlineMarketplace, SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, false)
+            .set(ReportAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to AllowanceDeductedPage when more then one activity is selected and option 'no' is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, false)
+            .set(ReportAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportAlternativeChargePage to ReportOnlineMarketplaceLossPage when Online marketplace activity option is selected" in {
 
         navigator.nextPage(
-          ReportAlternativeChargePage,
+          ReportAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
             .set(
-              SelectActivitiesPage,
+              SelectActivitiesPage(periodKey),
               Set[SelectActivities](SelectActivities.OnlineMarketplace)
             )
             .success
             .value
-            .set(ReportAlternativeChargePage, true)
+            .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from ReportMediaAlternativeChargePage to SocialMediaLoss page when 'Yes'" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportMediaAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
-            .set(ReportMediaAlternativeChargePage, true)
+            .set(ReportMediaAlternativeChargePage(periodKey), true)
             .success
             .value
-        ) mustBe routes.SocialMediaLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportMediaAlternativeChargePage to ReportSearchAlternativeChargePage when 'No'" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportMediaAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
-            .set(ReportMediaAlternativeChargePage, false)
+            .set(ReportMediaAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportMediaAlternativeChargePage to ReportOnlineMarketplaceAlternativeChargePage when 'No'" in {
 
         navigator.nextPage(
-          ReportMediaAlternativeChargePage,
+          ReportMediaAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-            .set(ReportMediaAlternativeChargePage, false)
+            .set(ReportMediaAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to AllowanceDeducted page when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportCrossBorderReliefPage,
+          ReportCrossBorderReliefPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportCrossBorderReliefPage, false)
+            .set(ReportCrossBorderReliefPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportCrossBorderReliefPage,
+          ReportCrossBorderReliefPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportCrossBorderReliefPage, true)
+            .set(ReportCrossBorderReliefPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReliefDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.ReliefDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchAlternativeChargePage to SearchEngineLoss page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportSearchAlternativeChargePage,
+          ReportSearchAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportSearchAlternativeChargePage, true)
+            .set(ReportSearchAlternativeChargePage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
-        ) mustBe routes.SearchEngineLossController.onPageLoad(NormalMode)
+        ) mustBe routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchAlternativeChargePage to ReportOnlineMarketplaceAlternativeChargePage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportSearchAlternativeChargePage,
+          ReportSearchAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportSearchAlternativeChargePage, false)
+            .set(ReportSearchAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SocialMediaLossPage to ReportSearchAlternativeCharge page when 'Yes' is selected and selected activity is 'SearchEngine'" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, true)
+            .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
             .success
             .value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SocialMediaLossPage to CompanyLiabilities page when 'Yes' is selected and selected activity is 'SocialMedia'" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, true)
+            .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a AllowanceDeductedPage to CompanyLiabilities page" in {
 
         navigator.nextPage(
-          AllowanceDeductedPage,
+          AllowanceDeductedPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a SocialMediaLossPage to GroupLiabilityPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, true)
+            .set(SocialMediaLossPage(periodKey), true)
             .success
             .value
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(100))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
 
         navigator.nextPage(
-          SocialMediaLossPage,
+          SocialMediaLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SocialMediaLossPage, false)
+            .set(SocialMediaLossPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSocialMediaOperatingMarginController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
         "is selected and selected activity is 'OnlineMarketplace'" in {
 
           navigator.nextPage(
-            SearchEngineLossPage,
+            SearchEngineLossPage(periodKey),
             NormalMode,
             UserAnswers("id")
-              .set(SearchEngineLossPage, true)
+              .set(SearchEngineLossPage(periodKey), true)
               .success
               .value
-              .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+              .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
               .success
               .value
-          ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+          ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
         }
 
       "must go from a SearchEngineLossPage to CompanyLiability page when 'Yes' is selected" in {
 
         navigator.nextPage(
-          SearchEngineLossPage,
+          SearchEngineLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SearchEngineLossPage, true)
+            .set(SearchEngineLossPage(periodKey), true)
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a SearchEngineLossPage to GroupLiability page when 'Yes' is selected and user has completed the companyDetails page" in {
 
         navigator.nextPage(
-          SearchEngineLossPage,
+          SearchEngineLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SearchEngineLossPage, true)
+            .set(SearchEngineLossPage(periodKey), true)
             .success
             .value
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(100))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a SearchEngineLossPage to report-search-engine-operating-margin page when 'No' is selected" in {
 
         navigator.nextPage(
-          SearchEngineLossPage,
+          SearchEngineLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(SearchEngineLossPage, false)
+            .set(SearchEngineLossPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportSearchEngineOperatingMarginController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportOnlineMarketplaceLossPage" +
         " when 'Yes' is selected" in {
 
           navigator.nextPage(
-            ReportOnlineMarketplaceAlternativeChargePage,
+            ReportOnlineMarketplaceAlternativeChargePage(periodKey),
             NormalMode,
             UserAnswers("id")
-              .set(ReportOnlineMarketplaceAlternativeChargePage, true)
+              .set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), true)
               .success
               .value
-          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(NormalMode)
+          ) mustBe routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, NormalMode)
         }
 
       "must go from a ReportOnlineMarketplaceAlternativeChargePage to reportCrossBorderTransactionReliefPage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceAlternativeChargePage,
+          ReportOnlineMarketplaceAlternativeChargePage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportOnlineMarketplaceAlternativeChargePage, false)
+            .set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceLossPage to ReportCrossBorderReliefPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceLossPage,
+          ReportOnlineMarketplaceLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportOnlineMarketplaceLossPage, true)
+            .set(ReportOnlineMarketplaceLossPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceLossPage to ReportOnlineMarketplaceOperatingMarginPage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceLossPage,
+          ReportOnlineMarketplaceLossPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(ReportOnlineMarketplaceLossPage, false)
+            .set(ReportOnlineMarketplaceLossPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportOnlineMarketplaceOperatingMarginPage to ReportCrossBorderReliefPage when 'No' is selected" in {
 
         navigator.nextPage(
-          ReportOnlineMarketplaceOperatingMarginPage,
+          ReportOnlineMarketplaceOperatingMarginPage(periodKey),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to AllowanceDeductedPage" in {
 
         navigator.nextPage(
-          ReportSocialMediaOperatingMarginPage,
+          ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SocialMedia)).success.value
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+          emptyUserAnswers
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
+            .success
+            .value
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to ReportSearchAlternativeChargePage when selectedActivities is SearchEngine" in {
 
         navigator.nextPage(
-          ReportSocialMediaOperatingMarginPage,
+          ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
-          emptyUserAnswers.set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.SearchEngine)).success.value
-        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(NormalMode)
+          emptyUserAnswers
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SearchEngine))
+            .success
+            .value
+        ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSocialMediaOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
 
         navigator.nextPage(
-          ReportSocialMediaOperatingMarginPage,
+          ReportSocialMediaOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchEngineOperatingMarginPage to ReportOnlineMarketplaceAlternativeChargePage when selectedActivities is OnlineMarketplace" in {
 
         navigator.nextPage(
-          ReportSearchEngineOperatingMarginPage,
+          ReportSearchEngineOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers
-            .set(SelectActivitiesPage, Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
             .success
             .value
-        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(NormalMode)
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a ReportSearchEngineOperatingMarginPage to AllowanceDeductedPage" in {
 
         navigator.nextPage(
-          ReportSearchEngineOperatingMarginPage,
+          ReportSearchEngineOperatingMarginPage(periodKey),
           NormalMode,
           emptyUserAnswers
-        ) mustBe routes.AllowanceDeductedController.onPageLoad(NormalMode)
+        ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to UKBankDetailsPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          IsRepaymentBankAccountUKPage,
+          IsRepaymentBankAccountUKPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(IsRepaymentBankAccountUKPage, true)
+            .set(IsRepaymentBankAccountUKPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.UKBankDetailsController.onPageLoad(NormalMode)
+        ) mustBe routes.UKBankDetailsController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a IsRepaymentBankAccountUKPage to BankDetailsForRepaymentPage when 'No' is selected" in {
 
         navigator.nextPage(
-          IsRepaymentBankAccountUKPage,
+          IsRepaymentBankAccountUKPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(IsRepaymentBankAccountUKPage, false)
+            .set(IsRepaymentBankAccountUKPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(NormalMode)
+        ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a GroupLiabilityPage to RepaymentPage" in {
 
         navigator.nextPage(
-          GroupLiabilityPage,
+          GroupLiabilityPage(periodKey),
           NormalMode,
           UserAnswers("id")
-        ) mustBe routes.RepaymentController.onPageLoad(NormalMode)
+        ) mustBe routes.RepaymentController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a RepaymentPage to IsRepaymentBankAccountUKPage when 'Yes' is selected" in {
 
         navigator.nextPage(
-          RepaymentPage,
+          RepaymentPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(RepaymentPage, true)
+            .set(RepaymentPage(periodKey), true)
             .success
             .value
-        ) mustBe routes.IsRepaymentBankAccountUKController.onPageLoad(NormalMode)
+        ) mustBe routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, NormalMode)
       }
 
       "must go from a RepaymentPage to CheckYourAnswers page when 'No' is selected" in {
 
         navigator.nextPage(
-          RepaymentPage,
+          RepaymentPage(periodKey),
           NormalMode,
           UserAnswers("id")
-            .set(RepaymentPage, false)
+            .set(RepaymentPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
+        ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
       }
 
       "must go to CompanyLiabilitiesPage0 index" in {
 
         navigator.nextPage(
-          CompanyLiabilitiesPage(index),
+          CompanyLiabilitiesPage(periodKey, index),
           NormalMode,
           UserAnswers("id")
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("C2", None))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, index)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a CompanyLiabilitiesPage0 index to CompanyLiabilitiesPage1 when there are 2 CompanyDetails data exists" in {
 
         navigator.nextPage(
-          CompanyLiabilitiesPage(Index(1)),
+          CompanyLiabilitiesPage(periodKey, Index(1)),
           NormalMode,
           UserAnswers("id")
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyDetailsPage(Index(1)), CompanyDetails("C2", None))
+            .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("C2", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(122.11))
             .success
             .value
-        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(NormalMode, Index(1))
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, Index(1))
       }
 
       "must go from a CompanyLiabilitiesPage to GroupLiability page when user filled the pages for both the companies mentioned in manage companies page" in {
 
         navigator.nextPage(
-          CompanyLiabilitiesPage(Index(1)),
+          CompanyLiabilitiesPage(periodKey, Index(1)),
           NormalMode,
           UserAnswers("id")
-            .set(CompanyDetailsPage(index), CompanyDetails("C1", None))
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
-            .set(CompanyLiabilitiesPage(index), BigDecimal(122.11))
+            .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(122.11))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(NormalMode)
+        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
     }
 
     "must go from a UKBankDetailsPage to CheckYourAnswers page" in {
 
       navigator.nextPage(
-        UKBankDetailsPage,
+        UKBankDetailsPage(periodKey),
         NormalMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
     }
 
     "must go from a BankDetailsForRepaymentPage to CheckYourAnswers page" in {
 
       navigator.nextPage(
-        BankDetailsForRepaymentPage,
+        BankDetailsForRepaymentPage(periodKey),
         NormalMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(false)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
     }
   }
 

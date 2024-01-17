@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.ReportOnlineMarketplaceAlternativeChargePage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,8 +26,8 @@ import viewmodels.implicits._
 
 object ReportOnlineMarketplaceAlternativeChargeSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportOnlineMarketplaceAlternativeChargePage).map { answer =>
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey)).map { answer =>
       val value = if (answer) "site.yes" else "site.no"
 
       SummaryListRowViewModel(
@@ -36,7 +36,7 @@ object ReportOnlineMarketplaceAlternativeChargeSummary {
         Seq(
           ActionItemViewModel(
             "site.change",
-            routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(CheckMode).url
+            routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, CheckMode).url
           )
             .withVisuallyHiddenText(messages("reportOnlineMarketplaceAlternativeCharge.change.hidden"))
         )

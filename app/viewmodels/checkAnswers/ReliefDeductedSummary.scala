@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.ReliefDeductedPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,13 +26,13 @@ import viewmodels.implicits._
 
 object ReliefDeductedSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReliefDeductedPage).map { answer =>
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReliefDeductedPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reliefDeducted.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ReliefDeductedController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.ReliefDeductedController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("reliefDeducted.change.hidden"))
         )
       )

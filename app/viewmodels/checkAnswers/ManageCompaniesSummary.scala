@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.ManageCompaniesPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,8 +28,8 @@ import viewmodels.implicits._
 
 object ManageCompaniesSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ManageCompaniesPage).map { answer =>
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ManageCompaniesPage(periodKey)).map { answer =>
       val value = ValueViewModel(
         HtmlContent(
           HtmlFormat.escape(messages(s"manageCompanies.$answer"))
@@ -40,7 +40,7 @@ object ManageCompaniesSummary {
         key = "manageCompanies.checkYourAnswersLabel",
         value = value,
         actions = Seq(
-          ActionItemViewModel("site.change", routes.ManageCompaniesController.onPageLoad(CheckMode).url)
+          ActionItemViewModel("site.change", routes.ManageCompaniesController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("manageCompanies.change.hidden"))
         )
       )

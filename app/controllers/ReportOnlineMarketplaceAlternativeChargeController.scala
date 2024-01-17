@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ReportOnlineMarketplaceAlternativeChargeFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.ReportOnlineMarketplaceAlternativeChargePage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -46,27 +46,30 @@ class ReportOnlineMarketplaceAlternativeChargeController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceAlternativeChargePage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode))
     }
 
-    Ok(view(preparedForm, mode))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode))),
           value =>
             for {
               updatedAnswers <-
-                Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceAlternativeChargePage, value))
+                Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceAlternativeChargePage, mode, updatedAnswers))
+            } yield Redirect(
+              navigator.nextPage(ReportOnlineMarketplaceAlternativeChargePage(periodKey), mode, updatedAnswers)
+            )
         )
-  }
+    }
 }

@@ -18,7 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.GroupLiabilityFormProvider
-import models.{Mode, formatDate}
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.GroupLiabilityPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,24 +44,25 @@ class GroupLiabilityController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val startDate = formatDate(request.period.start)
-    val endDate   = formatDate(request.period.end)
-    val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
-    val form      = formProvider(args)
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
+      val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
+      val form      = formProvider(args)
 
-    val preparedForm = request.userAnswers.get(GroupLiabilityPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+      val preparedForm = request.userAnswers.get(GroupLiabilityPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode, request.registration.isGroupMessage, startDate, endDate))
     }
 
-    Ok(view(preparedForm, mode, request.registration.isGroupMessage, startDate, endDate))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      val startDate = formatDate(request.period.start)
-      val endDate   = formatDate(request.period.end)
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
       val args      = Seq(request.registration.isGroupMessage, startDate, endDate)
       val form      = formProvider(args)
 
@@ -70,13 +71,13 @@ class GroupLiabilityController @Inject() (
         .fold(
           formWithErrors =>
             Future.successful(
-              BadRequest(view(formWithErrors, mode, request.registration.isGroupMessage, startDate, endDate))
+              BadRequest(view(formWithErrors, periodKey, mode, request.registration.isGroupMessage, startDate, endDate))
             ),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(GroupLiabilityPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(GroupLiabilityPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(GroupLiabilityPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(GroupLiabilityPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

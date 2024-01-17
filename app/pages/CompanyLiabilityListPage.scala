@@ -16,12 +16,13 @@
 
 package pages
 
+import models.PeriodKey
 import play.api.libs.json.JsPath
 import queries.Gettable
 
-case object CompanyLiabilityListPage extends Gettable[List[BigDecimal]] {
+case class CompanyLiabilityListPage(periodKey: PeriodKey) extends Gettable[List[BigDecimal]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = companyLiabilityList
 }

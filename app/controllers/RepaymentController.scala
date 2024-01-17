@@ -18,9 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.RepaymentFormProvider
-
-import javax.inject.Inject
-import models.{Mode, formatDate}
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.RepaymentPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -29,6 +27,7 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.RepaymentView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class RepaymentController @Inject() (
@@ -45,34 +44,35 @@ class RepaymentController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val startDate = formatDate(request.period.start)
-    val endDate   = formatDate(request.period.end)
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
 
-    val form         = formProvider(startDate, endDate)
-    val preparedForm = request.userAnswers.get(RepaymentPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+      val form         = formProvider(startDate, endDate)
+      val preparedForm = request.userAnswers.get(RepaymentPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode, startDate, endDate))
     }
 
-    Ok(view(preparedForm, mode, startDate, endDate))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
-      val startDate = formatDate(request.period.start)
-      val endDate   = formatDate(request.period.end)
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+      val startDate = request.periodStartDate
+      val endDate   = request.periodEndDate
       val form      = formProvider(startDate, endDate)
 
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, startDate, endDate))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, startDate, endDate))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(RepaymentPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(RepaymentPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(RepaymentPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(RepaymentPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

@@ -43,7 +43,7 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new RepaymentFormProvider()
   val form         = formProvider(startDate, endDate)
 
-  lazy val repaymentRoute = routes.RepaymentController.onPageLoad(NormalMode).url
+  lazy val repaymentRoute = routes.RepaymentController.onPageLoad(periodKey, NormalMode).url
 
   "Repayment Controller" - {
 
@@ -59,7 +59,7 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[RepaymentView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, startDate, endDate)(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, startDate, endDate)(
           request,
           messages(application)
         ).toString
@@ -68,7 +68,7 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(RepaymentPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(RepaymentPage(periodKey), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -80,7 +80,7 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode, startDate, endDate)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, startDate, endDate)(
           request,
           messages(application)
         ).toString
@@ -129,7 +129,7 @@ class RepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, startDate, endDate)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, startDate, endDate)(
           request,
           messages(application)
         ).toString

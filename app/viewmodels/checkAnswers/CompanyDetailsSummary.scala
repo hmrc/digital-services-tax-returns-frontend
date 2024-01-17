@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, Index, UserAnswers}
+import models.{CheckMode, Index, PeriodKey, UserAnswers}
 import pages.CompanyDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
@@ -28,17 +28,22 @@ import viewmodels.implicits._
 
 object CompanyDetailsSummary {
 
-  def row(index: Index, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(CompanyDetailsPage(index)).map { answer =>
+  def row(periodKey: PeriodKey, index: Index, answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(CompanyDetailsPage(periodKey, index)).map { answer =>
       val value = HtmlFormat.escape(answer.companyName).toString
 
       SummaryListRowViewModel(
         key = Key(HtmlContent(value)),
         value = ValueViewModel(Empty),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.CompanyDetailsController.onPageLoad(index, CheckMode).url)
+          ActionItemViewModel(
+            "site.change",
+            routes.CompanyDetailsController.onPageLoad(periodKey, index, CheckMode).url
+          )
             .withVisuallyHiddenText(messages("companyDetails.change.hidden")),
-          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(index, CheckMode).url)
+          ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(periodKey, index, CheckMode).url)
             .withVisuallyHiddenText(messages("companyDetails.remove.hidden"))
             .withCssClass("")
         )

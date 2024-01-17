@@ -18,7 +18,7 @@ package controllers
 
 import connectors.DSTConnector
 import controllers.actions._
-import models.formatDate
+import models.PeriodKey
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
@@ -43,28 +43,36 @@ class ReturnsCompleteController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(): Action[AnyContent] = (identify andThen getData andThen requireData).async { implicit request =>
-    val submittedPeriodStart = formatDate(request.period.start)
-    val submittedPeriodEnd   = formatDate(request.period.end)
-    val companyName          = request.registration.companyReg.company.name
+  def onPageLoad(periodKey: PeriodKey): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+      val submittedPeriodStart = request.periodStartDate
+      val submittedPeriodEnd   = request.periodEndDate
+      val companyName          = request.registration.companyReg.company.name
 
-    val sectionList = cyaHelper.createSectionList(request.userAnswers)
+      val sectionList = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
-    val printableCYA: Option[Html] = Some(
-      cyaView(
-        sectionList,
-        submittedPeriodStart,
-        submittedPeriodEnd,
-        request.registration,
-        isPrint = true,
-        showBackLink = false
+      val printableCYA: Option[Html] = Some(
+        cyaView(
+          periodKey,
+          sectionList,
+          submittedPeriodStart,
+          submittedPeriodEnd,
+          request.registration,
+          isPrint = true,
+          showBackLink = false
+        )
       )
-    )
 
-    for {
-      outstandingPeriod <- dstConnector.lookupOutstandingReturns()
-    } yield Ok(
-      view(companyName, submittedPeriodStart, submittedPeriodEnd, outstandingPeriod.toList.minBy(_.start), printableCYA)
-    )
-  }
+      for {
+        outstandingPeriod <- dstConnector.lookupOutstandingReturns()
+      } yield Ok(
+        view(
+          companyName,
+          submittedPeriodStart,
+          submittedPeriodEnd,
+          outstandingPeriod.toList.minBy(_.start),
+          printableCYA
+        )
+      )
+    }
 }

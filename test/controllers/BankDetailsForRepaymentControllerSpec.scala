@@ -24,8 +24,8 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.BankDetailsForRepaymentPage
+import play.api.data.Form
 import play.api.inject.bind
-import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -36,23 +36,19 @@ import scala.concurrent.Future
 
 class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call = Call("GET", "/foo")
 
-  val formProvider = new BankDetailsForRepaymentFormProvider()
-  val form         = formProvider()
+  val formProvider                        = new BankDetailsForRepaymentFormProvider()
+  val form: Form[BankDetailsForRepayment] = formProvider()
 
-  lazy val bankDetailsForRepaymentRoute = routes.BankDetailsForRepaymentController.onPageLoad(NormalMode).url
-  val iban                              = "GB36BARC20051773152391"
+  lazy val bankDetailsForRepaymentRoute: String =
+    routes.BankDetailsForRepaymentController.onPageLoad(periodKey, NormalMode).url
+  val iban                                      = "GB36BARC20051773152391"
 
-  val userAnswers = UserAnswers(
-    userAnswersId,
-    Json.obj(
-      BankDetailsForRepaymentPage.toString -> Json.obj(
-        "accountName"                    -> "Name",
-        "internationalBankAccountNumber" -> iban
-      )
-    )
-  )
+  val userAnswers: UserAnswers = emptyUserAnswers
+    .set(BankDetailsForRepaymentPage(periodKey), BankDetailsForRepayment("Name", iban))
+    .success
+    .value
 
   "BankDetailsForRepayment Controller" - {
 
@@ -68,7 +64,7 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
@@ -84,7 +80,7 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(BankDetailsForRepayment("Name", iban)), NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(BankDetailsForRepayment("Name", iban)), periodKey, NormalMode)(
           request,
           messages(application)
         ).toString
@@ -133,7 +129,10 @@ class BankDetailsForRepaymentControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

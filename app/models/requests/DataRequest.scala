@@ -16,7 +16,7 @@
 
 package models.requests
 
-import models.UserAnswers
+import models.{UserAnswers, formatDate}
 import models.registration.{Period, Registration}
 import play.api.mvc.{Request, WrappedRequest}
 
@@ -24,7 +24,7 @@ case class OptionalDataRequest[A](
   request: Request[A],
   userId: String,
   registration: Registration,
-  period: Period,
+  period: Option[Period],
   userAnswers: Option[UserAnswers]
 ) extends WrappedRequest[A](request)
 
@@ -32,6 +32,9 @@ case class DataRequest[A](
   request: Request[A],
   userId: String,
   registration: Registration,
-  period: Period,
+  period: Option[Period],
   userAnswers: UserAnswers
-) extends WrappedRequest[A](request)
+) extends WrappedRequest[A](request) {
+  lazy val periodStartDate: String = period.fold("Failed to get the start date")(date => formatDate(date.start))
+  lazy val periodEndDate: String   = period.fold("Failed to get the end date")(date => formatDate(date.end))
+}

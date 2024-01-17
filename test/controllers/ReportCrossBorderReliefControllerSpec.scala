@@ -40,7 +40,7 @@ class ReportCrossBorderReliefControllerSpec extends SpecBase with MockitoSugar {
   val formProvider = new ReportCrossBorderReliefFormProvider()
   val form         = formProvider()
 
-  lazy val reportCrossBorderReliefRoute = routes.ReportCrossBorderReliefController.onPageLoad(NormalMode).url
+  lazy val reportCrossBorderReliefRoute = routes.ReportCrossBorderReliefController.onPageLoad(periodKey, NormalMode).url
 
   "ReportCrossBorderRelief Controller" - {
 
@@ -56,13 +56,13 @@ class ReportCrossBorderReliefControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ReportCrossBorderReliefView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(ReportCrossBorderReliefPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(ReportCrossBorderReliefPage(periodKey), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +74,10 @@ class ReportCrossBorderReliefControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +123,10 @@ class ReportCrossBorderReliefControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

@@ -16,12 +16,12 @@
 
 package pages
 
-import models.SelectActivities
+import models.{PeriodKey, SelectActivities}
 import play.api.libs.json.JsPath
 
-case object SelectActivitiesPage extends QuestionPage[Set[SelectActivities]] {
+case class SelectActivitiesPage(periodKey: PeriodKey) extends QuestionPage[Set[SelectActivities]] {
 
-  override def path: JsPath = JsPath \ toString
+  override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = "selectActivities"
 }

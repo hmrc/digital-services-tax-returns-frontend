@@ -37,7 +37,7 @@ class PayYourDigitalServiceTaxController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad: Action[AnyContent] = identify.async { implicit request =>
+  def onPageLoad: Action[AnyContent] = identify().async { implicit request =>
     dstConnector.lookupOutstandingReturns().map { periods =>
       Ok(view(request.registration.registrationNumber, sortPeriods(periods)))
     }

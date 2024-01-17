@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
 import models.requests.OptionalDataRequest
-import models.{Index, Mode, UserAnswers}
+import models.{Index, Mode, PeriodKey, UserAnswers}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -47,48 +47,50 @@ class CompanyDetailsController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData) { implicit request =>
-    val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(index)) match {
-      case None        => form
-      case Some(value) => form.fill(value)
-    }
+  def onPageLoad(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData) { implicit request =>
+      val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(periodKey, index)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
 
-    Ok(view(preparedForm, index, mode))
-  }
+      Ok(view(preparedForm, periodKey, index, mode))
+    }
 
   private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
     request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-  def onSubmit(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData).async { implicit request =>
-    form
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(view(formWithErrors, index, mode))),
-        value =>
-          for {
-            updatedAnswers <-
-              Future.fromTry(
-                getUserAnswers(request).set(CompanyDetailsPage(index), value)
-              )
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(CompanyDetailsPage(index), mode, updatedAnswers))
-      )
-  }
+  def onSubmit(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData).async { implicit request =>
+      form
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, index, mode))),
+          value =>
+            for {
+              updatedAnswers <-
+                Future.fromTry(
+                  getUserAnswers(request).set(CompanyDetailsPage(periodKey, index), value)
+                )
+              _              <- sessionRepository.set(updatedAnswers)
+            } yield Redirect(navigator.nextPage(CompanyDetailsPage(periodKey, index), mode, updatedAnswers))
+        )
+    }
 
-  def onDelete(index: Index, mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onDelete(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       for {
         updatedAnswers <-
           Future.fromTry(
-            request.userAnswers.remove(CompanyDetailsPage(index))
+            request.userAnswers.remove(CompanyDetailsPage(periodKey, index))
           )
         _              <- sessionRepository.set(updatedAnswers)
       } yield {
-        val size = updatedAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+        val size = updatedAnswers.get(CompanyDetailsListPage(periodKey)).fold(0)(_.size)
         size match {
-          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), mode))
-          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(mode))
+          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
+          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
         }
       }
-  }
+    }
 }

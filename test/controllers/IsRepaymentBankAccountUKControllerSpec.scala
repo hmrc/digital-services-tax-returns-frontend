@@ -40,7 +40,8 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
   val formProvider = new IsRepaymentBankAccountUKFormProvider()
   val form         = formProvider()
 
-  lazy val isRepaymentBankAccountUKRoute = routes.IsRepaymentBankAccountUKController.onPageLoad(NormalMode).url
+  lazy val isRepaymentBankAccountUKRoute =
+    routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, NormalMode).url
 
   "IsRepaymentBankAccountUK Controller" - {
 
@@ -56,13 +57,13 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[IsRepaymentBankAccountUKView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
-      val userAnswers = UserAnswers(userAnswersId).set(IsRepaymentBankAccountUKPage, true).success.value
+      val userAnswers = UserAnswers(userAnswersId).set(IsRepaymentBankAccountUKPage(periodKey), true).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -74,7 +75,10 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -120,7 +124,10 @@ class IsRepaymentBankAccountUKControllerSpec extends SpecBase with MockitoSugar 
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 

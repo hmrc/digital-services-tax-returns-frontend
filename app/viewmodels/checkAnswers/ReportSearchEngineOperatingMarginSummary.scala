@@ -17,7 +17,7 @@
 package viewmodels.checkAnswers
 
 import controllers.routes
-import models.{CheckMode, UserAnswers}
+import models.{CheckMode, PeriodKey, UserAnswers}
 import pages.ReportSearchEngineOperatingMarginPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -26,15 +26,15 @@ import viewmodels.implicits._
 
 object ReportSearchEngineOperatingMarginSummary {
 
-  def row(answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
-    answers.get(ReportSearchEngineOperatingMarginPage).map { answer =>
+  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(ReportSearchEngineOperatingMarginPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reportSearchEngineOperatingMargin.checkYourAnswersLabel",
         value = ValueViewModel(answer.toString),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
-            routes.ReportSearchEngineOperatingMarginController.onPageLoad(CheckMode).url
+            routes.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey, CheckMode).url
           )
             .withVisuallyHiddenText(messages("reportSearchEngineOperatingMargin.change.hidden"))
         )

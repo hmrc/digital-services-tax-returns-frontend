@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ReportOnlineMarketplaceLossFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.ReportOnlineMarketplaceLossPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,28 +44,30 @@ class ReportOnlineMarketplaceLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val form         = formProvider(request.registration.isGroupMessage)
-    val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val form         = formProvider(request.registration.isGroupMessage)
+      val preparedForm = request.userAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode, request.registration))
     }
 
-    Ok(view(preparedForm, mode, request.registration))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val form = formProvider(request.registration.isGroupMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, request.registration))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, request.registration))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceLossPage, value))
+              updatedAnswers <-
+                Future.fromTry(request.userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceLossPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(ReportOnlineMarketplaceLossPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

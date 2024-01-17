@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.ManageCompaniesFormProvider
 import models.requests.DataRequest
-import models.{Index, Mode, NormalMode, UserAnswers}
+import models.{Index, Mode, NormalMode, PeriodKey, UserAnswers}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, ManageCompaniesPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -50,39 +50,42 @@ class ManageCompaniesController @Inject() (
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    request.userAnswers.get(CompanyDetailsListPage) match {
-      case Some(list) if list.nonEmpty => Ok(view(form, mode, getSummaryList))
-      case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), mode))
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      request.userAnswers.get(CompanyDetailsListPage(periodKey)) match {
+        case Some(list) if list.nonEmpty => Ok(view(form, periodKey, mode, getSummaryList(periodKey)))
+        case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
+      }
     }
-  }
 
-  private def getSummaryList(implicit request: DataRequest[AnyContent]): SummaryList = {
-    val numberOfCompanies: Int              = request.userAnswers.get(CompanyDetailsListPage).fold(0)(_.size)
+  private def getSummaryList(periodKey: PeriodKey)(implicit request: DataRequest[AnyContent]): SummaryList = {
+    val numberOfCompanies: Int              = request.userAnswers.get(CompanyDetailsListPage(periodKey)).fold(0)(_.size)
     val summaryListRow: Seq[SummaryListRow] = List.range(0, numberOfCompanies) flatMap { index =>
-      CompanyDetailsSummary.row(Index(index), request.userAnswers)
+      CompanyDetailsSummary.row(periodKey, Index(index), request.userAnswers)
     }
     SummaryListViewModel(summaryListRow)
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, getSummaryList))),
+          formWithErrors =>
+            Future.successful(BadRequest(view(formWithErrors, periodKey, mode, getSummaryList(periodKey)))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(ManageCompaniesPage, value))
-            } yield Redirect(navigator.nextPage(ManageCompaniesPage, mode, updatedAnswers))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(ManageCompaniesPage(periodKey), value))
+            } yield Redirect(navigator.nextPage(ManageCompaniesPage(periodKey), mode, updatedAnswers))
         )
-  }
-
-  def redirectToOnLoadPage: Action[AnyContent] = (identify andThen getData) { implicit request =>
-    request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage) match {
-      case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(NormalMode))
-      case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(Index(0), NormalMode))
     }
+
+  def redirectToOnLoadPage(periodKey: PeriodKey): Action[AnyContent] = (identify() andThen getData) {
+    implicit request =>
+      request.userAnswers.getOrElse(UserAnswers(request.userId)).get(CompanyDetailsListPage(periodKey)) match {
+        case Some(list) if list.nonEmpty => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
+        case _                           => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), NormalMode))
+      }
   }
 
 }

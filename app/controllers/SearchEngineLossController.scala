@@ -19,7 +19,7 @@ package controllers
 import controllers.actions._
 import forms.SearchEngineLossFormProvider
 import javax.inject.Inject
-import models.Mode
+import models.{Mode, PeriodKey}
 import navigation.Navigator
 import pages.SearchEngineLossPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -44,30 +44,31 @@ class SearchEngineLossController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData) { implicit request =>
-    val isGoupMessage = request.registration.isGroupMessage
-    val form          = formProvider(isGoupMessage)
-    val preparedForm  = request.userAnswers.get(SearchEngineLossPage) match {
-      case None        => form
-      case Some(value) => form.fill(value)
+  def onPageLoad(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      val isGoupMessage = request.registration.isGroupMessage
+      val form          = formProvider(isGoupMessage)
+      val preparedForm  = request.userAnswers.get(SearchEngineLossPage(periodKey)) match {
+        case None        => form
+        case Some(value) => form.fill(value)
+      }
+
+      Ok(view(preparedForm, periodKey, mode, isGoupMessage))
     }
 
-    Ok(view(preparedForm, mode, isGoupMessage))
-  }
-
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify andThen getData andThen requireData).async {
-    implicit request =>
+  def onSubmit(periodKey: PeriodKey, mode: Mode): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       val isGroupMessage = request.registration.isGroupMessage
       val form           = formProvider(isGroupMessage)
       form
         .bindFromRequest()
         .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, mode, isGroupMessage))),
+          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, mode, isGroupMessage))),
           value =>
             for {
-              updatedAnswers <- Future.fromTry(request.userAnswers.set(SearchEngineLossPage, value))
+              updatedAnswers <- Future.fromTry(request.userAnswers.set(SearchEngineLossPage(periodKey), value))
               _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(SearchEngineLossPage, mode, updatedAnswers))
+            } yield Redirect(navigator.nextPage(SearchEngineLossPage(periodKey), mode, updatedAnswers))
         )
-  }
+    }
 }

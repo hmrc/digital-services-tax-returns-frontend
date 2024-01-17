@@ -23,36 +23,37 @@ import org.scalatestplus.mockito.MockitoSugar.mock
 import pages.GroupLiabilityPage
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.CYAHelper
 import views.html.CheckYourAnswersView
 
 class CheckYourAnswersControllerSpec extends SpecBase {
 
-  val mockRegistration = mock[Registration]
-  val startDate        = formatDate(period.start)
-  val endDate          = formatDate(period.end)
-  val sectionList      = Seq()
+  val mockRegistration: Registration   = mock[Registration]
+  val startDate: String                = formatDate(period.start)
+  val endDate: String                  = formatDate(period.end)
+  val sectionList: Seq[SummaryListRow] = Seq()
 
-  lazy val checkYourAnswersRoute = routes.CheckYourAnswersController.onPageLoad(false).url
+  lazy val checkYourAnswersRoute: String = routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false).url
 
   "CheckYourAnswers Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val userAnswers = emptyUserAnswers.set(GroupLiabilityPage, BigDecimal(40.00)).success.value
+      val userAnswers = emptyUserAnswers.set(GroupLiabilityPage(periodKey), BigDecimal(40.00)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
         val request     = FakeRequest(GET, checkYourAnswersRoute)
-        val sectionList = new CYAHelper().createSectionList(userAnswers)(messages(application))
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(sectionList, startDate, endDate, registration)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
           request,
           messages(application)
         ).toString

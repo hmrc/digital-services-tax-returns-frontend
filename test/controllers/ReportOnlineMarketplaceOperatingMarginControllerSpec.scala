@@ -44,7 +44,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
   val validAnswer = 100.00
 
   lazy val reportOnlineMarketplaceOperatingMarginRoute =
-    routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(NormalMode).url
+    routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, NormalMode).url
 
   "ReportOnlineMarketplaceOperatingMargin Controller" - {
 
@@ -60,7 +60,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
         val view = application.injector.instanceOf[ReportOnlineMarketplaceOperatingMarginView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode, company)(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, company)(
           request,
           messages(application)
         ).toString
@@ -70,7 +70,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(ReportOnlineMarketplaceOperatingMarginPage, validAnswer).success.value
+        UserAnswers(userAnswersId).set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), validAnswer).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -82,7 +82,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), NormalMode, company)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), periodKey, NormalMode, company)(
           request,
           messages(application)
         ).toString
@@ -131,7 +131,7 @@ class ReportOnlineMarketplaceOperatingMarginControllerSpec extends SpecBase with
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode, company)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, company)(
           request,
           messages(application)
         ).toString

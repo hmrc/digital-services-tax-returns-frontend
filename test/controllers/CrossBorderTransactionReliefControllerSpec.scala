@@ -40,7 +40,8 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
 
   def onwardRoute = Call("GET", "/foo")
 
-  lazy val crossBorderTransactionReliefRoute = routes.CrossBorderTransactionReliefController.onPageLoad(NormalMode).url
+  lazy val crossBorderTransactionReliefRoute =
+    routes.CrossBorderTransactionReliefController.onPageLoad(periodKey, NormalMode).url
 
   "CrossBorderTransactionRelief Controller" - {
 
@@ -56,14 +57,14 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val view = application.injector.instanceOf[CrossBorderTransactionReliefView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
       }
     }
 
     "must populate the view correctly on a GET when the question has previously been answered" in {
 
       val userAnswers =
-        UserAnswers(userAnswersId).set(CrossBorderTransactionReliefPage, BigDecimal(100.00)).success.value
+        UserAnswers(userAnswersId).set(CrossBorderTransactionReliefPage(periodKey), BigDecimal(100.00)).success.value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
@@ -75,7 +76,10 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(100.00), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form.fill(100.00), periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -121,7 +125,10 @@ class CrossBorderTransactionReliefControllerSpec extends SpecBase with MockitoSu
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
