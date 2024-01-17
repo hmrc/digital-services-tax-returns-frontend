@@ -24,7 +24,7 @@ import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.CYAHelper
-import views.html.{CheckYourAnswersView, ReturnsCompleteView}
+import views.html.{PrintableCheckYourAnswersView, ReturnsCompleteView}
 
 import javax.inject.Inject
 import scala.concurrent.ExecutionContext
@@ -38,7 +38,7 @@ class ReturnsCompleteController @Inject() (
   cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnsCompleteView,
-  cyaView: CheckYourAnswersView
+  printableCyaView: PrintableCheckYourAnswersView
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -52,14 +52,12 @@ class ReturnsCompleteController @Inject() (
       val sectionList = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
       val printableCYA: Option[Html] = Some(
-        cyaView(
+        printableCyaView(
           periodKey,
           sectionList,
           submittedPeriodStart,
           submittedPeriodEnd,
-          request.registration,
-          isPrint = true,
-          showBackLink = false
+          request.registration
         )
       )
 
