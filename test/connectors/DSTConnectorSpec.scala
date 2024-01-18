@@ -64,13 +64,11 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
     }
 
     "successfully lookup a submitted return" in {
-      implicit val arbitraryReturn: Arbitrary[Return] = Arbitrary {
-        sampleReturn
-      }
+      implicit val arbitraryReturn: Arbitrary[Return] = Arbitrary(sampleReturn)
       val returns                                     = Arbitrary.arbitrary[Return].sample.value
       val key                                         = PeriodKey("003")
 
-      stubGet(Json.toJson(returns), s"/digital-services-tax/returns/$key", OK)
+      stubGet(Json.toJson(returns), s"/digital-services-tax/returns/${key.value}", OK)
 
       val response = connector.lookupSubmittedReturns(key)
       whenReady(response) { res =>
