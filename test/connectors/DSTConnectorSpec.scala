@@ -18,8 +18,11 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.ModelGenerators._
+import models.PeriodKey
 import models.SimpleJson._
+import models.TestSampleData._
 import models.registration.{Period, Registration}
+import models.returns.Return
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -57,6 +60,22 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
       whenReady(response) { res =>
         res mustBe defined
         res.value mustEqual registration
+      }
+    }
+
+    "successfully lookup a submitted return" in {
+      implicit val arbitraryReturn: Arbitrary[Return] = Arbitrary {
+        sampleReturn
+      }
+      val returns                                     = Arbitrary.arbitrary[Return].sample.value
+      val key                                         = PeriodKey("003")
+
+      stubGet(Json.toJson(returns), s"/digital-services-tax/returns/$key", OK)
+
+      val response = connector.lookupSubmittedReturns(key)
+      whenReady(response) { res =>
+        res mustBe defined
+        res.value mustEqual returns
       }
     }
 

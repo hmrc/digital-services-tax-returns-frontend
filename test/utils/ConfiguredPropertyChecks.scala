@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import enumeratum._
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-sealed trait Activity extends EnumEntry
-object Activity extends Enum[Activity] with PlayJsonEnum[Activity] {
-  def values: IndexedSeq[Activity] = findValues
-  case object SocialMedia extends Activity
-  case object SearchEngine extends Activity
-  case object OnlineMarketplace extends Activity
-
+trait ConfiguredPropertyChecks extends ScalaCheckDrivenPropertyChecks {
+  implicit val numberSuccessfulTests: PropertyCheckConfiguration = PropertyCheckConfiguration(10)
 }
