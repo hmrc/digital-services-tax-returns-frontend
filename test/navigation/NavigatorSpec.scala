@@ -261,10 +261,31 @@ class NavigatorSpec extends SpecBase {
           ReportCrossBorderReliefPage(periodKey),
           NormalMode,
           UserAnswers("id")
+            .set(ReportAlternativeChargePage(periodKey), false)
+            .success
+            .value
             .set(ReportCrossBorderReliefPage(periodKey), false)
             .success
             .value
         ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
+      }
+
+      "must go from a ReportCrossBorderReliefPage to companyLiability page when 'Yes' is selected and ReportAlternativeChargePage option is 'No'" in {
+
+        navigator.nextPage(
+          ReportCrossBorderReliefPage(periodKey),
+          NormalMode,
+          UserAnswers("id")
+            .set(ReportAlternativeChargePage(periodKey), true)
+            .success
+            .value
+            .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
+            .success
+            .value
+            .set(ReportCrossBorderReliefPage(periodKey), false)
+            .success
+            .value
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a ReportCrossBorderReliefPage to ReliefDeducted page when 'Yes' is selected" in {
@@ -273,6 +294,9 @@ class NavigatorSpec extends SpecBase {
           ReportCrossBorderReliefPage(periodKey),
           NormalMode,
           UserAnswers("id")
+            .set(ReportAlternativeChargePage(periodKey), false)
+            .success
+            .value
             .set(ReportCrossBorderReliefPage(periodKey), true)
             .success
             .value

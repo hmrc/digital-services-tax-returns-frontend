@@ -50,7 +50,7 @@ class Navigator @Inject() () {
     case ReportSocialMediaOperatingMarginPage(periodKey)         => ua => socialMediaOperatingMargin(periodKey, ua)(NormalMode)
     case ReportSearchEngineOperatingMarginPage(periodKey)        => ua => searchEnginOperatingMargin(periodKey, ua)(NormalMode)
     case ReliefDeductedPage(periodKey)                           =>
-      _ => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode))
+      ua => reliefDeducted(periodKey, ua)(NormalMode)
     case AllowanceDeductedPage(periodKey)                        => ua => Some(companyLiability(periodKey, Index(0), ua)(NormalMode))
     case UKBankDetailsPage(periodKey)                            =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey, isPrint = false))
@@ -78,9 +78,17 @@ class Navigator @Inject() () {
   }
 
   def reportCrossBorderRelief(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(ReportCrossBorderReliefPage(periodKey)) map {
-      case true  => routes.ReliefDeductedController.onPageLoad(periodKey, mode)
-      case false => routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
+    (ua.get(ReportCrossBorderReliefPage(periodKey)), ua.get(ReportAlternativeChargePage(periodKey))) match {
+      case (Some(false), Some(false)) => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
+      case (Some(false), Some(true))  => Some(companyLiability(periodKey, Index(0), ua)(mode))
+      case (Some(true), Some(_))      => Some(routes.ReliefDeductedController.onPageLoad(periodKey, mode))
+      case _                          => None
+    }
+
+  def reliefDeducted(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
+    ua.get(ReportAlternativeChargePage(periodKey)) map {
+      case true  => companyLiability(periodKey, Index(0), ua)(mode)
+      case false => routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
     }
 
   private def addCompanyDetails(periodKey: PeriodKey, mode: Mode)(userAnswers: UserAnswers): Option[Call] =

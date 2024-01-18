@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.CYAHelper
 import viewmodels.govuk.SummaryListFluency
-import views.html.{CheckYourAnswersView, ReturnsCompleteView}
+import views.html.{PrintableCheckYourAnswersView, ReturnsCompleteView}
 
 import scala.concurrent.Future
 
@@ -56,11 +56,11 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
 
         val result = route(application, request).value
 
-        val view = application.injector.instanceOf[ReturnsCompleteView]
-        val cya  = application.injector.instanceOf[CheckYourAnswersView]
+        val view         = application.injector.instanceOf[ReturnsCompleteView]
+        val printableCya = application.injector.instanceOf[PrintableCheckYourAnswersView]
 
         val printableCYA = Some(
-          cya(periodKey, sectionList, startDate, endDate, registration, isPrint = true, showBackLink = false)(
+          printableCya(periodKey, sectionList, startDate, endDate, registration)(
             request,
             messages(application)
           )
