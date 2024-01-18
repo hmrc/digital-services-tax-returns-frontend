@@ -46,5 +46,5 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
     http.GET[List[Period]](s"$backendURL/returns/all").map(_.toSet)
 
   def lookupSubmittedReturns(periodKey: PeriodKey)(implicit hc: HeaderCarrier): Future[Option[Return]] =
-    http.GET[Option[Return]](s"$backendURL/returns/${periodKey.value}")
+    http.GET[Option[Return]](s"$backendURL/returns/$periodKey")
 }
