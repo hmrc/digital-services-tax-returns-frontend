@@ -29,7 +29,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers.{contain, convertToAnyMustWrapper, defined}
 import play.api.Application
-import play.api.http.Status.OK
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -74,6 +74,16 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
       whenReady(response) { res =>
         res mustBe defined
         res.value mustEqual returns
+      }
+    }
+
+    "should return not found if no existing submitted return is found" in {
+      val key = PeriodKey("XXX")
+      stubGet(Json.toJson(sampleReturn), s"/digital-services-tax/returns/${key.value}", NOT_FOUND)
+
+      val response = connector.lookupSubmittedReturns(key)
+      whenReady(response) { res =>
+        res mustBe None
       }
     }
 
