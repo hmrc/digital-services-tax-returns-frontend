@@ -22,7 +22,6 @@ import models.PeriodKey
 import models.SimpleJson._
 import models.TestSampleData._
 import models.registration.{Period, Registration}
-import models.returns.Return
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
@@ -74,7 +73,7 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
       }
     }
 
-    "should return not found if no existing submitted return is found" in {
+    "should return not found if no existing return is found for the period key" in {
       val key = PeriodKey("XXX")
       stubGet(Json.toJson(sampleReturn), s"/digital-services-tax/returns/${key.value}", NOT_FOUND)
 
