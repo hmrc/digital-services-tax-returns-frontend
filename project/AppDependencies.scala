@@ -14,7 +14,9 @@ object AppDependencies {
     "com.chuusai"       %% "shapeless"                             % "2.4.0-M1",
     "commons-validator"  % "commons-validator"                     % "1.7",
     "org.typelevel"     %% "cats-core"                             % "2.10.0",
-    "fr.marcwrobel"      % "jbanking"                              % "4.1.0"
+    "fr.marcwrobel"      % "jbanking"                              % "4.1.0",
+    "com.beachape"              %% "enumeratum"                    % "1.7.0",
+    "com.beachape"              %% "enumeratum-play-json"          % "1.7.0"
   )
 
   val test = Seq(

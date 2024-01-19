@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+import cats.kernel.Monoid
 import com.ibm.icu.text.SimpleDateFormat
 import com.ibm.icu.util.{TimeZone, ULocale}
+import fr.marcwrobel.jbanking.iban.Iban
 import models.registration.Period
 import play.api.libs.json._
 import shapeless.tag.@@
@@ -150,7 +152,39 @@ package object models {
         regex = "^[0-9]{12}$"
       )
 
-  def sortPeriods(periods: Set[Period]) =
+  type Money = BigDecimal @@ Money.Tag
+  object Money extends ValidatedType[BigDecimal] {
+    def validateAndTransform(in: BigDecimal): Option[BigDecimal] =
+      Some(in).filter(_.toString.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
+
+    implicit def mon: Monoid[Money] = new Monoid[Money] {
+      val base: Monoid[BigDecimal]                    = implicitly[Monoid[BigDecimal]]
+      override def combine(a: Money, b: Money): Money = Money(base.combine(a, b))
+      override def empty: Money                       = Money(base.empty)
+    }
+  }
+
+  type Percent = Float @@ Percent.Tag
+  object Percent extends ValidatedType[Float] {
+    def validateAndTransform(in: Float): Option[Float] =
+      Some(in).filter { x =>
+        (x >= 0 && x <= 100) && (BigDecimal(x.toString).scale <= 3)
+      }
+
+    implicit def mon: Monoid[Percent] = new Monoid[Percent] {
+      val base: Monoid[Float]                               = implicitly[Monoid[Float]]
+      override def combine(a: Percent, b: Percent): Percent = Percent(base.combine(a, b))
+      override def empty: Percent                           = Percent(base.empty)
+    }
+  }
+
+  type IBAN = String @@ IBAN.Tag
+  object IBAN extends ValidatedType[String] {
+    override def validateAndTransform(in: String): Option[String] =
+      Some(in).map(_.replaceAll("\\s+", "")).filter(Iban.isValid)
+  }
+
+  def sortPeriods(periods: Set[Period]): List[Period] =
     periods.toList.sortBy(_.start)
   implicit class RichJsObject(jsObject: JsObject) {
 

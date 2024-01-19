@@ -16,8 +16,10 @@
 
 package connectors
 
+import models.PeriodKey
 import models.SimpleJson._
 import models.registration.{Period, Registration}
+import models.returns.Return
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
@@ -43,4 +45,6 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
   def lookupAllReturns()(implicit hc: HeaderCarrier): Future[Set[Period]] =
     http.GET[List[Period]](s"$backendURL/returns/all").map(_.toSet)
 
+  def lookupSubmittedReturns(periodKey: PeriodKey)(implicit hc: HeaderCarrier): Future[Option[Return]] =
+    http.GET[Option[Return]](s"$backendURL/returns/${periodKey.value}")
 }

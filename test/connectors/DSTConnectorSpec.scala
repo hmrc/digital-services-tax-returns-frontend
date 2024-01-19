@@ -18,7 +18,9 @@ package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
 import generators.ModelGenerators._
+import models.PeriodKey
 import models.SimpleJson._
+import models.TestSampleData._
 import models.registration.{Period, Registration}
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
@@ -26,7 +28,7 @@ import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers.{contain, convertToAnyMustWrapper, defined}
 import play.api.Application
-import play.api.http.Status.OK
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -57,6 +59,27 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
       whenReady(response) { res =>
         res mustBe defined
         res.value mustEqual registration
+      }
+    }
+
+    "successfully lookup a submitted return" in {
+      val key = PeriodKey("003")
+      stubGet(Json.toJson(sampleReturn), s"/digital-services-tax/returns/${key.value}", OK)
+
+      val response = connector.lookupSubmittedReturns(key)
+      whenReady(response) { res =>
+        res mustBe defined
+        res.value mustEqual sampleReturn
+      }
+    }
+
+    "should return not found if no existing return is found for the period key" in {
+      val key = PeriodKey("XXX")
+      stubGet(Json.toJson(sampleReturn), s"/digital-services-tax/returns/${key.value}", NOT_FOUND)
+
+      val response = connector.lookupSubmittedReturns(key)
+      whenReady(response) { res =>
+        res mustBe None
       }
     }
 

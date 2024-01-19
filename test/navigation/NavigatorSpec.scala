@@ -710,6 +710,28 @@ class NavigatorSpec extends SpecBase {
         UserAnswers("id")
       ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
     }
+
+    "must go from Relief deducted page to Allowance deducted page" in {
+      navigator.nextPage(
+        ReliefDeductedPage(periodKey),
+        NormalMode,
+        UserAnswers("id").set(ReportAlternativeChargePage(periodKey), false).success.value
+      ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
+    }
+
+    "must go from Relief deducted page to companyLiability page" in {
+      navigator.nextPage(
+        ReliefDeductedPage(periodKey),
+        NormalMode,
+        UserAnswers("id")
+          .set(ReportAlternativeChargePage(periodKey), true)
+          .success
+          .value
+          .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
+          .success
+          .value
+      ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
+    }
   }
 
 }

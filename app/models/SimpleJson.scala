@@ -17,12 +17,16 @@
 package models
 
 import cats.implicits._
-import models.registration.{Period, _}
+import enumeratum.EnumFormats
+import models.registration._
+import models.returns.Return
 import play.api.libs.json._
 import shapeless.tag.@@
 
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
+import scala.collection.immutable.ListMap
+import play.api.libs.json.Json.fromJson
 
 trait SimpleJson {
 
@@ -68,6 +72,43 @@ trait SimpleJson {
     validatedStringFormat(AddressLine, "address line")
   implicit val dstRegNoFormat: Format[String @@ models.DSTRegNumber.Tag]                               =
     validatedStringFormat(DSTRegNumber, "Digital Services Tax Registration Number")
+  implicit val ibanFormat: Format[String @@ models.IBAN.Tag]                                           = validatedStringFormat(IBAN, "IBAN number")
+
+  implicit val moneyFormat: Format[Money] = new Format[Money] {
+    override def reads(json: JsValue): JsResult[Money] =
+      json match {
+        case JsNumber(value) =>
+          Money.validateAndTransform(value.setScale(2)) match {
+            case Some(validCode) => JsSuccess(Money(validCode))
+            case None            => JsError(s"Expected a valid monetary value, got $value instead.")
+          }
+
+        case xs: JsValue =>
+          JsError(
+            JsPath -> JsonValidationError(Seq(s"""Expected a valid monetary value, got $xs instead"""))
+          )
+      }
+
+    override def writes(o: Money): JsValue = JsNumber(o)
+  }
+
+  implicit val percentFormat: Format[Percent] = new Format[Percent] {
+    override def reads(json: JsValue): JsResult[Percent] =
+      json match {
+        case JsNumber(value) =>
+          Percent.validateAndTransform(value.toFloat) match {
+            case Some(validCode) => JsSuccess(Percent(validCode))
+            case None            => JsError(s"Expected a valid percentage, got $value instead.")
+          }
+
+        case xs: JsValue =>
+          JsError(
+            JsPath -> JsonValidationError(Seq(s"""Expected a valid percentage, got $xs instead"""))
+          )
+      }
+
+    override def writes(o: Percent): JsValue = JsNumber(BigDecimal(o.toString))
+  }
 
 }
 
@@ -76,6 +117,67 @@ object SimpleJson extends SimpleJson {
   implicit val contactDetailsFormat: OFormat[ContactDetails]       = Json.format[ContactDetails]
   implicit val companyRegWrapperFormat: OFormat[CompanyRegWrapper] = Json.format[CompanyRegWrapper]
   implicit val registrationFormat: OFormat[Registration]           = Json.format[Registration]
+  implicit val activityFormat: Format[Activity]                    = EnumFormats.formats(Activity)
+  implicit val groupCompanyFormat: Format[GroupCompany]            = Json.format[GroupCompany]
+
+  implicit val activityMapFormat: Format[Map[Activity, Percent]] = new Format[Map[Activity, Percent]] {
+    override def reads(json: JsValue): JsResult[Map[Activity, Percent]] =
+      JsSuccess(json.as[Map[String, JsNumber]].map { case (k, v) =>
+        Activity.values.find(_.entryName == k).get -> Percent.apply(v.value.toFloat)
+      })
+
+    override def writes(o: Map[Activity, Percent]): JsValue =
+      JsObject(o.toSeq.map { case (k, v) =>
+        k.entryName -> JsNumber(BigDecimal(v.toString))
+      })
+  }
+
+  implicit def listMapReads[V](implicit formatV: Reads[V]): Reads[ListMap[String, V]] = new Reads[ListMap[String, V]] {
+    def reads(json: JsValue) = json match {
+      case JsObject(m) =>
+        type Errors = scala.collection.Seq[(JsPath, scala.collection.Seq[JsonValidationError])]
+
+        def locate(e: Errors, key: String): scala.collection.Seq[(JsPath, scala.collection.Seq[JsonValidationError])] =
+          e.map { case (path, validationError) =>
+            (JsPath \ key) ++ path -> validationError
+          }
+
+        m.foldLeft(Right(ListMap.empty): Either[Errors, ListMap[String, V]]) { case (acc, (key, value)) =>
+          (acc, fromJson[V](value)(formatV)) match {
+            case (Right(vs), JsSuccess(v, _)) => Right(vs + (key -> v))
+            case (Right(_), JsError(e))       => Left(locate(e, key))
+            case (Left(e), _: JsSuccess[_])   => Left(e)
+            case (Left(e1), JsError(e2))      => Left(e1 ++ locate(e2, key))
+          }
+        }.fold(_ => JsError.apply(), res => JsSuccess(res))
+
+      case _ => JsError(Seq(JsPath() -> Seq(JsonValidationError("error.expected.jsobject"))))
+    }
+  }
+
+  implicit val groupCompanyMapFormat: OFormat[ListMap[GroupCompany, Money]] =
+    new OFormat[ListMap[GroupCompany, Money]] {
+      override def reads(json: JsValue): JsResult[ListMap[GroupCompany, Money]] =
+        JsSuccess(json.as[ListMap[String, JsNumber]].map { case (k, v) =>
+          k.split(":") match {
+            case Array(name, utrS) =>
+              GroupCompany(CompanyName(name), Some(UTR(utrS))) -> Money.apply(v.value.setScale(2))
+            case Array(name)       =>
+              GroupCompany(CompanyName(name), None) -> Money.apply(v.value.setScale(2))
+          }
+        })
+
+      override def writes(o: ListMap[GroupCompany, Money]): JsObject =
+        JsObject(o.toSeq.map { case (k, v) =>
+          s"${k.name}:${k.utr.getOrElse("")}" -> JsNumber(v)
+        })
+    }
+
+  implicit val bankAccountFormat: OFormat[BankAccount]                 = Json.format[BankAccount]
+  implicit val foreignBankAccountFormat: OFormat[ForeignBankAccount]   = Json.format[ForeignBankAccount]
+  implicit val domesticBankAccountFormat: OFormat[DomesticBankAccount] = Json.format[DomesticBankAccount]
+  implicit val repaymentDetailsFormat: OFormat[RepaymentDetails]       = Json.format[RepaymentDetails]
+  implicit val returnFormat: OFormat[Return]                           = Json.format[Return]
 
   implicit val periodFormat: OFormat[Period] = Json.format[Period]
 

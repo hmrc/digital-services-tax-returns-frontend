@@ -17,10 +17,10 @@
 package controllers
 
 import base.SpecBase
-import models.formatDate
+import models.{SelectActivities, formatDate}
 import models.registration.Registration
 import org.scalatestplus.mockito.MockitoSugar.mock
-import pages.GroupLiabilityPage
+import pages.{GroupLiabilityPage, SelectActivitiesPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -41,6 +41,34 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     "must return OK and the correct view for a GET" in {
 
       val userAnswers = emptyUserAnswers.set(GroupLiabilityPage(periodKey), BigDecimal(40.00)).success.value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request     = FakeRequest(GET, checkYourAnswersRoute)
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when all activities are selected" in {
+
+      val userAnswers = emptyUserAnswers
+        .set(GroupLiabilityPage(periodKey), BigDecimal(40.00))
+        .success
+        .value
+        .set(SelectActivitiesPage(periodKey), SelectActivities.values.toSet)
+        .success
+        .value
 
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
