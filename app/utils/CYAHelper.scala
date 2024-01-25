@@ -44,9 +44,10 @@ class CYAHelper @Inject() () {
       "groupLiability.checkYourAnswersLabel.heading",
       Seq(
         GroupLiabilitySummary.row(periodKey, userAnswers),
+        AllowanceDeductedSummary.row(periodKey, userAnswers),
         ReportCrossBorderReliefSummary.row(periodKey, userAnswers),
-        CrossBorderTransactionReliefSummary.row(periodKey, userAnswers),
-        AllowanceDeductedSummary.row(periodKey, userAnswers)
+        ReliefDeductedSummary.row(periodKey, userAnswers)
+        // TODO add company liabilities summary here
       )
     )
 
