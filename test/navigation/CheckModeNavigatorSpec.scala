@@ -322,18 +322,18 @@ class CheckModeNavigatorSpec extends SpecBase {
     "must go from a SearchEngineLossPage to ReportOnlineMarketplaceAlternativeCharge page when 'Yes' " +
       "is selected and selected activity is 'OnlineMarketplace'" in {
 
-      navigator.nextPage(
-        SearchEngineLossPage(periodKey),
-        CheckMode,
-        UserAnswers("id")
-          .set(SearchEngineLossPage(periodKey), true)
-          .success
-          .value
-          .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
-          .success
-          .value
-      ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, CheckMode)
-    }
+        navigator.nextPage(
+          SearchEngineLossPage(periodKey),
+          CheckMode,
+          UserAnswers("id")
+            .set(SearchEngineLossPage(periodKey), true)
+            .success
+            .value
+            .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.OnlineMarketplace))
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, CheckMode)
+      }
 
     "must go from a SearchEngineLossPage to CompanyLiability page when 'Yes' is selected" in {
 

@@ -106,7 +106,7 @@ class CYAHelper @Inject() () {
   ): Option[Section] = {
     val selectedValue: Boolean =
       userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
-    val bool          = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.size == 1)
+    val bool                   = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.size == 1)
 
     if (selectedValue) {
       buildSection(
@@ -118,7 +118,7 @@ class CYAHelper @Inject() () {
           } else {
             ReportOnlineMarketplaceLossSummary.row(periodKey, userAnswers)
           },
-            ReportOnlineMarketplaceOperatingMarginSummary.row(periodKey, userAnswers)
+          ReportOnlineMarketplaceOperatingMarginSummary.row(periodKey, userAnswers)
         )
       )
     } else {
