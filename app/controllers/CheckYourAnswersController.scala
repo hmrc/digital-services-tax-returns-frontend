@@ -38,12 +38,12 @@ class CheckYourAnswersController @Inject() (
 ) extends FrontendBaseController
     with I18nSupport {
 
-  def onPageLoad(periodKey: PeriodKey, isPrint: Boolean = false): Action[AnyContent] =
+  def onPageLoad(periodKey: PeriodKey): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
       val startDate   = request.periodStartDate
       val endDate     = request.periodEndDate
       val sectionList = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
-      Ok(view(periodKey, sectionList, startDate, endDate, request.registration, isPrint))
+      Ok(view(periodKey, sectionList, startDate, endDate, request.registration))
     }
 }

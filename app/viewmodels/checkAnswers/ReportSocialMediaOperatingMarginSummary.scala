@@ -30,7 +30,7 @@ object ReportSocialMediaOperatingMarginSummary {
     answers.get(ReportSocialMediaOperatingMarginPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reportSocialMediaOperatingMargin.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString}%"),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
