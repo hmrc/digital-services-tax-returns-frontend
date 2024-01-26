@@ -114,10 +114,11 @@ class CYAHelper @Inject() () {
         Seq(
           SelectActivitiesSummary.row(periodKey, userAnswers, selectedValue),
           if (bool) {
-            ReportSearchAlternativeChargeSummary.row(periodKey, userAnswers)
+            ReportAlternativeChargeSummary.row(periodKey, userAnswers)
           } else {
-            ReportOnlineMarketplaceLossSummary.row(periodKey, userAnswers)
+            ReportOnlineMarketplaceAlternativeChargeSummary.row(periodKey, userAnswers)
           },
+          ReportOnlineMarketplaceLossSummary.row(periodKey, userAnswers),
           ReportOnlineMarketplaceOperatingMarginSummary.row(periodKey, userAnswers)
         )
       )

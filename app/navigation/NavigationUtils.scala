@@ -72,6 +72,8 @@ trait NavigationUtils {
         }
       case selectActivities if selectActivities.size > 1 =>
         redirectToAlternateChargesPage(periodKey, selectActivities)(mode)
+      case _                                             =>
+        routes.JourneyRecoveryController.onPageLoad()
     }
 
   private[navigation] def redirectToAlternateChargesPage(periodKey: PeriodKey, selectActivities: Set[SelectActivities])(
@@ -97,7 +99,7 @@ trait NavigationUtils {
         routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
       case _ if mode == NormalMode                                                                     =>
         routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
-      case _ if mode == CheckMode                                                                      =>
+      case _                                                                                           =>
         routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
@@ -151,7 +153,9 @@ trait NavigationUtils {
           routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
         case true                                                                                              =>
           companyLiability(periodKey, Index(0), ua)(mode)
-        case false                                                                                             =>
+        case true if mode == CheckMode                                                                         =>
+          routes.CheckYourAnswersController.onPageLoad(periodKey)
+        case _                                                                                                 =>
           routes.ReportSocialMediaOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
@@ -160,9 +164,11 @@ trait NavigationUtils {
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
-        case true                                                                                                   =>
+        case true if mode == NormalMode                                                                             =>
           companyLiability(periodKey, Index(0), ua)(mode)
-        case false                                                                                                  =>
+        case true if mode == CheckMode                                                                              =>
+          routes.CheckYourAnswersController.onPageLoad(periodKey)
+        case _                                                                                                      =>
           routes.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
@@ -173,7 +179,7 @@ trait NavigationUtils {
       .map {
         case true                        => routes.ReportOnlineMarketplaceLossController.onPageLoad(periodKey, mode)
         case false if mode == NormalMode => routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
-        case false if mode == CheckMode  => routes.CheckYourAnswersController.onPageLoad(periodKey)
+        case _                           => routes.CheckYourAnswersController.onPageLoad(periodKey)
       }
 
   def reportOnlineMarketplaceLoss(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
@@ -181,7 +187,7 @@ trait NavigationUtils {
       .map {
         case true if mode == NormalMode => routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
         case true if mode == CheckMode  => routes.CheckYourAnswersController.onPageLoad(periodKey)
-        case false                      => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, mode)
+        case _                          => routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
   private[navigation] def repayment(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =

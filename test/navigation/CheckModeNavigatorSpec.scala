@@ -344,28 +344,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           .set(SearchEngineLossPage(periodKey), true)
           .success
           .value
-          .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
-          .success
-          .value
-      ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index)
-    }
-
-    "must go from a SearchEngineLossPage to GroupLiability page when 'Yes' is selected and user has completed the companyDetails page" in {
-
-      navigator.nextPage(
-        SearchEngineLossPage(periodKey),
-        CheckMode,
-        UserAnswers("id")
-          .set(SearchEngineLossPage(periodKey), true)
-          .success
-          .value
-          .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
-          .success
-          .value
-          .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
-          .success
-          .value
-      ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, CheckMode)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
     "must go from a SearchEngineLossPage to report-search-engine-operating-margin page when 'No' is selected" in {
