@@ -30,7 +30,7 @@ object ReportOnlineMarketplaceOperatingMarginSummary {
     answers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString}%"),
         actions = Seq(
           ActionItemViewModel(
             "site.change",

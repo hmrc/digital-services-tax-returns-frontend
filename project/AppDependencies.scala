@@ -5,7 +5,7 @@ object AppDependencies {
   private val bootstrapVersion = "8.2.0"
   private val hmrcMongoVersion = "1.6.0"
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     play.sbt.PlayImport.ws,
     "uk.gov.hmrc"       %% "play-frontend-hmrc-play-30"            % "8.2.0",
     "uk.gov.hmrc"       %% "play-conditional-form-mapping-play-30" % "2.0.0",
@@ -15,11 +15,11 @@ object AppDependencies {
     "commons-validator"  % "commons-validator"                     % "1.7",
     "org.typelevel"     %% "cats-core"                             % "2.10.0",
     "fr.marcwrobel"      % "jbanking"                              % "4.1.0",
-    "com.beachape"              %% "enumeratum"                    % "1.7.0",
-    "com.beachape"              %% "enumeratum-play-json"          % "1.7.0"
+    "com.beachape"      %% "enumeratum"                            % "1.7.0",
+    "com.beachape"      %% "enumeratum-play-json"                  % "1.7.0"
   )
 
-  val test = Seq(
+  val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"            %% "bootstrap-test-play-30"  % bootstrapVersion,
     "uk.gov.hmrc.mongo"      %% "hmrc-mongo-test-play-30" % hmrcMongoVersion,
     "org.scalacheck"         %% "scalacheck"              % "1.17.0",

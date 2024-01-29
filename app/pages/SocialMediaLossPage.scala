@@ -16,12 +16,23 @@
 
 package pages
 
-import models.PeriodKey
+import models.{PeriodKey, UserAnswers}
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case class SocialMediaLossPage(periodKey: PeriodKey) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = "socialMediaLoss"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case Some(true) =>
+        userAnswers
+          .remove(ReportSocialMediaOperatingMarginPage(periodKey))
+
+      case _ => super.cleanup(value, userAnswers)
+    }
 }

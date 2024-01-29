@@ -64,14 +64,20 @@ class CYAHelper @Inject() () {
   ): Option[Section] = {
     val selectedValue =
       userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SocialMedia))
+    val bool          = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.size == 1)
+
     if (selectedValue) {
       buildSection(
         "socialMediaLoss.checkYourAnswersLabel.heading",
         Seq(
           SelectActivitiesSummary.row(periodKey, userAnswers, selectedValue),
-          ReportAlternativeChargeSummary.row(periodKey, userAnswers),
-          ReportMediaAlternativeChargeSummary.row(periodKey, userAnswers),
-          SocialMediaLossSummary.row(periodKey, userAnswers)
+          if (bool) {
+            ReportAlternativeChargeSummary.row(periodKey, userAnswers)
+          } else {
+            ReportMediaAlternativeChargeSummary.row(periodKey, userAnswers)
+          },
+          SocialMediaLossSummary.row(periodKey, userAnswers),
+          ReportSocialMediaOperatingMarginSummary.row(periodKey, userAnswers)
         )
       )
     } else {
@@ -84,13 +90,19 @@ class CYAHelper @Inject() () {
   ): Option[Section] = {
     val selectedValue =
       userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.SearchEngine))
+    val bool          = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.size == 1)
     if (selectedValue) {
       buildSection(
         "searchEngineLoss.checkYourAnswersLabel.heading",
         Seq(
-          SelectActivitiesSummary.row(periodKey, userAnswers),
+          SelectActivitiesSummary.row(periodKey, userAnswers, selectedValue),
+          if (bool) {
+            ReportAlternativeChargeSummary.row(periodKey, userAnswers)
+          } else {
+            ReportSearchAlternativeChargeSummary.row(periodKey, userAnswers)
+          },
           SearchEngineLossSummary.row(periodKey, userAnswers),
-          ReportSearchAlternativeChargeSummary.row(periodKey, userAnswers)
+          ReportSearchEngineOperatingMarginSummary.row(periodKey, userAnswers)
         )
       )
     } else {
@@ -101,14 +113,22 @@ class CYAHelper @Inject() () {
   private def createOnlineMarketPlaceSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
   ): Option[Section] = {
-    val selectedValue =
+    val selectedValue: Boolean =
       userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.contains(SelectActivities.OnlineMarketplace))
+    val bool                   = userAnswers.get(SelectActivitiesPage(periodKey)).fold(false)(_.size == 1)
+
     if (selectedValue) {
       buildSection(
         "reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading",
         Seq(
-          SelectActivitiesSummary.row(periodKey, userAnswers),
-          ReportOnlineMarketplaceLossSummary.row(periodKey, userAnswers)
+          SelectActivitiesSummary.row(periodKey, userAnswers, selectedValue),
+          if (bool) {
+            ReportAlternativeChargeSummary.row(periodKey, userAnswers)
+          } else {
+            ReportOnlineMarketplaceAlternativeChargeSummary.row(periodKey, userAnswers)
+          },
+          ReportOnlineMarketplaceLossSummary.row(periodKey, userAnswers),
+          ReportOnlineMarketplaceOperatingMarginSummary.row(periodKey, userAnswers)
         )
       )
     } else {
