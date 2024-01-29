@@ -23,7 +23,7 @@
     govukButton: GovukButton
 )
 
-@(periodKey: PeriodKey, list: Seq[Section], startDate: String, endDate: String, reg: Registration, isPrint: Boolean = false, showBackLink: Boolean = true)(implicit request: Request[_], messages: Messages)
+@(periodKey: PeriodKey, list: Seq[Section], startDate: String, endDate: String, reg: Registration, showBackLink: Boolean = true)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title", startDate, endDate)), showBackLink = showBackLink) {
 
@@ -40,10 +40,8 @@
    <h2 class="govuk-heading-m">@messages("checkYourAnswers.submit-heading")</h2>
    <p class="govuk-body">@messages("checkYourAnswers.submit-body")</p>
 
-   @if(!isPrint) {
     @govukButton(
-     ButtonViewModel(messages("site.submit"))
-      .asLink(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
-       )
-     }
+        ButtonViewModel(messages("site.submit"))
+        .asLink(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+    )
 }

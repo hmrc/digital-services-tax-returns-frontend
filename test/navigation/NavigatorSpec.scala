@@ -641,7 +641,7 @@ class NavigatorSpec extends SpecBase {
             .set(RepaymentPage(periodKey), false)
             .success
             .value
-        ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
+        ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
       }
 
       "must go to CompanyLiabilitiesPage0 index" in {
@@ -699,7 +699,7 @@ class NavigatorSpec extends SpecBase {
         UKBankDetailsPage(periodKey),
         NormalMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
     "must go from a BankDetailsForRepaymentPage to CheckYourAnswers page" in {
@@ -708,7 +708,7 @@ class NavigatorSpec extends SpecBase {
         BankDetailsForRepaymentPage(periodKey),
         NormalMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey, false)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
     "must go from Relief deducted page to Allowance deducted page" in {

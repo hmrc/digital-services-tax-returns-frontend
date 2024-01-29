@@ -15,7 +15,7 @@ GET        /refresh-session                                                contr
 
 GET        /there-is-a-problem                                             controllers.JourneyRecoveryController.onPageLoad(continueUrl: Option[RedirectUrl] ?= None)
 
-GET        /:periodKey/check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad(periodKey: PeriodKey, isPrint: Boolean)
+GET        /:periodKey/check-your-answers                                  controllers.CheckYourAnswersController.onPageLoad(periodKey: PeriodKey)
 
 GET        /unauthorised                                                   controllers.UnauthorisedController.onPageLoad
 

@@ -38,6 +38,7 @@ trait InputFluency {
         name = field.name,
         value = field.value,
         label = label,
+        autocomplete = Some("on"),
         errorMessage = errorMessage(field)
       )
   }

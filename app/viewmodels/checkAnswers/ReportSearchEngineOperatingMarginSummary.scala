@@ -30,7 +30,7 @@ object ReportSearchEngineOperatingMarginSummary {
     answers.get(ReportSearchEngineOperatingMarginPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reportSearchEngineOperatingMargin.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"${answer.toString}%"),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
