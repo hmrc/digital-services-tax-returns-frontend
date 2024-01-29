@@ -268,7 +268,7 @@ class CheckModeNavigatorSpec extends SpecBase {
       ) mustBe routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, CheckMode)
     }
 
-    "must go from a SocialMediaLossPage to CompanyLiabilities page when 'Yes' is selected and selected activity is 'SocialMedia'" in {
+    "must go from a SocialMediaLossPage to CheckYourAnswers page when 'Yes' is selected and selected activity is 'SocialMedia'" in {
 
       navigator.nextPage(
         SocialMediaLossPage(periodKey),
@@ -283,28 +283,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
           .success
           .value
-      ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index)
-    }
-
-    "must go from a SocialMediaLossPage to GroupLiabilityPage when 'Yes' is selected" in {
-
-      navigator.nextPage(
-        SocialMediaLossPage(periodKey),
-        CheckMode,
-        UserAnswers("id")
-          .set(SocialMediaLossPage(periodKey), true)
-          .success
-          .value
-          .set(SelectActivitiesPage(periodKey), Set[SelectActivities](SelectActivities.SocialMedia))
-          .success
-          .value
-          .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
-          .success
-          .value
-          .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
-          .success
-          .value
-      ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, CheckMode)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
     "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
