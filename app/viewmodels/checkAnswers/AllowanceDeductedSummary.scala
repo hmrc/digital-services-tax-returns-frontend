@@ -30,7 +30,7 @@ object AllowanceDeductedSummary {
     answers.get(AllowanceDeductedPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "allowanceDeducted.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"£${answer.toString()}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.AllowanceDeductedController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("allowanceDeducted.change.hidden"))

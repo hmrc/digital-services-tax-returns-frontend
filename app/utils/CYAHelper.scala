@@ -16,12 +16,12 @@
 
 package utils
 
-import models.{PeriodKey, SelectActivities, UserAnswers}
+import models.{Index, PeriodKey, SelectActivities, UserAnswers}
 import pages.SelectActivitiesPage
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
-import viewmodels.checkAnswers._
+import viewmodels.checkAnswers.{CompanyLiabilitiesSummary, _}
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
@@ -39,17 +39,20 @@ class CYAHelper @Inject() () {
 
   private def createGroupLiabilitySection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
-  ): Option[Section] =
+  ): Option[Section] = {
     buildSection(
       "groupLiability.checkYourAnswersLabel.heading",
       Seq(
         GroupLiabilitySummary.row(periodKey, userAnswers),
         AllowanceDeductedSummary.row(periodKey, userAnswers),
         ReportCrossBorderReliefSummary.row(periodKey, userAnswers),
-        ReliefDeductedSummary.row(periodKey, userAnswers)
+        ReliefDeductedSummary.row(periodKey, userAnswers),
+        CompanyLiabilitiesSummary.row(periodKey,userAnswers,Index(0))
         // TODO add company liabilities summary here
       )
     )
+  }
+
 
   private def createSocialMediaSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
