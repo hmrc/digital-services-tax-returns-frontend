@@ -17,11 +17,11 @@
 package utils
 
 import models.{Index, PeriodKey, SelectActivities, UserAnswers}
-import pages.SelectActivitiesPage
+import pages.{CompanyLiabilityListPage, SelectActivitiesPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
-import viewmodels.checkAnswers.{CompanyLiabilitiesSummary, _}
+import viewmodels.checkAnswers._
 import viewmodels.govuk.summarylist._
 
 import javax.inject.Inject
@@ -39,20 +39,25 @@ class CYAHelper @Inject() () {
 
   private def createGroupLiabilitySection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
-  ): Option[Section] = {
+  ): Option[Section] =
     buildSection(
       "groupLiability.checkYourAnswersLabel.heading",
       Seq(
         GroupLiabilitySummary.row(periodKey, userAnswers),
         AllowanceDeductedSummary.row(periodKey, userAnswers),
         ReportCrossBorderReliefSummary.row(periodKey, userAnswers),
-        ReliefDeductedSummary.row(periodKey, userAnswers),
-        CompanyLiabilitiesSummary.row(periodKey,userAnswers,Index(0))
-        // TODO add company liabilities summary here
-      )
+        ReliefDeductedSummary.row(periodKey, userAnswers)
+      ) ++ companyLiabilitiesRows(periodKey, userAnswers)
     )
-  }
 
+  private def companyLiabilitiesRows(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Seq[Option[SummaryListRow]] =
+    userAnswers
+      .get(CompanyLiabilityListPage(periodKey))
+      .fold[Seq[Option[SummaryListRow]]](Seq.empty)(_.zipWithIndex.map { case (_, index) =>
+        CompanyLiabilitiesSummary.row(periodKey, userAnswers, Index(index))
+      })
 
   private def createSocialMediaSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
