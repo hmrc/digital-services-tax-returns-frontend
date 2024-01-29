@@ -28,21 +28,19 @@ object CompanyLiabilitiesSummary {
 
   def row(periodKey: PeriodKey, answers: UserAnswers, index: Index)(implicit
     messages: Messages
-  ): Option[SummaryListRow] ={
+  ): Option[SummaryListRow] =
     for {
-      amount <- answers.get(CompanyLiabilitiesPage(periodKey, index))
+      amount  <- answers.get(CompanyLiabilitiesPage(periodKey, index))
       company <- answers.get(CompanyDetailsPage(periodKey, index))
-    } yield
-      SummaryListRowViewModel(
-        key = messages("companyLiabilities.checkYourAnswersLabel",company.companyName),
-        value = ValueViewModel(s"£${amount.toString()}"),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url
-          )
-            .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
+    } yield SummaryListRowViewModel(
+      key = messages("companyLiabilities.checkYourAnswersLabel", company.companyName),
+      value = ValueViewModel(s"£${amount.toString()}"),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url
         )
+          .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
       )
-  }
+    )
 }
