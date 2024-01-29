@@ -151,7 +151,7 @@ trait NavigationUtils {
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine)) =>
           routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
-        case true                                                                                              =>
+        case true if mode == NormalMode                                                                      =>
           companyLiability(periodKey, Index(0), ua)(mode)
         case true if mode == CheckMode                                                                         =>
           routes.CheckYourAnswersController.onPageLoad(periodKey)
