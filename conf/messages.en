@@ -371,3 +371,11 @@ reportSearchEngineOperatingMargin.error.required = Enter the {0}’s operating m
 reportSearchEngineOperatingMargin.error.invalid = Enter the {0}’s operating margin on its search engine activity \
                                                     in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
 reportSearchEngineOperatingMargin.change.hidden = Change group’s profit margin on activity
+
+resubmitAReturn.title = Which return do you need to resubmit?
+resubmitAReturn.heading = Which return do you need to resubmit?
+resubmitAReturn.option1 = Option 1
+resubmitAReturn.option2 = Option 2
+resubmitAReturn.checkYourAnswersLabel = Which return do you need to resubmit?
+resubmitAReturn.error.required = Select resubmitAReturn
+resubmitAReturn.change.hidden = ResubmitAReturn
