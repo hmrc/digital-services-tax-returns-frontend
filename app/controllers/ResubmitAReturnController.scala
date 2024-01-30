@@ -20,9 +20,10 @@ import connectors.DSTConnector
 import controllers.actions._
 import forms.ResubmitAReturnFormProvider
 import models.requests.OptionalDataRequest
-import models.{NormalMode, UserAnswers}
+import models.{NormalMode, ResubmitAReturn, UserAnswers}
 import navigation.Navigator
 import pages.ResubmitAReturnPage
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
@@ -47,7 +48,7 @@ class ResubmitAReturnController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[ResubmitAReturn] = formProvider()
 
   def onPageLoad(): Action[AnyContent] = (identify() andThen getData).async { implicit request =>
     dstConnector.lookupAmendableReturns() map { outstandingPeriods =>
