@@ -16,10 +16,11 @@
 
 package controllers
 
+import connectors.DSTConnector
 import controllers.actions._
 import forms.ResubmitAReturnFormProvider
-import javax.inject.Inject
-import models.Mode
+import models.requests.OptionalDataRequest
+import models.{NormalMode, UserAnswers}
 import navigation.Navigator
 import pages.ResubmitAReturnPage
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -28,45 +29,58 @@ import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ResubmitAReturnView
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class ResubmitAReturnController @Inject()(
-                                       override val messagesApi: MessagesApi,
-                                       sessionRepository: SessionRepository,
-                                       navigator: Navigator,
-                                       identify: IdentifierAction,
-                                       getData: DataRetrievalAction,
-                                       requireData: DataRequiredAction,
-                                       formProvider: ResubmitAReturnFormProvider,
-                                       val controllerComponents: MessagesControllerComponents,
-                                       view: ResubmitAReturnView
-                                     )(implicit ec: ExecutionContext) extends FrontendBaseController with I18nSupport {
+class ResubmitAReturnController @Inject() (
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  dstConnector: DSTConnector,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  requireData: DataRequiredAction,
+  formProvider: ResubmitAReturnFormProvider,
+  val controllerComponents: MessagesControllerComponents,
+  view: ResubmitAReturnView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
+    with I18nSupport {
 
   val form = formProvider()
 
-  def onPageLoad(mode: Mode): Action[AnyContent] = (identify() andThen getData andThen requireData) {
-    implicit request =>
-
-      val preparedForm = request.userAnswers.get(ResubmitAReturnPage) match {
-        case None => form
-        case Some(value) => form.fill(value)
+  def onPageLoad(): Action[AnyContent] = (identify() andThen getData).async { implicit request =>
+    dstConnector.lookupAmendableReturns() map { outstandingPeriods =>
+      outstandingPeriods.toList match {
+        case Nil     =>
+          NotFound("lookupAmendableReturns not found")
+        case periods =>
+          Ok(view(form, periods))
       }
-
-      Ok(view(preparedForm, mode))
+    }
   }
 
-  def onSubmit(mode: Mode): Action[AnyContent] = (identify() andThen getData andThen requireData).async {
-    implicit request =>
+  private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
+    request.userAnswers.getOrElse(UserAnswers(request.userId))
 
-      form.bindFromRequest().fold(
+  def onSubmit(): Action[AnyContent] = (identify() andThen getData).async { implicit request =>
+    form
+      .bindFromRequest()
+      .fold(
         formWithErrors =>
-          Future.successful(BadRequest(view(formWithErrors, mode))),
-
+          dstConnector.lookupAmendableReturns() map { outstandingPeriods =>
+            outstandingPeriods.toList match {
+              case Nil     =>
+                NotFound("lookupAmendableReturns not found")
+              case periods =>
+                BadRequest(view(formWithErrors, periods))
+            }
+          },
         value =>
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ResubmitAReturnPage, value))
+            updatedAnswers <- Future.fromTry(getUserAnswers(request).set(ResubmitAReturnPage, value))
             _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ResubmitAReturnPage, mode, updatedAnswers))
+          } yield Redirect(navigator.nextPage(ResubmitAReturnPage, NormalMode, updatedAnswers))
       )
   }
 }

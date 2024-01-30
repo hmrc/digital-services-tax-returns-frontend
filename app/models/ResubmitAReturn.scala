@@ -16,30 +16,23 @@
 
 package models
 
+import models.registration.Period
 import play.api.i18n.Messages
+import play.api.libs.json.{Json, OFormat}
 import uk.gov.hmrc.govukfrontend.views.Aliases.Text
 import uk.gov.hmrc.govukfrontend.views.viewmodels.radios.RadioItem
 
-sealed trait ResubmitAReturn
+case class ResubmitAReturn(key: String)
+object ResubmitAReturn {
 
-object ResubmitAReturn extends Enumerable.Implicits {
+  implicit val format: OFormat[ResubmitAReturn] = Json.format[ResubmitAReturn]
 
-  case object Option1 extends WithName("option1") with ResubmitAReturn
-  case object Option2 extends WithName("option2") with ResubmitAReturn
-
-  val values: Seq[ResubmitAReturn] = Seq(
-    Option1, Option2
-  )
-
-  def options(implicit messages: Messages): Seq[RadioItem] = values.zipWithIndex.map {
-    case (value, index) =>
+  def options(periods: Seq[Period])(implicit messages: Messages): Seq[RadioItem] = periods.zipWithIndex.map {
+    case (period, index) =>
       RadioItem(
-        content = Text(messages(s"resubmitAReturn.${value.toString}")),
-        value   = Some(value.toString),
-        id      = Some(s"value_$index")
+        content = Text(messages("resubmitAReturn.radio-label", formatDate(period.start), formatDate(period.end))),
+        id = Some(s"value_$index"),
+        value = Some(s"${period.key}")
       )
   }
-
-  implicit val enumerable: Enumerable[ResubmitAReturn] =
-    Enumerable(values.map(v => v.toString -> v): _*)
 }

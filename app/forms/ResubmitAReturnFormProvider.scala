@@ -16,16 +16,20 @@
 
 package forms
 
+import forms.mappings.Mappings
+import models.ResubmitAReturn
+import models.registration.Period
+import play.api.data.Form
+import play.api.data.Forms.mapping
+
 import javax.inject.Inject
 
-import forms.mappings.Mappings
-import play.api.data.Form
-import models.ResubmitAReturn
-
 class ResubmitAReturnFormProvider @Inject() extends Mappings {
+  def apply(): Form[ResubmitAReturn] = Form(
+    mapping(
+      "value" -> text("resubmitAReturn.error.required")
+        .verifying("resubmitAReturn.error.required", in => Period.Key.validateAndTransform(in).isDefined)
+    )(ResubmitAReturn.apply)(ResubmitAReturn.unapply)
+  )
 
-  def apply(): Form[ResubmitAReturn] =
-    Form(
-      "value" -> enumerable[ResubmitAReturn]("resubmitAReturn.error.required")
-    )
 }

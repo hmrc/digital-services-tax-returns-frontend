@@ -105,7 +105,6 @@ showBackLink = false
             <h2 class="govuk-heading-m">@messages("returnsDashboard.return-due")</h2>
             <p class="govuk-body">@{formatDate(period.returnDue)}</p>
             <p class="govuk-body">
-                <!--                            This will be changed to the new repository url once it is created -->
                 <a class="govuk-link" href="@routes.ManageCompaniesController.redirectToOnLoadPage(PeriodKey(period.key)).url">
                     @messages("returnsDashboard.submit-return")
                 </a>
@@ -122,8 +121,7 @@ showBackLink = false
                     @if(amended.nonEmpty) {
                     <li>
                         <p class="govuk-body">
-                            <!--                            This will be changed to the new repository url once it is created -->
-                            <a class="govuk-link" href="@appConfig.dstFrontendShowAmendmentsPageUrl">
+                            <a class="govuk-link" href="@routes.ResubmitAReturnController.onPageLoad().url">
                                 @messages("returnsDashboard.amendments")
                             </a>
                         </p>

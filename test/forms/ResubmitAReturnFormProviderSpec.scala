@@ -16,24 +16,23 @@
 
 package forms
 
-import forms.behaviours.OptionFieldBehaviours
-import models.ResubmitAReturn
+import forms.behaviours.StringFieldBehaviours
 import play.api.data.FormError
+import wolfendale.scalacheck.regexp.RegexpGen
 
-class ResubmitAReturnFormProviderSpec extends OptionFieldBehaviours {
+class ResubmitAReturnFormProviderSpec extends StringFieldBehaviours {
 
   val form = new ResubmitAReturnFormProvider()()
 
   ".value" - {
 
-    val fieldName = "value"
+    val fieldName   = "value"
     val requiredKey = "resubmitAReturn.error.required"
 
-    behave like optionsField[ResubmitAReturn](
+    behave like fieldThatBindsValidData(
       form,
       fieldName,
-      validValues  = ResubmitAReturn.values,
-      invalidError = FormError(fieldName, "error.invalid")
+      RegexpGen.from("""^[a-z0-9]{1,4}$""")
     )
 
     behave like mandatoryField(

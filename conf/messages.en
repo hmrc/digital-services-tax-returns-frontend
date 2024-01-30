@@ -374,8 +374,6 @@ reportSearchEngineOperatingMargin.change.hidden = Change group’s profit margin
 
 resubmitAReturn.title = Which return do you need to resubmit?
 resubmitAReturn.heading = Which return do you need to resubmit?
-resubmitAReturn.option1 = Option 1
-resubmitAReturn.option2 = Option 2
-resubmitAReturn.checkYourAnswersLabel = Which return do you need to resubmit?
-resubmitAReturn.error.required = Select resubmitAReturn
-resubmitAReturn.change.hidden = ResubmitAReturn
+resubmitAReturn.amend-a-return=You can amend a return up to 2 years after the end of the accounting period.
+resubmitAReturn.radio-label={0} to {1}
+resubmitAReturn.error.required = Select the return you need to resubmit

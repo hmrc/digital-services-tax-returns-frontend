@@ -17,13 +17,15 @@
 package controllers
 
 import base.SpecBase
+import connectors.DSTConnector
 import forms.ResubmitAReturnFormProvider
-import models.{NormalMode, ResubmitAReturn, UserAnswers}
+import models.{ResubmitAReturn, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.ResubmitAReturnPage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
@@ -35,20 +37,27 @@ import scala.concurrent.Future
 
 class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute = Call("GET", "/foo")
+  def onwardRoute: Call              = Call("GET", "/foo")
+  val mockDstConnector: DSTConnector = mock[DSTConnector]
 
-  lazy val resubmitAReturnRoute = routes.ResubmitAReturnController.onPageLoad(NormalMode).url
+  lazy val resubmitAReturnRoute: String = routes.ResubmitAReturnController.onPageLoad().url
 
-  val formProvider = new ResubmitAReturnFormProvider()
-  val form = formProvider()
+  val formProvider                = new ResubmitAReturnFormProvider()
+  val form: Form[ResubmitAReturn] = formProvider()
 
   "ResubmitAReturn Controller" - {
 
     "must return OK and the correct view for a GET" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[DSTConnector].toInstance(mockDstConnector)
+        )
+        .build()
 
       running(application) {
+        when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period)))
+
         val request = FakeRequest(GET, resubmitAReturnRoute)
 
         val result = route(application, request).value
@@ -56,25 +65,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ResubmitAReturnView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, NormalMode)(request, messages(application)).toString
-      }
-    }
-
-    "must populate the view correctly on a GET when the question has previously been answered" in {
-
-      val userAnswers = UserAnswers(userAnswersId).set(ResubmitAReturnPage, ResubmitAReturn.values.head).success.value
-
-      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
-
-      running(application) {
-        val request = FakeRequest(GET, resubmitAReturnRoute)
-
-        val view = application.injector.instanceOf[ResubmitAReturnView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(ResubmitAReturn.values.head), NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, List(period))(request, messages(application)).toString
       }
     }
 
@@ -95,7 +86,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, resubmitAReturnRoute)
-            .withFormUrlEncodedBody(("value", ResubmitAReturn.values.head.toString))
+            .withFormUrlEncodedBody(("value", period.key))
 
         val result = route(application, request).value
 
@@ -106,7 +97,13 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
     "must return a Bad Request and errors when invalid data is submitted" in {
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[DSTConnector].toInstance(mockDstConnector)
+        )
+        .build()
+
+      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period)))
 
       running(application) {
         val request =
@@ -120,39 +117,9 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, List(period))(request, messages(application)).toString
       }
     }
 
-    "must redirect to Journey Recovery for a GET if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request = FakeRequest(GET, resubmitAReturnRoute)
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
-
-    "redirect to Journey Recovery for a POST if no existing data is found" in {
-
-      val application = applicationBuilder(userAnswers = None).build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, resubmitAReturnRoute)
-            .withFormUrlEncodedBody(("value", ResubmitAReturn.values.head.toString))
-
-        val result = route(application, request).value
-
-        status(result) mustEqual SEE_OTHER
-
-        redirectLocation(result).value mustEqual routes.JourneyRecoveryController.onPageLoad().url
-      }
-    }
   }
 }
