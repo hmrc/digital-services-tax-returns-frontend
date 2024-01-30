@@ -30,7 +30,7 @@ object ReliefDeductedSummary {
     answers.get(ReliefDeductedPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "reliefDeducted.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
+        value = ValueViewModel(s"£${answer.toString()}"),
         actions = Seq(
           ActionItemViewModel("site.change", routes.ReliefDeductedController.onPageLoad(periodKey, CheckMode).url)
             .withVisuallyHiddenText(messages("reliefDeducted.change.hidden"))

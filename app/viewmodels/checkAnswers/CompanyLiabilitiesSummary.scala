@@ -18,7 +18,7 @@ package viewmodels.checkAnswers
 
 import controllers.routes
 import models.{CheckMode, Index, PeriodKey, UserAnswers}
-import pages.CompanyLiabilitiesPage
+import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.govuk.summarylist._
@@ -29,17 +29,18 @@ object CompanyLiabilitiesSummary {
   def row(periodKey: PeriodKey, answers: UserAnswers, index: Index)(implicit
     messages: Messages
   ): Option[SummaryListRow] =
-    answers.get(CompanyLiabilitiesPage(periodKey, index)).map { answer =>
-      SummaryListRowViewModel(
-        key = "companyLiabilities.checkYourAnswersLabel",
-        value = ValueViewModel(answer.toString),
-        actions = Seq(
-          ActionItemViewModel(
-            "site.change",
-            routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url
-          )
-            .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
+    for {
+      amount  <- answers.get(CompanyLiabilitiesPage(periodKey, index))
+      company <- answers.get(CompanyDetailsPage(periodKey, index))
+    } yield SummaryListRowViewModel(
+      key = messages("companyLiabilities.checkYourAnswersLabel", company.companyName),
+      value = ValueViewModel(s"£${amount.toString()}"),
+      actions = Seq(
+        ActionItemViewModel(
+          "site.change",
+          routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url
         )
+          .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
       )
-    }
+    )
 }

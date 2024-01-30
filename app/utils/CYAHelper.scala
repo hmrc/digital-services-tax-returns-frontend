@@ -16,8 +16,8 @@
 
 package utils
 
-import models.{PeriodKey, SelectActivities, UserAnswers}
-import pages.SelectActivitiesPage
+import models.{Index, PeriodKey, SelectActivities, UserAnswers}
+import pages.{CompanyLiabilityListPage, SelectActivitiesPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
@@ -47,9 +47,17 @@ class CYAHelper @Inject() () {
         AllowanceDeductedSummary.row(periodKey, userAnswers),
         ReportCrossBorderReliefSummary.row(periodKey, userAnswers),
         ReliefDeductedSummary.row(periodKey, userAnswers)
-        // TODO add company liabilities summary here
-      )
+      ) ++ companyLiabilitiesRows(periodKey, userAnswers)
     )
+
+  private def companyLiabilitiesRows(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    messages: Messages
+  ): Seq[Option[SummaryListRow]] =
+    userAnswers
+      .get(CompanyLiabilityListPage(periodKey))
+      .fold[Seq[Option[SummaryListRow]]](Seq.empty)(_.zipWithIndex.map { case (_, index) =>
+        CompanyLiabilitiesSummary.row(periodKey, userAnswers, Index(index))
+      })
 
   private def createSocialMediaSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
