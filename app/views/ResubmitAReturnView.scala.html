@@ -29,7 +29,7 @@
 
 @layout(pageTitle = title(form, messages("resubmitAReturn.title"))) {
 
-    @formHelper(action = routes.ResubmitAReturnController.onSubmit(), 'autoComplete -> "off") {
+    @formHelper(action = routes.ResubmitAReturnController.onSubmit, 'autoComplete -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))
