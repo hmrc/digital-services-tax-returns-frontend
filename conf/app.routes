@@ -143,3 +143,6 @@ GET        /:periodKey/report-search-engine-operating-margin               contr
 POST       /:periodKey/report-search-engine-operating-margin               controllers.ReportSearchEngineOperatingMarginController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
 GET        /:periodKey/edit/report-search-engine-operating-margin          controllers.ReportSearchEngineOperatingMarginController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
 POST       /:periodKey/edit/report-search-engine-operating-margin          controllers.ReportSearchEngineOperatingMarginController.onSubmit(periodKey: PeriodKey, mode: Mode = CheckMode)
+
+GET        /resubmit-a-return                                              controllers.ResubmitAReturnController.onPageLoad
+POST       /resubmit-a-return                                              controllers.ResubmitAReturnController.onSubmit
