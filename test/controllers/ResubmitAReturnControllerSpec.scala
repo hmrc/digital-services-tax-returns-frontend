@@ -19,12 +19,11 @@ package controllers
 import base.SpecBase
 import connectors.DSTConnector
 import forms.ResubmitAReturnFormProvider
-import models.{ResubmitAReturn, UserAnswers}
+import models.ResubmitAReturn
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import pages.ResubmitAReturnPage
 import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
@@ -40,7 +39,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute: Call              = Call("GET", "/foo")
   val mockDstConnector: DSTConnector = mock[DSTConnector]
 
-  lazy val resubmitAReturnRoute: String = routes.ResubmitAReturnController.onPageLoad().url
+  lazy val resubmitAReturnRoute: String = routes.ResubmitAReturnController.onPageLoad.url
 
   val formProvider                = new ResubmitAReturnFormProvider()
   val form: Form[ResubmitAReturn] = formProvider()
