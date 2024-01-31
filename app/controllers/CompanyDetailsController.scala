@@ -18,8 +18,7 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
-import models.requests.OptionalDataRequest
-import models.{Index, Mode, PeriodKey, UserAnswers}
+import models.{Index, Mode, PeriodKey}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
@@ -38,6 +37,7 @@ class CompanyDetailsController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  initialiseData: DataInitialiseAction,
   formProvider: CompanyDetailsFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: CompanyDetailsView
@@ -48,8 +48,8 @@ class CompanyDetailsController @Inject() (
   val form = formProvider()
 
   def onPageLoad(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
-    (identify(Some(periodKey)) andThen getData) { implicit request =>
-      val preparedForm = getUserAnswers(request).get(CompanyDetailsPage(periodKey, index)) match {
+    (identify(Some(periodKey)) andThen getData andThen initialiseData) { implicit request =>
+      val preparedForm = request.userAnswers.get(CompanyDetailsPage(periodKey, index)) match {
         case None        => form
         case Some(value) => form.fill(value)
       }
@@ -57,11 +57,8 @@ class CompanyDetailsController @Inject() (
       Ok(view(preparedForm, periodKey, index, mode))
     }
 
-  private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
-    request.userAnswers.getOrElse(UserAnswers(request.userId))
-
   def onSubmit(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
-    (identify(Some(periodKey)) andThen getData).async { implicit request =>
+    (identify(Some(periodKey)) andThen getData andThen initialiseData).async { implicit request =>
       form
         .bindFromRequest()
         .fold(
@@ -70,7 +67,7 @@ class CompanyDetailsController @Inject() (
             for {
               updatedAnswers <-
                 Future.fromTry(
-                  getUserAnswers(request).set(CompanyDetailsPage(periodKey, index), value)
+                  request.userAnswers.set(CompanyDetailsPage(periodKey, index), value)
                 )
               _              <- sessionRepository.set(updatedAnswers)
             } yield Redirect(navigator.nextPage(CompanyDetailsPage(periodKey, index), mode, updatedAnswers))

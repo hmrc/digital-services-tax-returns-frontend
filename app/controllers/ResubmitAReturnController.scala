@@ -19,8 +19,7 @@ package controllers
 import connectors.DSTConnector
 import controllers.actions._
 import forms.ResubmitAReturnFormProvider
-import models.requests.OptionalDataRequest
-import models.{NormalMode, ResubmitAReturn, UserAnswers}
+import models.{NormalMode, ResubmitAReturn}
 import navigation.Navigator
 import pages.ResubmitAReturnPage
 import play.api.data.Form
@@ -40,7 +39,7 @@ class ResubmitAReturnController @Inject() (
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
-  requireData: DataRequiredAction,
+  initialiseData: DataInitialiseAction,
   formProvider: ResubmitAReturnFormProvider,
   val controllerComponents: MessagesControllerComponents,
   view: ResubmitAReturnView
@@ -50,7 +49,7 @@ class ResubmitAReturnController @Inject() (
 
   val form: Form[ResubmitAReturn] = formProvider()
 
-  def onPageLoad(): Action[AnyContent] = (identify() andThen getData).async { implicit request =>
+  def onPageLoad: Action[AnyContent] = (identify() andThen getData).async { implicit request =>
     dstConnector.lookupAmendableReturns() map { outstandingPeriods =>
       outstandingPeriods.toList match {
         case Nil     =>
@@ -61,10 +60,7 @@ class ResubmitAReturnController @Inject() (
     }
   }
 
-  private def getUserAnswers(implicit request: OptionalDataRequest[AnyContent]) =
-    request.userAnswers.getOrElse(UserAnswers(request.userId))
-
-  def onSubmit(): Action[AnyContent] = (identify() andThen getData).async { implicit request =>
+  def onSubmit: Action[AnyContent] = (identify() andThen getData andThen initialiseData).async { implicit request =>
     form
       .bindFromRequest()
       .fold(
@@ -79,7 +75,7 @@ class ResubmitAReturnController @Inject() (
           },
         value =>
           for {
-            updatedAnswers <- Future.fromTry(getUserAnswers(request).set(ResubmitAReturnPage, value))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ResubmitAReturnPage, value))
             _              <- sessionRepository.set(updatedAnswers)
           } yield Redirect(navigator.nextPage(ResubmitAReturnPage, NormalMode, updatedAnswers))
       )
