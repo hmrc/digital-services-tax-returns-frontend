@@ -27,6 +27,8 @@
 
 @(form: Form[_], periods: List[Period])(implicit request: Request[_], messages: Messages)
 
+@hint= @{HtmlContent(s"<p class='govuk-body'>${messages("resubmitAReturn.amend-a-return").toString}</p>")}
+
 @layout(pageTitle = title(form, messages("resubmitAReturn.title"))) {
 
     @formHelper(action = routes.ResubmitAReturnController.onSubmit, 'autoComplete -> "off") {
@@ -41,6 +43,7 @@
                 legend = LegendViewModel(messages("resubmitAReturn.heading")).asPageHeading(LegendSize.Large),
                 items  = ResubmitAReturn.options(periods)
             )
+            .withHint(HintViewModel(hint))
         )
 
         @govukButton(
