@@ -25,4 +25,12 @@ object Activity extends Enum[Activity] with PlayJsonEnum[Activity] {
   case object SearchEngine extends Activity
   case object OnlineMarketplace extends Activity
 
+  def convert(activities: Set[Activity]): Set[SelectActivities] = {
+    activities.map {
+      case SocialMedia => SelectActivities.SocialMedia
+      case SearchEngine => SelectActivities.SearchEngine
+      case OnlineMarketplace => SelectActivities.OnlineMarketplace
+    }
+  }
+
 }
