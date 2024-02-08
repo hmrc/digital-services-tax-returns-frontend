@@ -47,19 +47,19 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
     returnData.alternateCharge.foldLeft(userAnswers)((ua, mapData) =>
       mapData._1 match {
         case SocialMedia => if (mapData._2 == 0) {
-          ua.set(SocialMediaLossPage(periodKey), true).get
+          ua.set(SocialMediaLossPage(periodKey), true).getOrElse(userAnswers)
         } else {
-          ua.set(ReportSocialMediaOperatingMarginPage(periodKey), mapData._2.toDouble).get
+          ua.set(ReportSocialMediaOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
         }
         case SearchEngine => if (mapData._2 == 0) {
-          ua.set(SearchEngineLossPage(periodKey), true).get
+          ua.set(SearchEngineLossPage(periodKey), true).getOrElse(userAnswers)
         } else {
-          ua.set(ReportSearchEngineOperatingMarginPage(periodKey), mapData._2.toDouble).get
+          ua.set(ReportSearchEngineOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
         }
         case OnlineMarketplace => if (mapData._2 == 0) {
-          userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), true).get
+          userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), true).getOrElse(userAnswers)
         } else {
-          userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).get
+          userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
         }
       }
     )
