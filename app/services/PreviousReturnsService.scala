@@ -1,24 +1,37 @@
+/*
+ * Copyright 2024 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package services
 
 import connectors.DSTConnector
-import jdk.jfr.Percentage
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
 import models.returns.Return
 import models.{Activity, PeriodKey, UserAnswers}
-import pages.{CrossBorderTransactionReliefPage, GroupLiabilityPage, ReportOnlineMarketplaceLossPage, ReportOnlineMarketplaceOperatingMarginPage, ReportSearchEngineOperatingMarginPage, ReportSocialMediaOperatingMarginPage, SearchEngineLossPage, SelectActivitiesPage, SocialMediaLossPage}
-import play.api.libs.json.{JsObject, Json}
+import pages._
 import uk.gov.hmrc.http.HeaderCarrier
 
-import java.time.Instant
 import javax.inject.Inject
+import scala.collection.immutable
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-@Singleton
 class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: UserAnswers)(implicit ec: ExecutionContext, hc: HeaderCarrier){
 
   def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers): Future[Option[Try[UserAnswers]]] = {
-    dstConnector.lookupSubmittedReturns(periodKey)(hc).map {
+    dstConnector.lookupSubmittedReturns(periodKey).map {
       case Some(returnData) =>
         val updatedUserAnswers = userAnswers.set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
           .flatMap(_.set(GroupLiabilityPage(periodKey), BigDecimal(returnData.totalLiability.toDouble)))
@@ -29,27 +42,27 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
     }
   }
 
-  def alternateChargeMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return) = {
-    returnData.alternateCharge map{
-      case (activity, percentage) =>
-        activity match {
-          case SocialMedia => if (percentage == 0) {
-            userAnswers.set(SocialMediaLossPage(periodKey),true)
-          } else {
-            userAnswers.set(ReportSocialMediaOperatingMarginPage(periodKey), percentage)
-          }
-          case SearchEngine => if (percentage == 0) {
-            userAnswers.set(SearchEngineLossPage(periodKey), true)
-          } else {
-            userAnswers.set(ReportSearchEngineOperatingMarginPage(periodKey), percentage)
-          }
-          case OnlineMarketplace => if (percentage == 0) {
-            userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), true)
-          } else {
-            userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), percentage)
-          }
+  def alternateChargeMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): UserAnswers = {
+
+    returnData.alternateCharge.foldLeft(userAnswers)((ua, mapData) =>
+      mapData._1 match {
+        case SocialMedia => if (mapData._2 == 0) {
+          ua.set(SocialMediaLossPage(periodKey), true).get
+        } else {
+          ua.set(ReportSocialMediaOperatingMarginPage(periodKey), mapData._2.toDouble).get
         }
-    }
+        case SearchEngine => if (mapData._2 == 0) {
+          ua.set(SearchEngineLossPage(periodKey), true).get
+        } else {
+          ua.set(ReportSearchEngineOperatingMarginPage(periodKey), mapData._2.toDouble).get
+        }
+        case OnlineMarketplace => if (mapData._2 == 0) {
+          userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), true).get
+        } else {
+          userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).get
+        }
+      }
+    )
   }
 
 }
