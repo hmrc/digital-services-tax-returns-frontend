@@ -19,7 +19,7 @@ package services
 import connectors.DSTConnector
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
 import models.returns.Return
-import models.{Activity, Money, PeriodKey, UserAnswers}
+import models.{Activity, BankDetailsForRepayment, DomesticBankAccount, ForeignBankAccount, Money, PeriodKey, UKBankDetails, UserAnswers}
 import pages._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -38,10 +38,17 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
           .flatMap(_.set(ReportAlternativeChargePage(periodKey), returnData.alternateCharge.nonEmpty))
           .flatMap(ua => alternateChargeMap(periodKey, ua, returnData))
           .flatMap(_.set(AllowanceDeductedPage(periodKey), returnData.allowanceAmount.getOrElse(Money(0.0))))
-//          .flatmap(_.set(RepaymentPage(periodKey), returnData.repayment.getOrElse(RepaymentDetails(AccountName, BankAccount))
           .flatMap { ua =>
             returnData.repayment match {
-              case Some(repaymentDetails) => ua.set(RepaymentPage(periodKey), repaymentDetails)
+              case Some(repaymentDetails) =>
+                repaymentDetails.bankAccount match {
+                  case DomesticBankAccount(sortCode, accountNo, _) =>
+                    val domesticBankDetails = UKBankDetails(repaymentDetails.accountName, sortCode, accountNo, None)
+                    ua.set(UKBankDetailsPage(periodKey), domesticBankDetails)
+                  case ForeignBankAccount(iban) =>
+                    val foreignBankDetails = BankDetailsForRepayment(repaymentDetails.accountName, iban)
+                    ua.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails)
+                }
               case None => Try(ua)
             }
           }

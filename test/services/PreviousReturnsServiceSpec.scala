@@ -18,7 +18,7 @@ package services
 
 import base.SpecBase
 import connectors.DSTConnector
-import models.SelectActivities
+import models.{AccountNumber, BankDetailsForRepayment, DomesticBankAccount, RepaymentDetails, SelectActivities, SortCode}
 import models.SimpleJson.returnFormat
 import models.returns.Return
 import org.mockito.ArgumentMatchers.any
@@ -314,6 +314,55 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
     updatedUserAnswers.get(CrossBorderTransactionReliefPage(periodKey)) mustBe Some(crossBorderReliefAmount)
     updatedUserAnswers.get(GroupLiabilityPage(periodKey)) mustBe Some(totalLiabilityAmount)
 
+  }
+
+  "processing return data with domestic bank details" in {
+
+    val accountName = "AccountName"
+    val sortCode = "123456"
+    val accountNumber = "12345678"
+    val domestic = "DomesticBankAccount"
+
+
+    val userAnswers = emptyUserAnswers
+      .set(
+        SelectActivitiesPage(periodKey),
+        Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
+      ).success.value
+
+    val returnData =
+      Json.parse("""
+                   |{
+                   |    "reportedActivities": [
+                   |        "OnlineMarketplace",
+                   |        "SocialMedia"
+                   |    ],
+                   |    "alternateCharge": {
+                   |        "OnlineMarketplace": 0
+                   |    },
+                   |    "crossBorderReliefAmount": 500000,
+                   |    "allowanceAmount": 1000,
+                   |    "companiesAmount": {},
+                   |    "totalLiability": 70000,
+                   |    "repayment": {
+                   |        "accountName": "AccountName",
+                   |        "bankAccount": {
+                   |            "sortCode": "123456",
+                   |            "accountNo": "12345678",
+                   |            "_type": "models.DomesticBankAccount"
+                   |        }
+                   |    }
+                   |}""".stripMargin).as[Return]
+
+    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+
+    val expectedBankDetails = DomesticBankAccount(
+      sortCode = SortCode(sortCode),
+      accountNo = AccountNumber(accountNumber),
+      buildingSocietyNumber = None
+    )
+    updatedUserAnswers.get(UKBankDetailsPage(periodKey)) mustBe Some(expectedBankDetails)
   }
 
 }
