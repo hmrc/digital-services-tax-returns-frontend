@@ -16,6 +16,8 @@
 
 package models
 
+import play.api.libs.json.{Json, OFormat}
+
 sealed trait BankAccount
 
 final case class ForeignBankAccount(iban: IBAN) extends BankAccount
@@ -30,3 +32,10 @@ final case class RepaymentDetails(
   accountName: AccountName,
   bankAccount: BankAccount
 )
+
+object RepaymentDetails {
+  implicit val bankAccountFormat: OFormat[BankAccount]                 = Json.format[BankAccount]
+  implicit val foreignBankAccountFormat: OFormat[ForeignBankAccount]   = Json.format[ForeignBankAccount]
+  implicit val domesticBankAccountFormat: OFormat[DomesticBankAccount] = Json.format[DomesticBankAccount]
+}
+

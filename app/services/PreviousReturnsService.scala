@@ -19,12 +19,11 @@ package services
 import connectors.DSTConnector
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
 import models.returns.Return
-import models.{Activity, PeriodKey, UserAnswers}
+import models.{Activity, BankDetailsForRepayment, DomesticBankAccount, ForeignBankAccount, Money, PeriodKey, UKBankDetails, UserAnswers}
 import pages._
 import uk.gov.hmrc.http.HeaderCarrier
 
 import javax.inject.Inject
-import scala.collection.immutable
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
@@ -36,15 +35,31 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
         val updatedUserAnswers = userAnswers.set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
           .flatMap(_.set(GroupLiabilityPage(periodKey), BigDecimal(returnData.totalLiability.toDouble)))
           .flatMap(_.set(CrossBorderTransactionReliefPage(periodKey), BigDecimal(returnData.crossBorderReliefAmount.toDouble)))
-//          .flatMap(alternateChargeMap(periodKey, _, returnData))
+          .flatMap(_.set(ReportAlternativeChargePage(periodKey), returnData.alternateCharge.nonEmpty))
+          .flatMap(ua => alternateChargeMap(periodKey, ua, returnData))
+          .flatMap(_.set(AllowanceDeductedPage(periodKey), returnData.allowanceAmount.getOrElse(Money(0.0))))
+          .flatMap { ua =>
+            returnData.repayment match {
+              case Some(repaymentDetails) =>
+                repaymentDetails.bankAccount match {
+                  case DomesticBankAccount(sortCode, accountNo, _) =>
+                    val domesticBankDetails = UKBankDetails(repaymentDetails.accountName, sortCode, accountNo, None)
+                    ua.set(UKBankDetailsPage(periodKey), domesticBankDetails)
+                  case ForeignBankAccount(iban) =>
+                    val foreignBankDetails = BankDetailsForRepayment(repaymentDetails.accountName, iban)
+                    ua.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails)
+                }
+              case None => Try(ua)
+            }
+          }
         Some(updatedUserAnswers)
       case None => None
     }
   }
 
-  def alternateChargeMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): UserAnswers = {
+  private def alternateChargeMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] = {
 
-    returnData.alternateCharge.foldLeft(userAnswers)((ua, mapData) =>
+    val a = returnData.alternateCharge.foldLeft(userAnswers)((ua, mapData) =>
       mapData._1 match {
         case SocialMedia => if (mapData._2 == 0) {
           ua.set(SocialMediaLossPage(periodKey), true).getOrElse(userAnswers)
@@ -63,6 +78,13 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
         }
       }
     )
+    if(a.get(SelectActivitiesPage(periodKey)).exists(_.size > 1)) {
+      a.set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), returnData.alternateCharge.contains(OnlineMarketplace))
+      .flatMap(_.set(ReportSearchAlternativeChargePage(periodKey), returnData.alternateCharge.contains(SearchEngine)))
+        .flatMap(_.set(ReportMediaAlternativeChargePage(periodKey), returnData.alternateCharge.contains(SocialMedia)))
+    } else {
+      Try(a)
+    }
   }
 
 }
