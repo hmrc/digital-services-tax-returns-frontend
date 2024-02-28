@@ -19,7 +19,7 @@ package services
 import connectors.DSTConnector
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
 import models.returns.Return
-import models.{Activity, BankDetailsForRepayment, DomesticBankAccount, ForeignBankAccount, Money, PeriodKey, UKBankDetails, UserAnswers}
+import models.{Activity, BankDetailsForRepayment, DomesticBankAccount, ForeignBankAccount, Index, Money, PeriodKey, UKBankDetails, UserAnswers}
 import pages._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -38,6 +38,7 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
           .flatMap(_.set(ReportAlternativeChargePage(periodKey), returnData.alternateCharge.nonEmpty))
           .flatMap(ua => alternateChargeMap(periodKey, ua, returnData))
           .flatMap(_.set(AllowanceDeductedPage(periodKey), returnData.allowanceAmount.getOrElse(Money(0.0))))
+          .flatMap(ua => companyMap(periodKey, ua, returnData.companiesAmount))
           .flatMap { ua =>
             returnData.repayment match {
               case Some(repaymentDetails) =>
@@ -72,9 +73,9 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
           ua.set(ReportSearchEngineOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
         }
         case OnlineMarketplace => if (mapData._2 == 0) {
-          userAnswers.set(ReportOnlineMarketplaceLossPage(periodKey), true).getOrElse(userAnswers)
+          ua.set(ReportOnlineMarketplaceLossPage(periodKey), true).getOrElse(userAnswers)
         } else {
-          userAnswers.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
+          ua.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
         }
       }
     )
@@ -84,6 +85,18 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
         .flatMap(_.set(ReportMediaAlternativeChargePage(periodKey), returnData.alternateCharge.contains(SocialMedia)))
     } else {
       Try(a)
+    }
+  }
+
+  def companyMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] = {
+    returnData.companiesAmount.zipWithIndex.foldLeft(Try(userAnswers)) {
+      (ua, data) =>
+        val (company, amount) = data._1
+        val index = data._2
+        ua.flatMap { ua =>
+          ua.set(CompanyLiabilitiesPage(periodKey, Index(index)), amount)
+            .flatMap(_.set(CompanyDetailsPage(periodKey, Index(index)), company.name))
+        }
     }
   }
 
