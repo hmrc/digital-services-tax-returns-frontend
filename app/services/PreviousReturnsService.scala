@@ -27,14 +27,19 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class PreviousReturnsService @Inject()(dstConnector: DSTConnector)(implicit ec: ExecutionContext){
+class PreviousReturnsService @Inject() (dstConnector: DSTConnector)(implicit ec: ExecutionContext) {
 
-  def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] = {
+  def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
+    hc: HeaderCarrier
+  ): Future[Option[UserAnswers]] =
     dstConnector.lookupSubmittedReturns(periodKey).map {
       case Some(returnData) =>
-        val updatedUserAnswers = userAnswers.set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
+        val updatedUserAnswers = userAnswers
+          .set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
           .flatMap(_.set(GroupLiabilityPage(periodKey), BigDecimal(returnData.totalLiability.toDouble)))
-          .flatMap(_.set(CrossBorderTransactionReliefPage(periodKey), BigDecimal(returnData.crossBorderReliefAmount.toDouble)))
+          .flatMap(
+            _.set(CrossBorderTransactionReliefPage(periodKey), BigDecimal(returnData.crossBorderReliefAmount.toDouble))
+          )
           .flatMap(_.set(ReportAlternativeChargePage(periodKey), returnData.alternateCharge.nonEmpty))
           .flatMap(ua => alternateChargeMap(periodKey, ua, returnData))
           .flatMap(_.set(AllowanceDeductedPage(periodKey), returnData.allowanceAmount.getOrElse(Money(0.0))))
@@ -46,58 +51,64 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector)(implicit ec: 
                   case DomesticBankAccount(sortCode, accountNo, _) =>
                     val domesticBankDetails = UKBankDetails(repaymentDetails.accountName, sortCode, accountNo, None)
                     ua.set(UKBankDetailsPage(periodKey), domesticBankDetails)
-                  case ForeignBankAccount(iban) =>
+                  case ForeignBankAccount(iban)                    =>
                     val foreignBankDetails = BankDetailsForRepayment(repaymentDetails.accountName, iban)
                     ua.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails)
                 }
-              case None => Try(ua)
+              case None                   => Try(ua)
             }
           }
         updatedUserAnswers.toOption
-      case None => None
+      case None             => None
     }
-  }
 
-  private def alternateChargeMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] = {
+  private def alternateChargeMap(
+    periodKey: PeriodKey,
+    userAnswers: UserAnswers,
+    returnData: Return
+  ): Try[UserAnswers] = {
 
     val a = returnData.alternateCharge.foldLeft(userAnswers)((ua, mapData) =>
       mapData._1 match {
-        case SocialMedia => if (mapData._2 == 0) {
-          ua.set(SocialMediaLossPage(periodKey), true).getOrElse(userAnswers)
-        } else {
-          ua.set(ReportSocialMediaOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
-        }
-        case SearchEngine => if (mapData._2 == 0) {
-          ua.set(SearchEngineLossPage(periodKey), true).getOrElse(userAnswers)
-        } else {
-          ua.set(ReportSearchEngineOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
-        }
-        case OnlineMarketplace => if (mapData._2 == 0) {
-          ua.set(ReportOnlineMarketplaceLossPage(periodKey), true).getOrElse(userAnswers)
-        } else {
-          ua.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
-        }
+        case SocialMedia       =>
+          if (mapData._2 == 0) {
+            ua.set(SocialMediaLossPage(periodKey), true).getOrElse(userAnswers)
+          } else {
+            ua.set(ReportSocialMediaOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
+          }
+        case SearchEngine      =>
+          if (mapData._2 == 0) {
+            ua.set(SearchEngineLossPage(periodKey), true).getOrElse(userAnswers)
+          } else {
+            ua.set(ReportSearchEngineOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
+          }
+        case OnlineMarketplace =>
+          if (mapData._2 == 0) {
+            ua.set(ReportOnlineMarketplaceLossPage(periodKey), true).getOrElse(userAnswers)
+          } else {
+            ua.set(ReportOnlineMarketplaceOperatingMarginPage(periodKey), mapData._2.toDouble).getOrElse(userAnswers)
+          }
       }
     )
-    if(a.get(SelectActivitiesPage(periodKey)).exists(_.size > 1)) {
-      a.set(ReportOnlineMarketplaceAlternativeChargePage(periodKey), returnData.alternateCharge.contains(OnlineMarketplace))
-      .flatMap(_.set(ReportSearchAlternativeChargePage(periodKey), returnData.alternateCharge.contains(SearchEngine)))
+    if (a.get(SelectActivitiesPage(periodKey)).exists(_.size > 1)) {
+      a.set(
+        ReportOnlineMarketplaceAlternativeChargePage(periodKey),
+        returnData.alternateCharge.contains(OnlineMarketplace)
+      ).flatMap(_.set(ReportSearchAlternativeChargePage(periodKey), returnData.alternateCharge.contains(SearchEngine)))
         .flatMap(_.set(ReportMediaAlternativeChargePage(periodKey), returnData.alternateCharge.contains(SocialMedia)))
     } else {
       Try(a)
     }
   }
 
-  private def companyMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] = {
-    returnData.companiesAmount.zipWithIndex.foldLeft(Try(userAnswers)) {
-      (ua, data) =>
-        val (company, amount) = data._1
-        val index = data._2
-        ua.flatMap { ua =>
-          ua.set(CompanyLiabilitiesPage(periodKey, Index(index)), amount)
-            .flatMap(_.set(CompanyDetailsPage(periodKey, Index(index)), CompanyDetails(company.name, company.utr)))
-        }
+  private def companyMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] =
+    returnData.companiesAmount.zipWithIndex.foldLeft(Try(userAnswers)) { (ua, data) =>
+      val (company, amount) = data._1
+      val index             = data._2
+      ua.flatMap { ua =>
+        ua.set(CompanyLiabilitiesPage(periodKey, Index(index)), amount)
+          .flatMap(_.set(CompanyDetailsPage(periodKey, Index(index)), CompanyDetails(company.name, company.utr)))
+      }
     }
-  }
 
 }

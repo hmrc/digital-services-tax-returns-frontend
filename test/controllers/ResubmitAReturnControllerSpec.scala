@@ -40,8 +40,8 @@ import scala.concurrent.Future
 
 class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
-  def onwardRoute: Call              = Call("GET", "/foo")
-  val mockDstConnector: DSTConnector = mock[DSTConnector]
+  def onwardRoute: Call                                  = Call("GET", "/foo")
+  val mockDstConnector: DSTConnector                     = mock[DSTConnector]
   val mockPreviousReturnsService: PreviousReturnsService = mock[PreviousReturnsService]
 
   lazy val resubmitAReturnRoute: String = routes.ResubmitAReturnController.onPageLoad.url
@@ -76,7 +76,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
-      val userAnswers = new UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
+      val userAnswers           = new UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
       when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))

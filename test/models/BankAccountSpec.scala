@@ -39,14 +39,13 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
 
     "deserialize json to Foreign bank account" in {
       val json: JsValue =
-        Json.parse(
-          """
+        Json.parse("""
             |{
             | "iban": "FR2531682128768051490609537",
             | "_type": "models.ForeignBankAccount"
             |}""".stripMargin)
 
-      json.as[ForeignBankAccount] mustBe  ForeignBankAccount(IBAN("FR2531682128768051490609537"))
+      json.as[ForeignBankAccount] mustBe ForeignBankAccount(IBAN("FR2531682128768051490609537"))
     }
 
     "deserialize json for repayments" in {
@@ -61,7 +60,10 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
                      |        }
                      |}""".stripMargin)
 
-      json.as[RepaymentDetails] mustBe RepaymentDetails(AccountName("AccountName"), DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None))
+      json.as[RepaymentDetails] mustBe RepaymentDetails(
+        AccountName("AccountName"),
+        DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None)
+      )
     }
   }
 }

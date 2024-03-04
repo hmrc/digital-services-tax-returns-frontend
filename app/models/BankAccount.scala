@@ -30,5 +30,3 @@ final case class RepaymentDetails(
   accountName: AccountName,
   bankAccount: BankAccount
 )
-
-
