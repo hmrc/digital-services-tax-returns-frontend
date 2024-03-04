@@ -18,14 +18,13 @@ package services
 
 import base.SpecBase
 import connectors.DSTConnector
-import models.{AccountNumber, BankDetailsForRepayment, DomesticBankAccount, RepaymentDetails, SelectActivities, SortCode}
 import models.SimpleJson.returnFormat
 import models.returns.Return
+import models.{BankDetailsForRepayment, CompanyDetails, Index, SelectActivities, UKBankDetails}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
-import org.scalatest.{BeforeAndAfterEach, EitherValues, OptionValues}
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
+import org.scalatest.{BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.mockito.MockitoSugar
 import pages._
 import play.api.libs.json.Json
@@ -34,7 +33,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with OptionValues with EitherValues with BeforeAndAfterEach {
+class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with OptionValues with BeforeAndAfterEach {
   val mockDSTConnector: DSTConnector = mock[DSTConnector]
   implicit val hc: HeaderCarrier = HeaderCarrier()
   val service = new PreviousReturnsService(dstConnector = mockDSTConnector, userAnswers = emptyUserAnswers)
@@ -69,7 +68,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
         |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(SocialMediaLossPage(periodKey)) mustBe Some(true)
   }
@@ -97,7 +96,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(SocialMediaLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportMediaAlternativeChargePage(periodKey)) mustBe None
   }
@@ -125,7 +124,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(SearchEngineLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportSearchAlternativeChargePage(periodKey)) mustBe None
   }
@@ -153,7 +152,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey)) mustBe None
   }
@@ -183,7 +182,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)) mustBe Some(15.0)
     updatedUserAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) mustBe Some(20.0)
     updatedUserAnswers.get(ReportMediaAlternativeChargePage(periodKey)) mustBe Some(true)
@@ -215,9 +214,9 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) mustBe Some(true)
-    updatedUserAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) shouldBe None
+    updatedUserAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) mustBe None
     updatedUserAnswers.get(ReportAlternativeChargePage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportMediaAlternativeChargePage(periodKey)) mustBe Some(false)
     updatedUserAnswers.get(SocialMediaLossPage(periodKey)) mustBe None
@@ -245,7 +244,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportAlternativeChargePage(periodKey)) mustBe Some(false)
   }
 
@@ -276,7 +275,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(CrossBorderTransactionReliefPage(periodKey)) mustBe Some(crossBorderReliefAmount)
   }
 
@@ -309,7 +308,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |    }""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(AllowanceDeductedPage(periodKey)) mustBe Some(allowanceAmount)
     updatedUserAnswers.get(CrossBorderTransactionReliefPage(periodKey)) mustBe Some(crossBorderReliefAmount)
     updatedUserAnswers.get(GroupLiabilityPage(periodKey)) mustBe Some(totalLiabilityAmount)
@@ -321,8 +320,7 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
     val accountName = "AccountName"
     val sortCode = "123456"
     val accountNumber = "12345678"
-    val domestic = "DomesticBankAccount"
-
+    val buildingNumber = None
 
     val userAnswers = emptyUserAnswers
       .set(
@@ -349,20 +347,112 @@ class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFu
                    |        "bankAccount": {
                    |            "sortCode": "123456",
                    |            "accountNo": "12345678",
-                   |            "_type": "models.DomesticBankAccount"
+                   |            "_type": "DomesticBankAccount"
                    |        }
                    |    }
                    |}""".stripMargin).as[Return]
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value.success.value
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
 
-    val expectedBankDetails = DomesticBankAccount(
-      sortCode = SortCode(sortCode),
-      accountNo = AccountNumber(accountNumber),
-      buildingSocietyNumber = None
+    val bankDetails = UKBankDetails(
+      accountName = accountName,
+      sortCode = sortCode,
+      accountNumber = accountNumber,
+      buildingNumber = buildingNumber
     )
-    updatedUserAnswers.get(UKBankDetailsPage(periodKey)) mustBe Some(expectedBankDetails)
+    updatedUserAnswers.get(UKBankDetailsPage(periodKey)) mustBe Some(bankDetails)
+  }
+
+  "processing return data with foreign bank details" in {
+
+    val accountName = "AccountName"
+    val iban = "FR2531682128768051490609537"
+
+    val userAnswers = emptyUserAnswers
+      .set(
+        SelectActivitiesPage(periodKey),
+        Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
+      ).success.value
+
+    val returnData =
+      Json.parse("""
+                   |{
+                   |    "reportedActivities": [
+                   |        "OnlineMarketplace",
+                   |        "SocialMedia"
+                   |    ],
+                   |    "alternateCharge": {
+                   |        "OnlineMarketplace": 0
+                   |    },
+                   |    "crossBorderReliefAmount": 500000,
+                   |    "allowanceAmount": 1000,
+                   |    "companiesAmount": {},
+                   |    "totalLiability": 70000,
+                   |    "repayment": {
+                   |        "accountName": "AccountName",
+                   |        "bankAccount": {
+                   |            "iban" : "FR2531682128768051490609537",
+                   |            "_type": "ForeignBankAccount"
+                   |        }
+                   |    }
+                   |}""".stripMargin).as[Return]
+
+    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
+
+    val bankDetails = BankDetailsForRepayment(
+      accountName = accountName,
+      internationalBankAccountNumber = iban
+    )
+    updatedUserAnswers.get(BankDetailsForRepaymentPage(periodKey)) mustBe Some(bankDetails)
+  }
+
+  "processing return data with company amount" in {
+
+    val companyName = "Company 1"
+    val utr = Some("1111111000")
+    val companyAmount = 1000.0
+    val index = Index(0)
+
+    val companyName2 = "Company 2"
+    val utr2 = Some("2222222000")
+    val companyAmount2 = 2000.0
+    val index2 = Index(1)
+
+    val userAnswers = emptyUserAnswers
+      .set(
+        SelectActivitiesPage(periodKey),
+        Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
+      ).success.value
+
+    val returnData =
+      Json.parse("""
+                   |{
+                   |        "reportedActivities" : [
+                   |            "OnlineMarketplace",
+                   |            "SocialMedia"
+                   |        ],
+                   |        "alternateCharge" : {
+                   |            "OnlineMarketplace" : 0.0
+                   |        },
+                   |        "crossBorderReliefAmount" : 500000,
+                   |        "allowanceAmount" : 1000,
+                   |        "companiesAmount" : {
+                   |                    "Company 1:1111111000" : 1000.0,
+                   |                    "Company 2:2222222000" : 2000.0
+                   |        },
+                   |        "totalLiability" : 70000
+                   |    }""".stripMargin).as[Return]
+
+    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
+    updatedUserAnswers.get(CompanyDetailsPage(periodKey, index)).value mustBe CompanyDetails(companyName, utr)
+    updatedUserAnswers.get(CompanyLiabilitiesPage(periodKey, index)).value mustBe companyAmount
+
+    updatedUserAnswers.get(CompanyDetailsPage(periodKey, index2)).value mustBe CompanyDetails(companyName2, utr2)
+    updatedUserAnswers.get(CompanyLiabilitiesPage(periodKey, index2)).value mustBe companyAmount2
+
   }
 
 }

@@ -19,7 +19,7 @@ package services
 import connectors.DSTConnector
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
 import models.returns.Return
-import models.{Activity, BankDetailsForRepayment, DomesticBankAccount, ForeignBankAccount, Index, Money, PeriodKey, UKBankDetails, UserAnswers}
+import models.{Activity, BankDetailsForRepayment, CompanyDetails, DomesticBankAccount, ForeignBankAccount, Index, Money, PeriodKey, UKBankDetails, UserAnswers}
 import pages._
 import uk.gov.hmrc.http.HeaderCarrier
 
@@ -29,7 +29,7 @@ import scala.util.Try
 
 class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: UserAnswers)(implicit ec: ExecutionContext, hc: HeaderCarrier){
 
-  def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers): Future[Option[Try[UserAnswers]]] = {
+  def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers): Future[Option[UserAnswers]] = {
     dstConnector.lookupSubmittedReturns(periodKey).map {
       case Some(returnData) =>
         val updatedUserAnswers = userAnswers.set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
@@ -38,7 +38,7 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
           .flatMap(_.set(ReportAlternativeChargePage(periodKey), returnData.alternateCharge.nonEmpty))
           .flatMap(ua => alternateChargeMap(periodKey, ua, returnData))
           .flatMap(_.set(AllowanceDeductedPage(periodKey), returnData.allowanceAmount.getOrElse(Money(0.0))))
-          .flatMap(ua => companyMap(periodKey, ua, returnData.companiesAmount))
+          .flatMap(ua => companyMap(periodKey, ua, returnData))
           .flatMap { ua =>
             returnData.repayment match {
               case Some(repaymentDetails) =>
@@ -53,7 +53,7 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
               case None => Try(ua)
             }
           }
-        Some(updatedUserAnswers)
+        updatedUserAnswers.toOption
       case None => None
     }
   }
@@ -88,14 +88,14 @@ class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: 
     }
   }
 
-  def companyMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] = {
+  private def companyMap(periodKey: PeriodKey, userAnswers: UserAnswers, returnData: Return): Try[UserAnswers] = {
     returnData.companiesAmount.zipWithIndex.foldLeft(Try(userAnswers)) {
       (ua, data) =>
         val (company, amount) = data._1
         val index = data._2
         ua.flatMap { ua =>
           ua.set(CompanyLiabilitiesPage(periodKey, Index(index)), amount)
-            .flatMap(_.set(CompanyDetailsPage(periodKey, Index(index)), company.name))
+            .flatMap(_.set(CompanyDetailsPage(periodKey, Index(index)), CompanyDetails(company.name, company.utr)))
         }
     }
   }

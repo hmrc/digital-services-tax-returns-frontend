@@ -41,8 +41,8 @@ class ResubmitAReturnController @Inject() (
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   initialiseData: DataInitialiseAction,
-  previousReturnsService: PreviousReturnsService,
   formProvider: ResubmitAReturnFormProvider,
+  previousReturnsService: PreviousReturnsService,
   val controllerComponents: MessagesControllerComponents,
   view: ResubmitAReturnView
 )(implicit ec: ExecutionContext)
@@ -78,8 +78,8 @@ class ResubmitAReturnController @Inject() (
         value =>
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ResubmitAReturnPage, value))
-            userAnswersOpt <- previousReturnsService.convertReturnToUserAnswers(PeriodKey(value.key),updatedAnswers)
-            _             <- sessionRepository.set(userAnswersOpt.getOrElse(updatedAnswers))
+            userAnswersOpt <- previousReturnsService.convertReturnToUserAnswers(PeriodKey(value.key), updatedAnswers)
+            _              <- sessionRepository.set(userAnswersOpt.getOrElse(updatedAnswers))
           } yield Redirect(navigator.nextPage(ResubmitAReturnPage, NormalMode, updatedAnswers))
       )
   }
