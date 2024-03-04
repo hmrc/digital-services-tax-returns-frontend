@@ -19,25 +19,30 @@ package controllers
 import base.SpecBase
 import connectors.DSTConnector
 import forms.ResubmitAReturnFormProvider
-import models.ResubmitAReturn
+import models.registration.Period
+import models.{PeriodKey, ResubmitAReturn, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.Form
 import play.api.inject.bind
+import play.api.libs.json.Json
 import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import services.PreviousReturnsService
 import views.html.ResubmitAReturnView
 
+import java.time.Instant
 import scala.concurrent.Future
 
 class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute: Call              = Call("GET", "/foo")
   val mockDstConnector: DSTConnector = mock[DSTConnector]
+  val mockPreviousReturnsService: PreviousReturnsService = mock[PreviousReturnsService]
 
   lazy val resubmitAReturnRoute: String = routes.ResubmitAReturnController.onPageLoad.url
 
@@ -71,14 +76,20 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to the next page when valid data is submitted" in {
 
       val mockSessionRepository = mock[SessionRepository]
+      val userAnswers = new UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
+      when(mockPreviousReturnsService.convertReturnToUserAnswers(any[PeriodKey], any[UserAnswers])(any()))
+        .thenReturn(Future.successful(Some(userAnswers)))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[DSTConnector].toInstance(mockDstConnector),
+            bind[PreviousReturnsService].toInstance(mockPreviousReturnsService)
           )
           .build()
 
