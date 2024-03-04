@@ -36,7 +36,7 @@ import scala.concurrent.Future
 class PreviousReturnsServiceSpec extends SpecBase with MockitoSugar with ScalaFutures with OptionValues with BeforeAndAfterEach {
   val mockDSTConnector: DSTConnector = mock[DSTConnector]
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  val service = new PreviousReturnsService(dstConnector = mockDSTConnector, userAnswers = emptyUserAnswers)
+  val service = new PreviousReturnsService(dstConnector = mockDSTConnector)
 
   override def beforeEach(): Unit = {
     reset(mockDSTConnector)

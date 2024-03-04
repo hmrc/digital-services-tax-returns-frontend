@@ -27,9 +27,9 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
-class PreviousReturnsService @Inject()(dstConnector: DSTConnector, userAnswers: UserAnswers)(implicit ec: ExecutionContext, hc: HeaderCarrier){
+class PreviousReturnsService @Inject()(dstConnector: DSTConnector)(implicit ec: ExecutionContext){
 
-  def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers): Future[Option[UserAnswers]] = {
+  def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit hc: HeaderCarrier): Future[Option[UserAnswers]] = {
     dstConnector.lookupSubmittedReturns(periodKey).map {
       case Some(returnData) =>
         val updatedUserAnswers = userAnswers.set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
