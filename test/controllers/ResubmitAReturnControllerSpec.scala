@@ -43,6 +43,8 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
   def onwardRoute: Call                                  = Call("GET", "/foo")
   val mockDstConnector: DSTConnector                     = mock[DSTConnector]
   val mockPreviousReturnsService: PreviousReturnsService = mock[PreviousReturnsService]
+  val mockSessionRepository                              = mock[SessionRepository]
+  val mockNavigator                                      = mock[Navigator]
 
   lazy val resubmitAReturnRoute: String = routes.ResubmitAReturnController.onPageLoad.url
 
@@ -75,8 +77,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
     "must redirect to the next page when valid data is submitted" in {
 
-      val mockSessionRepository = mock[SessionRepository]
-      val userAnswers           = new UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
+      val userAnswers = new UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
       when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
@@ -131,5 +132,59 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
+    "onPageLoad must return NotFound when there are no amendable returns" in {
+
+      val emptyUserAnswers = UserAnswers(id = "empty", data = Json.obj(), lastUpdated = Instant.now)
+
+      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[DSTConnector].toInstance(mockDstConnector),
+          bind[PreviousReturnsService].toInstance(mockPreviousReturnsService)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(GET, resubmitAReturnRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual NOT_FOUND
+        contentAsString(result) mustEqual "lookupAmendableReturns not found"
+      }
+    }
+
+    "onSubmit must return NotFound when there are no amendable returns" in {
+
+      val userAnswers = UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
+
+      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
+      when(mockSessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers))
+        .overrides(
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[DSTConnector].toInstance(mockDstConnector),
+          bind[PreviousReturnsService].toInstance(mockPreviousReturnsService),
+          bind[Navigator].toInstance(mockNavigator)
+        )
+        .build()
+
+      running(application) {
+        val request = FakeRequest(POST, resubmitAReturnRoute)
+          .withFormUrlEncodedBody(
+            "field"  -> "value",
+            "field2" -> "value2"
+          )
+
+        val result = route(application, request).value
+
+        status(result) mustEqual NOT_FOUND
+        contentAsString(result) mustEqual "lookupAmendableReturns not found"
+      }
+    }
   }
 }

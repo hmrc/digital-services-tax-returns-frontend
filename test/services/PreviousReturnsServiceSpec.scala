@@ -178,7 +178,7 @@ class PreviousReturnsServiceSpec
     updatedUserAnswers.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey)) mustBe None
   }
 
-  "OnlineMarketPlace and Social Media activities with positive margin" in {
+  "OnlineMarketPlace, Social Media and Search Engine activities with positive margin" in {
     val userAnswers = emptyUserAnswers
       .set(
         SelectActivitiesPage(periodKey),
@@ -197,7 +197,8 @@ class PreviousReturnsServiceSpec
                    |        ],
                    |        "alternateCharge" : {
                    |            "OnlineMarketplace" : 15.0,
-                   |            "SocialMedia" : 20.0
+                   |            "SocialMedia" : 20.0,
+                   |            "SearchEngine" : 30.0
                    |        },
                    |        "crossBorderReliefAmount" : 500000,
                    |        "allowanceAmount" : 600000,
@@ -210,7 +211,9 @@ class PreviousReturnsServiceSpec
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)) mustBe Some(15.0)
     updatedUserAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) mustBe Some(20.0)
+    updatedUserAnswers.get(ReportSearchEngineOperatingMarginPage(periodKey)) mustBe Some(30.0)
     updatedUserAnswers.get(ReportMediaAlternativeChargePage(periodKey)) mustBe Some(true)
+    updatedUserAnswers.get(ReportAlternativeChargePage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportAlternativeChargePage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(SocialMediaLossPage(periodKey)) mustBe None
   }
@@ -505,7 +508,6 @@ class PreviousReturnsServiceSpec
 
     updatedUserAnswers.get(CompanyDetailsPage(periodKey, index2)).value mustBe CompanyDetails(companyName2, utr2)
     updatedUserAnswers.get(CompanyLiabilitiesPage(periodKey, index2)).value mustBe companyAmount2
-
   }
 
 }
