@@ -79,7 +79,7 @@ class ResubmitAReturnController @Inject() (
           val periodKey = PeriodKey(value.key)
           for {
             updatedAnswers <- Future.fromTry(request.userAnswers.set(ResubmitAReturnPage(periodKey), value))
-            userAnswersOpt <- previousReturnsService.convertReturnToUserAnswers(PeriodKey(value.key), updatedAnswers)
+            userAnswersOpt <- previousReturnsService.convertReturnToUserAnswers(periodKey, updatedAnswers)
             _              <- sessionRepository.set(userAnswersOpt.getOrElse(updatedAnswers))
           } yield Redirect(navigator.nextPage(ResubmitAReturnPage(periodKey), NormalMode, updatedAnswers))
         }
