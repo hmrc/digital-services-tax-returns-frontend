@@ -57,7 +57,7 @@ class PreviousReturnsService @Inject() (dstConnector: DSTConnector)(implicit ec:
                   case ForeignBankAccount(iban)                    =>
                     val foreignBankDetails = BankDetailsForRepayment(repaymentDetails.accountName, iban)
                     ua.set(IsRepaymentBankAccountUKPage(periodKey), false)
-                    .flatMap(_.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails))
+                      .flatMap(_.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails))
                 }
               case None                   => Try(ua)
             }

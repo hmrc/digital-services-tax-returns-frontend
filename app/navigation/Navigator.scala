@@ -56,8 +56,7 @@ class Navigator @Inject() () extends NavigationUtils {
       _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
     case BankDetailsForRepaymentPage(periodKey)                  =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
-    case ResubmitAReturnPage(periodKey) => _ =>
-      Some(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
+    case ResubmitAReturnPage(periodKey)                          => _ => Some(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
     case _                                                       => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 
