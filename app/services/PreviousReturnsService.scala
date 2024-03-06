@@ -30,7 +30,7 @@ import scala.util.Try
 class PreviousReturnsService @Inject() (dstConnector: DSTConnector)(implicit ec: ExecutionContext) {
 
   def convertReturnToUserAnswers(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
-                                                                                 hc: HeaderCarrier
+    hc: HeaderCarrier
   ): Future[Option[UserAnswers]] =
     dstConnector.lookupSubmittedReturns(periodKey).map {
       case Some(returnData) =>
@@ -67,10 +67,10 @@ class PreviousReturnsService @Inject() (dstConnector: DSTConnector)(implicit ec:
     }
 
   private def alternateChargeMap(
-                                  periodKey: PeriodKey,
-                                  userAnswers: UserAnswers,
-                                  returnData: Return
-                                ): Try[UserAnswers] = {
+    periodKey: PeriodKey,
+    userAnswers: UserAnswers,
+    returnData: Return
+  ): Try[UserAnswers] = {
 
     val a = returnData.alternateCharge.foldLeft(userAnswers)((ua, mapData) =>
       mapData._1 match {

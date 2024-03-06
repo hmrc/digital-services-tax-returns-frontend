@@ -34,7 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class PreviousReturnsServiceSpec
-  extends SpecBase
+    extends SpecBase
     with MockitoSugar
     with ScalaFutures
     with OptionValues

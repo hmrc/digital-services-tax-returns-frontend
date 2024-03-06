@@ -34,19 +34,19 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ResubmitAReturnController @Inject() (
-                                            override val messagesApi: MessagesApi,
-                                            sessionRepository: SessionRepository,
-                                            dstConnector: DSTConnector,
-                                            navigator: Navigator,
-                                            identify: IdentifierAction,
-                                            getData: DataRetrievalAction,
-                                            initialiseData: DataInitialiseAction,
-                                            formProvider: ResubmitAReturnFormProvider,
-                                            previousReturnsService: PreviousReturnsService,
-                                            val controllerComponents: MessagesControllerComponents,
-                                            view: ResubmitAReturnView
-                                          )(implicit ec: ExecutionContext)
-  extends FrontendBaseController
+  override val messagesApi: MessagesApi,
+  sessionRepository: SessionRepository,
+  dstConnector: DSTConnector,
+  navigator: Navigator,
+  identify: IdentifierAction,
+  getData: DataRetrievalAction,
+  initialiseData: DataInitialiseAction,
+  formProvider: ResubmitAReturnFormProvider,
+  previousReturnsService: PreviousReturnsService,
+  val controllerComponents: MessagesControllerComponents,
+  view: ResubmitAReturnView
+)(implicit ec: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   val form: Form[ResubmitAReturn] = formProvider()
