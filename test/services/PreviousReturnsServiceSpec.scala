@@ -316,7 +316,45 @@ class PreviousReturnsServiceSpec
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
-    updatedUserAnswers.get(CrossBorderTransactionReliefPage(periodKey)) mustBe Some(crossBorderReliefAmount)
+    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
+    updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe Some(true)
+  }
+
+  "processing return data with 0.0 cross-border relief amount" in {
+
+    val crossBorderReliefAmount = 0.0
+
+    val userAnswers = emptyUserAnswers
+      .set(
+        SelectActivitiesPage(periodKey),
+        Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
+      )
+      .success
+      .value
+
+    val returnData =
+      Json
+        .parse("""
+                 |{
+                 |        "reportedActivities" : [
+                 |            "OnlineMarketplace",
+                 |            "SocialMedia"
+                 |        ],
+                 |        "alternateCharge" : {
+                 |            "OnlineMarketplace" : 0.0
+                 |        },
+                 |        "crossBorderReliefAmount" : 0.0,
+                 |        "allowanceAmount" : 600000,
+                 |        "companiesAmount" : {},
+                 |        "totalLiability" : 70000
+                 |    }""".stripMargin)
+        .as[Return]
+
+    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
+    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
+    updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe Some(false)
+    updatedUserAnswers.get(RepaymentPage(periodKey)) mustBe Some(false)
   }
 
   "processing return data with allowance amount" in {
@@ -354,7 +392,7 @@ class PreviousReturnsServiceSpec
     when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(AllowanceDeductedPage(periodKey)) mustBe Some(allowanceAmount)
-    updatedUserAnswers.get(CrossBorderTransactionReliefPage(periodKey)) mustBe Some(crossBorderReliefAmount)
+    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
     updatedUserAnswers.get(GroupLiabilityPage(periodKey)) mustBe Some(totalLiabilityAmount)
 
   }
@@ -410,6 +448,8 @@ class PreviousReturnsServiceSpec
       buildingNumber = buildingNumber
     )
     updatedUserAnswers.get(UKBankDetailsPage(periodKey)) mustBe Some(bankDetails)
+    updatedUserAnswers.get(RepaymentPage(periodKey)) mustBe Some(true)
+    updatedUserAnswers.get(IsRepaymentBankAccountUKPage(periodKey)) mustBe Some(true)
   }
 
   "processing return data with foreign bank details" in {
@@ -458,6 +498,8 @@ class PreviousReturnsServiceSpec
       internationalBankAccountNumber = iban
     )
     updatedUserAnswers.get(BankDetailsForRepaymentPage(periodKey)) mustBe Some(bankDetails)
+    updatedUserAnswers.get(IsRepaymentBankAccountUKPage(periodKey)) mustBe Some(false)
+    updatedUserAnswers.get(RepaymentPage(periodKey)) mustBe Some(true)
   }
 
   "processing return data with company amount" in {

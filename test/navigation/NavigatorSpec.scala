@@ -691,6 +691,14 @@ class NavigatorSpec extends SpecBase {
             .value
         ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
       }
+
+      "must go from ResubmitAReturnPage to ManageCompaniesPage" in {
+        navigator.nextPage(
+          ResubmitAReturnPage(periodKey),
+          NormalMode,
+          UserAnswers("id")
+        ) mustBe routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode)
+      }
     }
 
     "must go from a UKBankDetailsPage to CheckYourAnswers page" in {

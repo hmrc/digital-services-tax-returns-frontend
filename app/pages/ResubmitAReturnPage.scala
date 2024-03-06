@@ -16,10 +16,10 @@
 
 package pages
 
-import models.ResubmitAReturn
+import models.{PeriodKey, ResubmitAReturn}
 import play.api.libs.json.JsPath
 
-case object ResubmitAReturnPage extends QuestionPage[ResubmitAReturn] {
+case class ResubmitAReturnPage(periodKey: PeriodKey) extends QuestionPage[ResubmitAReturn] {
 
   override def path: JsPath = JsPath \ toString
 

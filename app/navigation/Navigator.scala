@@ -18,7 +18,7 @@ package navigation
 
 import controllers.routes
 import models._
-import pages.{BankDetailsForRepaymentPage, _}
+import pages.{BankDetailsForRepaymentPage, ResubmitAReturnPage, _}
 import play.api.mvc.Call
 
 import javax.inject.{Inject, Singleton}
@@ -56,6 +56,8 @@ class Navigator @Inject() () extends NavigationUtils {
       _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
     case BankDetailsForRepaymentPage(periodKey)                  =>
       _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
+    case ResubmitAReturnPage(periodKey) => _ =>
+      Some(routes.ManageCompaniesController.onPageLoad(periodKey, NormalMode))
     case _                                                       => _ => Some(routes.ReturnsDashboardController.onPageLoad)
   }
 

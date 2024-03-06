@@ -37,23 +37,27 @@ class PreviousReturnsService @Inject() (dstConnector: DSTConnector)(implicit ec:
         val updatedUserAnswers = userAnswers
           .set(SelectActivitiesPage(periodKey), Activity.convert(returnData.reportedActivities))
           .flatMap(_.set(GroupLiabilityPage(periodKey), BigDecimal(returnData.totalLiability.toDouble)))
+          .flatMap(_.set(ReportCrossBorderReliefPage(periodKey), returnData.crossBorderReliefAmount.toDouble > 0))
           .flatMap(
-            _.set(CrossBorderTransactionReliefPage(periodKey), BigDecimal(returnData.crossBorderReliefAmount.toDouble))
+            _.set(ReliefDeductedPage(periodKey), BigDecimal(returnData.crossBorderReliefAmount.toDouble))
           )
           .flatMap(_.set(ReportAlternativeChargePage(periodKey), returnData.alternateCharge.nonEmpty))
           .flatMap(ua => alternateChargeMap(periodKey, ua, returnData))
           .flatMap(_.set(AllowanceDeductedPage(periodKey), returnData.allowanceAmount.getOrElse(Money(0.0))))
           .flatMap(ua => companyMap(periodKey, ua, returnData))
+          .flatMap(_.set(RepaymentPage(periodKey), returnData.repayment.isDefined))
           .flatMap { ua =>
             returnData.repayment match {
               case Some(repaymentDetails) =>
                 repaymentDetails.bankAccount match {
                   case DomesticBankAccount(sortCode, accountNo, _) =>
                     val domesticBankDetails = UKBankDetails(repaymentDetails.accountName, sortCode, accountNo, None)
-                    ua.set(UKBankDetailsPage(periodKey), domesticBankDetails)
+                    ua.set(IsRepaymentBankAccountUKPage(periodKey), true)
+                      .flatMap(_.set(UKBankDetailsPage(periodKey), domesticBankDetails))
                   case ForeignBankAccount(iban)                    =>
                     val foreignBankDetails = BankDetailsForRepayment(repaymentDetails.accountName, iban)
-                    ua.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails)
+                    ua.set(IsRepaymentBankAccountUKPage(periodKey), false)
+                    .flatMap(_.set(BankDetailsForRepaymentPage(periodKey), foreignBankDetails))
                 }
               case None                   => Try(ua)
             }
