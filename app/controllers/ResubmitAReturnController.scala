@@ -19,13 +19,14 @@ package controllers
 import connectors.DSTConnector
 import controllers.actions._
 import forms.ResubmitAReturnFormProvider
-import models.{NormalMode, ResubmitAReturn}
+import models.{NormalMode, PeriodKey, ResubmitAReturn}
 import navigation.Navigator
 import pages.ResubmitAReturnPage
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import repositories.SessionRepository
+import services.PreviousReturnsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.ResubmitAReturnView
 
@@ -41,6 +42,7 @@ class ResubmitAReturnController @Inject() (
   getData: DataRetrievalAction,
   initialiseData: DataInitialiseAction,
   formProvider: ResubmitAReturnFormProvider,
+  previousReturnsService: PreviousReturnsService,
   val controllerComponents: MessagesControllerComponents,
   view: ResubmitAReturnView
 )(implicit ec: ExecutionContext)
@@ -73,11 +75,14 @@ class ResubmitAReturnController @Inject() (
                 BadRequest(view(formWithErrors, periods))
             }
           },
-        value =>
+        value => {
+          val periodKey = PeriodKey(value.key)
           for {
-            updatedAnswers <- Future.fromTry(request.userAnswers.set(ResubmitAReturnPage, value))
-            _              <- sessionRepository.set(updatedAnswers)
-          } yield Redirect(navigator.nextPage(ResubmitAReturnPage, NormalMode, updatedAnswers))
+            updatedAnswers <- Future.fromTry(request.userAnswers.set(ResubmitAReturnPage(periodKey), value))
+            userAnswersOpt <- previousReturnsService.convertReturnToUserAnswers(periodKey, updatedAnswers)
+            _              <- sessionRepository.set(userAnswersOpt.getOrElse(updatedAnswers))
+          } yield Redirect(navigator.nextPage(ResubmitAReturnPage(periodKey), NormalMode, updatedAnswers))
+        }
       )
   }
 }

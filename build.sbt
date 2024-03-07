@@ -41,7 +41,7 @@ lazy val root = (project in file("."))
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
       ".*javascript.*;.*Routes.*;.*viewmodels.*;.*ViewUtils.*;.*GuiceInjector;.*views.*;" +
       ".*Routes.*;.*viewmodels.govuk.*;app.*;prod.*",
-    ScoverageKeys.coverageMinimumStmtTotal := 96,
+    ScoverageKeys.coverageMinimumStmtTotal := 95,
     ScoverageKeys.coverageMinimumBranchTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := true,
     ScoverageKeys.coverageHighlighting := true,

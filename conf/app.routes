@@ -62,11 +62,6 @@ POST       /:periodKey/report-search-engine-alternative-charge             contr
 GET        /:periodKey/edit/report-search-engine-alternative-charge        controllers.ReportSearchAlternativeChargeController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
 POST       /:periodKey/edit/report-search-engine-alternative-charge        controllers.ReportSearchAlternativeChargeController.onSubmit(periodKey: PeriodKey, mode: Mode = CheckMode)
 
-GET        /:periodKey/cross-border-transaction-relief-amount              controllers.CrossBorderTransactionReliefController.onPageLoad(periodKey: PeriodKey, mode: Mode = NormalMode)
-POST       /:periodKey/cross-border-transaction-relief-amount              controllers.CrossBorderTransactionReliefController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
-GET        /:periodKey/edit/cross-border-transaction-relief-amount         controllers.CrossBorderTransactionReliefController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
-POST       /:periodKey/edit/cross-border-transaction-relief-amount         controllers.CrossBorderTransactionReliefController.onSubmit(periodKey: PeriodKey, mode: Mode = CheckMode)
-
 GET        /:periodKey/report-alternative-charge                           controllers.ReportAlternativeChargeController.onPageLoad(periodKey: PeriodKey, mode: Mode = NormalMode)
 POST       /:periodKey/report-alternative-charge                           controllers.ReportAlternativeChargeController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
 GET        /:periodKey/edit/report-alternative-charge                      controllers.ReportAlternativeChargeController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
