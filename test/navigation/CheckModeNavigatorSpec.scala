@@ -452,7 +452,6 @@ class CheckModeNavigatorSpec extends SpecBase {
       ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
-
     "must go from a GroupLiabilityPage to RepaymentPage" in {
 
       navigator.nextPage(

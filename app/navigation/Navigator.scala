@@ -83,8 +83,7 @@ class Navigator @Inject() () extends NavigationUtils {
     case ReliefDeductedPage(periodKey)                           =>
       ua => reliefDeducted(periodKey, ua)(CheckMode)
     case _                                                       =>
-      _ =>
-        None
+      _ => None
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {
