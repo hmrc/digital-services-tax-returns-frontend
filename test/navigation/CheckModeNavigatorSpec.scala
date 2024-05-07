@@ -34,7 +34,7 @@ class CheckModeNavigatorSpec extends SpecBase {
         UnknownPage,
         CheckMode,
         UserAnswers("id")
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
+      ) mustBe routes.JourneyRecoveryController.onPageLoad()
     }
 
     "must go from a CompanyDetailsPage to ManageCompanies page" in {
@@ -386,13 +386,13 @@ class CheckModeNavigatorSpec extends SpecBase {
       ) mustBe routes.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey, CheckMode)
     }
 
-    "must go from a ReportOnlineMarketplaceOperatingMarginPage to ReportCrossBorderReliefPage when 'No' is selected" in {
+    "must go from a ReportOnlineMarketplaceOperatingMarginPage to CheckYourAnswerPage when 'No' is selected" in {
 
       navigator.nextPage(
         ReportOnlineMarketplaceOperatingMarginPage(periodKey),
         CheckMode,
         UserAnswers("id")
-      ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode)
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
     }
 
     "must go from a ReportSocialMediaOperatingMarginPage to CheckYourAnswers page" in {
@@ -450,6 +450,39 @@ class CheckModeNavigatorSpec extends SpecBase {
         CheckMode,
         emptyUserAnswers
       ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
+    }
+
+
+    "must go from a GroupLiabilityPage to RepaymentPage" in {
+
+      navigator.nextPage(
+        GroupLiabilityPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+      ) mustBe routes.RepaymentController.onPageLoad(periodKey, CheckMode)
+    }
+
+    "must go from a CompanyLiabilitiesPage to GroupLiability page when user filled the pages for both the companies mentioned in manage companies page" in {
+
+      navigator.nextPage(
+        CompanyLiabilitiesPage(periodKey, Index(1)),
+        CheckMode,
+        UserAnswers("id")
+          .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
+          .success
+          .value
+          .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(122.11))
+          .success
+          .value
+      ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, CheckMode)
+    }
+
+    "must go from Relief deducted page to Allowance deducted page" in {
+      navigator.nextPage(
+        ReliefDeductedPage(periodKey),
+        CheckMode,
+        UserAnswers("id").set(ReportAlternativeChargePage(periodKey), false).success.value
+      ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, CheckMode)
     }
   }
 }
