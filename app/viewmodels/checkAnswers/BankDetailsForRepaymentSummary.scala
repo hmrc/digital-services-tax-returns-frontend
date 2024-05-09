@@ -28,7 +28,7 @@ import viewmodels.implicits._
 
 object BankDetailsForRepaymentSummary {
 
-  def accountName(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def accountNameRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(BankDetailsForRepaymentPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "bankDetailsForRepayment.accountName.change.hidden",
@@ -43,7 +43,7 @@ object BankDetailsForRepaymentSummary {
       )
     }
 
-  def iban(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def ibanRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(BankDetailsForRepaymentPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "bankDetailsForRepayment.internationalBankAccountNumber.change.hidden",

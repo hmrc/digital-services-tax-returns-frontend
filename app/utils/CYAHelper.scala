@@ -150,8 +150,8 @@ class CYAHelper @Inject() () {
       )
     } else {
       Seq(
-        BankDetailsForRepaymentSummary.accountName(periodKey, userAnswers),
-        BankDetailsForRepaymentSummary.iban(periodKey, userAnswers)
+        BankDetailsForRepaymentSummary.accountNameRow(periodKey, userAnswers),
+        BankDetailsForRepaymentSummary.ibanRow(periodKey, userAnswers)
       )
     }
 
