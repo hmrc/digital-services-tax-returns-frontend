@@ -137,7 +137,7 @@ class CYAHelper @Inject() () {
   }
 
   private def createReturnRepaymentsSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
-                                                                                            messages: Messages
+    messages: Messages
   ): Option[Section] = {
     val isUKAccount = userAnswers.get(IsRepaymentBankAccountUKPage(periodKey)).getOrElse(false)
 
@@ -163,7 +163,6 @@ class CYAHelper @Inject() () {
       ) ++ bankDetailsRows
     )
   }
-
 
   private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {
     val nonEmptyRows = rows.flatten

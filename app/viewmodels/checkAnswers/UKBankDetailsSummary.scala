@@ -58,7 +58,9 @@ object UKBankDetailsSummary {
       )
     }
 
-  def accountNumberRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def accountNumberRow(periodKey: PeriodKey, answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
     answers.get(UKBankDetailsPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
         key = "uKBankDetails.accountNumber",
@@ -73,7 +75,9 @@ object UKBankDetailsSummary {
       )
     }
 
-  def buildingNumberRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def buildingNumberRow(periodKey: PeriodKey, answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
     answers.get(UKBankDetailsPage(periodKey)).flatMap { answer =>
       answer.buildingNumber.map { buildingNumber =>
         SummaryListRowViewModel(
@@ -90,4 +94,3 @@ object UKBankDetailsSummary {
       }
     }
 }
-

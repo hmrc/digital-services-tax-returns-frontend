@@ -89,9 +89,9 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     }
 
     "must return OK and the correct view for a GET when UK bank details are supplied" in {
-      val accountName = "AccountName"
-      val sortCode = "123456"
-      val accountNumber = "12345678"
+      val accountName    = "AccountName"
+      val sortCode       = "123456"
+      val accountNumber  = "12345678"
       val buildingNumber = Some("1234567890")
 
       val userAnswers = emptyUserAnswers
@@ -105,7 +105,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, checkYourAnswersRoute)
+        val request     = FakeRequest(GET, checkYourAnswersRoute)
         val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
 
         val result = route(application, request).value
@@ -122,7 +122,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
     "must return OK and the correct view for a GET when non-UK bank details are supplied" in {
       val accountName = "ForeignAccount"
-      val iban = "IBAN123456789"
+      val iban        = "IBAN123456789"
 
       val userAnswers = emptyUserAnswers
         .set(IsRepaymentBankAccountUKPage(periodKey), false)
@@ -135,7 +135,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
       val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
 
       running(application) {
-        val request = FakeRequest(GET, checkYourAnswersRoute)
+        val request     = FakeRequest(GET, checkYourAnswersRoute)
         val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
 
         val result = route(application, request).value
