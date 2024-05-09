@@ -17,10 +17,10 @@
 package controllers
 
 import base.SpecBase
-import models.{SelectActivities, formatDate}
 import models.registration.Registration
+import models.{BankDetailsForRepayment, SelectActivities, UKBankDetails, formatDate}
 import org.scalatestplus.mockito.MockitoSugar.mock
-import pages.{GroupLiabilityPage, SelectActivitiesPage}
+import pages.{BankDetailsForRepaymentPage, GroupLiabilityPage, IsRepaymentBankAccountUKPage, SelectActivitiesPage, UKBankDetailsPage}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
@@ -74,6 +74,68 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
       running(application) {
         val request     = FakeRequest(GET, checkYourAnswersRoute)
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when UK bank details are supplied" in {
+      val accountName = "AccountName"
+      val sortCode = "123456"
+      val accountNumber = "12345678"
+      val buildingNumber = Some("1234567890")
+
+      val userAnswers = emptyUserAnswers
+        .set(IsRepaymentBankAccountUKPage(periodKey), true)
+        .success
+        .value
+        .set(UKBankDetailsPage(periodKey), UKBankDetails(accountName, sortCode, accountNumber, buildingNumber))
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRoute)
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+
+        val result = route(application, request).value
+
+        val view = application.injector.instanceOf[CheckYourAnswersView]
+
+        status(result) mustEqual OK
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must return OK and the correct view for a GET when non-UK bank details are supplied" in {
+      val accountName = "ForeignAccount"
+      val iban = "IBAN123456789"
+
+      val userAnswers = emptyUserAnswers
+        .set(IsRepaymentBankAccountUKPage(periodKey), false)
+        .success
+        .value
+        .set(BankDetailsForRepaymentPage(periodKey), BankDetailsForRepayment(accountName, iban))
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRoute)
         val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
 
         val result = route(application, request).value
