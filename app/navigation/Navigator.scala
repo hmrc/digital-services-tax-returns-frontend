@@ -65,6 +65,8 @@ class Navigator @Inject() () extends NavigationUtils {
       _ => Some(routes.ManageCompaniesController.onPageLoad(periodKey, CheckMode))
     case SelectActivitiesPage(periodKey)                         =>
       _ => Some(routes.ReportAlternativeChargeController.onPageLoad(periodKey, CheckMode))
+    case GroupLiabilityPage(periodKey)                           => _ => Some(routes.RepaymentController.onPageLoad(periodKey, CheckMode))
+    case CompanyLiabilitiesPage(periodKey, index)                => ua => Some(companyLiability(periodKey, index, ua)(CheckMode))
     case ReportAlternativeChargePage(periodKey)                  => ua => reportAlternativeChargeNavigation(periodKey, CheckMode)(ua)
     case ReportMediaAlternativeChargePage(periodKey)             => ua => reportMediaAlternative(periodKey, ua)(CheckMode)
     case ReportCrossBorderReliefPage(periodKey)                  => ua => reportCrossBorderRelief(periodKey, ua)(CheckMode)
@@ -75,14 +77,13 @@ class Navigator @Inject() () extends NavigationUtils {
     case SearchEngineLossPage(periodKey)                         => ua => searchEngineLoss(periodKey, ua)(CheckMode)
     case ReportOnlineMarketplaceLossPage(periodKey)              => ua => reportOnlineMarketplaceLoss(periodKey, ua)(CheckMode)
     case ReportOnlineMarketplaceOperatingMarginPage(periodKey)   =>
-      _ => Some(routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode))
+      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
     case ReportSocialMediaOperatingMarginPage(periodKey)         => ua => socialMediaOperatingMargin(periodKey, ua)(CheckMode)
     case ReportSearchEngineOperatingMarginPage(periodKey)        => ua => searchEnginOperatingMargin(periodKey, ua)(CheckMode)
+    case ReliefDeductedPage(periodKey)                           =>
+      ua => reliefDeducted(periodKey, ua)(CheckMode)
     case _                                                       =>
-      _ =>
-        Some(
-          routes.CheckYourAnswersController.onPageLoad(PeriodKey("003"))
-        ) // TODO period key will be looked at when we implement navigation for Check mode navigation
+      _ => None
   }
 
   def nextPage(page: Page, mode: Mode, userAnswers: UserAnswers): Call = mode match {

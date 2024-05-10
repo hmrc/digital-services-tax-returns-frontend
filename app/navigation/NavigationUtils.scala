@@ -34,7 +34,7 @@ trait NavigationUtils {
   private[navigation] def reliefDeducted(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(ReportAlternativeChargePage(periodKey)) map {
       case true  => companyLiability(periodKey, Index(0), ua)(mode)
-      case false => routes.AllowanceDeductedController.onPageLoad(periodKey, NormalMode)
+      case false => routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
     }
 
   private[navigation] def addCompanyDetails(periodKey: PeriodKey, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
