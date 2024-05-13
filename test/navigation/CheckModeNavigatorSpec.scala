@@ -483,5 +483,85 @@ class CheckModeNavigatorSpec extends SpecBase {
         UserAnswers("id").set(ReportAlternativeChargePage(periodKey), false).success.value
       ) mustBe routes.AllowanceDeductedController.onPageLoad(periodKey, CheckMode)
     }
+
+    "must go from RepaymentPage to IsRepaymentBankAccountUKPage when user answers yes for repayment" in {
+      navigator.nextPage(
+        RepaymentPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+          .set(RepaymentPage(periodKey), true)
+          .success
+          .value
+      ) mustBe routes.IsRepaymentBankAccountUKController.onPageLoad(periodKey, CheckMode)
+    }
+
+    "must go from RepaymentPage to CheckYourAnswersPage when user answers no for repayment" in {
+      navigator.nextPage(
+        RepaymentPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+          .set(RepaymentPage(periodKey), false)
+          .success
+          .value
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
+    }
+
+    "must go from IsRepaymentBankAccountUKPage to UKBankDetailsPage when bank account is from UK" in {
+      navigator.nextPage(
+        IsRepaymentBankAccountUKPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+          .set(IsRepaymentBankAccountUKPage(periodKey), true)
+          .success
+          .value
+      ) mustBe routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode)
+    }
+
+    "must go from UKBankDetailsPage to CheckYourAnswersPage" in {
+      navigator.nextPage(
+        UKBankDetailsPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+          .set(
+            UKBankDetailsPage(periodKey),
+            UKBankDetails(
+              accountName = "AccountName",
+              sortCode = "123456",
+              accountNumber = "12345678",
+              buildingNumber = Some("12345678")
+            )
+          )
+          .success
+          .value
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
+    }
+
+    "must go from IsRepaymentBankAccountUKPage to BankDetailsForRepaymentPage when bank account is Foreign" in {
+      navigator.nextPage(
+        IsRepaymentBankAccountUKPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+          .set(IsRepaymentBankAccountUKPage(periodKey), false)
+          .success
+          .value
+      ) mustBe routes.BankDetailsForRepaymentController.onPageLoad(periodKey, CheckMode)
+    }
+
+    "must go from BankDetailsForRepaymentPage to CheckYourAnswersPage" in {
+      navigator.nextPage(
+        BankDetailsForRepaymentPage(periodKey),
+        CheckMode,
+        UserAnswers("id")
+          .set(
+            BankDetailsForRepaymentPage(periodKey),
+            BankDetailsForRepayment(
+              accountName = "AccountName",
+              internationalBankAccountNumber = "GB36BARC20051773152391"
+            )
+          )
+          .success
+          .value
+      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
+    }
   }
 }

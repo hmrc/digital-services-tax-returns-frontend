@@ -16,12 +16,23 @@
 
 package pages
 
-import models.PeriodKey
+import models.{PeriodKey, UserAnswers}
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case class IsRepaymentBankAccountUKPage(periodKey: PeriodKey) extends QuestionPage[Boolean] {
 
   override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = "isRepaymentBankAccountUK"
+
+  override def cleanup(value: Option[Boolean], userAnswers: UserAnswers): Try[UserAnswers] =
+    value match {
+      case Some(false) =>
+        userAnswers
+          .remove(UKBankDetailsPage(periodKey))
+
+      case _ => userAnswers.remove(BankDetailsForRepaymentPage(periodKey))
+    }
 }
