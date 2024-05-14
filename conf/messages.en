@@ -269,6 +269,7 @@ uKBankDetails.error.accountNumber.invalid  = Enter the account number in the cor
 uKBankDetails.error.buildingNumber.length  = Building society roll number must be 18 characters or fewer
 uKBankDetails.error.buildingNumber.invalid  = Building society roll number must only include letters a to z, numbers, hyphens and spaces
 
+uKBankDetails.buildingRollNumber = Building society roll number
 uKBankDetails.accountName.change.hidden = Account name
 uKBankDetails.sortCode.change.hidden = Sort code
 uKBankDetails.accountNumber.change.hidden = Account number

@@ -28,21 +28,32 @@ import viewmodels.implicits._
 
 object BankDetailsForRepaymentSummary {
 
-  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def accountNameRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(BankDetailsForRepaymentPage(periodKey)).map { answer =>
-      val value = HtmlFormat.escape(answer.accountName).toString + "<br/>" + HtmlFormat
-        .escape(answer.internationalBankAccountNumber)
-        .toString
-
       SummaryListRowViewModel(
-        key = "bankDetailsForRepayment.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "bankDetailsForRepayment.accountName.change.hidden",
+        value = ValueViewModel(HtmlContent(HtmlFormat.escape(answer.accountName).toString)),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
             routes.BankDetailsForRepaymentController.onPageLoad(periodKey, CheckMode).url
           )
-            .withVisuallyHiddenText(messages("bankDetailsForRepayment.change.hidden"))
+            .withVisuallyHiddenText(messages("bankDetailsForRepayment.accountName.change.hidden"))
+        )
+      )
+    }
+
+  def ibanRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(BankDetailsForRepaymentPage(periodKey)).map { answer =>
+      SummaryListRowViewModel(
+        key = "bankDetailsForRepayment.internationalBankAccountNumber.change.hidden",
+        value = ValueViewModel(HtmlContent(HtmlFormat.escape(answer.internationalBankAccountNumber).toString)),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.BankDetailsForRepaymentController.onPageLoad(periodKey, CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("bankDetailsForRepayment.internationalBankAccountNumber.change.hidden"))
         )
       )
     }

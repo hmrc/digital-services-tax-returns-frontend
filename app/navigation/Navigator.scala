@@ -82,6 +82,12 @@ class Navigator @Inject() () extends NavigationUtils {
     case ReportSearchEngineOperatingMarginPage(periodKey)        => ua => searchEnginOperatingMargin(periodKey, ua)(CheckMode)
     case ReliefDeductedPage(periodKey)                           =>
       ua => reliefDeducted(periodKey, ua)(CheckMode)
+    case RepaymentPage(periodKey)                                => ua => repayment(periodKey, ua)(CheckMode)
+    case IsRepaymentBankAccountUKPage(periodKey)                 => ua => repaymentBankAccount(periodKey, ua)(CheckMode)
+    case UKBankDetailsPage(periodKey)                            =>
+      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
+    case BankDetailsForRepaymentPage(periodKey)                  =>
+      _ => Some(routes.CheckYourAnswersController.onPageLoad(periodKey))
     case _                                                       =>
       _ => None
   }

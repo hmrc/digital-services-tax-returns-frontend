@@ -17,7 +17,7 @@
 package utils
 
 import models.{Index, PeriodKey, SelectActivities, UserAnswers}
-import pages.{CompanyLiabilityListPage, SelectActivitiesPage}
+import pages.{CompanyLiabilityListPage, IsRepaymentBankAccountUKPage, SelectActivitiesPage}
 import play.api.i18n.Messages
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import viewmodels.Section
@@ -138,15 +138,31 @@ class CYAHelper @Inject() () {
 
   private def createReturnRepaymentsSection(periodKey: PeriodKey, userAnswers: UserAnswers)(implicit
     messages: Messages
-  ): Option[Section] =
+  ): Option[Section] = {
+    val isUKAccount = userAnswers.get(IsRepaymentBankAccountUKPage(periodKey)).getOrElse(false)
+
+    val bankDetailsRows = if (isUKAccount) {
+      Seq(
+        UKBankDetailsSummary.accountNameRow(periodKey, userAnswers),
+        UKBankDetailsSummary.sortCodeRow(periodKey, userAnswers),
+        UKBankDetailsSummary.accountNumberRow(periodKey, userAnswers),
+        UKBankDetailsSummary.buildingNumberRow(periodKey, userAnswers)
+      )
+    } else {
+      Seq(
+        BankDetailsForRepaymentSummary.accountNameRow(periodKey, userAnswers),
+        BankDetailsForRepaymentSummary.ibanRow(periodKey, userAnswers)
+      )
+    }
+
     buildSection(
       "repayment.checkYourAnswersLabel.heading",
       Seq(
         RepaymentSummary.row(periodKey, userAnswers),
-        IsRepaymentBankAccountUKSummary.row(periodKey, userAnswers),
-        UKBankDetailsSummary.row(periodKey, userAnswers)
-      )
+        IsRepaymentBankAccountUKSummary.row(periodKey, userAnswers)
+      ) ++ bankDetailsRows
     )
+  }
 
   private def buildSection(heading: String, rows: Seq[Option[SummaryListRow]]): Option[Section] = {
     val nonEmptyRows = rows.flatten

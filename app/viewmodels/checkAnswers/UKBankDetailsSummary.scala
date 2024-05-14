@@ -28,17 +28,69 @@ import viewmodels.implicits._
 
 object UKBankDetailsSummary {
 
-  def row(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+  def accountNameRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(UKBankDetailsPage(periodKey)).map { answer =>
-      val value = HtmlFormat.escape(answer.accountName).toString + "<br/>" + HtmlFormat.escape(answer.sortCode).toString
-
       SummaryListRowViewModel(
-        key = "uKBankDetails.checkYourAnswersLabel",
-        value = ValueViewModel(HtmlContent(value)),
+        key = "uKBankDetails.accountName.change.hidden",
+        value = ValueViewModel(HtmlContent(HtmlFormat.escape(answer.accountName).toString)),
         actions = Seq(
-          ActionItemViewModel("site.change", routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url)
-            .withVisuallyHiddenText(messages("uKBankDetails.change.hidden"))
+          ActionItemViewModel(
+            "site.change",
+            routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("accountName.change.hidden"))
         )
       )
+    }
+
+  def sortCodeRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
+    answers.get(UKBankDetailsPage(periodKey)).map { answer =>
+      SummaryListRowViewModel(
+        key = "uKBankDetails.sortCode",
+        value = ValueViewModel(HtmlContent(HtmlFormat.escape(answer.sortCode.grouped(2).mkString("-")).toString)),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("sortCode.change.hidden"))
+        )
+      )
+    }
+
+  def accountNumberRow(periodKey: PeriodKey, answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(UKBankDetailsPage(periodKey)).map { answer =>
+      SummaryListRowViewModel(
+        key = "uKBankDetails.accountNumber",
+        value = ValueViewModel(HtmlContent(HtmlFormat.escape(answer.accountNumber).toString)),
+        actions = Seq(
+          ActionItemViewModel(
+            "site.change",
+            routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
+          )
+            .withVisuallyHiddenText(messages("accountNumber.change.hidden"))
+        )
+      )
+    }
+
+  def buildingNumberRow(periodKey: PeriodKey, answers: UserAnswers)(implicit
+    messages: Messages
+  ): Option[SummaryListRow] =
+    answers.get(UKBankDetailsPage(periodKey)).flatMap { answer =>
+      answer.buildingNumber.map { buildingNumber =>
+        SummaryListRowViewModel(
+          key = "uKBankDetails.buildingRollNumber",
+          value = ValueViewModel(HtmlContent(HtmlFormat.escape(buildingNumber).toString)),
+          actions = Seq(
+            ActionItemViewModel(
+              "site.change",
+              routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
+            )
+              .withVisuallyHiddenText(messages("uKBankDetails.buildingRollNumber.change.hidden"))
+          )
+        )
+      }
     }
 }
