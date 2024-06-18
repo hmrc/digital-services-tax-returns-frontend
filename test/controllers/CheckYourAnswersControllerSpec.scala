@@ -149,5 +149,29 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         ).toString
       }
     }
+
+    "must return Redirect to confirmation page on successful submission" in {
+      val accountName = "ForeignAccount"
+      val iban        = "IBAN123456789"
+
+      val userAnswers = emptyUserAnswers
+        .set(IsRepaymentBankAccountUKPage(periodKey), false)
+        .success
+        .value
+        .set(BankDetailsForRepaymentPage(periodKey), BankDetailsForRepayment(accountName, iban))
+        .success
+        .value
+
+      val application = applicationBuilder(userAnswers = Some(userAnswers)).build()
+
+      running(application) {
+        val request     = FakeRequest(POST, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+       redirectLocation(result) mustBe Some(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+      }
+    }
   }
 }

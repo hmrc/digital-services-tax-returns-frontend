@@ -46,4 +46,9 @@ class CheckYourAnswersController @Inject() (
 
       Ok(view(periodKey, sectionList, startDate, endDate, request.registration))
     }
+
+  def onSubmit(periodKey: PeriodKey): Action[AnyContent] =
+    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
+      Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+    }
 }
