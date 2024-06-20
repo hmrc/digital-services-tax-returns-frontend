@@ -16,6 +16,11 @@
 
 package services
 
-class SubmissionService {
+import connectors.DSTConnector
+
+import javax.inject.Inject
+import scala.concurrent.ExecutionContext
+
+class SubmissionService @Inject() (dstConnector: DSTConnector)(implicit ec: ExecutionContext) {
 
 }

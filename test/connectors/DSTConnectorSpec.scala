@@ -22,13 +22,15 @@ import models.PeriodKey
 import models.SimpleJson._
 import models.TestSampleData._
 import models.registration.{Period, Registration}
+import models.returns.Return
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers.{contain, convertToAnyMustWrapper, defined}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import play.api.Application
-import play.api.http.Status.{NOT_FOUND, OK}
+import play.api.http.Status.{BAD_REQUEST, NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -148,6 +150,39 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
     }
   }
 
+  "should submit a period and a return successfully" in {
+    forAll { (period: Period, ret: Return) =>
+      val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
+
+      stubPost(Json.toJson(ret).toString(),
+        encodedKey,
+          OK
+      )
+
+      val response = connector.submitReturn(period, ret)
+      whenReady(response) { status =>
+        status mustBe OK
+      }
+    }
+  }
+
+  "should have correct status code where submitting return failed" in {
+    forAll { (period: Period, ret: Return) =>
+      val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
+
+      stubPost("{}",
+       encodedKey,
+        BAD_REQUEST
+      )
+
+      val response = connector.submitReturn(period, ret)
+      whenReady(response) { status =>
+        status mustBe BAD_REQUEST
+      }
+    }
+  }
+
+
   private def stubGet(body: JsValue, url: String, status: Int): Any =
     mockServer.stubFor(
       get(urlPathEqualTo(url))
@@ -155,6 +190,16 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
           aResponse()
             .withStatus(status)
             .withBody(body.toString())
+        )
+    )
+
+  private def stubPost(body: String, encodedKey: String, status: Int): Any =
+    mockServer.stubFor(
+      post(urlPathEqualTo(s"/digital-services-tax/returns/$encodedKey"))
+        .willReturn(
+          aResponse()
+            .withStatus(status)
+            .withBody(body)
         )
     )
 }
