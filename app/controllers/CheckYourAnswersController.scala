@@ -22,33 +22,47 @@ import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierA
 import models.PeriodKey
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.ConversionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.CYAHelper
+import viewmodels.Section
 import views.html.CheckYourAnswersView
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class CheckYourAnswersController @Inject() (
   override val messagesApi: MessagesApi,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
   requireData: DataRequiredAction,
+  conversionService: ConversionService,
   dstConnector: DSTConnector,
   cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
-) extends FrontendBaseController
+) (implicit ex: ExecutionContext) extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(periodKey: PeriodKey): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
-      val startDate   = request.periodStartDate
-      val endDate     = request.periodEndDate
-      val sectionList = cyaHelper.createSectionList(periodKey, request.userAnswers)
+      val startDate: String = request.periodStartDate
+      val endDate: String = request.periodEndDate
+      val sectionList: Seq[Section] = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
       Ok(view(periodKey, sectionList, startDate, endDate, request.registration))
     }
 
   def onSubmit(periodKey: PeriodKey): Action[AnyContent] =
-    (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
-      Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+    (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
+      conversionService.convertToReturn(periodKey, request.userAnswers) match {
+        case Some(returnData) => request.period match {
+          case Some(period) => dstConnector.submitReturn(period = period, returnData) flatMap {
+            case OK => Future.successful(Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey)))
+            case _ =>  Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+          }
+          case _ => Future.successful(NotFound)
+        }
+        case _ => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+      }
     }
 }
