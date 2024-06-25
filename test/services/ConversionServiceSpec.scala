@@ -73,15 +73,17 @@ class ConversionServiceSpec extends SpecBase {
         .success
         .value
 
-      service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-        Set(SocialMedia, SearchEngine, OnlineMarketplace),
-        Map(SocialMedia -> percent, SearchEngine -> percent, OnlineMarketplace -> percent),
-        Money(0.0),
-        None,
-        ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
-        Money(0.0),
-        None
-      ))
+      service.convertToReturn(periodKey, userAnswers) mustBe Some(
+        Return(
+          Set(SocialMedia, SearchEngine, OnlineMarketplace),
+          Map(SocialMedia                               -> percent, SearchEngine -> percent, OnlineMarketplace -> percent),
+          Money(0.0),
+          None,
+          ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
+          Money(0.0),
+          None
+        )
+      )
     }
 
     "must convert user Answers to Returns model when ReportAlternativeChargePage is false" in {
@@ -102,15 +104,17 @@ class ConversionServiceSpec extends SpecBase {
         .success
         .value
 
-      service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-        Set(SocialMedia, SearchEngine, OnlineMarketplace),
-        Map.empty,
-        Money(0.0),
-        None,
-        ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
-        Money(0.0),
-        None
-      ))
+      service.convertToReturn(periodKey, userAnswers) mustBe Some(
+        Return(
+          Set(SocialMedia, SearchEngine, OnlineMarketplace),
+          Map.empty,
+          Money(0.0),
+          None,
+          ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
+          Money(0.0),
+          None
+        )
+      )
     }
 
     "must convert user Answers to Returns model when selected activities have got the margin percentage" in {
@@ -150,19 +154,21 @@ class ConversionServiceSpec extends SpecBase {
         .success
         .value
 
-      service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-        Set(SocialMedia, SearchEngine, OnlineMarketplace),
-        Map(
-          SocialMedia       -> Percent(20.00.toFloat),
-          SearchEngine      -> Percent(30.00.toFloat),
-          OnlineMarketplace -> Percent(40.00.toFloat)
-        ),
-        Money(0.0),
-        None,
-        ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
-        Money(0.0),
-        None
-      ))
+      service.convertToReturn(periodKey, userAnswers) mustBe Some(
+        Return(
+          Set(SocialMedia, SearchEngine, OnlineMarketplace),
+          Map(
+            SocialMedia                                 -> Percent(20.00.toFloat),
+            SearchEngine                                -> Percent(30.00.toFloat),
+            OnlineMarketplace                           -> Percent(40.00.toFloat)
+          ),
+          Money(0.0),
+          None,
+          ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
+          Money(0.0),
+          None
+        )
+      )
 
     }
 
@@ -190,19 +196,20 @@ class ConversionServiceSpec extends SpecBase {
         .success
         .value
 
-
-      service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-        Set(SocialMedia, SearchEngine, OnlineMarketplace),
-        Map.empty,
-        Money(0.0),
-        None,
-        ListMap(
-          GroupCompany(CompanyName("C1"), None) -> Money(122.11),
-          GroupCompany(CompanyName("C2"), None) -> Money(133.11)
-        ),
-        Money(0.0),
-        None
-      ))
+      service.convertToReturn(periodKey, userAnswers) mustBe Some(
+        Return(
+          Set(SocialMedia, SearchEngine, OnlineMarketplace),
+          Map.empty,
+          Money(0.0),
+          None,
+          ListMap(
+            GroupCompany(CompanyName("C1"), None) -> Money(122.11),
+            GroupCompany(CompanyName("C2"), None) -> Money(133.11)
+          ),
+          Money(0.0),
+          None
+        )
+      )
 
       service.convertToReturn(periodKey, userAnswers)
     }
@@ -238,15 +245,17 @@ class ConversionServiceSpec extends SpecBase {
       .success
       .value
 
-    service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-      Set(SocialMedia),
-      Map.empty,
-      Money(0.0),
-      None,
-      ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
-      Money(0.0),
-      Some(RepaymentDetails(AccountName("accountName"), ForeignBankAccount(IBAN("GB36BARC20051773152391"))))
-    ))
+    service.convertToReturn(periodKey, userAnswers) mustBe Some(
+      Return(
+        Set(SocialMedia),
+        Map.empty,
+        Money(0.0),
+        None,
+        ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
+        Money(0.0),
+        Some(RepaymentDetails(AccountName("accountName"), ForeignBankAccount(IBAN("GB36BARC20051773152391"))))
+      )
+    )
 
     service.convertToReturn(periodKey, userAnswers)
   }
@@ -283,24 +292,26 @@ class ConversionServiceSpec extends SpecBase {
       .success
       .value
 
-    service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-      Set(SocialMedia),
-      Map.empty,
-      Money(0.0),
-      None,
-      ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
-      Money(0.0),
-      Some(
-        RepaymentDetails(
-          AccountName("accountName"),
-          DomesticBankAccount(
-            SortCode("123456"),
-            AccountNumber("12345678"),
-            Some(BuildingSocietyRollNumber("buildingNumber"))
+    service.convertToReturn(periodKey, userAnswers) mustBe Some(
+      Return(
+        Set(SocialMedia),
+        Map.empty,
+        Money(0.0),
+        None,
+        ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
+        Money(0.0),
+        Some(
+          RepaymentDetails(
+            AccountName("accountName"),
+            DomesticBankAccount(
+              SortCode("123456"),
+              AccountNumber("12345678"),
+              Some(BuildingSocietyRollNumber("buildingNumber"))
+            )
           )
         )
       )
-    ))
+    )
 
     service.convertToReturn(periodKey, userAnswers)
   }
@@ -324,15 +335,17 @@ class ConversionServiceSpec extends SpecBase {
       .success
       .value
 
-    service.convertToReturn(periodKey, userAnswers) mustBe Some(Return(
-      Set(SocialMedia),
-      Map.empty,
-      Money(0.0),
-      None,
-      ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
-      Money(0.0),
-      None
-    ))
+    service.convertToReturn(periodKey, userAnswers) mustBe Some(
+      Return(
+        Set(SocialMedia),
+        Map.empty,
+        Money(0.0),
+        None,
+        ListMap(GroupCompany(CompanyName("C1"), None) -> Money(122.11)),
+        Money(0.0),
+        None
+      )
+    )
 
     service.convertToReturn(periodKey, userAnswers)
   }

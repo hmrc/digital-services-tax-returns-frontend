@@ -154,10 +154,7 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
     forAll { (period: Period, ret: Return) =>
       val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
 
-      stubPost(Json.toJson(ret).toString(),
-        encodedKey,
-          OK
-      )
+      stubPost(Json.toJson(ret).toString(), encodedKey, OK)
 
       val response = connector.submitReturn(period, ret)
       whenReady(response) { status =>
@@ -170,10 +167,7 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
     forAll { (period: Period, ret: Return) =>
       val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
 
-      stubPost("{}",
-       encodedKey,
-        BAD_REQUEST
-      )
+      stubPost("{}", encodedKey, BAD_REQUEST)
 
       val response = connector.submitReturn(period, ret)
       whenReady(response) { status =>
@@ -181,7 +175,6 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
       }
     }
   }
-
 
   private def stubGet(body: JsValue, url: String, status: Int): Any =
     mockServer.stubFor(

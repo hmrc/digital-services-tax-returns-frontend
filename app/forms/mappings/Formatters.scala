@@ -110,7 +110,8 @@ trait Formatters {
             case _                                                                       =>
               Left(Seq(FormError(key, invalidKey, args)))
           }
-      override def unbind(key: String, value: Double): Map[String, String] = baseFormatter.unbind(key, value.toString.replace(".0", ""))
+      override def unbind(key: String, value: Double): Map[String, String]                      =
+        baseFormatter.unbind(key, value.toString.replace(".0", ""))
     }
 
   private[mappings] def currencyFormatter(

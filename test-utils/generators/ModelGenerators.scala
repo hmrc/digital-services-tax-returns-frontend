@@ -20,7 +20,7 @@ import cats.implicits.{none, _}
 import models.registration._
 import models._
 import models.returns.Return
-import org.scalacheck.Arbitrary.{arbitrary, arbBigDecimal => _, _}
+import org.scalacheck.Arbitrary.{arbBigDecimal => _, arbitrary, _}
 import org.scalacheck.Gen.buildableOf
 import org.scalacheck.cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
@@ -156,13 +156,12 @@ object ModelGenerators {
       ).mapN(Period.apply)
     )
 
-
   implicit val arbActivity: Arbitrary[Activity] = Arbitrary {
     Gen.oneOf(List(Activity.SocialMedia, Activity.SearchEngine, Activity.OnlineMarketplace))
   }
 
   // what range of values is acceptable? pennies? fractional pennies?
-  implicit val arbMoney: Arbitrary[Money]   = Arbitrary(
+  implicit val arbMoney: Arbitrary[Money] = Arbitrary(
     Gen.choose(0L, 1000000000000L).map(b => Money(BigDecimal(b).setScale(2)))
   )
 

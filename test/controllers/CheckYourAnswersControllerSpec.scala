@@ -39,10 +39,10 @@ import scala.concurrent.Future
 
 class CheckYourAnswersControllerSpec extends SpecBase {
 
-  val mockRegistration: Registration       = mock[Registration]
-  val startDate: String                    = formatDate(period.start)
-  val endDate: String                      = formatDate(period.end)
-  val sectionList: Seq[SummaryListRow]     = Seq()
+  val mockRegistration: Registration           = mock[Registration]
+  val startDate: String                        = formatDate(period.start)
+  val endDate: String                          = formatDate(period.end)
+  val sectionList: Seq[SummaryListRow]         = Seq()
   val mockDSTConnector: DSTConnector           = mock[DSTConnector]
   val mockConversionService: ConversionService = mock[ConversionService]
 

@@ -26,12 +26,11 @@ import scala.collection.immutable.ListMap
 
 class ConversionService {
 
-  def convertToReturn(periodKey: PeriodKey, userAnswers: UserAnswers): Option[Return] = {
-
+  def convertToReturn(periodKey: PeriodKey, userAnswers: UserAnswers): Option[Return] =
     for {
       activities     <- userAnswers.get(SelectActivitiesPage(periodKey)).map(_.toSet)
       companyDetails <- userAnswers.get(CompanyDetailsListPage(periodKey))
-      isRepaid <- userAnswers.get(RepaymentPage(periodKey))
+      isRepaid       <- userAnswers.get(RepaymentPage(periodKey))
     } yield {
       val alternateCharge: Map[Activity, Percent]        =
         if (userAnswers.get(ReportAlternativeChargePage(periodKey)).contains(true)) {
@@ -53,8 +52,6 @@ class ConversionService {
         repayment = repayment(isRepaid, periodKey, userAnswers)
       )
     }
-
-  }
 
   private def alternateChargeMap(
     periodKey: PeriodKey,
@@ -93,16 +90,18 @@ class ConversionService {
 
   }
 
-  private def companyMap(periodKey: PeriodKey, companyDetails: List[CompanyDetails], userAnswers: UserAnswers):
-  Seq[(GroupCompany, Money)] =
-    companyDetails.zipWithIndex.flatMap {
-      case (companyDetail, index) =>
-        val grpName   =
-          GroupCompany(CompanyName(companyDetail.companyName), companyDetail.uniqueTaxpayerReference.map(UTR(_)))
-       userAnswers.get(CompanyLiabilitiesPage(periodKey, Index(index))) map (liability => grpName -> Money(liability))
+  private def companyMap(
+    periodKey: PeriodKey,
+    companyDetails: List[CompanyDetails],
+    userAnswers: UserAnswers
+  ): Seq[(GroupCompany, Money)] =
+    companyDetails.zipWithIndex.flatMap { case (companyDetail, index) =>
+      val grpName =
+        GroupCompany(CompanyName(companyDetail.companyName), companyDetail.uniqueTaxpayerReference.map(UTR(_)))
+      userAnswers.get(CompanyLiabilitiesPage(periodKey, Index(index))) map (liability => grpName -> Money(liability))
     }
 
-  private def repayment(isRepaid: Boolean, periodKey: PeriodKey, userAnswers: UserAnswers): Option[RepaymentDetails] = {
+  private def repayment(isRepaid: Boolean, periodKey: PeriodKey, userAnswers: UserAnswers): Option[RepaymentDetails] =
     (isRepaid, userAnswers.get(IsRepaymentBankAccountUKPage(periodKey))) match {
       case (true, Some(true))  =>
         userAnswers.get(UKBankDetailsPage(periodKey)) map (bankDetails =>
@@ -124,8 +123,7 @@ class ConversionService {
             )
           )
         )
-      case _           => None
+      case _                   => None
     }
-  }
 
 }

@@ -40,13 +40,14 @@ class CheckYourAnswersController @Inject() (
   cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView
-) (implicit ex: ExecutionContext) extends FrontendBaseController
+)(implicit ex: ExecutionContext)
+    extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(periodKey: PeriodKey): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
-      val startDate: String = request.periodStartDate
-      val endDate: String = request.periodEndDate
+      val startDate: String         = request.periodStartDate
+      val endDate: String           = request.periodEndDate
       val sectionList: Seq[Section] = cyaHelper.createSectionList(periodKey, request.userAnswers)
 
       Ok(view(periodKey, sectionList, startDate, endDate, request.registration))
@@ -55,14 +56,16 @@ class CheckYourAnswersController @Inject() (
   def onSubmit(periodKey: PeriodKey): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
       conversionService.convertToReturn(periodKey, request.userAnswers) match {
-        case Some(returnData) => request.period match {
-          case Some(period) => dstConnector.submitReturn(period = period, returnData) flatMap {
-            case OK => Future.successful(Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey)))
-            case _ =>  Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+        case Some(returnData) =>
+          request.period match {
+            case Some(period) =>
+              dstConnector.submitReturn(period = period, returnData) flatMap {
+                case OK => Future.successful(Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey)))
+                case _  => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+              }
+            case _            => Future.successful(NotFound)
           }
-          case _ => Future.successful(NotFound)
-        }
-        case _ => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+        case _                => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       }
     }
 }
