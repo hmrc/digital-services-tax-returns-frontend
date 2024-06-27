@@ -61,7 +61,7 @@ class CheckYourAnswersController @Inject() (
             case Some(period) =>
               dstConnector.submitReturn(period = period, returnData) flatMap {
                 case OK => Future.successful(Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey)))
-                case _  => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
+                case _  => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad())) // TODO Get the confirmation from design on the technical difficulties page
               }
             case _            => Future.successful(NotFound)
           }
