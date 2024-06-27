@@ -17,22 +17,34 @@
 package controllers
 
 import base.SpecBase
+import connectors.DSTConnector
+import generators.ModelGenerators.returnGen
 import models.registration.Registration
+import models.returns.Return
 import models.{BankDetailsForRepayment, SelectActivities, UKBankDetails, formatDate}
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
+import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar.mock
-import pages.{BankDetailsForRepaymentPage, GroupLiabilityPage, IsRepaymentBankAccountUKPage, SelectActivitiesPage, UKBankDetailsPage}
+import pages._
+import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.ConversionService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.CYAHelper
 import views.html.CheckYourAnswersView
 
+import scala.concurrent.Future
+
 class CheckYourAnswersControllerSpec extends SpecBase {
 
-  val mockRegistration: Registration   = mock[Registration]
-  val startDate: String                = formatDate(period.start)
-  val endDate: String                  = formatDate(period.end)
-  val sectionList: Seq[SummaryListRow] = Seq()
+  val mockRegistration: Registration           = mock[Registration]
+  val startDate: String                        = formatDate(period.start)
+  val endDate: String                          = formatDate(period.end)
+  val sectionList: Seq[SummaryListRow]         = Seq()
+  val mockDSTConnector: DSTConnector           = mock[DSTConnector]
+  val mockConversionService: ConversionService = mock[ConversionService]
 
   lazy val checkYourAnswersRoute: String = routes.CheckYourAnswersController.onPageLoad(periodKey).url
 
@@ -147,6 +159,82 @@ class CheckYourAnswersControllerSpec extends SpecBase {
           request,
           messages(application)
         ).toString
+      }
+    }
+
+    "must return Redirect to confirmation page on successful submission" in {
+
+      val returnData = Arbitrary.arbitrary[Return].sample.value
+      when(mockDSTConnector.submitReturn(any(), any())(any())).thenReturn(Future.successful(OK))
+      when(mockConversionService.convertToReturn(any(), any())).thenReturn(Some(returnData))
+
+      val userAnswers = emptyUserAnswers
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[DSTConnector].toInstance(mockDSTConnector),
+            bind[ConversionService].toInstance(mockConversionService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
+      }
+    }
+
+    "must return Redirect to 'technical difficulties' page on failed submission" in {
+
+      val returnData = Arbitrary.arbitrary[Return].sample.value
+      when(mockDSTConnector.submitReturn(any(), any())(any())).thenReturn(Future.successful(BAD_REQUEST))
+      when(mockConversionService.convertToReturn(any(), any())).thenReturn(Some(returnData))
+
+      val userAnswers = emptyUserAnswers
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[DSTConnector].toInstance(mockDSTConnector),
+            bind[ConversionService].toInstance(mockConversionService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
+      }
+    }
+
+    "must return Redirect to 'technical difficulties' page when user has not completed the journey" in {
+
+      when(mockConversionService.convertToReturn(any(), any())).thenReturn(None)
+
+      val userAnswers = emptyUserAnswers
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[DSTConnector].toInstance(mockDSTConnector),
+            bind[ConversionService].toInstance(mockConversionService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(POST, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
       }
     }
   }

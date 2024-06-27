@@ -19,6 +19,7 @@
 
 @this(
     layout: templates.Layout,
+    formHelper: FormWithCSRF,
     govukSummaryList: GovukSummaryList,
     govukButton: GovukButton
 )
@@ -40,8 +41,9 @@
    <h2 class="govuk-heading-m">@messages("checkYourAnswers.submit-heading")</h2>
    <p class="govuk-body">@messages("checkYourAnswers.submit-body")</p>
 
-    @govukButton(
-        ButtonViewModel(messages("site.submit"))
-        .asLink(routes.ReturnsCompleteController.onPageLoad(periodKey).url)
-    )
+    @formHelper(action = routes.CheckYourAnswersController.onSubmit(periodKey), Symbol("autoComplete") -> "off") {
+        @govukButton(
+            ButtonViewModel(messages("checkYourAnswers.save-continue")).withAttribute("id" -> "submit").preventingDoubleClick()
+        )
+    }
 }

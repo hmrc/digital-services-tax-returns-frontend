@@ -20,8 +20,10 @@ import models.PeriodKey
 import models.SimpleJson._
 import models.registration.{Period, Registration}
 import models.returns.Return
+import play.api.Logging
+import play.api.http.Status.INTERNAL_SERVER_ERROR
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.Inject
@@ -29,9 +31,9 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(implicit
   executionContext: ExecutionContext
-) {
+) extends Logging {
 
-  val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
+  private val backendURL: String = servicesConfig.baseUrl("digital-services-tax") + "/digital-services-tax"
 
   def lookupRegistration()(implicit hc: HeaderCarrier): Future[Option[Registration]] =
     http.GET[Option[Registration]](s"$backendURL/registration")
@@ -47,4 +49,14 @@ class DSTConnector @Inject() (http: HttpClient, servicesConfig: ServicesConfig)(
 
   def lookupSubmittedReturns(periodKey: PeriodKey)(implicit hc: HeaderCarrier): Future[Option[Return]] =
     http.GET[Option[Return]](s"$backendURL/returns/${periodKey.value}")
+
+  def submitReturn(period: Period, ret: Return)(implicit hc: HeaderCarrier): Future[Int] = {
+    val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
+    http.POST[Return, HttpResponse](s"$backendURL/returns/$encodedKey", ret) map { response =>
+      response.status
+    }
+  } recoverWith { case e: Exception =>
+    logger.warn(s"An Exception thrown from downstream service: ${e.getMessage}")
+    Future.successful(INTERNAL_SERVER_ERROR)
+  }
 }
