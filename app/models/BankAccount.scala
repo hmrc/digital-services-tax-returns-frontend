@@ -16,6 +16,8 @@
 
 package models
 
+import play.api.libs.json.{Json, JsonConfiguration, JsonNaming, OFormat}
+
 sealed trait BankAccount
 
 final case class ForeignBankAccount(iban: IBAN) extends BankAccount
@@ -30,3 +32,24 @@ final case class RepaymentDetails(
   accountName: AccountName,
   bankAccount: BankAccount
 )
+
+object DomesticBankAccount extends SimpleJson{
+  implicit val domesticBankAccountFormat: OFormat[DomesticBankAccount] = Json.format[DomesticBankAccount]
+}
+
+object ForeignBankAccount extends SimpleJson{
+  implicit val foreignBankAccountFormat: OFormat[ForeignBankAccount]   = Json.format[ForeignBankAccount]
+}
+
+object BankAccount {
+
+  private[models] val jsonConfig                = JsonConfiguration(
+    discriminator = "_type",
+    typeNaming = JsonNaming { fullName =>
+      s"uk.gov.hmrc.digitalservicestax.data.${fullName.split("\\.").last}"
+    })
+  implicit val format: OFormat[BankAccount] = Json.configured(jsonConfig).format[BankAccount]
+
+
+
+}

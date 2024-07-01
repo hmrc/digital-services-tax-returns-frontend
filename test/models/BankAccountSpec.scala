@@ -31,7 +31,7 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
                      |{
                      | "sortCode": "123456",
                      | "accountNo": "12345678",
-                     | "_type": "models.DomesticBankAccount"
+                     | "_type": "uk.gov.hmrc.digitalservicestax.data.DomesticBankAccount"
                      |}""".stripMargin)
 
       json.as[DomesticBankAccount] mustBe DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None)
@@ -42,7 +42,7 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
         Json.parse("""
                      |{
                      | "iban": "FR2531682128768051490609537",
-                     | "_type": "models.ForeignBankAccount"
+                     | "_type": "uk.gov.hmrc.digitalservicestax.data.ForeignBankAccount"
                      |}""".stripMargin)
 
       json.as[ForeignBankAccount] mustBe ForeignBankAccount(IBAN("FR2531682128768051490609537"))
@@ -56,7 +56,7 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
                      |        "bankAccount": {
                      |            "sortCode": "123456",
                      |            "accountNo": "12345678",
-                     |            "_type": "DomesticBankAccount"
+                     |            "_type": "uk.gov.hmrc.digitalservicestax.data.DomesticBankAccount"
                      |        }
                      |}""".stripMargin)
 
@@ -65,5 +65,26 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
         DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None)
       )
     }
+
+    "serialize json for repayments" in {
+      val expectedJson: JsValue =
+        Json.parse("""
+                     |{
+                     | "accountName": "AccountName",
+                     |        "bankAccount": {
+                     |            "sortCode": "123456",
+                     |            "accountNo": "12345678",
+                     |            "_type": "uk.gov.hmrc.digitalservicestax.data.DomesticBankAccount"
+                     |        }
+                     |}""".stripMargin)
+
+       Json.toJson(RepaymentDetails(
+        AccountName("AccountName"),
+        DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None)
+      )) mustBe expectedJson
+
+    }
+
+
   }
 }
