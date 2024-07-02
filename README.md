@@ -15,24 +15,30 @@ This is the main frontend, currently containing the returns form.
 
 For details about the digital services tax see [the GOV.UK guidance](https://www.gov.uk/government/consultations/digital-services-tax-draft-guidance)
 
-## Running from source
-Clone the repository using SSH:
+## Running the service
+### Service manager
+The whole service can be started with:
 
-`git@github.com:hmrc/digital-services-tax-returns-frontend.git`
+`sm2 --start DST_ALL`
 
-Run the code from source using
+or specifically for only the frontend
 
-`sbt run`
+`sm2 --start DST_RETURNS_FRONTEND`
 
-Open your browser and navigate to the following url:
+### Locally
 
-`http://localhost:8743/digital-services-tax-returns-frontend`
+`sbt 'run 8743'`
 
-Ensure your service manager config is up to date, and run the following command:
-
-`sm --start DST_ALL -f`
-
-This will start all the required services
+* Visit http://localhost:9949/auth-login-stub/gg-sign-in
+* You may need to add some user details to the form
+#### DST Returns Journey
+    * Affinity Group: Organisation
+    * Group identifier: 12345
+    * Enrolment Key: HMRC-DST-ORG
+    * Identifier Name: DSTRefNumber
+    * Identifier Value: AMDST0799721562
+* Then enter a redirect url: http://localhost:8740/digital-services-tax
+* Press **Submit**.
 
 ## Running the tests
 
