@@ -173,24 +173,6 @@ object SimpleJson extends SimpleJson {
         })
     }
 
-  implicit val foreignBankAccountFormat: OFormat[ForeignBankAccount]   = Json.format[ForeignBankAccount]
-  implicit val domesticBankAccountFormat: OFormat[DomesticBankAccount] = Json.format[DomesticBankAccount]
-
-  implicit val formatBankAccountFormat: Format[BankAccount] = new Format[BankAccount] {
-
-    override def reads(json: JsValue): JsResult[BankAccount] =
-      json
-        .validate[DomesticBankAccount]
-        .orElse(
-          json.validate[ForeignBankAccount]
-        )
-
-    override def writes(o: BankAccount): JsValue = o match {
-      case m @ ForeignBankAccount(_)        => foreignBankAccountFormat.writes(m)
-      case m @ DomesticBankAccount(_, _, _) => domesticBankAccountFormat.writes(m)
-    }
-  }
-
   implicit val repaymentDetailsFormat: OFormat[RepaymentDetails] = Json.format[RepaymentDetails]
   implicit val returnFormat: OFormat[Return]                     = Json.format[Return]
 
