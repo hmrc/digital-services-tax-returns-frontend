@@ -432,7 +432,7 @@ class PreviousReturnsServiceSpec
                  |        "bankAccount": {
                  |            "sortCode": "123456",
                  |            "accountNo": "12345678",
-                 |            "_type": "DomesticBankAccount"
+                 |            "_type": "uk.gov.hmrc.digitalservicestax.data.DomesticBankAccount"
                  |        }
                  |    }
                  |}""".stripMargin)
@@ -484,7 +484,7 @@ class PreviousReturnsServiceSpec
                  |        "accountName": "AccountName",
                  |        "bankAccount": {
                  |            "iban" : "FR2531682128768051490609537",
-                 |            "_type": "ForeignBankAccount"
+                 |            "_type": "uk.gov.hmrc.digitalservicestax.data.ForeignBankAccount"
                  |        }
                  |    }
                  |}""".stripMargin)

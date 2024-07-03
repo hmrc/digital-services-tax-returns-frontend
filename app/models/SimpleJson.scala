@@ -173,7 +173,6 @@ object SimpleJson extends SimpleJson {
         })
     }
 
-
   implicit val repaymentDetailsFormat: OFormat[RepaymentDetails] = Json.format[RepaymentDetails]
   implicit val returnFormat: OFormat[Return]                     = Json.format[Return]
 

@@ -78,13 +78,14 @@ class BankAccountSpec extends AnyFreeSpec with Matchers with ScalaCheckPropertyC
                      |        }
                      |}""".stripMargin)
 
-       Json.toJson(RepaymentDetails(
-        AccountName("AccountName"),
-        DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None)
-      )) mustBe expectedJson
+      Json.toJson(
+        RepaymentDetails(
+          AccountName("AccountName"),
+          DomesticBankAccount(SortCode("123456"), AccountNumber("12345678"), None)
+        )
+      ) mustBe expectedJson
 
     }
-
 
   }
 }
