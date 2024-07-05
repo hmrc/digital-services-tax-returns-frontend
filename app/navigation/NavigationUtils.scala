@@ -27,20 +27,25 @@ trait NavigationUtils {
     (
       ua.get(ReportCrossBorderReliefPage(periodKey)),
       ua.get(ReportAlternativeChargePage(periodKey)),
-      ua.get(ReportOnlineMarketplaceLossPage(periodKey))
+      isAlternativeChargesSelected(periodKey, ua)
     ) match {
-      case (Some(false), Some(true), Some(true)) =>
+      case (Some(false), Some(true), true) =>
         Some(routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0)))
-      case (Some(false), Some(_), _)             => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
-      case (Some(true), Some(_), _)              => Some(routes.ReliefDeductedController.onPageLoad(periodKey, mode))
-      case _                                     => None
+      case (Some(false), Some(_), _)       => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
+      case (Some(true), Some(_), _)        => Some(routes.ReliefDeductedController.onPageLoad(periodKey, mode))
+      case _                               => None
     }
 
+  private def isAlternativeChargesSelected(periodKey: PeriodKey, ua: UserAnswers): Boolean =
+    ua.get(SocialMediaLossPage(periodKey)).contains(true) || ua
+      .get(SearchEngineLossPage(periodKey))
+      .contains(true) || ua.get(ReportOnlineMarketplaceLossPage(periodKey)).contains(true)
+
   private[navigation] def reliefDeducted(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
-    (ua.get(ReportAlternativeChargePage(periodKey)), ua.get(ReportOnlineMarketplaceLossPage(periodKey))) match {
-      case (Some(true), Some(true)) => Some(routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0)))
-      case (Some(false), _)         => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
-      case _                        => None
+    (ua.get(ReportAlternativeChargePage(periodKey)), isAlternativeChargesSelected(periodKey, ua)) match {
+      case (Some(true), true) => Some(routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0)))
+      case (Some(false), _)   => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
+      case _                  => None
     }
 
   private[navigation] def addCompanyDetails(periodKey: PeriodKey, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
