@@ -89,7 +89,6 @@ class CompanyLiabilitiesController @Inject() (
                     Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(periodKey, index), value))
                   _              <- sessionRepository.set(updatedAnswers)
                 } yield {
-                  println("--------hhhhhh I am here--------")
                   Redirect(navigator.nextPage(CompanyLiabilitiesPage(periodKey, index), mode, updatedAnswers))
                 }
             )
