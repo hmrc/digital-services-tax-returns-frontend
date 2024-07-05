@@ -19,7 +19,7 @@ package controllers
 import com.google.inject.Inject
 import connectors.DSTConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
-import models.PeriodKey
+import models.{CompanyName, PeriodKey}
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import services.ConversionService
@@ -49,6 +49,7 @@ class CheckYourAnswersController @Inject() (
       val startDate: String         = request.periodStartDate
       val endDate: String           = request.periodEndDate
       val sectionList: Seq[Section] = cyaHelper.createSectionList(periodKey, request.userAnswers)
+      val companyName: CompanyName = request.registration.companyReg.company.name
 
       Ok(view(periodKey, sectionList, startDate, endDate, request.registration))
     }
