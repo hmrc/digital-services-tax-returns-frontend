@@ -88,9 +88,7 @@ class CompanyLiabilitiesController @Inject() (
                   updatedAnswers <-
                     Future.fromTry(request.userAnswers.set(CompanyLiabilitiesPage(periodKey, index), value))
                   _              <- sessionRepository.set(updatedAnswers)
-                } yield {
-                  Redirect(navigator.nextPage(CompanyLiabilitiesPage(periodKey, index), mode, updatedAnswers))
-                }
+                } yield Redirect(navigator.nextPage(CompanyLiabilitiesPage(periodKey, index), mode, updatedAnswers))
             )
         case _                    =>
           logger.logger.info("CompanyDetailsPage is missing data")
