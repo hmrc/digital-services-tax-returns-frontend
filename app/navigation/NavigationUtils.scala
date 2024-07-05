@@ -36,10 +36,10 @@ trait NavigationUtils {
       case _                               => None
     }
 
-  private def isAlternativeChargesSelected(periodKey: PeriodKey, ua: UserAnswers): Boolean =
-    ua.get(SocialMediaLossPage(periodKey)).contains(true) || ua
-      .get(SearchEngineLossPage(periodKey))
-      .contains(true) || ua.get(ReportOnlineMarketplaceLossPage(periodKey)).contains(true)
+  private def isAlternativeChargesSelected(periodKey: PeriodKey, ua: UserAnswers): Boolean = {
+    val pages = Seq(SocialMediaLossPage, SearchEngineLossPage, ReportOnlineMarketplaceLossPage)
+    pages.exists(page => ua.get(page(periodKey)).contains(true))
+  }
 
   private[navigation] def reliefDeducted(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     (ua.get(ReportAlternativeChargePage(periodKey)), isAlternativeChargesSelected(periodKey, ua)) match {
