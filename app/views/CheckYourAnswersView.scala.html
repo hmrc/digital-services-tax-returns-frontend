@@ -15,7 +15,7 @@
  *@
 
 @import viewmodels.Section
-@import models.registration.Registration
+@import models.CompanyName
 
 @this(
     layout: templates.Layout,
@@ -24,7 +24,7 @@
     govukButton: GovukButton
 )
 
-@(periodKey: PeriodKey, list: Seq[Section], startDate: String, endDate: String, reg: Registration, showBackLink: Boolean = true)(implicit request: Request[_], messages: Messages)
+@(periodKey: PeriodKey, list: Seq[Section], startDate: String, endDate: String, displayName: CompanyName, showBackLink: Boolean = true)(implicit request: Request[_], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("checkYourAnswers.title", startDate, endDate)), showBackLink = showBackLink) {
 
@@ -32,7 +32,7 @@
 
    @list.map { section =>
        @section.title.map { title =>
-           <h2 class="govuk-heading-m">@messages(title, reg.isGroupMessage)</h2>
+           <h2 class="govuk-heading-m">@messages(title, displayName)</h2>
     }
 
    @govukSummaryList(section.rows)
