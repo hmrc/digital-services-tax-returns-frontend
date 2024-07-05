@@ -31,7 +31,6 @@ import play.api.inject.bind
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.ConversionService
-import shapeless.tag.@@
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.CYAHelper
 import views.html.CheckYourAnswersView
@@ -46,7 +45,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
   val sectionList: Seq[SummaryListRow]         = Seq()
   val mockDSTConnector: DSTConnector           = mock[DSTConnector]
   val mockConversionService: ConversionService = mock[ConversionService]
-  val displayName: CompanyName = CompanyName("Some Corporation")
+  val displayName: CompanyName                 = CompanyName("Some Corporation")
 
   lazy val checkYourAnswersRoute: String = routes.CheckYourAnswersController.onPageLoad(periodKey).url
 

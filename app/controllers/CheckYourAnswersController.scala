@@ -49,7 +49,8 @@ class CheckYourAnswersController @Inject() (
       val startDate: String         = request.periodStartDate
       val endDate: String           = request.periodEndDate
       val sectionList: Seq[Section] = cyaHelper.createSectionList(periodKey, request.userAnswers)
-      val displayName: CompanyName = request.registration.ultimateParent.fold(request.registration.companyReg.company.name)(_.name)
+      val displayName: CompanyName  =
+        request.registration.ultimateParent.fold(request.registration.companyReg.company.name)(_.name)
 
       Ok(view(periodKey, sectionList, startDate, endDate, displayName))
     }
