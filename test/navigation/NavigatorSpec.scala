@@ -279,6 +279,9 @@ class NavigatorSpec extends SpecBase {
             .set(ReportAlternativeChargePage(periodKey), true)
             .success
             .value
+            .set(ReportOnlineMarketplaceLossPage(periodKey), true)
+            .success
+            .value
             .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))
             .success
             .value
@@ -378,7 +381,7 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
-      "must go from a SocialMediaLossPage to GroupLiabilityPage when 'Yes' is selected" in {
+      "must go from a SocialMediaLossPage to CompanyLiability page when 'Yes' is selected" in {
 
         navigator.nextPage(
           SocialMediaLossPage(periodKey),
@@ -396,7 +399,7 @@ class NavigatorSpec extends SpecBase {
             .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a SocialMediaLossPage to report-social-media-operating-margin page when 'No' is selected" in {
@@ -457,7 +460,7 @@ class NavigatorSpec extends SpecBase {
             .set(CompanyLiabilitiesPage(periodKey, index), BigDecimal(100))
             .success
             .value
-        ) mustBe routes.GroupLiabilityController.onPageLoad(periodKey, NormalMode)
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
       "must go from a SearchEngineLossPage to report-search-engine-operating-margin page when 'No' is selected" in {
@@ -733,6 +736,9 @@ class NavigatorSpec extends SpecBase {
         NormalMode,
         UserAnswers("id")
           .set(ReportAlternativeChargePage(periodKey), true)
+          .success
+          .value
+          .set(ReportOnlineMarketplaceLossPage(periodKey), true)
           .success
           .value
           .set(CompanyDetailsPage(periodKey, index), CompanyDetails("C1", None))

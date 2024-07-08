@@ -24,17 +24,28 @@ import play.api.mvc.Call
 trait NavigationUtils {
 
   private[navigation] def reportCrossBorderRelief(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
-    (ua.get(ReportCrossBorderReliefPage(periodKey)), ua.get(ReportAlternativeChargePage(periodKey))) match {
-      case (Some(false), Some(false)) => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
-      case (Some(false), Some(true))  => Some(companyLiability(periodKey, Index(0), ua)(mode))
-      case (Some(true), Some(_))      => Some(routes.ReliefDeductedController.onPageLoad(periodKey, mode))
-      case _                          => None
+    (
+      ua.get(ReportCrossBorderReliefPage(periodKey)),
+      ua.get(ReportAlternativeChargePage(periodKey)),
+      isAlternativeChargesSelected(periodKey, ua)
+    ) match {
+      case (Some(false), Some(true), true) =>
+        Some(routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0)))
+      case (Some(false), Some(_), _)       => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
+      case (Some(true), Some(_), _)        => Some(routes.ReliefDeductedController.onPageLoad(periodKey, mode))
+      case _                               => None
     }
 
+  private def isAlternativeChargesSelected(periodKey: PeriodKey, ua: UserAnswers): Boolean = {
+    val pages = Seq(SocialMediaLossPage, SearchEngineLossPage, ReportOnlineMarketplaceLossPage)
+    pages.exists(page => ua.get(page(periodKey)).contains(true))
+  }
+
   private[navigation] def reliefDeducted(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
-    ua.get(ReportAlternativeChargePage(periodKey)) map {
-      case true  => companyLiability(periodKey, Index(0), ua)(mode)
-      case false => routes.AllowanceDeductedController.onPageLoad(periodKey, mode)
+    (ua.get(ReportAlternativeChargePage(periodKey)), isAlternativeChargesSelected(periodKey, ua)) match {
+      case (Some(true), true) => Some(routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0)))
+      case (Some(_), _)       => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
+      case _                  => None
     }
 
   private[navigation] def addCompanyDetails(periodKey: PeriodKey, mode: Mode)(userAnswers: UserAnswers): Option[Call] =
@@ -124,10 +135,9 @@ trait NavigationUtils {
   private[navigation] def companyLiability(periodKey: PeriodKey, pageIndex: Index, ua: UserAnswers)(
     mode: Mode
   ): Call = {
-    val companyDetailsCount: Int = ua.get(CompanyDetailsListPage(periodKey)).map(_.size).getOrElse(0)
-    val liabilityCount: Int      = ua.get(CompanyLiabilityListPage(periodKey)).map(_.size).getOrElse(0)
-
-    def preCond(index: Index) = liabilityCount == companyDetailsCount && index.position < liabilityCount
+    val companyDetailsCount: Int       = ua.get(CompanyDetailsListPage(periodKey)).map(_.size).getOrElse(0)
+    val liabilityCount: Int            = ua.get(CompanyLiabilityListPage(periodKey)).map(_.size).getOrElse(0)
+    def preCond(index: Index): Boolean = liabilityCount == companyDetailsCount && index.position < liabilityCount
 
     val index: Index = if (preCond(pageIndex)) Index(pageIndex.position + 1) else Index(liabilityCount)
 
@@ -152,7 +162,7 @@ trait NavigationUtils {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine)) =>
           routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
         case true if mode == NormalMode                                                                        =>
-          companyLiability(periodKey, Index(0), ua)(mode)
+          routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0))
         case true if mode == CheckMode                                                                         =>
           routes.CheckYourAnswersController.onPageLoad(periodKey)
         case _                                                                                                 =>
@@ -165,7 +175,7 @@ trait NavigationUtils {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
         case true if mode == NormalMode                                                                             =>
-          companyLiability(periodKey, Index(0), ua)(mode)
+          routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0))
         case true if mode == CheckMode                                                                              =>
           routes.CheckYourAnswersController.onPageLoad(periodKey)
         case _                                                                                                      =>
