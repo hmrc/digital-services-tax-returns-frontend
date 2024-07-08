@@ -161,6 +161,8 @@ trait NavigationUtils {
       .map {
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine)) =>
           routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
+        case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
+          routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
         case true if mode == NormalMode                                                                        =>
           routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0))
         case true if mode == CheckMode                                                                         =>
