@@ -159,15 +159,15 @@ trait NavigationUtils {
   private[navigation] def socialMediaLoss(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     ua.get(SocialMediaLossPage(periodKey))
       .map {
-        case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine)) =>
+        case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.SearchEngine))      =>
           routes.ReportSearchAlternativeChargeController.onPageLoad(periodKey, mode)
         case true if ua.get(SelectActivitiesPage(periodKey)).exists(_.contains(SelectActivities.OnlineMarketplace)) =>
           routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, mode)
-        case true if mode == NormalMode                                                                        =>
+        case true if mode == NormalMode                                                                             =>
           routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0))
-        case true if mode == CheckMode                                                                         =>
+        case true if mode == CheckMode                                                                              =>
           routes.CheckYourAnswersController.onPageLoad(periodKey)
-        case _                                                                                                 =>
+        case _                                                                                                      =>
           routes.ReportSocialMediaOperatingMarginController.onPageLoad(periodKey, mode)
       }
 
