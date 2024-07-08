@@ -44,7 +44,7 @@ trait NavigationUtils {
   private[navigation] def reliefDeducted(periodKey: PeriodKey, ua: UserAnswers)(mode: Mode): Option[Call] =
     (ua.get(ReportAlternativeChargePage(periodKey)), isAlternativeChargesSelected(periodKey, ua)) match {
       case (Some(true), true) => Some(routes.CompanyLiabilitiesController.onPageLoad(periodKey, mode, Index(0)))
-      case (Some(false), _)   => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
+      case (Some(_), _)       => Some(routes.AllowanceDeductedController.onPageLoad(periodKey, mode))
       case _                  => None
     }
 
