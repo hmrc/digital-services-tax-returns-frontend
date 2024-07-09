@@ -156,6 +156,27 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, NormalMode)
       }
 
+      "must go from a SocialMediaLossPage to ReportCrossBorderReliefPage when OnlineMarketplace and Social media activity is selected" in {
+
+        navigator.nextPage(
+          SocialMediaLossPage(periodKey),
+          NormalMode,
+          UserAnswers("id")
+            .set(
+              SelectActivitiesPage(periodKey),
+              Set[SelectActivities](SelectActivities.OnlineMarketplace, SelectActivities.SocialMedia)
+            )
+            .success
+            .value
+            .set(ReportAlternativeChargePage(periodKey), true)
+            .success
+            .value
+            .set(SocialMediaLossPage(periodKey), true)
+            .success
+            .value
+        ) mustBe routes.ReportOnlineMarketplaceAlternativeChargeController.onPageLoad(periodKey, NormalMode)
+      }
+
       "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage when OnlineMarketplace is selected and option 'no' is selected" in {
 
         navigator.nextPage(
