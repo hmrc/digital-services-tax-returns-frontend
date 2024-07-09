@@ -21,7 +21,7 @@ import connectors.DSTConnector
 import generators.ModelGenerators.returnGen
 import models.registration.Registration
 import models.returns.Return
-import models.{BankDetailsForRepayment, SelectActivities, UKBankDetails, formatDate}
+import models.{BankDetailsForRepayment, CompanyName, SelectActivities, UKBankDetails, formatDate}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary
@@ -45,6 +45,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
   val sectionList: Seq[SummaryListRow]         = Seq()
   val mockDSTConnector: DSTConnector           = mock[DSTConnector]
   val mockConversionService: ConversionService = mock[ConversionService]
+  val displayName: CompanyName                 = CompanyName("Some Corporation")
 
   lazy val checkYourAnswersRoute: String = routes.CheckYourAnswersController.onPageLoad(periodKey).url
 
@@ -65,7 +66,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
           request,
           messages(application)
         ).toString
@@ -93,7 +94,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
           request,
           messages(application)
         ).toString
@@ -125,7 +126,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
           request,
           messages(application)
         ).toString
@@ -155,7 +156,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, registration)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
           request,
           messages(application)
         ).toString

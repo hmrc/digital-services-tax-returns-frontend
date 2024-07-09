@@ -44,6 +44,7 @@
             .withPrefix(PrefixOrSuffix(content = Text("£")))
             .withInputMode("decimal")
             .withWidth(Fixed10)
+            .withHint(HintViewModel(HtmlContent(messages("groupLiability.hint"))))
         )
 
         @govukButton(

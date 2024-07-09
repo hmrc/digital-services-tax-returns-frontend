@@ -68,10 +68,7 @@ refresh: Int = 0)(contentBlock: Html)(implicit request: Request[_], messages: Me
 
 @content = {
     @contentBlock
-
-    <div class="govuk-!-margin-top-8">
         @hmrcReportTechnicalIssueHelper()
-    </div>
 }
 
 @govukLayout(
