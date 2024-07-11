@@ -37,7 +37,7 @@ or specifically for only the frontend
     * Enrolment Key: HMRC-DST-ORG
     * Identifier Name: DSTRefNumber
     * Identifier Value: AMDST0799721562
-* Then enter a redirect url: http://localhost:8740/digital-services-tax
+* Then enter a redirect url: http://localhost:8743/digital-services-tax-returns
 * Press **Submit**.
 
 ## Running the tests
