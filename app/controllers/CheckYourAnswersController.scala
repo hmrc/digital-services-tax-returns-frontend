@@ -26,7 +26,7 @@ import services.ConversionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.CYAHelper
 import viewmodels.Section
-import views.html.CheckYourAnswersView
+import views.html.{CheckYourAnswersView, TechnicalDifficultiesView}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -39,7 +39,8 @@ class CheckYourAnswersController @Inject() (
   dstConnector: DSTConnector,
   cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
-  view: CheckYourAnswersView
+  view: CheckYourAnswersView,
+  errorView: TechnicalDifficultiesView
 )(implicit ex: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -64,9 +65,7 @@ class CheckYourAnswersController @Inject() (
               dstConnector.submitReturn(period = period, returnData) flatMap {
                 case OK => Future.successful(Redirect(routes.ReturnsCompleteController.onPageLoad(periodKey)))
                 case _  =>
-                  Future.successful(
-                    Redirect(routes.JourneyRecoveryController.onPageLoad())
-                  ) // TODO Get the confirmation from design on the technical difficulties page
+                  Future.successful(InternalServerError(errorView()))
               }
             case _            => Future.successful(NotFound)
           }

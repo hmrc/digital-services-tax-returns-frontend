@@ -378,3 +378,7 @@ resubmitAReturn.heading = Which return do you need to resubmit?
 resubmitAReturn.amend-a-return=You can amend a return up to 2 years after the end of the accounting period.
 resubmitAReturn.radio-label={0} to {1}
 resubmitAReturn.error.required = Select the return you need to resubmit
+
+technicalDifficulties.title = Sorry, there is a problem with the service
+technicalDifficulties.heading = Sorry, there is a problem with the service
+technicalDifficulties.guidance = We have not saved your answers. When the service is available, you will have to start again.
