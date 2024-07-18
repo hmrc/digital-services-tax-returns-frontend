@@ -21,7 +21,7 @@
 
 @()(implicit request: Request[_], messages: Messages)
 
-@layout(pageTitle = titleNoForm(messages("technicalDifficulties.title"))) {
+@layout(pageTitle = titleNoForm(messages("technicalDifficulties.title")), showBackLink =  false) {
 
     <h1 class="govuk-heading-xl">@messages("technicalDifficulties.heading")</h1>
 
