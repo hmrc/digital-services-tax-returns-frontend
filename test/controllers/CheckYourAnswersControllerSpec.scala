@@ -33,7 +33,7 @@ import play.api.test.Helpers._
 import services.ConversionService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.CYAHelper
-import views.html.CheckYourAnswersView
+import views.html.{CheckYourAnswersView, TechnicalDifficultiesView}
 
 import scala.concurrent.Future
 
@@ -210,12 +210,17 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         val result = route(application, request).value
 
-        status(result) mustEqual SEE_OTHER
-        redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
+        val view = application.injector.instanceOf[TechnicalDifficultiesView]
+
+        status(result) mustEqual INTERNAL_SERVER_ERROR
+        contentAsString(result) mustEqual view()(
+          request,
+          messages(application)
+        ).toString
       }
     }
 
-    "must return Redirect to 'technical difficulties' page when user has not completed the journey" in {
+    "must return Redirect to 'JourneyRecovery' page when user has not completed the journey" in {
 
       when(mockConversionService.convertToReturn(any(), any())).thenReturn(None)
 
