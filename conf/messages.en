@@ -143,6 +143,7 @@ companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference mu
 companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
 companyDetails.change.hidden = Change company name
 companyDetails.remove.hidden = Remove company
+companyDetails.uniqueTaxpayerReference.duplicate = You have already entered this UTR
 
 #Manage companies
 manageCompanies.title = Confirm the companies in your group that have a Digital Services Tax liability

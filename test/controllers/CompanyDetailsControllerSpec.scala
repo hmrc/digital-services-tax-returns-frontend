@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyDetailsFormProvider
-import models.{CompanyDetails, Index, NormalMode, UserAnswers}
+import models.{CompanyDetails, Index, NormalMode, PeriodKey, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -29,6 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import services.CompanyDetailsService
 import views.html.CompanyDetailsView
 
 import scala.concurrent.Future
@@ -115,11 +116,17 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+
+      when(mockCompanyDetailsService.companyDetailsExists("id", PeriodKey("003"), CompanyDetails("value 1", Some("1234567890"))))
+        .thenReturn(Future.successful(None))
+
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
           )
           .build()
 

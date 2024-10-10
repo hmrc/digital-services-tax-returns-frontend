@@ -61,6 +61,12 @@ final case class UserAnswers(
       page.cleanup(None, updatedAnswers)
     }
   }
+
+  def getByPeriodKey(periodKey: PeriodKey): Map[String, JsValue] =
+    this.data.value.get(periodKey.value).map(jsv => jsv.as[Map[String, JsValue]]).getOrElse(Map.empty[String, JsValue])
+
+  def findByAttr[T: Reads](periodKey: PeriodKey, attrKey: String): Option[T] =
+    getByPeriodKey(periodKey).get(attrKey).map(jsv => jsv.as[T])
 }
 
 object UserAnswers {

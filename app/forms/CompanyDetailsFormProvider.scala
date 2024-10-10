@@ -18,7 +18,7 @@ package forms
 
 import forms.mappings.Mappings
 import models.CompanyDetails
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 import play.api.data.Forms._
 
 import javax.inject.Inject
@@ -44,4 +44,7 @@ class CompanyDetailsFormProvider @Inject() extends Mappings {
       )
     )(CompanyDetails.apply)(CompanyDetails.unapply)
   )
+
+  def duplicateUtrFormError: FormError =
+    FormError("uniqueTaxpayerReference", "companyDetails.uniqueTaxpayerReference.duplicate")
 }

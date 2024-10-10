@@ -89,4 +89,5 @@ class SessionRepository @Inject() (
       .deleteOne(byId(id))
       .toFuture()
       .map(_ => true)
+
 }
