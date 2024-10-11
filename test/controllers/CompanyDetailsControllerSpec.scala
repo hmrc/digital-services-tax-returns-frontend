@@ -171,7 +171,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
     "must return a Bad Request and errors when UTR already exists" in {
 
       val mockCompanyDetailsService = mock[CompanyDetailsService]
-      val mockSessionRepository = mock[SessionRepository]
+      val mockSessionRepository     = mock[SessionRepository]
 
       when(
         mockCompanyDetailsService
@@ -179,11 +179,14 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       )
         .thenReturn(Future.successful(None))
 
-
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[SessionRepository].toInstance(mockSessionRepository),
-        bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)).build()
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
+        )
+        .build()
 
       running(application) {
         val request =
