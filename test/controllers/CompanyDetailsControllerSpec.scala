@@ -18,7 +18,7 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyDetailsFormProvider
-import models.{CompanyDetails, Index, NormalMode, UserAnswers}
+import models.{CompanyDetails, Index, NormalMode, PeriodKey, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
@@ -29,6 +29,7 @@ import play.api.mvc.Call
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
+import services.CompanyDetailsService
 import views.html.CompanyDetailsView
 
 import scala.concurrent.Future
@@ -115,11 +116,20 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
 
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+
+      when(
+        mockCompanyDetailsService
+          .companyDetailsExists("id", PeriodKey("003"), CompanyDetails("value 1", Some("1234567890")))
+      )
+        .thenReturn(Future.successful(None))
+
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
           .overrides(
             bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
-            bind[SessionRepository].toInstance(mockSessionRepository)
+            bind[SessionRepository].toInstance(mockSessionRepository),
+            bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
           )
           .build()
 
@@ -145,6 +155,45 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
+
+        val view = application.injector.instanceOf[CompanyDetailsView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must return a Bad Request and errors when UTR already exists" in {
+
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+      val mockSessionRepository     = mock[SessionRepository]
+
+      when(
+        mockCompanyDetailsService
+          .companyDetailsExists("id", PeriodKey("003"), CompanyDetails("fun ltd", Some("1234567890")))
+      )
+        .thenReturn(Future.successful(None))
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, companyDetailsRoute)
+            .withFormUrlEncodedBody(("fun ltd", "1234567890"))
+
+        val boundForm = form.bind(Map("fun ltd" -> "1234567890"))
 
         val view = application.injector.instanceOf[CompanyDetailsView]
 

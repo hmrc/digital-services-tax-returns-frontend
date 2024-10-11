@@ -18,12 +18,14 @@ package controllers
 
 import controllers.actions._
 import forms.CompanyDetailsFormProvider
-import models.{Index, Mode, PeriodKey}
+import models.requests.DataRequest
+import models.{CompanyDetails, Index, Mode, PeriodKey}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.i18n.{I18nSupport, MessagesApi}
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
+import services.CompanyDetailsService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import views.html.CompanyDetailsView
 
@@ -33,6 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class CompanyDetailsController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
+  companyDetailsService: CompanyDetailsService,
   navigator: Navigator,
   identify: IdentifierAction,
   getData: DataRetrievalAction,
@@ -59,19 +62,23 @@ class CompanyDetailsController @Inject() (
 
   def onSubmit(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen initialiseData).async { implicit request =>
-      form
-        .bindFromRequest()
-        .fold(
-          formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, index, mode))),
-          value =>
-            for {
-              updatedAnswers <-
-                Future.fromTry(
-                  request.userAnswers.set(CompanyDetailsPage(periodKey, index), value)
-                )
-              _              <- sessionRepository.set(updatedAnswers)
-            } yield Redirect(navigator.nextPage(CompanyDetailsPage(periodKey, index), mode, updatedAnswers))
-        )
+      val boundForm = form.bindFromRequest()
+
+      if (boundForm.hasErrors) {
+        Future.successful(BadRequest(view(boundForm, periodKey, index, mode)))
+      } else {
+        val companyDetails: CompanyDetails = boundForm.value.head
+        companyDetailsService
+          .companyDetailsExists(request.userId, periodKey, companyDetails)
+          .flatMap {
+            case None        => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
+            case Some(true)  =>
+              Future.successful(
+                BadRequest(view(boundForm.withError(formProvider.duplicateUtrFormError), periodKey, index, mode))
+              )
+            case Some(false) => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
+          }
+      }
     }
 
   def onDelete(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
@@ -90,4 +97,17 @@ class CompanyDetailsController @Inject() (
         }
       }
     }
+
+  private def updateUserAnswersAndSession(
+    request: DataRequest[AnyContent],
+    periodKey: PeriodKey,
+    index: Index,
+    companyDetails: CompanyDetails,
+    mode: Mode
+  ): Future[Result] =
+    for {
+      updatedAnswers <-
+        Future.fromTry(request.userAnswers.set(CompanyDetailsPage(periodKey, index), companyDetails))
+      _              <- sessionRepository.set(updatedAnswers)
+    } yield Redirect(navigator.nextPage(CompanyDetailsPage(periodKey, index), mode, updatedAnswers))
 }

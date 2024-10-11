@@ -27,7 +27,7 @@ or specifically for only the frontend
 
 ### Locally
 
-`sbt 'run 8743'`
+`sbt 'run 8745'`
 
 * Visit http://localhost:9949/auth-login-stub/gg-sign-in
 * You may need to add some user details to the form
