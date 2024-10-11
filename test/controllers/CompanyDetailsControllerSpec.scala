@@ -118,7 +118,10 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockCompanyDetailsService = mock[CompanyDetailsService]
 
-      when(mockCompanyDetailsService.companyDetailsExists("id", PeriodKey("003"), CompanyDetails("value 1", Some("1234567890"))))
+      when(
+        mockCompanyDetailsService
+          .companyDetailsExists("id", PeriodKey("003"), CompanyDetails("value 1", Some("1234567890")))
+      )
         .thenReturn(Future.successful(None))
 
       val application =
@@ -152,6 +155,42 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
             .withFormUrlEncodedBody(("value", "invalid value"))
 
         val boundForm = form.bind(Map("value" -> "invalid value"))
+
+        val view = application.injector.instanceOf[CompanyDetailsView]
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(
+          request,
+          messages(application)
+        ).toString
+      }
+    }
+
+    "must return a Bad Request and errors when UTR already exists" in {
+
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+      val mockSessionRepository = mock[SessionRepository]
+
+      when(
+        mockCompanyDetailsService
+          .companyDetailsExists("id", PeriodKey("003"), CompanyDetails("fun ltd", Some("1234567890")))
+      )
+        .thenReturn(Future.successful(None))
+
+
+      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers)).overrides(bind[SessionRepository].toInstance(mockSessionRepository),
+        bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)).build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, companyDetailsRoute)
+            .withFormUrlEncodedBody(("fun ltd", "1234567890"))
+
+        val boundForm = form.bind(Map("fun ltd" -> "1234567890"))
 
         val view = application.injector.instanceOf[CompanyDetailsView]
 

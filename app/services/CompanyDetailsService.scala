@@ -26,7 +26,11 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CompanyDetailsService @Inject() (sessionRepository: SessionRepository)(implicit ec: ExecutionContext) {
 
-  def companyDetailsExists(userId: String, periodKey: PeriodKey, companyDetails: CompanyDetails): Future[Option[Boolean]] =
+  def companyDetailsExists(
+    userId: String,
+    periodKey: PeriodKey,
+    companyDetails: CompanyDetails
+  ): Future[Option[Boolean]] =
     sessionRepository
       .get(userId)
       .map {

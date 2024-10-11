@@ -86,11 +86,16 @@ class UserAnswersSpec extends AnyFreeSpec with TryValues with OptionValues {
     ".findByAttr" - {
       val userAnswers = UserAnswers("Int-123-456-789", data)
 
-      userAnswers.findByAttr[List[CompanyDetails]](PeriodKey("004"), "company-details").value mustEqual List(CompanyDetails("fun ltd", Some("1234567890")),
-        CompanyDetails("boring ltd", Some("1234867491")))
+      userAnswers.findByAttr[List[CompanyDetails]](PeriodKey("004"), "company-details").value mustEqual List(
+        CompanyDetails("fun ltd", Some("1234567890")),
+        CompanyDetails("boring ltd", Some("1234867491"))
+      )
       userAnswers.findByAttr[Boolean](PeriodKey("004"), "reportAlternativeCharge").value mustEqual false
       userAnswers.findByAttr[Boolean](PeriodKey("004"), "reportCrossBorderRelief").value mustEqual false
-      userAnswers.findByAttr[Seq[String]](PeriodKey("004"), "selectActivities").value mustEqual Seq("Social media", "Online Marketplace")
+      userAnswers.findByAttr[Seq[String]](PeriodKey("004"), "selectActivities").value mustEqual Seq(
+        "Social media",
+        "Online Marketplace"
+      )
     }
   }
 }

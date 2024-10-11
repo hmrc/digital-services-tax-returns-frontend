@@ -28,49 +28,74 @@ import scala.concurrent.Future
 
 class CompanyDetailsServiceSpec extends SpecBase {
 
-  val mockSessionRepository: SessionRepository = mock[SessionRepository]
+  val mockSessionRepository: SessionRepository     = mock[SessionRepository]
   val companyDetailsService: CompanyDetailsService = new CompanyDetailsService(mockSessionRepository)
 
   "companyDetailsExists" - {
     "must return None when no user answers exist" in {
       when(mockSessionRepository.get("Int-123-456-789")).thenReturn(Future.successful(None))
 
-      whenReady(companyDetailsService.companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", Some("1234567890")))) { exists =>
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", Some("1234567890")))
+      ) { exists =>
         exists mustEqual None
       }
     }
 
     "must return false when the user answers are not populated" in {
-      when(mockSessionRepository.get("Int-123-456-789")).thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", Json.obj()))))
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", Json.obj()))))
 
-      whenReady(companyDetailsService.companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", Some("1234567890")))) { exists =>
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", Some("1234567890")))
+      ) { exists =>
         exists.value mustEqual false
       }
     }
 
     "must return false when company has been added" in {
-      val jsObj = Json.obj(("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890")))))))))
-      when(mockSessionRepository.get("Int-123-456-789")).thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", jsObj))))
+      val jsObj = Json.obj(
+        ("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890"))))))))
+      )
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", jsObj))))
 
-      whenReady(companyDetailsService.companyDetailsExists("Int-123-456-789", PeriodKey("004"), CompanyDetails("fun ltd", Some("1234567890")))) { exists =>
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("004"), CompanyDetails("fun ltd", Some("1234567890")))
+      ) { exists =>
         exists.value mustEqual false
       }
     }
 
     "must return false when the company has not been added" in {
-      val jsObj = Json.obj(("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890")))))))))
-      when(mockSessionRepository.get("Int-123-456-789")).thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", jsObj))))
+      val jsObj = Json.obj(
+        ("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890"))))))))
+      )
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", jsObj))))
 
-      whenReady(companyDetailsService.companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("boring ltd", Some("1334557899")))) { exists =>
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("boring ltd", Some("1334557899")))
+      ) { exists =>
         exists.value mustEqual false
       }
     }
 
     "must return false when company details don't match" in {
-      val jsObj = Json.obj(("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890")))))))))
-      when(mockSessionRepository.get("Int-123-456-789")).thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", jsObj))))
+      val jsObj = Json.obj(
+        ("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890"))))))))
+      )
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", jsObj))))
 
-      whenReady(companyDetailsService.companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("boring ltd", Some("1134577891")))) { exists =>
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("boring ltd", Some("1134577891")))
+      ) { exists =>
         exists.value mustEqual false
       }
     }

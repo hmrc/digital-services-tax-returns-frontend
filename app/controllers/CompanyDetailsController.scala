@@ -67,12 +67,12 @@ class CompanyDetailsController @Inject() (
       if (boundForm.hasErrors) {
         Future.successful(BadRequest(view(boundForm, periodKey, index, mode)))
       } else {
-      val companyDetails: CompanyDetails = boundForm.value.head
+        val companyDetails: CompanyDetails = boundForm.value.head
         companyDetailsService
           .companyDetailsExists(request.userId, periodKey, companyDetails)
           .flatMap {
-            case None => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
-            case Some(true) =>
+            case None        => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
+            case Some(true)  =>
               Future.successful(
                 BadRequest(view(boundForm.withError(formProvider.duplicateUtrFormError), periodKey, index, mode))
               )
