@@ -37,7 +37,10 @@ class CompanyDetailsService @Inject() (sessionRepository: SessionRepository)(imp
         _.map { userAnswers =>
           userAnswers
             .findByAttr[List[CompanyDetails]](periodKey, companyDetailsList)
-            .contains(CompanyDetails(companyDetails.companyName, companyDetails.uniqueTaxpayerReference))
+            .exists(companiesDetails =>
+              companiesDetails
+                .contains(CompanyDetails(companyDetails.companyName, companyDetails.uniqueTaxpayerReference))
+            )
         }
       }
 }
