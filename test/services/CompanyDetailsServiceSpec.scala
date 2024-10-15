@@ -55,7 +55,7 @@ class CompanyDetailsServiceSpec extends SpecBase {
       }
     }
 
-    "must return false when company has been added" in {
+    "must return true when company has been added" in {
       val jsObj = Json.obj(
         ("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890"))))))))
       )
@@ -66,7 +66,7 @@ class CompanyDetailsServiceSpec extends SpecBase {
         companyDetailsService
           .companyDetailsExists("Int-123-456-789", PeriodKey("004"), CompanyDetails("fun ltd", Some("1234567890")))
       ) { exists =>
-        exists.value mustEqual false
+        exists.value mustEqual true
       }
     }
 
