@@ -99,7 +99,7 @@ GET        /:periodKey/edit/company-liabilities/:index/                    contr
 POST       /:periodKey/edit/company-liabilities/:index/                    controllers.CompanyLiabilitiesController.onSubmit(periodKey: PeriodKey, mode: Mode = CheckMode, index:Index)
 
 GET        /:periodKey/is-repayment-bank-account-uk                        controllers.IsRepaymentBankAccountUKController.onPageLoad(periodKey: PeriodKey, mode: Mode = NormalMode)
-POST       /:periodKey/is-repayment-bank-account-uk                        controllers.IsRepaymentBankAccountUKController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
+POST       /:periodKey/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
 GET        /:periodKey/edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
 POST       /:periodKey/edit/is-repayment-bank-account-uk                   controllers.IsRepaymentBankAccountUKController.onSubmit(periodKey: PeriodKey, mode: Mode = CheckMode)
 
