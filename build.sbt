@@ -6,7 +6,7 @@ import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
 lazy val appName: String = "digital-services-tax-returns-frontend"
 
 ThisBuild / majorVersion := 0
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := "2.13.16"
 
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala, SbtDistributablesPlugin)
@@ -14,7 +14,7 @@ lazy val root = (project in file("."))
   .settings(inConfig(Test)(testSettings): _*)
   .settings(ThisBuild / useSuperShell := false)
   .settings(
-    scalaVersion := "2.13.12",
+    scalaVersion := "2.13.16",
     name := appName,
     RoutesKeys.routesImport ++= Seq(
       "models._",
