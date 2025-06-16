@@ -42,10 +42,10 @@ class AuthenticationController @Inject() (mcc: MessagesControllerComponents, tim
   }
 
   def signOut: Action[AnyContent] = Action {
-    Redirect(appConfig.signOutDstUrl).withNewSession
+    Redirect(appConfig.signOutDstUrl)
   }
 
   def timeOut: Action[AnyContent] = Action { implicit request =>
-    Ok(timeOutView()).withNewSession
+    Ok(timeOutView())
   }
 }
