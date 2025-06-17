@@ -32,12 +32,11 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   lazy val ggLoginUrl: String                     = s"$companyAuthFrontend$companyAuthSignInPath"
   lazy val feedbackSurveyUrl: String              = loadConfig("microservice.services.feedback-survey.url")
-  private lazy val basGatewayUrl: String          = servicesConfig.getConfString("bas-gateway.host", "")
   private lazy val companyAuthFrontend: String    = servicesConfig.getConfString("company-auth.url", "")
   private lazy val companyAuthSignInPath: String  = servicesConfig.getConfString("company-auth.sign-in-path", "")
   private lazy val companyAuthSignOutPath: String = servicesConfig.getConfString("company-auth.sign-out-path", "")
 
-  lazy val signOutDstUrl: String = s"$basGatewayUrl$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
+  lazy val signOutDstUrl: String = s"$companyAuthSignOutPath?continue=$feedbackSurveyUrl"
 
   val appName: String = configuration.get[String]("appName")
 
