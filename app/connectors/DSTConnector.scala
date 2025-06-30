@@ -55,8 +55,9 @@ class DSTConnector @Inject() (http: HttpClientV2, servicesConfig: ServicesConfig
 
   def submitReturn(period: Period, ret: Return)(implicit hc: HeaderCarrier): Future[Int] = {
     val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
-    http.post(new URI(s"$backendURL/returns/$encodedKey").toURL).withBody(Json.toJson(ret)).execute[HttpResponse].map { response =>
-      response.status
+    http.post(new URI(s"$backendURL/returns/$encodedKey").toURL).withBody(Json.toJson(ret)).execute[HttpResponse].map {
+      response =>
+        response.status
     }
   } recoverWith { case e: Exception =>
     logger.warn(s"An Exception thrown from downstream service: ${e.getMessage}")
