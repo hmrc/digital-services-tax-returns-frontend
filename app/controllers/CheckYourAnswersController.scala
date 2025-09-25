@@ -19,9 +19,12 @@ package controllers
 import com.google.inject.Inject
 import connectors.DSTConnector
 import controllers.actions.{DataRequiredAction, DataRetrievalAction, IdentifierAction}
+import models.requests.DataRequest
 import models.{CompanyName, PeriodKey}
+import pages.ReturnsAlreadySubmittedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import repositories.SessionRepository
 import services.ConversionService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.CYAHelper
@@ -40,20 +43,26 @@ class CheckYourAnswersController @Inject() (
   cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: CheckYourAnswersView,
-  errorView: TechnicalDifficultiesView
+  errorView: TechnicalDifficultiesView,
+  sessionRepository: SessionRepository
 )(implicit ex: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
 
   def onPageLoad(periodKey: PeriodKey): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData) { implicit request =>
-      val startDate: String         = request.periodStartDate
-      val endDate: String           = request.periodEndDate
-      val sectionList: Seq[Section] = cyaHelper.createSectionList(periodKey, request.userAnswers)
-      val displayName: CompanyName  =
-        request.registration.ultimateParent.fold(request.registration.companyReg.company.name)(_.name)
+      if (returnsAlreadySubmitted(request)) {
+        sessionRepository.clear(request.userId)
+        Redirect(routes.ReturnsAlreadySubmittedController.onPageLoad)
+      } else {
+        val startDate: String         = request.periodStartDate
+        val endDate: String           = request.periodEndDate
+        val sectionList: Seq[Section] = cyaHelper.createSectionList(periodKey, request.userAnswers)
+        val displayName: CompanyName  =
+          request.registration.ultimateParent.fold(request.registration.companyReg.company.name)(_.name)
 
-      Ok(view(periodKey, sectionList, startDate, endDate, displayName))
+        Ok(view(periodKey, sectionList, startDate, endDate, displayName))
+      }
     }
 
   def onSubmit(periodKey: PeriodKey): Action[AnyContent] =
@@ -72,4 +81,7 @@ class CheckYourAnswersController @Inject() (
         case _                => Future.successful(Redirect(routes.JourneyRecoveryController.onPageLoad()))
       }
     }
+
+  private def returnsAlreadySubmitted(request: DataRequest[AnyContent]) =
+    request.userAnswers.get(ReturnsAlreadySubmittedPage).getOrElse(false)
 }

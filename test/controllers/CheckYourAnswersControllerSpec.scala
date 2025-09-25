@@ -21,7 +21,7 @@ import connectors.DSTConnector
 import generators.ModelGenerators.returnGen
 import models.registration.Registration
 import models.returns.Return
-import models.{BankDetailsForRepayment, CompanyName, SelectActivities, UKBankDetails, formatDate}
+import models.{BankDetailsForRepayment, CompanyName, SelectActivities, UKBankDetails, UserAnswers, formatDate}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary
@@ -241,6 +241,32 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
         status(result) mustEqual SEE_OTHER
         redirectLocation(result) mustBe Some(routes.JourneyRecoveryController.onPageLoad().url)
+      }
+    }
+
+    "must return Redirect to 'ReturnsAlreadySubmitted' page when user has already submitted returns" in {
+
+      val returnData = Arbitrary.arbitrary[Return].sample.value
+      when(mockDSTConnector.submitReturn(any(), any())(any())).thenReturn(Future.successful(OK))
+      when(mockConversionService.convertToReturn(any(), any())).thenReturn(Some(returnData))
+
+      val userAnswers: UserAnswers = emptyUserAnswers.set(ReturnsAlreadySubmittedPage, true).get
+
+      val application =
+        applicationBuilder(userAnswers = Some(userAnswers))
+          .overrides(
+            bind[DSTConnector].toInstance(mockDSTConnector),
+            bind[ConversionService].toInstance(mockConversionService)
+          )
+          .build()
+
+      running(application) {
+        val request = FakeRequest(GET, checkYourAnswersRoute)
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result) mustBe Some(routes.ReturnsAlreadySubmittedController.onPageLoad.url)
       }
     }
   }
