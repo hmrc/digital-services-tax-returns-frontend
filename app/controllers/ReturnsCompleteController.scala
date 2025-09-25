@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,15 +19,17 @@ package controllers
 import connectors.DSTConnector
 import controllers.actions._
 import models.PeriodKey
+import pages.ReturnsAlreadySubmittedPage
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import play.twirl.api.Html
+import repositories.SessionRepository
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendBaseController
 import utils.CYAHelper
 import views.html.{PrintableCheckYourAnswersView, ReturnsCompleteView}
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class ReturnsCompleteController @Inject() (
   override val messagesApi: MessagesApi,
@@ -38,7 +40,8 @@ class ReturnsCompleteController @Inject() (
   cyaHelper: CYAHelper,
   val controllerComponents: MessagesControllerComponents,
   view: ReturnsCompleteView,
-  printableCyaView: PrintableCheckYourAnswersView
+  printableCyaView: PrintableCheckYourAnswersView,
+  sessionRepository: SessionRepository
 )(implicit ec: ExecutionContext)
     extends FrontendBaseController
     with I18nSupport {
@@ -63,6 +66,8 @@ class ReturnsCompleteController @Inject() (
 
       for {
         outstandingPeriod <- dstConnector.lookupOutstandingReturns()
+        updatedAnswers    <- Future.fromTry(request.userAnswers.set(ReturnsAlreadySubmittedPage, true))
+        _                 <- sessionRepository.set(updatedAnswers)
       } yield Ok(
         view(
           companyName,

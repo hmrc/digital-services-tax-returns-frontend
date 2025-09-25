@@ -120,6 +120,8 @@ POST       /:periodKey/edit/repayment                                      contr
 
 GET        /:periodKey/returns/complete                                    controllers.ReturnsCompleteController.onPageLoad(periodKey: PeriodKey)
 
+GET        /returns/already-complete                                       controllers.ReturnsAlreadySubmittedController.onPageLoad
+
 GET        /:periodKey/report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey: PeriodKey, mode: Mode = NormalMode)
 POST       /:periodKey/report-online-marketplace-operating-margin          controllers.ReportOnlineMarketplaceOperatingMarginController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
 GET        /:periodKey/edit/report-online-marketplace-operating-margin     controllers.ReportOnlineMarketplaceOperatingMarginController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
