@@ -37,8 +37,8 @@ object TestEnum {
 
 class FormattersSpec extends AnyWordSpec with Matchers with Formatters {
 
-  val testKey = "value"
-  val errorKey = "error.required"
+  val testKey           = "value"
+  val errorKey          = "error.required"
   val args: Seq[String] = Seq("arg1")
 
   "stringFormatter" should {
@@ -63,7 +63,7 @@ class FormattersSpec extends AnyWordSpec with Matchers with Formatters {
 
   "booleanFormatter" should {
     val invalidKey = "error.invalid"
-    val formatter = booleanFormatter(errorKey, invalidKey, args)
+    val formatter  = booleanFormatter(errorKey, invalidKey, args)
 
     "bind 'true' to true" in {
       formatter.bind(testKey, Map(testKey -> "true")) shouldBe Right(true)
@@ -88,8 +88,8 @@ class FormattersSpec extends AnyWordSpec with Matchers with Formatters {
 
   "intFormatter" should {
     val wholeNumberKey = "error.whole"
-    val nonNumericKey = "error.nonNumeric"
-    val formatter = intFormatter(errorKey, wholeNumberKey, nonNumericKey, args)
+    val nonNumericKey  = "error.nonNumeric"
+    val formatter      = intFormatter(errorKey, wholeNumberKey, nonNumericKey, args)
 
     "bind a valid integer string" in {
       formatter.bind(testKey, Map(testKey -> "1,234")) shouldBe Right(1234)
@@ -110,17 +110,17 @@ class FormattersSpec extends AnyWordSpec with Matchers with Formatters {
 
   "percentageFormatter" should {
     val invalidKey = "error.invalid"
-    val formatter = percentageFormatter(errorKey, invalidKey, args)
+    val formatter  = percentageFormatter(errorKey, invalidKey, args)
 
     "bind valid percentages" in {
       formatter.bind(testKey, Map(testKey -> "50.55")) shouldBe Right(50.55)
-      formatter.bind(testKey, Map(testKey -> "0")) shouldBe Right(0.0)
-      formatter.bind(testKey, Map(testKey -> "100")) shouldBe Right(100.0)
+      formatter.bind(testKey, Map(testKey -> "0"))     shouldBe Right(0.0)
+      formatter.bind(testKey, Map(testKey -> "100"))   shouldBe Right(100.0)
     }
 
     "fail to bind values out of 0-100 range" in {
       formatter.bind(testKey, Map(testKey -> "100.1")) shouldBe Left(Seq(FormError(testKey, invalidKey, args)))
-      formatter.bind(testKey, Map(testKey -> "-1")) shouldBe Left(Seq(FormError(testKey, invalidKey, args)))
+      formatter.bind(testKey, Map(testKey -> "-1"))    shouldBe Left(Seq(FormError(testKey, invalidKey, args)))
     }
 
     "fail to bind values with more than 3 decimal places" in {
@@ -134,7 +134,7 @@ class FormattersSpec extends AnyWordSpec with Matchers with Formatters {
   }
 
   "currencyFormatter" should {
-    val invalidKey = "error.invalid"
+    val invalidKey  = "error.invalid"
     val exceededKey = "error.exceeded"
     val maxMoneyKey = "error.maxMoney"
 
@@ -165,7 +165,7 @@ class FormattersSpec extends AnyWordSpec with Matchers with Formatters {
   "enumerableFormatter" should {
     val invalidKey = "error.invalid"
     import TestEnum.given
-    val formatter = enumerableFormatter[TestEnum](errorKey, invalidKey, args)
+    val formatter  = enumerableFormatter[TestEnum](errorKey, invalidKey, args)
 
     "bind valid enum values" in {
       formatter.bind(testKey, Map(testKey -> "OptionA")) shouldBe Right(TestEnum.OptionA)
