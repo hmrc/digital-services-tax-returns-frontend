@@ -18,7 +18,7 @@ package models
 
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.mustBe
 import pages.SelectActivitiesPage
 
 class ActivitySpec extends AnyFreeSpec {

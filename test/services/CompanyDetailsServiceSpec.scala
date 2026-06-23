@@ -19,7 +19,7 @@ package services
 import base.SpecBase
 import models.{CompanyDetails, PeriodKey, UserAnswers}
 import org.mockito.Mockito.when
-import org.mockito.MockitoSugar.mock
+import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.libs.json._
 import repositories.SessionRepository
 

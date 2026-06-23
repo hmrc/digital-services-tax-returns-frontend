@@ -17,7 +17,7 @@
 package models
 
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.must.Matchers.{mustBe, mustEqual}
 import org.scalatest.{OptionValues, TryValues}
 import pages.QuestionPage
 import play.api.libs.json.{JsArray, JsBoolean, JsPath, JsString, Json}

@@ -62,7 +62,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
         .build()
 
       running(application) {
-        when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period)))
+        when(mockDstConnector.lookupAmendableReturns()(using any())).thenReturn(Future.successful(Set(period)))
 
         val request = FakeRequest(GET, resubmitAReturnRoute)
 
@@ -71,7 +71,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[ResubmitAReturnView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, List(period))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, List(period))(using request, messages(application)).toString
       }
     }
 
@@ -79,9 +79,9 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
       val userAnswers = new UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
-      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
-      when(mockPreviousReturnsService.convertReturnToUserAnswers(any[PeriodKey], any[UserAnswers])(any()))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+      when(mockDstConnector.lookupAmendableReturns()(using any())).thenReturn(Future.successful(Set.empty[Period]))
+      when(mockPreviousReturnsService.convertReturnToUserAnswers(any[PeriodKey], any[UserAnswers])(using any()))
         .thenReturn(Future.successful(Some(userAnswers)))
 
       val application =
@@ -114,7 +114,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
         )
         .build()
 
-      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period)))
+      when(mockDstConnector.lookupAmendableReturns()(using any())).thenReturn(Future.successful(Set(period)))
 
       running(application) {
         val request =
@@ -128,7 +128,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, List(period))(request, messages(application)).toString
+        contentAsString(result) mustEqual view(boundForm, List(period))(using request, messages(application)).toString
       }
     }
 
@@ -136,7 +136,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
       val emptyUserAnswers = UserAnswers(id = "empty", data = Json.obj(), lastUpdated = Instant.now)
 
-      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
+      when(mockDstConnector.lookupAmendableReturns()(using any())).thenReturn(Future.successful(Set.empty[Period]))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
@@ -161,7 +161,7 @@ class ResubmitAReturnControllerSpec extends SpecBase with MockitoSugar {
 
       val userAnswers = UserAnswers(id = "userId", data = Json.obj(), lastUpdated = Instant.now)
 
-      when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set.empty[Period]))
+      when(mockDstConnector.lookupAmendableReturns()(using any())).thenReturn(Future.successful(Set.empty[Period]))
       when(mockSessionRepository.set(any[UserAnswers])).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(userAnswers))

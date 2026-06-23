@@ -57,7 +57,10 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
         val view = application.injector.instanceOf[ReportSearchAlternativeChargeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(using
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -75,7 +78,7 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -86,7 +89,7 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -124,7 +127,7 @@ class ReportSearchAlternativeChargeControllerSpec extends SpecBase with MockitoS
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString

@@ -18,12 +18,12 @@ package services
 
 import base.SpecBase
 import connectors.DSTConnector
+import models.*
 import models.Activity.{OnlineMarketplace, SearchEngine, SocialMedia}
-import models._
 import models.registration.GroupCompany
 import models.returns.Return
-import org.mockito.MockitoSugar.mock
-import pages._
+import org.scalatestplus.mockito.MockitoSugar.mock
+import pages.*
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.collection.immutable.ListMap

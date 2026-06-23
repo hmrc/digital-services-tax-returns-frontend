@@ -26,10 +26,10 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar.mock
-import pages._
+import pages.*
 import play.api.inject.bind
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import services.ConversionService
 import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
 import utils.CYAHelper
@@ -59,14 +59,14 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
       running(application) {
         val request     = FakeRequest(GET, checkYourAnswersRoute)
-        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(using messages(application))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(using
           request,
           messages(application)
         ).toString
@@ -87,14 +87,14 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
       running(application) {
         val request     = FakeRequest(GET, checkYourAnswersRoute)
-        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(using messages(application))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(using
           request,
           messages(application)
         ).toString
@@ -119,14 +119,14 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
       running(application) {
         val request     = FakeRequest(GET, checkYourAnswersRoute)
-        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(using messages(application))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(using
           request,
           messages(application)
         ).toString
@@ -149,14 +149,14 @@ class CheckYourAnswersControllerSpec extends SpecBase {
 
       running(application) {
         val request     = FakeRequest(GET, checkYourAnswersRoute)
-        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(messages(application))
+        val sectionList = new CYAHelper().createSectionList(periodKey, userAnswers)(using messages(application))
 
         val result = route(application, request).value
 
         val view = application.injector.instanceOf[CheckYourAnswersView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(
+        contentAsString(result) mustEqual view(periodKey, sectionList, startDate, endDate, displayName)(using
           request,
           messages(application)
         ).toString
@@ -166,7 +166,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     "must return Redirect to confirmation page on successful submission" in {
 
       val returnData = Arbitrary.arbitrary[Return].sample.value
-      when(mockDSTConnector.submitReturn(any(), any())(any())).thenReturn(Future.successful(OK))
+      when(mockDSTConnector.submitReturn(any(), any())(using any())).thenReturn(Future.successful(OK))
       when(mockConversionService.convertToReturn(any(), any())).thenReturn(Some(returnData))
 
       val userAnswers = emptyUserAnswers
@@ -192,7 +192,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     "must return Redirect to 'technical difficulties' page on failed submission" in {
 
       val returnData = Arbitrary.arbitrary[Return].sample.value
-      when(mockDSTConnector.submitReturn(any(), any())(any())).thenReturn(Future.successful(BAD_REQUEST))
+      when(mockDSTConnector.submitReturn(any(), any())(using any())).thenReturn(Future.successful(BAD_REQUEST))
       when(mockConversionService.convertToReturn(any(), any())).thenReturn(Some(returnData))
 
       val userAnswers = emptyUserAnswers
@@ -213,7 +213,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
         val view = application.injector.instanceOf[TechnicalDifficultiesView]
 
         status(result) mustEqual INTERNAL_SERVER_ERROR
-        contentAsString(result) mustEqual view()(
+        contentAsString(result) mustEqual view()(using
           request,
           messages(application)
         ).toString
@@ -247,7 +247,7 @@ class CheckYourAnswersControllerSpec extends SpecBase {
     "must return Redirect to 'ReturnsAlreadySubmitted' page when user has already submitted returns" in {
 
       val returnData = Arbitrary.arbitrary[Return].sample.value
-      when(mockDSTConnector.submitReturn(any(), any())(any())).thenReturn(Future.successful(OK))
+      when(mockDSTConnector.submitReturn(any(), any())(using any())).thenReturn(Future.successful(OK))
       when(mockConversionService.convertToReturn(any(), any())).thenReturn(Some(returnData))
 
       val userAnswers: UserAnswers = emptyUserAnswers.set(ReturnsAlreadySubmittedPage, true).get

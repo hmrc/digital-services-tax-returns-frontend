@@ -42,7 +42,7 @@ class CompanyDetailsFormProvider @Inject() extends Mappings {
         text("companyDetails.error.uniqueTaxpayerReference.required")
           .verifying(regexp(uniqueTaxReferenceMaxRegex, "companyDetails.error.uniqueTaxpayerReference.invalid"))
       )
-    )(CompanyDetails.apply)(CompanyDetails.unapply)
+    )(CompanyDetails.apply)(cd => Some(cd.companyName, cd.uniqueTaxpayerReference))
   )
 
   def duplicateUtrFormError: FormError =

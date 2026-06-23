@@ -60,7 +60,7 @@ class ReportSearchEngineOperatingMarginControllerSpec extends SpecBase with Mock
         val view = application.injector.instanceOf[ReportSearchEngineOperatingMarginView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode, company)(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, company)(using
           request,
           messages(application)
         ).toString
@@ -82,7 +82,7 @@ class ReportSearchEngineOperatingMarginControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(validAnswer), periodKey, NormalMode, company)(
+        contentAsString(result) mustEqual view(form.fill(validAnswer), periodKey, NormalMode, company)(using
           request,
           messages(application)
         ).toString
@@ -93,7 +93,7 @@ class ReportSearchEngineOperatingMarginControllerSpec extends SpecBase with Mock
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -131,7 +131,7 @@ class ReportSearchEngineOperatingMarginControllerSpec extends SpecBase with Mock
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, company)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, company)(using
           request,
           messages(application)
         ).toString

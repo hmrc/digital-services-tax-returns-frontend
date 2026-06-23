@@ -17,7 +17,6 @@
 package models.registration
 
 import models.ValidatedType
-import shapeless.tag.@@
 
 import java.time.LocalDate
 
@@ -31,7 +30,7 @@ final case class Period(start: LocalDate, end: LocalDate, returnDue: LocalDate, 
 
 object Period {
 
-  type Key = String @@ Key.Tag
+  type Key = Key.Type
 
   object Key extends ValidatedType[String] {
     def validateAndTransform(in: String): Option[String] =

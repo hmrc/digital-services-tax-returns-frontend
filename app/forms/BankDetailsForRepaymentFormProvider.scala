@@ -45,6 +45,6 @@ class BankDetailsForRepaymentFormProvider @Inject() extends Mappings {
         ),
       "internationalBankAccountNumber" -> text(ibanErrorKey)
         .verifying(firstError(maxLength(ibanLength, ibanLengthErrorKey), ibanCheck(ibanInvalidErrorKey)))
-    )(BankDetailsForRepayment.apply)(BankDetailsForRepayment.unapply)
+    )(BankDetailsForRepayment.apply)(bd => Some(bd.accountName, bd.internationalBankAccountNumber))
   )
 }

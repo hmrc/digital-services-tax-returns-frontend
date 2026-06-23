@@ -24,10 +24,11 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CompanyDetailsPage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import services.CompanyDetailsService
 import views.html.CompanyDetailsView
@@ -38,10 +39,10 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider = new CompanyDetailsFormProvider()
-  val form         = formProvider()
+  val formProvider               = new CompanyDetailsFormProvider()
+  val form: Form[CompanyDetails] = formProvider()
 
-  lazy val companyDetailsRoute = routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
+  lazy val companyDetailsRoute: String = routes.CompanyDetailsController.onPageLoad(periodKey, index, NormalMode).url
 
   val userAnswers: UserAnswers =
     emptyUserAnswers
@@ -63,7 +64,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(
+        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -82,7 +83,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(
+        contentAsString(result) mustEqual view(form, periodKey, index, NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -106,7 +107,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
           periodKey,
           index,
           NormalMode
-        )(request, messages(application)).toString
+        )(using request, messages(application)).toString
       }
     }
 
@@ -114,7 +115,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val mockCompanyDetailsService = mock[CompanyDetailsService]
 
@@ -161,7 +162,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -179,7 +180,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       )
         .thenReturn(Future.successful(None))
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
         .overrides(
@@ -200,17 +201,78 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(using
           request,
           messages(application)
         ).toString
       }
     }
 
+    "must return Bad Request when CompanyDetails exists and returns true" in {
+
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+      val mockSessionRepository     = mock[SessionRepository]
+
+      when(
+        mockCompanyDetailsService
+          .companyDetailsExists(any, any, any)
+      )
+        .thenReturn(Future.successful(Some(true)))
+
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, companyDetailsRoute)
+            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "1234567890"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual BAD_REQUEST
+      }
+    }
+
+    "must redirect when CompanyDetails exists and returns false" in {
+
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+      val mockSessionRepository     = mock[SessionRepository]
+
+      when(
+        mockCompanyDetailsService
+          .companyDetailsExists(any, any, any)
+      ).thenReturn(Future.successful(Some(false)))
+
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, companyDetailsRoute)
+            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "1234567890"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+      }
+    }
+
     "must redirect to company details page on removing the last company details from manage companies page" in {
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -236,7 +298,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to company details page on when no company details records exists" in {
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -262,7 +324,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
     "must redirect to manage companies page on removing the one of the company name from the list of companies" in {
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val ua = userAnswers
         .set(CompanyDetailsPage(periodKey, Index(1)), CompanyDetails("value 2", None))

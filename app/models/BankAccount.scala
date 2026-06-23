@@ -49,6 +49,6 @@ object BankAccount {
       s"uk.gov.hmrc.digitalservicestax.data.${fullName.split("\\.").last}"
     }
   )
-  implicit val format: OFormat[BankAccount] = Json.configured(jsonConfig).format[BankAccount]
+  implicit val format: OFormat[BankAccount] = Json.configured(using jsonConfig).format[BankAccount]
 
 }

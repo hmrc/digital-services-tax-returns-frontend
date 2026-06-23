@@ -20,7 +20,6 @@ import com.ibm.icu.util.{TimeZone, ULocale}
 import fr.marcwrobel.jbanking.iban.Iban
 import models.registration.Period
 import play.api.libs.json._
-import shapeless.tag.@@
 
 import java.time.{LocalDate, ZoneId}
 
@@ -40,14 +39,14 @@ package object models {
     sdf
   }
 
-  type UTR = String @@ UTR.Tag
+  type UTR = UTR.Type
   object UTR
       extends RegexValidatedString(
         "^[0-9]{10}$",
         _.replaceAll(" ", "")
       )
 
-  type Email = String @@ Email.Tag
+  type Email = Email.Type
   object Email extends ValidatedType[String] {
     def validateAndTransform(email: String): Option[String] = {
       import org.apache.commons.validator.routines.EmailValidator
@@ -55,82 +54,82 @@ package object models {
     }
   }
 
-  type InternalId = String @@ InternalId.Tag
+  type InternalId = InternalId.Type
   object InternalId
       extends RegexValidatedString(
         regex = "^Int-[a-f0-9-]*$"
       )
 
-  type Postcode = String @@ Postcode.Tag
+  type Postcode = Postcode.Type
   object Postcode
       extends RegexValidatedString(
         """^[A-Z]{1,2}[0-9][0-9A-Z]?\s?[0-9][A-Z]{2}$""",
         _.trim.replaceAll("[ \\t]+", " ").toUpperCase
       )
 
-  type PhoneNumber = String @@ PhoneNumber.Tag
+  type PhoneNumber = PhoneNumber.Type
   object PhoneNumber
       extends RegexValidatedString(
         "^[A-Z0-9 \\-]{1,30}$"
       )
 
-  type CompanyName = String @@ CompanyName.Tag
+  type CompanyName = CompanyName.Type
   object CompanyName
       extends RegexValidatedString(
         regex = """^[a-zA-Z0-9 '&.-]{1,105}$"""
       )
 
-  type AddressLine = String @@ AddressLine.Tag
+  type AddressLine = AddressLine.Type
   object AddressLine
       extends RegexValidatedString(
         regex = """^[a-zA-Z0-9 '&.-]{1,35}$"""
       )
 
-  type SafeId = String @@ SafeId.Tag
+  type SafeId = SafeId.Type
   object SafeId
       extends RegexValidatedString(
         "^[A-Z0-9]{1,15}$"
       )
 
-  type SortCode = String @@ SortCode.Tag
+  type SortCode = SortCode.Type
   object SortCode
       extends RegexValidatedString(
         """^[0-9]{6}$""",
         _.filter(_.isDigit)
       )
 
-  type AccountNumber = String @@ AccountNumber.Tag
+  type AccountNumber = AccountNumber.Type
   object AccountNumber
       extends RegexValidatedString(
         """^[0-9]{8}$""",
         _.filter(_.isDigit)
       )
 
-  type BuildingSocietyRollNumber = String @@ BuildingSocietyRollNumber.Tag
+  type BuildingSocietyRollNumber = BuildingSocietyRollNumber.Type
   object BuildingSocietyRollNumber
       extends RegexValidatedString(
         """^[A-Za-z0-9 -]{1,18}$"""
       )
 
-  type AccountName = String @@ AccountName.Tag
+  type AccountName = AccountName.Type
   object AccountName
       extends RegexValidatedString(
         """^[a-zA-Z&^]{1,35}$"""
       )
 
-  type DSTRegNumber = String @@ DSTRegNumber.Tag
+  type DSTRegNumber = DSTRegNumber.Type
   object DSTRegNumber
       extends RegexValidatedString(
         "^([A-Z]{2}DST[0-9]{10})$"
       )
 
-  type RestrictiveString = String @@ RestrictiveString.Tag
+  type RestrictiveString = RestrictiveString.Type
   object RestrictiveString
       extends RegexValidatedString(
         """^[a-zA-Z'&-^]{1,35}$"""
       )
 
-  type CountryCode = String @@ CountryCode.Tag
+  type CountryCode = CountryCode.Type
   object CountryCode
       extends RegexValidatedString(
         """^[A-Z][A-Z]$""",
@@ -140,19 +139,19 @@ package object models {
         }
       )
 
-  type NonEmptyString = String @@ NonEmptyString.Tag
+  type NonEmptyString = NonEmptyString.Type
   object NonEmptyString extends ValidatedType[String] {
     def validateAndTransform(in: String): Option[String] =
       Some(in).filter(_.nonEmpty)
   }
 
-  type FormBundleNumber = String @@ FormBundleNumber.Tag
+  type FormBundleNumber = FormBundleNumber.Type
   object FormBundleNumber
       extends RegexValidatedString(
         regex = "^[0-9]{12}$"
       )
 
-  type Money = BigDecimal @@ Money.Tag
+  type Money = Money.Type
   object Money extends ValidatedType[BigDecimal] {
     def validateAndTransform(in: BigDecimal): Option[BigDecimal] =
       Some(in).filter(_.toString.matches("^[0-9]+(\\.[0-9]{1,2})?$"))
@@ -164,7 +163,7 @@ package object models {
     }
   }
 
-  type Percent = Float @@ Percent.Tag
+  type Percent = Percent.Type
   object Percent extends ValidatedType[Float] {
     def validateAndTransform(in: Float): Option[Float] =
       Some(in).filter { x =>
@@ -178,7 +177,7 @@ package object models {
     }
   }
 
-  type IBAN = String @@ IBAN.Tag
+  type IBAN = IBAN.Type
   object IBAN extends ValidatedType[String] {
     override def validateAndTransform(in: String): Option[String] =
       Some(in).map(_.replaceAll("\\s+", "")).filter(Iban.isValid)
@@ -214,7 +213,7 @@ package object models {
 
         case (first :: second :: rest, oldValue) =>
           Reads
-            .optionNoError(Reads.at[JsValue](JsPath(first :: Nil)))
+            .optionNoError(using Reads.at[JsValue](JsPath(first :: Nil)))
             .reads(oldValue)
             .flatMap { opt =>
               opt
@@ -290,9 +289,9 @@ package object models {
         case ((_: KeyPathNode) :: Nil, _)                                              => JsError(s"cannot remove a key on $jsValue")
         case (first :: second :: rest, oldValue)                                       =>
           Reads
-            .optionNoError(Reads.at[JsValue](JsPath(first :: Nil)))
+            .optionNoError(using Reads.at[JsValue](JsPath(first :: Nil)))
             .reads(oldValue)
-            .flatMap { opt: Option[JsValue] =>
+            .flatMap { (opt: Option[JsValue]) =>
               opt
                 .map(JsSuccess(_))
                 .getOrElse {

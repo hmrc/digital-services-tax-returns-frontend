@@ -57,7 +57,10 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
         val view = application.injector.instanceOf[ReportOnlineMarketplaceAlternativeChargeView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(using
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -76,7 +79,7 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -87,7 +90,7 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -125,7 +128,7 @@ class ReportOnlineMarketplaceAlternativeChargeControllerSpec extends SpecBase wi
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString

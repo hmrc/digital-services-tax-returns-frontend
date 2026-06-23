@@ -33,7 +33,7 @@ trait CheckboxFluency {
   object CheckboxesViewModel extends ErrorMessageAwareness with FieldsetFluency {
 
     def apply(
-      form: Form[_],
+      form: Form[?],
       name: String,
       items: Seq[CheckboxItem],
       legend: Legend
@@ -46,7 +46,7 @@ trait CheckboxFluency {
       )
 
     def apply(
-      form: Form[_],
+      form: Form[?],
       name: String,
       items: Seq[CheckboxItem],
       fieldset: Fieldset
@@ -67,7 +67,7 @@ trait CheckboxFluency {
       checkboxes.copy(describedBy = Some(value))
 
     def withHint(hint: Hint): Checkboxes =
-      checkboxes copy (hint = Some(hint))
+      checkboxes.copy(hint = Some(hint))
   }
 
   object CheckboxItemViewModel {

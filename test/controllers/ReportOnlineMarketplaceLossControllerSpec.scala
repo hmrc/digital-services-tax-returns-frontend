@@ -57,7 +57,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val view = application.injector.instanceOf[ReportOnlineMarketplaceLossView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode, registration)(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, registration)(using
           request,
           messages(application)
         ).toString
@@ -78,7 +78,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, registration)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, registration)(using
           request,
           messages(application)
         ).toString
@@ -89,7 +89,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -127,7 +127,7 @@ class ReportOnlineMarketplaceLossControllerSpec extends SpecBase with MockitoSug
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, registration)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, registration)(using
           request,
           messages(application)
         ).toString

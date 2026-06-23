@@ -25,7 +25,7 @@ import org.scalatest.matchers.should.Matchers
 import utils.ConfiguredPropertyChecks
 
 class ValidatedTypeSpec extends AnyFlatSpec with Matchers with ConfiguredPropertyChecks {
-  val ibanList = List(
+  val ibanList: Seq[String] = List(
     "AD9179714843548170724658",
     "AE532299249995935421750",
     "AL36442788709271283994894168",
@@ -37,7 +37,7 @@ class ValidatedTypeSpec extends AnyFlatSpec with Matchers with ConfiguredPropert
   )
 
   it should "validate IBAN numbers from a series of concrete examples" in {
-    forAll(Gen.oneOf(ibanList), minSuccessful(PosInt(86))) { source: String =>
+    forAll(Gen.oneOf(ibanList), minSuccessful(PosInt(86))) { (source: String) =>
       IBAN.of(source) shouldBe defined
     }
   }

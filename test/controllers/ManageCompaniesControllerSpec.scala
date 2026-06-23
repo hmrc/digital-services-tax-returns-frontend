@@ -65,11 +65,12 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
 
         val view                = application.injector.instanceOf[ManageCompaniesView]
         val expectedSummaryList = List.range(0, 2) flatMap { index =>
-          CompanyDetailsSummary.row(periodKey, Index(index), ua)(messages(application))
+          CompanyDetailsSummary.row(periodKey, Index(index), ua)(using messages(application))
         }
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, periodKey, NormalMode, SummaryListViewModel(expectedSummaryList))(
+          using
           request,
           messages(application)
         ).toString
@@ -133,7 +134,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -171,7 +172,7 @@ class ManageCompaniesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, SummaryListViewModel(List.empty))(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, SummaryListViewModel(List.empty))(using
           request,
           messages(application)
         ).toString

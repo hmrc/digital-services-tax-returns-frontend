@@ -16,21 +16,22 @@
 
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
-import generators.ModelGenerators._
+import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.http.Fault
+import generators.ModelGenerators.*
 import models.PeriodKey
-import models.SimpleJson._
-import models.TestSampleData._
+import models.SimpleJson.*
+import models.TestSampleData.*
 import models.registration.{Period, Registration}
 import models.returns.Return
 import org.scalacheck.Arbitrary
 import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.{IntegrationPatience, ScalaFutures}
 import org.scalatest.freespec.AnyFreeSpec
-import org.scalatest.matchers.must.Matchers.{contain, convertToAnyMustWrapper, defined}
+import org.scalatest.matchers.must.Matchers.{contain, defined, must, mustBe, mustEqual}
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks.forAll
 import play.api.Application
-import play.api.http.Status.{BAD_REQUEST, NOT_FOUND, OK}
+import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, NOT_FOUND, OK}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -172,6 +173,25 @@ class DSTConnectorSpec extends AnyFreeSpec with WiremockServer with ScalaFutures
       val response = connector.submitReturn(period, ret)
       whenReady(response) { status =>
         status mustBe BAD_REQUEST
+      }
+    }
+  }
+
+  "should handle thrown exception" in {
+    forAll { (period: Period, ret: Return) =>
+      val encodedKey = java.net.URLEncoder.encode(period.key, "UTF-8")
+
+      mockServer.stubFor(
+        post(urlPathEqualTo(s"/digital-services-tax/returns/$encodedKey"))
+          .willReturn(
+            aResponse()
+              .withFault(Fault.EMPTY_RESPONSE)
+          )
+      )
+
+      val response = connector.submitReturn(period, ret)
+      whenReady(response) { status =>
+        status mustBe INTERNAL_SERVER_ERROR
       }
     }
   }

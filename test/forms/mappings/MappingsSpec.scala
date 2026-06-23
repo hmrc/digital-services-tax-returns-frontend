@@ -33,7 +33,7 @@ object MappingsSpec {
     val values: Set[Foo] = Set(Bar, Baz)
 
     implicit val fooEnumerable: Enumerable[Foo] =
-      Enumerable(values.toSeq.map(v => v.toString -> v): _*)
+      Enumerable(values.toSeq.map(v => v.toString -> v)*)
   }
 }
 
@@ -87,6 +87,60 @@ class MappingsSpec extends AnyFreeSpec with Matchers with OptionValues with Mapp
     "must not bind a string with spaces" in {
       val result = testForm.bind(Map("value" -> "      "))
       result.errors must contain(FormError("value", "error.required"))
+    }
+  }
+
+  "currency" - {
+
+    val testFormWithoutMaxMoney: Form[BigDecimal] =
+      Form(
+        "value" -> currency()
+      )
+
+    val testFormWithMaxMoney: Form[BigDecimal] =
+      Form(
+        "value" -> currency(maxMoneyKey = Some("error.maxMoney"))
+      )
+
+    "must bind a valid currency value" in {
+      val result = testFormWithoutMaxMoney.bind(Map("value" -> "12,345.67"))
+      result.get mustEqual BigDecimal("12345.67")
+    }
+
+    "must not bind an empty value" in {
+      val result = testFormWithoutMaxMoney.bind(Map("value" -> ""))
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must not bind an invalid currency format" in {
+      val result = testFormWithoutMaxMoney.bind(Map("value" -> "12.345"))
+      result.errors must contain(FormError("value", "error.invalid"))
+    }
+
+    "must not bind when length exceeds max money precision limit" in {
+      val massiveNum = "1" * 20
+      val result     = testFormWithoutMaxMoney.bind(Map("value" -> massiveNum))
+      result.errors must contain(FormError("value", "error.exceeded"))
+    }
+
+    "must bind value over 25,000,000 if maxMoneyKey is None" in {
+      val result = testFormWithoutMaxMoney.bind(Map("value" -> "25000001"))
+      result.get mustEqual BigDecimal("25000001")
+    }
+
+    "must not bind value over 25,000,000 if maxMoneyKey is defined" in {
+      val result = testFormWithMaxMoney.bind(Map("value" -> "25000001"))
+      result.errors must contain(FormError("value", "error.maxMoney"))
+    }
+
+    "must not bind an empty map" in {
+      val result = testFormWithoutMaxMoney.bind(Map.empty[String, String])
+      result.errors must contain(FormError("value", "error.required"))
+    }
+
+    "must unbind a valid value formatted to 2 decimal places" in {
+      val result = testFormWithoutMaxMoney.fill(BigDecimal("100.1"))
+      result.apply("value").value.value mustEqual "100.10"
     }
   }
 

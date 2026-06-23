@@ -62,7 +62,7 @@ trait RadiosFluency {
         fieldset = FieldsetViewModel(legend)
       )
 
-    def yesNo(
+    private def yesNo(
       field: Field,
       fieldset: Fieldset
     )(implicit messages: Messages): Radios = {
@@ -94,7 +94,7 @@ trait RadiosFluency {
       radios.copy(hint = Some(hint))
 
     def withFormGroupClasses(classes: String): Radios =
-      radios copy (formGroup = radios.formGroup.copy(classes = Some(classes)))
+      radios.copy(formGroup = radios.formGroup.copy(classes = Some(classes)))
 
     def withIdPrefix(prefix: String): Radios =
       radios.copy(idPrefix = Some(prefix))

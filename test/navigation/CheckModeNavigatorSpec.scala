@@ -73,6 +73,13 @@ class CheckModeNavigatorSpec extends SpecBase {
       ) mustBe routes.ReportMediaAlternativeChargeController.onPageLoad(periodKey, CheckMode)
     }
 
+    "must go to JourneyRecovery when no activity is selected" in {
+      val selectedActivities = Set.empty[SelectActivities]
+      navigator.redirectToAlternateChargesPage(periodKey, selectedActivities)(
+        CheckMode
+      ) mustBe routes.JourneyRecoveryController.onPageLoad()
+    }
+
     "must go from a ReportAlternativeChargePage to ReportSearchAlternativeChargePage when more then one activity and option 'yes' is selected" in {
 
       navigator.nextPage(

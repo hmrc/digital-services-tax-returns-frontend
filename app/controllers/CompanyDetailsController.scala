@@ -16,12 +16,13 @@
 
 package controllers
 
-import controllers.actions._
+import controllers.actions.*
 import forms.CompanyDetailsFormProvider
 import models.requests.DataRequest
 import models.{CompanyDetails, Index, Mode, PeriodKey}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, CompanyDetailsPage}
+import play.api.data.Form
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import repositories.SessionRepository
@@ -48,7 +49,7 @@ class CompanyDetailsController @Inject() (
     extends FrontendBaseController
     with I18nSupport {
 
-  val form = formProvider()
+  val form: Form[CompanyDetails] = formProvider()
 
   def onPageLoad(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen initialiseData) { implicit request =>

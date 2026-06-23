@@ -56,7 +56,7 @@ class AuthenticationControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
 
         val appConfig = application.injector.instanceOf[FrontendAppConfig]
-        val request   = FakeRequest(GET, routes.AuthenticationController.signOut.url)
+        val request   = FakeRequest(GET, routes.AuthenticationController.signOut().url)
 
         val result = route(application, request).value
 
@@ -80,7 +80,7 @@ class AuthenticationControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual timeOutView()(request, messages(application)).toString()
+        contentAsString(result) mustEqual timeOutView()(using request, messages(application)).toString()
 
       }
     }

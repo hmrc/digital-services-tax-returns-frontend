@@ -16,8 +16,10 @@
 
 package config
 
+import com.typesafe.config.ConfigFactory
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.must.Matchers
+import play.api.Configuration
 
 class ServiceSpec extends AnyFreeSpec with Matchers {
 
@@ -27,6 +29,25 @@ class ServiceSpec extends AnyFreeSpec with Matchers {
       service.baseUrl mustBe "protocol://host:port"
       service.toString mustBe "protocol://host:port"
       Service.convertToString(service) mustBe "protocol://host:port"
+    }
+
+    "must load from configuration" in {
+
+      val config = Configuration(
+        ConfigFactory.parseString(
+          """
+            |my-service {
+            |  host = "localhost"
+            |  port = "8080"
+            |  protocol = "http"
+            |}
+            |""".stripMargin
+        )
+      )
+
+      val service = config.get[Service]("my-service")
+
+      service mustBe Service("localhost", "8080", "http")
     }
   }
 }
