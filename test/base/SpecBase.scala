@@ -27,7 +27,6 @@ import play.api.i18n.{Messages, MessagesApi}
 import play.api.inject.bind
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
-import shapeless.tag.@@
 
 trait SpecBase
     extends AnyFreeSpec
@@ -43,7 +42,7 @@ trait SpecBase
 
   def messages(app: Application): Messages = app.injector.instanceOf[MessagesApi].preferred(FakeRequest())
 
-  val dstRegNumber: Option[String @@ models.DSTRegNumber.Tag]                                        = Some(DSTRegNumber("AMDST0799721562"))
+  val dstRegNumber: Option[models.DSTRegNumber.Type]                                                 = Some(DSTRegNumber("AMDST0799721562"))
   val index: Index                                                                                   = Index(0)
   val periodKey: PeriodKey                                                                           = PeriodKey("003")
   protected def applicationBuilder(userAnswers: Option[UserAnswers] = None): GuiceApplicationBuilder =

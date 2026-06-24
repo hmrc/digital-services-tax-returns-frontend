@@ -53,8 +53,8 @@ class ReturnsDashboardControllerSpec extends SpecBase with MockitoSugar {
         val period2 =
           Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
-        when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period1)))
-        when(mockDstConnector.lookupAmendableReturns()(any())).thenReturn(Future.successful(Set(period2)))
+        when(mockDstConnector.lookupOutstandingReturns()(using any())).thenReturn(Future.successful(Set(period1)))
+        when(mockDstConnector.lookupAmendableReturns()(using any())).thenReturn(Future.successful(Set(period2)))
 
         val request = FakeRequest(GET, routes.ReturnsDashboardController.onPageLoad.url)
         val result  = route(application, request).value
@@ -68,7 +68,7 @@ class ReturnsDashboardControllerSpec extends SpecBase with MockitoSugar {
             .sortBy(_.start),
           List(period2)
             .sortBy(_.start)
-        )(request, messages(application)).toString
+        )(using request, messages(application)).toString
       }
     }
   }

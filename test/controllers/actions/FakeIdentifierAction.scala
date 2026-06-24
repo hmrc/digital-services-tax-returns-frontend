@@ -32,7 +32,7 @@ class FakeIdentifierAction @Inject() (
 
   override def apply(
     periodKey: Option[PeriodKey] = None
-  ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] =
+  ): ActionBuilder[IdentifierRequest, AnyContent] & ActionFunction[Request, IdentifierRequest] =
     new FakeAuthIdentifierAction(parser)
 }
 class FakeAuthIdentifierAction @Inject() (bodyParsers: PlayBodyParsers)

@@ -24,7 +24,6 @@ import org.scalacheck.Arbitrary.{arbBigDecimal => _, arbitrary, _}
 import org.scalacheck.Gen.buildableOf
 import org.scalacheck.cats.implicits._
 import org.scalacheck.{Arbitrary, Gen}
-import shapeless.tag.@@
 import uk.gov.hmrc.auth.core._
 import wolfendale.scalacheck.regexp.RegexpGen
 
@@ -41,7 +40,7 @@ object ModelGenerators {
   implicit def arbDSTNumber: Arbitrary[DSTRegNumber]  = Arbitrary(DSTRegNumber.gen)
 
   implicit class RichRegexValidatedString[A <: RegexValidatedString](val in: A) {
-    def gen: Gen[String @@ RichRegexValidatedString.this.in.Tag] = RegexpGen.from(in.regex).map(in.apply)
+    def gen: Gen[RichRegexValidatedString.this.in.Type] = RegexpGen.from(in.regex).map(in.apply)
   }
 
   implicit val argRestrictedString: Arbitrary[RestrictiveString] = Arbitrary(
@@ -52,7 +51,7 @@ object ModelGenerators {
     Gen.alphaNumStr.map(_.take(255))
   )
 
-  def neString(maxLen: Int = 255): Gen[String @@ models.NonEmptyString.Tag] = (
+  def neString(maxLen: Int = 255): Gen[NonEmptyString.Type] = (
     Gen.alphaNumChar,
     arbitrary[String]
   ).mapN((num, str) => s"$num$str").map(_.take(maxLen)).map(NonEmptyString.apply)
@@ -137,7 +136,7 @@ object ModelGenerators {
     Gen.oneOf(List(AffinityGroup.Agent, AffinityGroup.Individual, AffinityGroup.Organisation))
   }
 
-  implicit def periodKey: Arbitrary[@@[String, Period.Key.Tag]] = {
+  implicit def periodKey: Arbitrary[Period.Key.Type] = {
     val g = for {
       n <- Gen.chooseNum(1, 4)
       c <- Gen.alphaChar

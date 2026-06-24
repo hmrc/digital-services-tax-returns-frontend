@@ -19,12 +19,10 @@
 @import models.registration.Period
 
 @this(
-        layout: templates.Layout,
-        govukButton: GovukButton,
-        appConfig: FrontendAppConfig
+        layout: templates.Layout
 )
 
-@(regNo: Option[DSTRegNumber], outstanding: List[Period])(implicit request: Request[_], messages: Messages)
+@(regNo: Option[DSTRegNumber], outstanding: List[Period])(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("pay-your-dst.title")), showBackLink = true) {
 

@@ -76,7 +76,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(SocialMediaLossPage(periodKey)) mustBe Some(true)
@@ -108,7 +108,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(SocialMediaLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportMediaAlternativeChargePage(periodKey)) mustBe None
@@ -140,7 +140,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(SearchEngineLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportSearchAlternativeChargePage(periodKey)) mustBe None
@@ -172,7 +172,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportOnlineMarketplaceAlternativeChargePage(periodKey)) mustBe None
@@ -207,7 +207,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceOperatingMarginPage(periodKey)) mustBe Some(15.0)
     updatedUserAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) mustBe Some(20.0)
@@ -245,7 +245,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportOnlineMarketplaceLossPage(periodKey)) mustBe Some(true)
     updatedUserAnswers.get(ReportSocialMediaOperatingMarginPage(periodKey)) mustBe None
@@ -279,7 +279,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReportAlternativeChargePage(periodKey)) mustBe Some(false)
   }
@@ -314,7 +314,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
     updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe Some(true)
@@ -350,7 +350,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
     updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe Some(false)
@@ -389,7 +389,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(AllowanceDeductedPage(periodKey)) mustBe Some(allowanceAmount)
     updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
@@ -438,7 +438,7 @@ class PreviousReturnsServiceSpec
                  |}""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
 
     val bankDetails = UKBankDetails(
@@ -490,7 +490,7 @@ class PreviousReturnsServiceSpec
                  |}""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
 
     val bankDetails = BankDetailsForRepayment(
@@ -543,7 +543,7 @@ class PreviousReturnsServiceSpec
                  |    }""".stripMargin)
         .as[Return]
 
-    when(mockDSTConnector.lookupSubmittedReturns(any())(any())).thenReturn(Future.successful(Some(returnData)))
+    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(CompanyDetailsPage(periodKey, index)).value mustBe CompanyDetails(companyName, utr)
     updatedUserAnswers.get(CompanyLiabilitiesPage(periodKey, index)).value mustBe companyAmount

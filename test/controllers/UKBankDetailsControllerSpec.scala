@@ -61,7 +61,10 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(using
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -81,7 +84,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
           form.fill(UKBankDetails("Name", "123456", "12345678", None)),
           periodKey,
           NormalMode
-        )(request, messages(application)).toString
+        )(using request, messages(application)).toString
       }
     }
 
@@ -89,7 +92,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -127,7 +130,7 @@ class UKBankDetailsControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString

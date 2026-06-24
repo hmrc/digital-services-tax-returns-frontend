@@ -18,13 +18,13 @@ package controllers
 
 import base.SpecBase
 import connectors.DSTConnector
-import models.formatDate
+import models.{CompanyName, formatDate}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.inject
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.CYAHelper
 import viewmodels.govuk.SummaryListFluency
@@ -35,9 +35,9 @@ import scala.concurrent.Future
 class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with SummaryListFluency {
   implicit val hc: HeaderCarrier     = HeaderCarrier()
   val mockDstConnector: DSTConnector = mock[DSTConnector]
-  val companyName                    = registration.companyReg.company.name
-  val startDate                      = formatDate(period.start)
-  val endDate                        = formatDate(period.end)
+  val companyName: CompanyName       = registration.companyReg.company.name
+  val startDate: String              = formatDate(period.start)
+  val endDate: String                = formatDate(period.end)
 
   "ReturnsComplete Controller" - {
 
@@ -49,10 +49,10 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
 
       running(application) {
 
-        when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
+        when(mockDstConnector.lookupOutstandingReturns()(using any())).thenReturn(Future.successful(Set(period)))
 
         val request     = FakeRequest(GET, routes.ReturnsCompleteController.onPageLoad(periodKey).url)
-        val sectionList = new CYAHelper().createSectionList(periodKey, emptyUserAnswers)(messages(application))
+        val sectionList = new CYAHelper().createSectionList(periodKey, emptyUserAnswers)(using messages(application))
 
         val result = route(application, request).value
 
@@ -60,14 +60,14 @@ class ReturnsCompleteControllerSpec extends SpecBase with MockitoSugar with Summ
         val printableCya = application.injector.instanceOf[PrintableCheckYourAnswersView]
 
         val printableCYA = Some(
-          printableCya(periodKey, sectionList, startDate, endDate, registration)(
+          printableCya(periodKey, sectionList, startDate, endDate, registration)(using
             request,
             messages(application)
           )
         )
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(companyName, startDate, endDate, period, printableCYA)(
+        contentAsString(result) mustEqual view(companyName, startDate, endDate, period, printableCYA)(using
           request,
           messages(application)
         ).toString

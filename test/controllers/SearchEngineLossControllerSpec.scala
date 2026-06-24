@@ -24,10 +24,11 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.SearchEngineLossPage
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.SearchEngineLossView
 
@@ -37,11 +38,11 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider   = new SearchEngineLossFormProvider()
-  val form           = formProvider("company")
-  val isGroupMessage = registration.isGroupMessage
+  val formProvider           = new SearchEngineLossFormProvider()
+  val form: Form[Boolean]    = formProvider("company")
+  val isGroupMessage: String = registration.isGroupMessage
 
-  lazy val searchEngineLossRoute = routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode).url
+  lazy val searchEngineLossRoute: String = routes.SearchEngineLossController.onPageLoad(periodKey, NormalMode).url
 
   "SearchEngineLoss Controller" - {
 
@@ -57,7 +58,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
         val view = application.injector.instanceOf[SearchEngineLossView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode, isGroupMessage)(
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode, isGroupMessage)(using
           request,
           messages(application)
         ).toString
@@ -78,7 +79,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, isGroupMessage)(
+        contentAsString(result) mustEqual view(form.fill(true), periodKey, NormalMode, isGroupMessage)(using
           request,
           messages(application)
         ).toString
@@ -89,7 +90,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -127,7 +128,7 @@ class SearchEngineLossControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, isGroupMessage)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode, isGroupMessage)(using
           request,
           messages(application)
         ).toString

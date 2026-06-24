@@ -29,7 +29,7 @@ class ResubmitAReturnFormProvider @Inject() extends Mappings {
     mapping(
       "value" -> text("resubmitAReturn.error.required")
         .verifying("resubmitAReturn.error.required", in => Period.Key.validateAndTransform(in).isDefined)
-    )(ResubmitAReturn.apply)(ResubmitAReturn.unapply)
+    )(ResubmitAReturn.apply)(r => Some(r.key))
   )
 
 }

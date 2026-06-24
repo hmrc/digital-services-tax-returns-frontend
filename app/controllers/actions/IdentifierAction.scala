@@ -36,7 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 trait IdentifierAction {
   def apply(
     periodKey: Option[PeriodKey] = None
-  ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest]
+  ): ActionBuilder[IdentifierRequest, AnyContent] & ActionFunction[Request, IdentifierRequest]
 }
 
 class AuthIdentifierAction @Inject() (
@@ -50,7 +50,7 @@ class AuthIdentifierAction @Inject() (
 
   override def apply(
     periodKey: Option[PeriodKey] = None
-  ): ActionBuilder[IdentifierRequest, AnyContent] with ActionFunction[Request, IdentifierRequest] =
+  ): ActionBuilder[IdentifierRequest, AnyContent] & ActionFunction[Request, IdentifierRequest] =
     new AuthenticatedIdentifierAction(authConnector, dstConnector, config, parser, periodKey)
 }
 

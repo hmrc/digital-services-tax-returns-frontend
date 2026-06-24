@@ -21,16 +21,18 @@ import com.google.inject.Inject
 import config.FrontendAppConfig
 import connectors.DSTConnector
 import controllers.routes
-import generators.ModelGenerators._
+import generators.ModelGenerators.*
+import models.PeriodKey
 import models.registration.{Period, Registration}
+import models.requests.IdentifierRequest
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito._
+import org.mockito.Mockito.*
 import org.scalacheck.Arbitrary
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.mvc.{BodyParsers, Results}
+import play.api.mvc.{Action, AnyContent, BodyParsers, Results}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core._
+import play.api.test.Helpers.*
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
 import uk.gov.hmrc.auth.core.retrieve.Retrieval
 import uk.gov.hmrc.http.{HeaderCarrier, UnauthorizedException}
@@ -42,7 +44,16 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
   val mockDstConnector: DSTConnector = mock[DSTConnector]
   class Harness(authAction: IdentifierAction) {
-    def onPageLoad() = authAction()(_ => Results.Ok)
+    def onPageLoad(): Action[AnyContent] = authAction() { implicit request: IdentifierRequest[AnyContent] =>
+      Results.Ok
+    }
+  }
+
+  class HarnessWithPeriodKey(authAction: IdentifierAction, periodKey: PeriodKey) {
+    def onPageLoad(): Action[AnyContent] =
+      authAction(Some(periodKey)) { implicit request =>
+        Results.Ok
+      }
   }
 
   "Auth Action" - {
@@ -239,17 +250,91 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
 
-          when(appConfig.dstNewReturnsFrontendEnableFlag) thenReturn true
+          when(appConfig.dstNewReturnsFrontendEnableFlag).thenReturn(true)
 
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
-            retrieval
-          )
-          when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
-          when(mockDstConnector.lookupAllReturns()(any())).thenReturn(Future.successful(Set(period)))
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(using any(), any()))
+            .thenReturn(Future.successful(retrieval))
+          when(mockDstConnector.lookupRegistration()(using any())).thenReturn(Future.successful(Some(registration)))
+          when(mockDstConnector.lookupAllReturns()(using any())).thenReturn(Future.successful(Set(period)))
 
           val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
           val result     = controller.onPageLoad()(FakeRequest("", ""))
+          status(result) mustBe OK
+
+        }
+      }
+
+      "must return NotFound when the requested period does not exist" in {
+
+        type AuthRetrievals = Option[String]
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+
+          val bodyParsers = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig   = mock[FrontendAppConfig]
+
+          val registration = Arbitrary.arbitrary[Registration].sample.value
+
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+
+          when(appConfig.dstNewReturnsFrontendEnableFlag).thenReturn(true)
+
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(using any(), any()))
+            .thenReturn(Future.successful(Some("internalId")))
+
+          when(mockDstConnector.lookupRegistration()(using any()))
+            .thenReturn(Future.successful(Some(registration)))
+
+          when(mockDstConnector.lookupAllReturns()(using any()))
+            .thenReturn(Future.successful(Set.empty))
+
+          val missingPeriodKey = PeriodKey("DOES_NOT_EXIST")
+
+          val action =
+            new AuthIdentifierAction(
+              mockAuthConnector,
+              mockDstConnector,
+              appConfig,
+              bodyParsers
+            )
+
+          val controller = new HarnessWithPeriodKey(action, missingPeriodKey)
+
+          val result = controller.onPageLoad()(FakeRequest())
+
+          status(result) mustBe NOT_FOUND
+        }
+      }
+
+      "must create an IdentifierRequest when the requested period exists" in {
+
+        type AuthRetrievals = Option[String]
+
+        val application = applicationBuilder(userAnswers = None).build()
+
+        running(application) {
+          val bodyParsers  = application.injector.instanceOf[BodyParsers.Default]
+          val appConfig    = mock[FrontendAppConfig]
+          val registration = Arbitrary.arbitrary[Registration].sample.value
+          val period       = Arbitrary.arbitrary[Period].sample.value
+          val periodKey    = PeriodKey(period.key)
+
+          val mockAuthConnector: AuthConnector = mock[AuthConnector]
+          val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
+
+          when(appConfig.dstNewReturnsFrontendEnableFlag).thenReturn(true)
+
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(using any(), any()))
+            .thenReturn(Future.successful(retrieval))
+          when(mockDstConnector.lookupRegistration()(using any())).thenReturn(Future.successful(Some(registration)))
+          when(mockDstConnector.lookupAllReturns()(using any())).thenReturn(Future.successful(Set(period)))
+
+          val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
+          val controller = new HarnessWithPeriodKey(action, periodKey)
+          val result     = controller.onPageLoad()(FakeRequest())
           status(result) mustBe OK
 
         }
@@ -269,13 +354,12 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
 
-          when(appConfig.dstNewReturnsFrontendEnableFlag) thenReturn false
-          when(appConfig.dstFrontendRegistrationUrl) thenReturn "http://localhost:1234/oldReg"
+          when(appConfig.dstNewReturnsFrontendEnableFlag).thenReturn(false)
+          when(appConfig.dstFrontendRegistrationUrl).thenReturn("http://localhost:1234/oldReg")
 
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
-            retrieval
-          )
-          when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(Some(registration)))
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(using any(), any()))
+            .thenReturn(Future.successful(retrieval))
+          when(mockDstConnector.lookupRegistration()(using any())).thenReturn(Future.successful(Some(registration)))
 
           val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
@@ -298,9 +382,8 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals        = None
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
-            retrieval
-          )
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(using any(), any()))
+            .thenReturn(Future.successful(retrieval))
 
           val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)
@@ -327,10 +410,9 @@ class AuthActionSpec extends SpecBase with MockitoSugar {
 
           val mockAuthConnector: AuthConnector = mock[AuthConnector]
           val retrieval: AuthRetrievals        = Some("Int-7e341-48319ddb53")
-          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(any(), any())) thenReturn Future.successful(
-            retrieval
-          )
-          when(mockDstConnector.lookupRegistration()(any())).thenReturn(Future.successful(None))
+          when(mockAuthConnector.authorise[AuthRetrievals](any(), any())(using any(), any()))
+            .thenReturn(Future.successful(retrieval))
+          when(mockDstConnector.lookupRegistration()(using any())).thenReturn(Future.successful(None))
 
           val action     = new AuthIdentifierAction(mockAuthConnector, mockDstConnector, appConfig, bodyParsers)
           val controller = new Harness(action)

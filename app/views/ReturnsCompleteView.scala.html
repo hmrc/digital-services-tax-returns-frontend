@@ -20,11 +20,10 @@
 
 @this(
         layout: templates.Layout,
-        govukButton: GovukButton,
         govukPanel: GovukPanel
 )
 
-@(companyName: String,submittedPeriodStart: String, submittedPeriodEnd:String, nextPeriod: Period, printableCYA: Option[Html])(implicit request: Request[_], messages: Messages)
+@(companyName: String,submittedPeriodStart: String, submittedPeriodEnd:String, nextPeriod: Period, printableCYA: Option[Html])(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = titleNoForm(messages("returnsComplete.title")), showBackLink = false) {
 <div id="print-submission">

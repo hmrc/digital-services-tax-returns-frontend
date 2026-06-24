@@ -18,16 +18,17 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyLiabilitiesFormProvider
-import models.{CompanyDetails, NormalMode, UserAnswers, formatDate}
+import models.{CompanyDetails, CompanyName, NormalMode, UserAnswers, formatDate}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.{CompanyDetailsPage, CompanyLiabilitiesPage}
+import play.api.data.Form
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.CompanyLiabilitiesView
 
@@ -35,17 +36,18 @@ import scala.concurrent.Future
 
 class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider = new CompanyLiabilitiesFormProvider()
-  val companyName  = registration.companyReg.company.name
-  val startDate    = formatDate(period.start)
-  val endDate      = formatDate(period.end)
-  val form         = formProvider(companyName)
+  val formProvider             = new CompanyLiabilitiesFormProvider()
+  val companyName: CompanyName = registration.companyReg.company.name
+  val startDate: String        = formatDate(period.start)
+  val endDate: String          = formatDate(period.end)
+  val form: Form[BigDecimal]   = formProvider(companyName)
 
   def onwardRoute = Call("GET", "/foo")
 
-  val validAnswer = BigDecimal(100.00)
+  val validAnswer: BigDecimal = BigDecimal(100.00)
 
-  lazy val companyLiabilitiesRoute = routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index).url
+  lazy val companyLiabilitiesRoute: String =
+    routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index).url
 
   "CompanyLiabilities Controller" - {
 
@@ -66,6 +68,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
         contentAsString(result) mustEqual view(form, periodKey, NormalMode, index, companyName, startDate, endDate)(
+          using
           request,
           messages(application)
         ).toString
@@ -114,7 +117,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
           companyName,
           startDate,
           endDate
-        )(
+        )(using
           request,
           messages(application)
         ).toString
@@ -129,7 +132,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
         .success
         .value
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(userAnswers))
@@ -179,7 +182,7 @@ class CompanyLiabilitiesControllerSpec extends SpecBase with MockitoSugar {
           companyName,
           startDate,
           endDate
-        )(
+        )(using
           request,
           messages(application)
         ).toString

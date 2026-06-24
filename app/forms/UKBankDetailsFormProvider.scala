@@ -52,6 +52,6 @@ class UKBankDetailsFormProvider @Inject() extends Mappings {
             )
           )
       )
-    )(UKBankDetails.apply)(UKBankDetails.unapply)
+    )(UKBankDetails.apply)(ukbd => Some((ukbd.accountName, ukbd.sortCode, ukbd.accountNumber, ukbd.buildingNumber)))
   )
 }

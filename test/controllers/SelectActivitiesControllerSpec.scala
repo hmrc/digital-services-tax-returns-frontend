@@ -25,11 +25,12 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
 import pages.SelectActivitiesPage
+import play.api.data.Form
 import play.api.inject
 import play.api.inject.bind
 import play.api.mvc.Call
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import repositories.SessionRepository
 import views.html.SelectActivitiesView
 
@@ -39,11 +40,12 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
   def onwardRoute = Call("GET", "/foo")
 
-  val formProvider                   = new SelectActivitiesFormProvider()
-  val form                           = formProvider()
-  val mockDstConnector: DSTConnector = mock[DSTConnector]
+  val formProvider                      = new SelectActivitiesFormProvider()
+  val form: Form[Set[SelectActivities]] = formProvider()
+  val mockDstConnector: DSTConnector    = mock[DSTConnector]
 
-  lazy val selectActivitiesRoute = routes.SelectActivitiesController.onPageLoad(periodKey, mode = NormalMode).url
+  lazy val selectActivitiesRoute: String =
+    routes.SelectActivitiesController.onPageLoad(periodKey, mode = NormalMode).url
 
   "SelectActivitiesController" - {
 
@@ -63,7 +65,10 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
         status(result) mustEqual OK
 
-        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(request, messages(application)).toString
+        contentAsString(result) mustEqual view(form, periodKey, NormalMode)(using
+          request,
+          messages(application)
+        ).toString
       }
     }
 
@@ -80,7 +85,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(form.fill(SelectActivities.values.toSet), periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(form.fill(SelectActivities.values.toSet), periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString
@@ -96,7 +101,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
 
       val mockSessionRepository = mock[SessionRepository]
 
-      when(mockSessionRepository.set(any())) thenReturn Future.successful(true)
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
 
       val application =
         applicationBuilder(userAnswers = Some(emptyUserAnswers))
@@ -109,7 +114,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
       running(application) {
         val request =
           FakeRequest(POST, selectActivitiesRoute)
-            .withFormUrlEncodedBody(formData: _*)
+            .withFormUrlEncodedBody(formData*)
 
         val result = route(application, request).value
 
@@ -134,7 +139,7 @@ class SelectActivitiesControllerSpec extends SpecBase with MockitoSugar {
         val result = route(application, request).value
 
         status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(
+        contentAsString(result) mustEqual view(boundForm, periodKey, NormalMode)(using
           request,
           messages(application)
         ).toString

@@ -25,13 +25,13 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], periods: List[Period])(implicit request: Request[_], messages: Messages)
+@(form: Form[?], periods: List[Period])(implicit request: Request[?], messages: Messages)
 
 @hint= @{HtmlContent(s"<p class='govuk-body'>${messages("resubmitAReturn.amend-a-return").toString}</p>")}
 
 @layout(pageTitle = title(form, messages("resubmitAReturn.title"))) {
 
-    @formHelper(action = routes.ResubmitAReturnController.onSubmit, 'autoComplete -> "off") {
+    @formHelper(action = routes.ResubmitAReturnController.onSubmit, Symbol("autoComplete") -> "off") {
 
         @if(form.errors.nonEmpty) {
             @govukErrorSummary(ErrorSummaryViewModel(form,  errorLinkOverrides = Map("value" -> "value_0")))

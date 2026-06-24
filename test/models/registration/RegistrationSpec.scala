@@ -40,6 +40,14 @@ class RegistrationSpec extends AnyFreeSpec with Matchers with ScalaCheckProperty
       registration.isGroupMessage mustBe "company"
     }
 
+    "must serialise and de-serialise registration model where registration number is not set" in {
+      val expectedRegistration = Arbitrary.arbitrary[Registration].sample.value.copy(ultimateParent = None)
+      val json                 = Json.toJson[Registration](expectedRegistration)
+      val registration         = json.as[Registration].copy(registrationNumber = None)
+      registration mustBe expectedRegistration.copy(registrationNumber = None)
+      registration.isGroupMessage mustBe "company"
+    }
+
     "de-serialise registration model" in {
       val registration = Registration(
         CompanyRegWrapper(

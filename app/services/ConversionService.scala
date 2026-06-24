@@ -20,7 +20,6 @@ import models.{Money, _}
 import models.registration.GroupCompany
 import models.returns.Return
 import pages._
-import shapeless.tag.@@
 
 import scala.collection.immutable.ListMap
 
@@ -32,15 +31,15 @@ class ConversionService {
       companyDetails <- userAnswers.get(CompanyDetailsListPage(periodKey))
       isRepaid       <- userAnswers.get(RepaymentPage(periodKey))
     } yield {
-      val alternateCharge: Map[Activity, Percent]        =
+      val alternateCharge: Map[Activity, Percent] =
         if (userAnswers.get(ReportAlternativeChargePage(periodKey)).contains(true)) {
           alternateChargeMap(periodKey, userAnswers)
         } else { Map.empty }
-      val totalLiability: BigDecimal @@ models.Money.Tag =
+      val totalLiability: Money.Type              =
         userAnswers.get(GroupLiabilityPage(periodKey)).map(Money(_)).getOrElse(Money(BigDecimal(0.0)))
-      val crossBorderReliefAmount                        =
+      val crossBorderReliefAmount                 =
         userAnswers.get(ReliefDeductedPage(periodKey)).map(Money(_)).getOrElse(Money(BigDecimal(0.0)))
-      val allowanceAmount                                = userAnswers.get(AllowanceDeductedPage(periodKey)).map(Money(_))
+      val allowanceAmount                         = userAnswers.get(AllowanceDeductedPage(periodKey)).map(Money(_))
 
       Return(
         reportedActivities = Activity.convertToActivity(activities),

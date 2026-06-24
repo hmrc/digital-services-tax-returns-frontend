@@ -40,7 +40,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
 
   val appName: String = configuration.get[String]("appName")
 
-  val contactHost = configuration.get[String]("contact-frontend.host")
+  val contactHost: String = configuration.get[String]("contact-frontend.host")
 
   val loginUrl: String         = configuration.get[String]("urls.login")
   val loginContinueUrl: String = configuration.get[String]("urls.loginContinue")
@@ -48,7 +48,7 @@ class FrontendAppConfig @Inject() (configuration: Configuration, servicesConfig:
   val timeout: Int   = configuration.get[Int]("timeout-dialog.timeout")
   val countdown: Int = configuration.get[Int]("timeout-dialog.countdown")
 
-  val cacheTtl: Int = configuration.get[Int]("mongodb.timeToLiveInSeconds")
+  val cacheTtl: Long = configuration.get[Long]("mongodb.timeToLiveInSeconds")
 
   lazy val dstNewReturnsFrontendEnableFlag: Boolean =
     configuration.getOptional[Boolean]("feature.dstNewReturnsFrontendEnable").getOrElse(false)

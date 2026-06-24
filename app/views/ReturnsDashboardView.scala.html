@@ -23,11 +23,10 @@
 
 @this(
 govukLayout: templates.Layout,
-govukSummaryList : GovukSummaryList,
-appConfig: FrontendAppConfig
+govukSummaryList : GovukSummaryList
 )
 
-@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit request:Request[_], messages: Messages)
+@(reg: Registration, outstanding: List[Period], amended: List[Period])(implicit request:Request[?], messages: Messages)
 
 @company = @{reg.companyReg.company}
 
@@ -93,7 +92,7 @@ showBackLink = false
             </p>
             <p class="govuk-body">@formatDate(period.paymentDue)</p>
             <p class="govuk-body">
-                <a class="govuk-link" href="@routes.PayYourDigitalServiceTaxController.onPageLoad.url">
+                <a class="govuk-link" href="@routes.PayYourDigitalServiceTaxController.onPageLoad().url">
                     @messages("returnsDashboard.pay-tax")
                 </a>
             </p>

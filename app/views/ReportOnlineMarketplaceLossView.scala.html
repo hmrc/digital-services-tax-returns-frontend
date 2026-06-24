@@ -25,7 +25,7 @@
     govukButton: GovukButton
 )
 
-@(form: Form[_], periodKey: PeriodKey, mode: Mode, reg: Registration)(implicit request: Request[_], messages: Messages)
+@(form: Form[?], periodKey: PeriodKey, mode: Mode, reg: Registration)(implicit request: Request[?], messages: Messages)
 
 @layout(pageTitle = title(form, messages("reportOnlineMarketplaceLoss.title", reg.isGroupMessage))) {
 

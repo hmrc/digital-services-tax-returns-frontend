@@ -48,7 +48,7 @@ class PayYourDigitalServiceTaxControllerSpec extends SpecBase with MockitoSugar 
         val period =
           Period(LocalDate.now(), LocalDate.now().plusDays(1), LocalDate.now().plusDays(5), Period.Key("key"))
 
-        when(mockDstConnector.lookupOutstandingReturns()(any())).thenReturn(Future.successful(Set(period)))
+        when(mockDstConnector.lookupOutstandingReturns()(using any())).thenReturn(Future.successful(Set(period)))
 
         val request = FakeRequest(GET, routes.PayYourDigitalServiceTaxController.onPageLoad().url)
         val result  = route(application, request).value
@@ -56,7 +56,7 @@ class PayYourDigitalServiceTaxControllerSpec extends SpecBase with MockitoSugar 
         val view = application.injector.instanceOf[PayYourDigitalServiceTaxView]
 
         status(result) mustEqual OK
-        contentAsString(result) mustEqual view(dstRegNumber, List(period).sortBy(_.start))(
+        contentAsString(result) mustEqual view(dstRegNumber, List(period).sortBy(_.start))(using
           request,
           messages(application)
         ).toString

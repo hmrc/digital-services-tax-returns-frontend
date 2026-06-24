@@ -21,7 +21,6 @@ import enumeratum.EnumFormats
 import models.registration._
 import models.returns.Return
 import play.api.libs.json._
-import shapeless.tag.@@
 
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
@@ -30,9 +29,9 @@ import play.api.libs.json.Json.fromJson
 
 trait SimpleJson {
 
-  def validatedStringFormat(A: ValidatedType[String], name: String): Format[String @@ A.Tag] =
-    new Format[String @@ A.Tag] {
-      override def reads(json: JsValue): JsResult[String @@ A.Tag] = json match {
+  def validatedStringFormat(A: ValidatedType[String], name: String): Format[A.Type] =
+    new Format[A.Type] {
+      override def reads(json: JsValue): JsResult[A.Type] = json match {
         case JsString(value) =>
           A.validateAndTransform(value) match {
             case Some(v) => JsSuccess(A(v))
@@ -41,38 +40,38 @@ trait SimpleJson {
         case xs: JsValue     => JsError(JsPath -> JsonValidationError(Seq(s"""Expected a valid $name, got $xs instead""")))
       }
 
-      override def writes(o: String @@ A.Tag): JsValue = JsString(o)
+      override def writes(o: A.Type): JsValue = JsString(o)
     }
 
-  implicit val postcodeFormat: Format[String @@ models.Postcode.Tag]                                   = validatedStringFormat(Postcode, "postcode")
-  implicit val phoneNumberFormat: Format[String @@ models.PhoneNumber.Tag]                             =
+  implicit val postcodeFormat: Format[Postcode.Type]                                   = validatedStringFormat(Postcode, "postcode")
+  implicit val phoneNumberFormat: Format[PhoneNumber.Type]                             =
     validatedStringFormat(PhoneNumber, "phone number")
-  implicit val utrFormat: Format[String @@ models.UTR.Tag]                                             = validatedStringFormat(UTR, "UTR")
-  implicit val safeIfFormat: Format[String @@ models.SafeId.Tag]                                       = validatedStringFormat(SafeId, "SafeId")
-  implicit val formBundleNoFormat: Format[String @@ models.FormBundleNumber.Tag]                       =
+  implicit val utrFormat: Format[UTR.Type]                                             = validatedStringFormat(UTR, "UTR")
+  implicit val safeIfFormat: Format[SafeId.Type]                                       = validatedStringFormat(SafeId, "SafeId")
+  implicit val formBundleNoFormat: Format[FormBundleNumber.Type]                       =
     validatedStringFormat(FormBundleNumber, "FormBundleNumber")
-  implicit val internalIdFormat: Format[String @@ models.InternalId.Tag]                               =
+  implicit val internalIdFormat: Format[InternalId.Type]                               =
     validatedStringFormat(InternalId, "internal id")
-  implicit val emailFormat: Format[String @@ models.Email.Tag]                                         = validatedStringFormat(Email, "email")
-  implicit val countryCodeFormat: Format[String @@ models.CountryCode.Tag]                             =
+  implicit val emailFormat: Format[Email.Type]                                         = validatedStringFormat(Email, "email")
+  implicit val countryCodeFormat: Format[CountryCode.Type]                             =
     validatedStringFormat(CountryCode, "country code")
-  implicit val sortCodeFormat: Format[String @@ models.SortCode.Tag]                                   = validatedStringFormat(SortCode, "sort code")
-  implicit val accountNumberFormat: Format[String @@ models.AccountNumber.Tag]                         =
+  implicit val sortCodeFormat: Format[SortCode.Type]                                   = validatedStringFormat(SortCode, "sort code")
+  implicit val accountNumberFormat: Format[AccountNumber.Type]                         =
     validatedStringFormat(AccountNumber, "account number")
-  implicit val buildingSocietyRollNumberFormat: Format[String @@ models.BuildingSocietyRollNumber.Tag] =
+  implicit val buildingSocietyRollNumberFormat: Format[BuildingSocietyRollNumber.Type] =
     validatedStringFormat(BuildingSocietyRollNumber, "building society roll number")
-  implicit val accountNameFormat: Format[String @@ models.AccountName.Tag]                             =
+  implicit val accountNameFormat: Format[AccountName.Type]                             =
     validatedStringFormat(AccountName, "account name")
-  implicit val periodKeyFormat: Format[String @@ Period.Key.Tag]                                       = validatedStringFormat(Period.Key, "Period Key")
-  implicit val restrictiveFormat: Format[String @@ models.RestrictiveString.Tag]                       =
+  implicit val periodKeyFormat: Format[Period.Key.Type]                                = validatedStringFormat(Period.Key, "Period Key")
+  implicit val restrictiveFormat: Format[RestrictiveString.Type]                       =
     validatedStringFormat(RestrictiveString, "name")
-  implicit val companyNameFormat: Format[String @@ models.CompanyName.Tag]                             =
+  implicit val companyNameFormat: Format[CompanyName.Type]                             =
     validatedStringFormat(CompanyName, "company name")
-  implicit val mandatoryAddressLineFormat: Format[String @@ models.AddressLine.Tag]                    =
+  implicit val mandatoryAddressLineFormat: Format[AddressLine.Type]                    =
     validatedStringFormat(AddressLine, "address line")
-  implicit val dstRegNoFormat: Format[String @@ models.DSTRegNumber.Tag]                               =
+  implicit val dstRegNoFormat: Format[DSTRegNumber.Type]                               =
     validatedStringFormat(DSTRegNumber, "Digital Services Tax Registration Number")
-  implicit val ibanFormat: Format[String @@ models.IBAN.Tag]                                           = validatedStringFormat(IBAN, "IBAN number")
+  implicit val ibanFormat: Format[IBAN.Type]                                           = validatedStringFormat(IBAN, "IBAN number")
 
   implicit val moneyFormat: Format[Money] = new Format[Money] {
     override def reads(json: JsValue): JsResult[Money] =
@@ -133,7 +132,7 @@ object SimpleJson extends SimpleJson {
   }
 
   implicit def listMapReads[V](implicit formatV: Reads[V]): Reads[ListMap[String, V]] = new Reads[ListMap[String, V]] {
-    def reads(json: JsValue) = json match {
+    def reads(json: JsValue): JsResult[ListMap[String, V]] = json match {
       case JsObject(m) =>
         type Errors = scala.collection.Seq[(JsPath, scala.collection.Seq[JsonValidationError])]
 
@@ -143,7 +142,7 @@ object SimpleJson extends SimpleJson {
           }
 
         m.foldLeft(Right(ListMap.empty): Either[Errors, ListMap[String, V]]) { case (acc, (key, value)) =>
-          (acc, fromJson[V](value)(formatV)) match {
+          (acc, fromJson[V](value)(using formatV)) match {
             case (Right(vs), JsSuccess(v, _)) => Right(vs + (key -> v))
             case (Right(_), JsError(e))       => Left(locate(e, key))
             case (Left(e), _: JsSuccess[_])   => Left(e)
