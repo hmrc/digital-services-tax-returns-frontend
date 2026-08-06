@@ -47,12 +47,11 @@ package object models {
       )
 
   type Email = Email.Type
-  object Email extends ValidatedType[String] {
-    def validateAndTransform(email: String): Option[String] = {
-      import org.apache.commons.validator.routines.EmailValidator
-      Some(email).filter(EmailValidator.getInstance.isValid(_))
-    }
-  }
+  object Email
+      extends RegexValidatedString(
+        """^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]{0,63}+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$""",
+        _.replaceAll(" ", "")
+      )
 
   type InternalId = InternalId.Type
   object InternalId
