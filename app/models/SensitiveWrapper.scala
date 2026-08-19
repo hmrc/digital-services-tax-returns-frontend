@@ -35,4 +35,3 @@ object SensitiveWrapper {
   ): Writes[SensitiveWrapper[T]] = sensitiveEncrypter
 
 }
-  
