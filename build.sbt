@@ -33,7 +33,7 @@ lazy val root = (project in file("."))
     ),
     PlayKeys.playDefaultPort := 8743,
     ScoverageKeys.coverageExcludedFiles := "<empty>;Reverse.*;.*handlers.*;.*components.*;" +
-      ".*javascript.*;.*Routes.*;.*viewmodels.*;.*ViewUtils.*;.*GuiceInjector;.*views.*;",
+      ".*javascript.*;.*Routes.*;.*viewmodels.*;.*ViewUtils.*;.*GuiceInjector;.*views.*;.*app.config.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageMinimumBranchTotal := 80,
     ScoverageKeys.coverageFailOnMinimum := true,
@@ -66,5 +66,5 @@ lazy val testSettings: Seq[Def.Setting[_]] = Seq(
 
 lazy val it = project
   .enablePlugins(PlayScala)
-  .dependsOn(root % "test->test") // the "test->test" allows reusing test code and test dependencies
+  .dependsOn(root % "test->test;compile->compile") // reuses app + test code and includes runtime dependencies such as crypto-json
   .settings(libraryDependencies ++= AppDependencies.test)
