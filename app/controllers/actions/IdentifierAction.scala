@@ -68,7 +68,7 @@ class AuthenticatedIdentifierAction @Inject() (
   override def invokeBlock[A](request: Request[A], block: IdentifierRequest[A] => Future[Result]): Future[Result] = {
 
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
-    authorised(AuthProviders(GovernmentGateway) and Organisation and User).retrieve(Retrievals.internalId) {
+    authorised(Organisation and User).retrieve(Retrievals.internalId) {
       case Some(internalId) =>
         if (config.dstNewReturnsFrontendEnableFlag) {
           lookupRegistration(request, periodKey, internalId, block)
