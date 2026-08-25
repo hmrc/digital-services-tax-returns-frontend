@@ -37,13 +37,8 @@ This will start all the required services.
 * Visit http://localhost:9949/auth-login-stub/gg-sign-in
 * You may need to add some user details to the form
 #### DST Returns Journey
-    * Affinity Group: Organisation
-    * Group identifier: 12345
-    * Enrolment Key: HMRC-DST-ORG
-    * Identifier Name: DSTRefNumber
-    * Identifier Value: AMDST0799721562
-* Then enter a redirect url: http://localhost:8743/digital-services-tax-returns
-* Press **Submit**.
+
+    Test data can found on the teams confluence area.
 
 ## Running the tests
 
