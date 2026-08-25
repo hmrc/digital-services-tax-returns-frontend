@@ -38,7 +38,7 @@ This will start all the required services.
 * You may need to add some user details to the form
 #### DST Returns Journey
 
-    Test data can found on the teams confluence area.
+    Test data can be found in the team's Confluence area.
 
 ## Running the tests
 
