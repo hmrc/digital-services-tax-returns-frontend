@@ -15,17 +15,27 @@
  *@
 
 @this(
-    layout: templates.Layout
+    layout: templates.Layout,
+    govukButton: GovukButton
 )
 
 @()(implicit request: Request[?], messages: Messages)
 
 @layout(
     pageTitle = titleNoForm(messages("unauthorised.title")),
-    timeout   = false
+    showBackLink = false,
+    timeout      = false,
+    showSignOut  = false
 ) {
 
-    <h1 class="govuk-heading-xl">@messages("unauthorised.heading")</h1>
+    <h1 class="govuk-heading-l">@messages("unauthorised.heading")</h1>
 
-    <p class="govuk-body">@messages("unauthorised.guidance")</p>
+    <p class="govuk-body">@messages("unauthorised.signOut.reason")</p>
+    <p class="govuk-body">@messages("unauthorised.signIn.reason")</p>
+
+    <p class="govuk-body">
+        @govukButton(
+            ButtonViewModel(messages("site.signIn")).asLink(controllers.auth.routes.AuthenticationController.signIn().url)
+        )
+    </p>
 }
