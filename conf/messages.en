@@ -64,8 +64,10 @@ signedOut.title = For your security, we signed you out
 signedOut.heading = For your security, we signed you out
 signedOut.guidance = We did not save your answers.
 
-unauthorised.title = You can’t access this service with this account
-unauthorised.heading = You can’t access this service with this account
+unauthorised.title = You cannot use this service
+unauthorised.heading = You cannot use this service
+unauthorised.signOut.reason = You signed in with the HMRC sign in details for an individual or agent. We have signed you out.
+unauthorised.signIn.reason = To use this service, sign in with the HMRC sign in details for the company that is registered for the Digital Services Tax.
 
 #Returns Dashboard Landing Page
 returnsDashboard.heading=Digital Services Tax details
@@ -79,7 +81,7 @@ returnsDashboard.payment-due-warning.after=after
 returnsDashboard.payment-due-warning.return-submitted=your latest return has been submitted.
 returnsDashboard.return-due=Next return due
 returnsDashboard.submit-return=Submit a return
-returnsDashboard.account-history=Account History
+returnsDashboard.account-history=Account history
 returnsDashboard.balance=View your balance and transactions history
 returnsDashboard.amendments=Resubmit a previous return
 returnsDashboard.previous-payments= If you have a question regarding a payment, email
