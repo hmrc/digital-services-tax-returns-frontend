@@ -18,10 +18,10 @@ package controllers
 
 import base.SpecBase
 import forms.CompanyDetailsFormProvider
-import models.{CompanyDetails, Index, NormalMode, PeriodKey, UserAnswers}
+import models.{CheckMode, CompanyDetails, Index, NormalMode, PeriodKey, UserAnswers}
 import navigation.{FakeNavigator, Navigator}
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.when
+import org.mockito.Mockito.{never, verify, when}
 import org.scalatestplus.mockito.MockitoSugar
 import pages.CompanyDetailsPage
 import play.api.data.Form
@@ -169,46 +169,7 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
       }
     }
 
-    "must return a Bad Request and errors when UTR already exists" in {
-
-      val mockCompanyDetailsService = mock[CompanyDetailsService]
-      val mockSessionRepository     = mock[SessionRepository]
-
-      when(
-        mockCompanyDetailsService
-          .companyDetailsExists("id", PeriodKey("003"), CompanyDetails("fun ltd", Some("1234567890")))
-      )
-        .thenReturn(Future.successful(None))
-
-      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
-
-      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
-        .overrides(
-          bind[SessionRepository].toInstance(mockSessionRepository),
-          bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
-        )
-        .build()
-
-      running(application) {
-        val request =
-          FakeRequest(POST, companyDetailsRoute)
-            .withFormUrlEncodedBody(("fun ltd", "1234567890"))
-
-        val boundForm = form.bind(Map("fun ltd" -> "1234567890"))
-
-        val view = application.injector.instanceOf[CompanyDetailsView]
-
-        val result = route(application, request).value
-
-        status(result) mustEqual BAD_REQUEST
-        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(using
-          request,
-          messages(application)
-        ).toString
-      }
-    }
-
-    "must return Bad Request when CompanyDetails exists and returns true" in {
+    "must return Bad Request with a duplicate UTR error in NormalMode" in {
 
       val mockCompanyDetailsService = mock[CompanyDetailsService]
       val mockSessionRepository     = mock[SessionRepository]
@@ -235,7 +196,48 @@ class CompanyDetailsControllerSpec extends SpecBase with MockitoSugar {
 
         val result = route(application, request).value
 
+        val boundForm = form
+          .bind(Map("companyName" -> "value 1", "uniqueTaxpayerReference" -> "1234567890"))
+          .withError(formProvider.duplicateUtrFormError)
+
+        val view = application.injector.instanceOf[CompanyDetailsView]
+
         status(result) mustEqual BAD_REQUEST
+        contentAsString(result) mustEqual view(boundForm, periodKey, index, NormalMode)(using
+          request,
+          messages(application)
+        ).toString
+        verify(mockSessionRepository, never()).set(any())
+      }
+    }
+
+    "must redirect and save when CompanyDetails exists and mode is CheckMode" in {
+
+      val mockCompanyDetailsService = mock[CompanyDetailsService]
+      val mockSessionRepository     = mock[SessionRepository]
+
+      when(mockCompanyDetailsService.companyDetailsExists(any, any, any))
+        .thenReturn(Future.successful(Some(true)))
+      when(mockSessionRepository.set(any())).thenReturn(Future.successful(true))
+
+      val application = applicationBuilder(userAnswers = Some(emptyUserAnswers))
+        .overrides(
+          bind[Navigator].toInstance(new FakeNavigator(onwardRoute)),
+          bind[SessionRepository].toInstance(mockSessionRepository),
+          bind[CompanyDetailsService].toInstance(mockCompanyDetailsService)
+        )
+        .build()
+
+      running(application) {
+        val request =
+          FakeRequest(POST, routes.CompanyDetailsController.onPageLoad(periodKey, index, CheckMode).url)
+            .withFormUrlEncodedBody(("companyName", "value 1"), ("uniqueTaxpayerReference", "1234567890"))
+
+        val result = route(application, request).value
+
+        status(result) mustEqual SEE_OTHER
+        redirectLocation(result).value mustEqual onwardRoute.url
+        verify(mockSessionRepository).set(any())
       }
     }
 
