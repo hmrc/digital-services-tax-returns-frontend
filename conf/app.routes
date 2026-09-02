@@ -9,7 +9,7 @@ GET        /assets/*file                                                   contr
 GET        /sign-in                                                        controllers.auth.AuthenticationController.signIn()
 GET        /sign-out                                                       controllers.auth.AuthenticationController.signOut()
 
-GET        /time-out                                                       controllers.auth.AuthenticationController.timeOut()
+GET        /we-signed-you-out                                              controllers.auth.AuthenticationController.timeOut()
 
 GET        /refresh-session                                                controllers.KeepAliveController.keepAlive
 
