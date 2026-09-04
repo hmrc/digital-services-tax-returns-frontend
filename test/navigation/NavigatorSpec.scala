@@ -402,6 +402,15 @@ class NavigatorSpec extends SpecBase {
         ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, NormalMode, index)
       }
 
+      "must go from a AllowanceDeductedPage to CompanyLiabilitiesPage in CheckMode" in {
+
+        navigator.nextPage(
+          AllowanceDeductedPage(periodKey),
+          CheckMode,
+          UserAnswers("id")
+        ) mustBe routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, Index(0))
+      }
+
       "must go from a SocialMediaLossPage to CompanyLiability page when 'Yes' is selected" in {
 
         navigator.nextPage(
