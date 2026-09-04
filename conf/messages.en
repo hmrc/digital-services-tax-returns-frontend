@@ -339,7 +339,6 @@ returnsComplete.what-you-do-next.title = What you must do next
 returnsComplete.what-you-do-next.p1 = Your next return will be for {0} to {1}.
 returnsComplete.what-you-do-next.p2 = You must pay any Digital Services Tax you owe for your next return period by {0} and submit a return by {1}.
 returnsComplete.index = Go to your Digital Services Tax details
-returnsComplete.before-you-go= Before you go
 
 returns-already-submitted.title = Returns Submitted
 returns-already-submitted.heading = Returns Submitted
@@ -347,8 +346,8 @@ returns-already-submitted.p1 = Your session has been cleared because you submitt
 returns-already-submitted.button = Start Again
 
 common.feedback.p1 = Your feedback helps us make our service better.
-common.feedback.survey = Take our survey
-common.feedback.survey.p1 = to share your feedback on this service. It takes about 1 minute to complete.
+common.feedback.survey = What did you think of this service?
+common.feedback.survey.p1 = (takes 30 seconds)
 
 reportOnlineMarketplaceOperatingMargin.title = What was the {0}’s operating margin on its online marketplace activity?
 reportOnlineMarketplaceOperatingMargin.heading = What was the {0}’s operating margin on its online marketplace activity?
