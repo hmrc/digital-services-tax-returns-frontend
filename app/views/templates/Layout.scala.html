@@ -47,7 +47,7 @@ refresh: Int = 0)(contentBlock: Html)(implicit request: RequestHeader, messages:
             signOutUrl = Some(controllers.auth.routes.AuthenticationController.signOut().url),
             timeoutUrl = Some(controllers.auth.routes.AuthenticationController.timeOut().url),
             title = Some(messages("time-out.title")),
-            messageSuffix = Some(messages("time-out.messageSuffix"))
+            message = Some(messages("time-out.message"))
             )))
         } else None
     )

@@ -17,8 +17,8 @@ date.day = Day
 date.month = Month
 date.year = Year
 
-time-out.title=For your security, we signed you out
-time-out.messageSuffix=GOV.UK
+time-out.title=You’re about to be signed out
+time-out.message=For your security, we will sign you out in
 
 #Common
 common.title=Digital Services Tax
@@ -135,7 +135,7 @@ companyDetails.companyName = Company name
 companyDetails.companyName.hint = This is the name registered with an official company register, such as Companies House
 companyDetails.uniqueTaxpayerReference = What is your Corporation Tax Unique Taxpayer Reference? (optional)
 companyDetails.uniqueTaxpayerReference.hint = This is 10 numbers, for example 1234567890. It will be on tax returns and other letters about Corporation \
-Tax. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can <a target=_blank class="govuk-link" href="https://www.gov.uk/find-lost-utr-number">find a lost UTR number (opens in a new window or tab)</a>.
+Tax. It may be called ‘reference’, ‘UTR’ or ‘official use’. You can <a target=_blank class="govuk-link" href="https://www.gov.uk/find-lost-utr-number">find a lost UTR number (opens in new tab)</a>.
 companyDetails.checkYourAnswersLabel = Company details
 companyDetails.error.companyName.required = Enter the company’s name
 companyDetails.error.companyName.length = Company name must be 105 characters or fewer
