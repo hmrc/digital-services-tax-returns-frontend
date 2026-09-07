@@ -345,7 +345,6 @@ returns-already-submitted.heading = Returns Submitted
 returns-already-submitted.p1 = Your session has been cleared because you submitted your returns.
 returns-already-submitted.button = Start Again
 
-common.feedback.p1 = Your feedback helps us make our service better.
 common.feedback.survey = What did you think of this service?
 common.feedback.survey.p1 = (takes 30 seconds)
 
