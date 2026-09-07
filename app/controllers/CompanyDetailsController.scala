@@ -19,7 +19,7 @@ package controllers
 import controllers.actions.*
 import forms.CompanyDetailsFormProvider
 import models.requests.DataRequest
-import models.{CompanyDetails, Index, Mode, PeriodKey}
+import models.{CheckMode, CompanyDetails, Index, Mode, PeriodKey}
 import navigation.Navigator
 import pages.{CompanyDetailsListPage, CompanyDetailsPage}
 import play.api.data.Form
@@ -72,11 +72,16 @@ class CompanyDetailsController @Inject() (
         companyDetailsService
           .companyDetailsExists(request.userId, periodKey, companyDetails)
           .flatMap {
-            case None        => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
-            case Some(true)  =>
-              Future.successful(
-                BadRequest(view(boundForm.withError(formProvider.duplicateUtrFormError), periodKey, index, mode))
-              )
+            case None       => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
+            case Some(true) =>
+              if (mode == CheckMode) {
+                updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
+              } else {
+                Future.successful(
+                  BadRequest(view(boundForm.withError(formProvider.duplicateUtrFormError), periodKey, index, mode))
+                )
+              }
+
             case Some(false) => updateUserAnswersAndSession(request, periodKey, index, companyDetails, mode)
           }
       }
