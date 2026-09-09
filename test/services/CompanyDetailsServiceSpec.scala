@@ -55,6 +55,42 @@ class CompanyDetailsServiceSpec extends SpecBase {
       }
     }
 
+    "must return false when the UTR is not set" in {
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", Json.obj()))))
+
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", None))
+      ) { exists =>
+        exists.value mustEqual false
+      }
+    }
+
+    "must return false when the UTR is empty" in {
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", Json.obj()))))
+
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", Some("")))
+      ) { exists =>
+        exists.value mustEqual false
+      }
+    }
+
+    "must return false when the UTR is empty space" in {
+      when(mockSessionRepository.get("Int-123-456-789"))
+        .thenReturn(Future.successful(Some(UserAnswers("Int-123-456-789", Json.obj()))))
+
+      whenReady(
+        companyDetailsService
+          .companyDetailsExists("Int-123-456-789", PeriodKey("001"), CompanyDetails("fun ltd", Some("      ")))
+      ) { exists =>
+        exists.value mustEqual false
+      }
+    }
+
     "must return true when company has been added" in {
       val jsObj = Json.obj(
         ("004", Json.obj(("company-details", JsArray(Seq(Json.toJson(CompanyDetails("fun ltd", Some("1234567890"))))))))
