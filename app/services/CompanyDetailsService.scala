@@ -31,16 +31,21 @@ class CompanyDetailsService @Inject() (sessionRepository: SessionRepository)(imp
     periodKey: PeriodKey,
     companyDetails: CompanyDetails
   ): Future[Option[Boolean]] =
-    sessionRepository
-      .get(userId)
-      .map {
-        _.map { userAnswers =>
-          userAnswers
-            .findByAttr[List[CompanyDetails]](periodKey, companyDetailsList)
-            .exists(companiesDetails =>
-              companiesDetails
-                .contains(CompanyDetails(companyDetails.companyName, companyDetails.uniqueTaxpayerReference))
-            )
-        }
+    companyDetails.uniqueTaxpayerReference
+      .map(_.trim)
+      .filter(_.nonEmpty)
+      .fold(Future.successful(Some(false))) { _ =>
+        sessionRepository
+          .get(userId)
+          .map {
+            _.map { userAnswers =>
+              userAnswers
+                .findByAttr[List[CompanyDetails]](periodKey, companyDetailsList)
+                .exists(companiesDetails =>
+                  companiesDetails
+                    .contains(CompanyDetails(companyDetails.companyName, companyDetails.uniqueTaxpayerReference))
+                )
+            }
+          }
       }
 }

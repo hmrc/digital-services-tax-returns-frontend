@@ -72,7 +72,7 @@ unauthorised.signIn.reason = To use this service, sign in with the HMRC sign in 
 #Returns Dashboard Landing Page
 returnsDashboard.heading=Digital Services Tax details
 returnsDashboard.ultimate-parent-name=Group’s ultimate parent company
-returnsDashboard.dst-no=DST Registation Number
+returnsDashboard.dst-no=DST Registration Number
 returnsDashboard.company-name=Responsible member
 returnsDashboard.payment-due=Next payment due
 returnsDashboard.pay-tax=Pay your Digital Services Tax
@@ -167,14 +167,14 @@ reportMediaAlternativeCharge.change.hidden = Alternative charge applied
 socialMediaLoss.title=Has the group made a loss on its social media activity?
 socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
-socialMediaLoss.checkYourAnswersLabel.heading = Social Media Activity
+socialMediaLoss.checkYourAnswersLabel.heading = Social media activity
 socialMediaLoss.checkYourAnswersLabel=Loss made
 socialMediaLoss.change.hidden=Change loss made
 
 #Report online marketplace alternative charge
 reportOnlineMarketplaceAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
 reportOnlineMarketplaceAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
-reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading = Online Marketplace Activity
+reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading = Online marketplace activity
 reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportOnlineMarketplaceAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your online marketplace activity
 reportOnlineMarketplaceAlternativeCharge.change.hidden = Online marketplace alternative charge applied
@@ -243,20 +243,19 @@ allowanceDeducted.change.hidden = Change the amount of £25m annual allowance cl
 searchEngineLoss.title = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.checkYourAnswersLabel = Loss made
-searchEngineLoss.checkYourAnswersLabel.heading = Search Engine Activity
+searchEngineLoss.checkYourAnswersLabel.heading = Search engine activity
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
 searchEngineLoss.change.hidden = Loss made
 
 uKBankDetails.title = Your bank details for repayment
 uKBankDetails.heading = Your bank details for repayment
-uKBankDetails.enter.the.details = Enter the details of the international bank account that repayments should be made into.
 uKBankDetails.accountName = Name on the account
 uKBankDetails.sortCode = Sort code
-uKBankDetails.sortCode.hint = The sort code must be 6 digits long
+uKBankDetails.sortCode.hint = Must be 6 digits long
 uKBankDetails.accountNumber = Account number
-uKBankDetails.accountNumber.hint = The account number must be between 6 and 8 digits long
+uKBankDetails.accountNumber.hint = Must be 8 digits long
 uKBankDetails.buildingNumber = Building society roll number (if you have one)
-uKBankDetails.buildingNumber.hint = You can find the building society roll number on your card, statement or passbook
+uKBankDetails.buildingNumber.hint = You can find it on your card, statement or passbook
 
 uKBankDetails.checkYourAnswersLabel = Return repayments
 uKBankDetails.error.accountName.required = Enter the account name
@@ -267,7 +266,7 @@ uKBankDetails.error.sortCode.required = Enter the sort code
 uKBankDetails.error.sortCode.invalid = Enter the sort code in the correct format, like 123456
 
 uKBankDetails.error.accountNumber.required = Enter the account number
-uKBankDetails.error.accountNumber.invalid  = Enter the account number in the correct format, like 123456 or 12345678
+uKBankDetails.error.accountNumber.invalid  = Enter the account number in the correct format, like 12345678
 
 uKBankDetails.error.buildingNumber.length  = Building society roll number must be 18 characters or fewer
 uKBankDetails.error.buildingNumber.invalid  = Building society roll number must only include letters a to z, numbers, hyphens and spaces
@@ -295,9 +294,8 @@ isRepaymentBankAccountUK.change.hidden = Change if this is a UK bank account
 bankDetailsForRepayment.title = Your bank details for repayment
 bankDetailsForRepayment.heading = Your bank details for repayment
 bankDetailsForRepayment.accountName = Name on the account
-bankDetailsForRepayment.enter.the.details = Enter the details of the international bank account that repayments should be made into.
 bankDetailsForRepayment.internationalBankAccountNumber = International Bank Account Number (IBAN)
-bankDetailsForRepayment.internationalBankAccountNumber.hint = The IBAN can be found on your bank statement, or you can ask your bank
+bankDetailsForRepayment.internationalBankAccountNumber.hint = You can ask your bank or check your bank statement
 bankDetailsForRepayment.checkYourAnswersLabel = Bank details for repayment
 bankDetailsForRepayment.error.accountName.required = Enter the name on the account
 bankDetailsForRepayment.error.internationalBankAccountNumber.required = Enter an IBAN
@@ -372,8 +370,8 @@ reliefDeducted.error.invalid = The amount of cross-border transactions relief yo
 reliefDeducted.error.exceeded = The amount of cross-border transactions relief you deducted from revenues must be 15 numbers or fewer
 reliefDeducted.change.hidden = Change the amount of relief claimed on cross-border transactions
 
-reportSearchEngineOperatingMargin.title = What was the {0}’s operating margin on its search engine activity?
-reportSearchEngineOperatingMargin.heading = Enter the {0}’s operating margin on its search engine activity
+reportSearchEngineOperatingMargin.title = What is the {0}’s operating margin on its search engine activity?
+reportSearchEngineOperatingMargin.heading = What is the {0}’s operating margin on its search engine activity?
 reportSearchEngineOperatingMargin.checkYourAnswersLabel = Group’s profit margin on activity
 reportSearchEngineOperatingMargin.error.required = Enter the {0}’s operating margin on its search engine activity
 reportSearchEngineOperatingMargin.error.invalid = Enter the {0}’s operating margin on its search engine activity \
