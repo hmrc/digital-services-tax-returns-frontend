@@ -89,19 +89,7 @@ class CompanyDetailsController @Inject() (
 
   def onDelete(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen requireData).async { implicit request =>
-      for {
-        updatedAnswers <-
-          Future.fromTry(
-            request.userAnswers.remove(CompanyDetailsPage(periodKey, index))
-          )
-        _              <- sessionRepository.set(updatedAnswers)
-      } yield {
-        val size = updatedAnswers.get(CompanyDetailsListPage(periodKey)).fold(0)(_.size)
-        size match {
-          case 0 => Redirect(routes.CompanyDetailsController.onPageLoad(periodKey, Index(0), mode))
-          case _ => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
-        }
-      }
+      Future.successful(Redirect(routes.RemoveCompanyController.onPageLoad(periodKey, index, mode)))
     }
 
   private def updateUserAnswersAndSession(
