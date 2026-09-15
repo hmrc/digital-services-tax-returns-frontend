@@ -31,7 +31,7 @@ import views.html.RemoveCompanyView
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class RemoveCompanyController @Inject()(
+class RemoveCompanyController @Inject() (
   override val messagesApi: MessagesApi,
   sessionRepository: SessionRepository,
   identify: IdentifierAction,
@@ -50,40 +50,38 @@ class RemoveCompanyController @Inject()(
     (identify(Some(periodKey)) andThen getData andThen initialiseData) { implicit request =>
       findCompanyDetails(periodKey, index, request) match {
         case Some(companyDetails) => Ok(view(form, periodKey, index, mode, companyDetails.companyName))
-        case None => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
+        case None                 => Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
       }
     }
 
-  def onSubmit(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] = {
+  def onSubmit(periodKey: PeriodKey, index: Index, mode: Mode): Action[AnyContent] =
     (identify(Some(periodKey)) andThen getData andThen initialiseData).async { implicit request =>
       findCompanyDetails(periodKey, index, request) match {
         case Some(companyDetails) =>
           form
             .bindFromRequest()
             .fold(
-              formWithErrors => Future.successful(BadRequest(view(formWithErrors, periodKey, index, mode, companyDetails.companyName))),
+              formWithErrors =>
+                Future.successful(BadRequest(view(formWithErrors, periodKey, index, mode, companyDetails.companyName))),
               {
-                case true =>
+                case true  =>
                   for {
                     updatedAnswers <-
                       Future.fromTry(
                         request.userAnswers.remove(CompanyDetailsPage(periodKey, index))
                       )
-                    _ <- sessionRepository.set(updatedAnswers)
-                  } yield {
-                    Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
-                  }
+                    _              <- sessionRepository.set(updatedAnswers)
+                  } yield Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode))
                 case false => Future.successful(Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode)))
               }
             )
-        case None => Future.successful(Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode)))
+        case None                 => Future.successful(Redirect(routes.ManageCompaniesController.onPageLoad(periodKey, mode)))
       }
     }
-  }
 
   private def findCompanyDetails(periodKey: PeriodKey, index: Index, request: DataRequest[AnyContent]) =
     request.userAnswers
-    .get(CompanyDetailsListPage(periodKey))
-    .flatMap(_.lift(index.position))
+      .get(CompanyDetailsListPage(periodKey))
+      .flatMap(_.lift(index.position))
 
 }

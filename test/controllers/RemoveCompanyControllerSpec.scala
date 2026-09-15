@@ -35,7 +35,7 @@ import scala.concurrent.Future
 
 class RemoveCompanyControllerSpec extends SpecBase with MockitoSugar {
 
-  val formProvider       = new RemoveCompanyFormProvider()
+  val formProvider        = new RemoveCompanyFormProvider()
   val form: Form[Boolean] = formProvider()
 
   lazy val removeCompanyRoute: String =
