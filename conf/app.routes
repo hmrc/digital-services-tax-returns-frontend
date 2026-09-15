@@ -32,6 +32,11 @@ GET        /:periodKey/manage-companies/edit/:index/company                contr
 POST       /:periodKey/manage-companies/edit/:index/company                controllers.CompanyDetailsController.onSubmit(periodKey: PeriodKey, index: Index, mode: Mode = CheckMode)
 GET        /:periodKey/manage-companies/delete/:index/company              controllers.CompanyDetailsController.onDelete(periodKey: PeriodKey, index: Index, mode: Mode = CheckMode)
 
+GET        /:periodKey/remove-company/:index/                              controllers.RemoveCompanyController.onPageLoad(periodKey: PeriodKey, index: Index, mode: Mode = NormalMode)
+POST       /:periodKey/remove-company/:index/                              controllers.RemoveCompanyController.onSubmit(periodKey: PeriodKey, index: Index, mode: Mode = NormalMode)
+GET        /:periodKey/remove-company/:index/                              controllers.RemoveCompanyController.onPageLoad(periodKey: PeriodKey, index: Index, mode: Mode = CheckMode)
+POST       /:periodKey/remove-company/:index/                              controllers.RemoveCompanyController.onSubmit(periodKey: PeriodKey, index: Index, mode: Mode = CheckMode)
+
 GET        /:periodKey/manage-companies                                    controllers.ManageCompaniesController.onPageLoad(periodKey: PeriodKey, mode: Mode = NormalMode)
 POST       /:periodKey/manage-companies                                    controllers.ManageCompaniesController.onSubmit(periodKey: PeriodKey, mode: Mode = NormalMode)
 GET        /:periodKey/manage-companies                                    controllers.ManageCompaniesController.onPageLoad(periodKey: PeriodKey, mode: Mode = CheckMode)
