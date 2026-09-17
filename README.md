@@ -32,13 +32,17 @@ This will start all the required services.
 
 ### Locally
 
-`sbt 'run 8745'`
+`sbt run`
 
 * Visit http://localhost:9949/auth-login-stub/gg-sign-in
-* You may need to add some user details to the form
+* You may need to add some user details to the form:
+
 #### DST Returns Journey
 
-    Test data can be found in the team's Confluence area.
+Local Host Redirect URL:
+http://localhost:8743/digital-services-tax-returns
+
+Test data can be found in the team's Confluence area.
 
 ## Running the tests
 
