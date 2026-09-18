@@ -29,14 +29,11 @@ case class SelectActivitiesPage(periodKey: PeriodKey) extends QuestionPage[Set[S
   override def toString: String = "selectActivities"
 
   override def cleanup(value: Option[Set[SelectActivities]], userAnswers: UserAnswers): Try[UserAnswers] =
-
-    if(value.exists(!_.contains(OnlineMarketplace))) {
-    userAnswers
-      .remove(ReportCrossBorderReliefPage(periodKey))
-      .flatMap(_.remove(ReliefDeductedPage(periodKey)))
-    }
-    else
-    {
+    if (value.exists(!_.contains(OnlineMarketplace))) {
+      userAnswers
+        .remove(ReportCrossBorderReliefPage(periodKey))
+        .flatMap(_.remove(ReliefDeductedPage(periodKey)))
+    } else {
       super.cleanup(value, userAnswers)
     }
 }
