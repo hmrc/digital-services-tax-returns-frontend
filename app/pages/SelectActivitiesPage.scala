@@ -39,13 +39,4 @@ case class SelectActivitiesPage(periodKey: PeriodKey) extends QuestionPage[Set[S
     {
       super.cleanup(value, userAnswers)
     }
-
-  /* value.map match {
-      case OnlineMarketplace =>
-        userAnswers
-          .remove(ReportCrossBorderReliefPage(periodKey))
-          .flatMap(_.remove(ReliefDeductedPage(periodKey)))
-
-      case _ => super.cleanup(value, userAnswers)
-   }*/
 }
