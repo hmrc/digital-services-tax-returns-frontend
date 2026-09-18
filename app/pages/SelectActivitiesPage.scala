@@ -16,12 +16,36 @@
 
 package pages
 
-import models.{PeriodKey, SelectActivities}
+import models.SelectActivities.OnlineMarketplace
+import models.{PeriodKey, SelectActivities, UserAnswers}
 import play.api.libs.json.JsPath
+
+import scala.util.Try
 
 case class SelectActivitiesPage(periodKey: PeriodKey) extends QuestionPage[Set[SelectActivities]] {
 
   override def path: JsPath = JsPath \ periodKey.value \ toString
 
   override def toString: String = "selectActivities"
+
+  override def cleanup(value: Option[Set[SelectActivities]], userAnswers: UserAnswers): Try[UserAnswers] =
+
+    if(value.exists(!_.contains(OnlineMarketplace))) {
+    userAnswers
+      .remove(ReportCrossBorderReliefPage(periodKey))
+      .flatMap(_.remove(ReliefDeductedPage(periodKey)))
+    }
+    else
+    {
+      super.cleanup(value, userAnswers)
+    }
+
+  /* value.map match {
+      case OnlineMarketplace =>
+        userAnswers
+          .remove(ReportCrossBorderReliefPage(periodKey))
+          .flatMap(_.remove(ReliefDeductedPage(periodKey)))
+
+      case _ => super.cleanup(value, userAnswers)
+   }*/
 }

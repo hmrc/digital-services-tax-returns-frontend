@@ -107,7 +107,7 @@ trait NavigationUtils {
     mode: Mode
   ): Call =
     selectActivities match {
-      case activities if activities.contains(SelectActivities.OnlineMarketplace) && mode == NormalMode =>
+      case activities if activities.contains(SelectActivities.OnlineMarketplace) =>
         routes.ReportCrossBorderReliefController.onPageLoad(periodKey, mode)
       case _ if mode == NormalMode                                                                     =>
         routes.AllowanceDeductedController.onPageLoad(periodKey, mode)

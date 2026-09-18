@@ -41,6 +41,11 @@ case class ReportAlternativeChargePage(periodKey: PeriodKey) extends QuestionPag
           .flatMap(_.remove(ReportOnlineMarketplaceLossPage(periodKey)))
           .flatMap(_.remove(ReportOnlineMarketplaceOperatingMarginPage(periodKey)))
 
+      case Some(true) =>
+        userAnswers
+          .remove(ReportCrossBorderReliefPage(periodKey))
+          .flatMap(_.remove(ReliefDeductedPage(periodKey)))
+
       case _ => super.cleanup(value, userAnswers)
     }
 }
