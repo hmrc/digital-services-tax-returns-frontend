@@ -284,9 +284,7 @@ class PreviousReturnsServiceSpec
     updatedUserAnswers.get(ReportAlternativeChargePage(periodKey)) mustBe Some(false)
   }
 
-  "processing return data with cross-border relief amount" in {
-
-    val crossBorderReliefAmount = 500000
+  "processing return data with no cross-border relief amount due to OnlineMarketPlace not being selected" in {
 
     val userAnswers = emptyUserAnswers
       .set(
@@ -301,43 +299,7 @@ class PreviousReturnsServiceSpec
         .parse("""
                  |{
                  |        "reportedActivities" : [
-                 |            "OnlineMarketplace",
-                 |            "SocialMedia"
-                 |        ],
-                 |        "alternateCharge" : {
-                 |            "OnlineMarketplace" : 0.0
-                 |        },
-                 |        "crossBorderReliefAmount" : 500000,
-                 |        "allowanceAmount" : 600000,
-                 |        "companiesAmount" : {},
-                 |        "totalLiability" : 70000
-                 |    }""".stripMargin)
-        .as[Return]
-
-    when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
-    val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
-    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
-    updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe Some(true)
-  }
-
-  "processing return data with 0.0 cross-border relief amount" in {
-
-    val crossBorderReliefAmount = 0.0
-
-    val userAnswers = emptyUserAnswers
-      .set(
-        SelectActivitiesPage(periodKey),
-        Set[SelectActivities](SelectActivities.SocialMedia, SelectActivities.SearchEngine)
-      )
-      .success
-      .value
-
-    val returnData =
-      Json
-        .parse("""
-                 |{
-                 |        "reportedActivities" : [
-                 |            "OnlineMarketplace",
+                 |            "SearchEngine",
                  |            "SocialMedia"
                  |        ],
                  |        "alternateCharge" : {
@@ -352,16 +314,15 @@ class PreviousReturnsServiceSpec
 
     when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
-    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
-    updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe Some(false)
+    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe None
+    updatedUserAnswers.get(ReportCrossBorderReliefPage(periodKey)) mustBe None
     updatedUserAnswers.get(RepaymentPage(periodKey)) mustBe Some(false)
   }
 
   "processing return data with allowance amount" in {
 
-    val allowanceAmount         = 1000
-    val crossBorderReliefAmount = 500000
-    val totalLiabilityAmount    = 70000
+    val allowanceAmount      = 1000
+    val totalLiabilityAmount = 70000
 
     val userAnswers = emptyUserAnswers
       .set(
@@ -392,7 +353,7 @@ class PreviousReturnsServiceSpec
     when(mockDSTConnector.lookupSubmittedReturns(any())(using any())).thenReturn(Future.successful(Some(returnData)))
     val updatedUserAnswers = service.convertReturnToUserAnswers(periodKey, userAnswers).futureValue.value
     updatedUserAnswers.get(AllowanceDeductedPage(periodKey)) mustBe Some(allowanceAmount)
-    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe Some(crossBorderReliefAmount)
+    updatedUserAnswers.get(ReliefDeductedPage(periodKey)) mustBe None
     updatedUserAnswers.get(GroupLiabilityPage(periodKey)) mustBe Some(totalLiabilityAmount)
 
   }

@@ -134,7 +134,7 @@ class CheckModeNavigatorSpec extends SpecBase {
       ) mustBe routes.SocialMediaLossController.onPageLoad(periodKey, CheckMode)
     }
 
-    "must go from a ReportAlternativeChargePage to CheckYourAnswers page when OnlineMarketplace is selected and option 'no' is selected" in {
+    "must go from a ReportAlternativeChargePage to ReportCrossBorderReliefPage page when OnlineMarketplace is selected and option 'no' is selected" in {
 
       navigator.nextPage(
         ReportAlternativeChargePage(periodKey),
@@ -149,7 +149,7 @@ class CheckModeNavigatorSpec extends SpecBase {
           .set(ReportAlternativeChargePage(periodKey), false)
           .success
           .value
-      ) mustBe routes.CheckYourAnswersController.onPageLoad(periodKey)
+      ) mustBe routes.ReportCrossBorderReliefController.onPageLoad(periodKey, CheckMode)
     }
 
     "must go from a ReportAlternativeChargePage to CheckYourAnswers page when more then one activity is selected and option 'no' is selected" in {
