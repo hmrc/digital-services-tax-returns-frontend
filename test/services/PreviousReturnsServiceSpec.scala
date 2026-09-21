@@ -321,8 +321,8 @@ class PreviousReturnsServiceSpec
 
   "processing return data with allowance amount" in {
 
-    val allowanceAmount         = 1000
-    val totalLiabilityAmount    = 70000
+    val allowanceAmount      = 1000
+    val totalLiabilityAmount = 70000
 
     val userAnswers = emptyUserAnswers
       .set(
