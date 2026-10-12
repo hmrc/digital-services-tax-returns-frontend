@@ -42,9 +42,9 @@ object CompanyDetailsSummary {
             "site.change",
             routes.CompanyDetailsController.onPageLoad(periodKey, index, CheckMode).url
           )
-            .withVisuallyHiddenText(messages("companyDetails.change.hidden")),
+            .withVisuallyHiddenText(answer.companyName),
           ActionItemViewModel("site.remove", routes.CompanyDetailsController.onDelete(periodKey, index, CheckMode).url)
-            .withVisuallyHiddenText(messages("companyDetails.remove.hidden"))
+            .withVisuallyHiddenText(answer.companyName)
             .withCssClass("")
         )
       ).withCssClass("dst-listing")
