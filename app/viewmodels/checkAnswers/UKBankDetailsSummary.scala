@@ -22,23 +22,23 @@ import pages.UKBankDetailsPage
 import play.api.i18n.Messages
 import play.twirl.api.HtmlFormat
 import uk.gov.hmrc.govukfrontend.views.viewmodels.content.HtmlContent
-import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.SummaryListRow
-import viewmodels.govuk.summarylist._
-import viewmodels.implicits._
+import uk.gov.hmrc.govukfrontend.views.viewmodels.summarylist.{Key, SummaryListRow}
+import viewmodels.govuk.summarylist.*
+import viewmodels.implicits.*
 
 object UKBankDetailsSummary {
 
   def accountNameRow(periodKey: PeriodKey, answers: UserAnswers)(implicit messages: Messages): Option[SummaryListRow] =
     answers.get(UKBankDetailsPage(periodKey)).map { answer =>
       SummaryListRowViewModel(
-        key = "uKBankDetails.accountName.change.hidden",
+        key = "uKBankDetails.accountName",
         value = ValueViewModel(HtmlContent(HtmlFormat.escape(answer.accountName).toString)),
         actions = Seq(
           ActionItemViewModel(
             "site.change",
             routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
           )
-            .withVisuallyHiddenText(messages("accountName.change.hidden"))
+            .withVisuallyHiddenText(messages("uKBankDetails.accountName.change.hidden"))
         )
       )
     }
@@ -53,7 +53,7 @@ object UKBankDetailsSummary {
             "site.change",
             routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
           )
-            .withVisuallyHiddenText(messages("sortCode.change.hidden"))
+            .withVisuallyHiddenText(messages("uKBankDetails.sortCode.change.hidden"))
         )
       )
     }
@@ -70,7 +70,7 @@ object UKBankDetailsSummary {
             "site.change",
             routes.UKBankDetailsController.onPageLoad(periodKey, CheckMode).url
           )
-            .withVisuallyHiddenText(messages("accountNumber.change.hidden"))
+            .withVisuallyHiddenText(messages("uKBankDetails.accountNumber.change.hidden"))
         )
       )
     }

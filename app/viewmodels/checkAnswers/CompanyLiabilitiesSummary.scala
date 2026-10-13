@@ -40,7 +40,7 @@ object CompanyLiabilitiesSummary {
           "site.change",
           routes.CompanyLiabilitiesController.onPageLoad(periodKey, CheckMode, index).url
         )
-          .withVisuallyHiddenText(messages("companyLiabilities.change.hidden"))
+          .withVisuallyHiddenText(messages("companyLiabilities.change.hidden", company.companyName))
       )
     )
 }

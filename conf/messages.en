@@ -97,7 +97,7 @@ select-activities.online-marketplace=Online marketplace
 select-activities.minLength=Select if you are reporting social media, search engine or online marketplace activities in this return
 select-activities.error.required=Select if you are reporting social media, search engine or online marketplace activities in this return
 selectActivities.checkYourAnswersLabel=Activity reported in this return
-selectActivities.change.hidden=Change activity reported in this return
+selectActivities.change.hidden= activity reported in this return
 
 
 #error pages
@@ -143,8 +143,6 @@ companyDetails.error.companyName.invalid = Company name must only include letter
 companyDetails.error.uniqueTaxpayerReference.required = Enter uniqueTaxpayerReference
 companyDetails.error.uniqueTaxpayerReference.length = uniqueTaxpayerReference must be 10 characters or less
 companyDetails.error.uniqueTaxpayerReference.invalid = Enter the company’s Corporation Tax Unique Taxpayer Reference in the correct format
-companyDetails.change.hidden = Change company name
-companyDetails.remove.hidden = Remove company
 companyDetails.uniqueTaxpayerReference.duplicate = You have already entered this UTR
 
 #Manage companies
@@ -166,7 +164,7 @@ reportMediaAlternativeCharge.title = Are you applying the alternative charge for
 reportMediaAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins to your social media activity?
 reportMediaAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your social media activity
 reportMediaAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
-reportMediaAlternativeCharge.change.hidden = Alternative charge applied
+reportMediaAlternativeCharge.change.hidden = if you are applying the alternative charge to social media activity
 
 #Report social media loss
 socialMediaLoss.title=Has the group made a loss on its social media activity?
@@ -174,7 +172,7 @@ socialMediaLoss.heading=Has the group made a loss on its social media activity?
 socialMediaLoss.error.required=Select yes if the group made a loss on its social media activity
 socialMediaLoss.checkYourAnswersLabel.heading = Social media activity
 socialMediaLoss.checkYourAnswersLabel=Loss made
-socialMediaLoss.change.hidden=Change loss made
+socialMediaLoss.change.hidden = if the group has made a loss on its social media activity
 
 #Report online marketplace alternative charge
 reportOnlineMarketplaceAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins to your online marketplace activity?
@@ -182,14 +180,14 @@ reportOnlineMarketplaceAlternativeCharge.heading = Are you applying the alternat
 reportOnlineMarketplaceLoss.checkYourAnswersLabel.heading = Online marketplace activity
 reportOnlineMarketplaceAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportOnlineMarketplaceAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your online marketplace activity
-reportOnlineMarketplaceAlternativeCharge.change.hidden = Online marketplace alternative charge applied
+reportOnlineMarketplaceAlternativeCharge.change.hidden = if you are applying the alternative charge to online marketplace activity
 
 #Report search engine alternative charges
 reportSearchAlternativeCharge.title = Are you applying the alternative charge for low or negative UK profit margins to your search engine activity?
 reportSearchAlternativeCharge.heading = Are you applying the alternative charge for low or negative UK profit margins to your search engine activity?
 reportSearchAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
 reportSearchAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins to your search engine activity
-reportSearchAlternativeCharge.change.hidden = Alternative charge applied
+reportSearchAlternativeCharge.change.hidden = if you are applying the alternative charge to search engine activity
 
 #Cross-border transactions relief
 crossBorderTransactionRelief.title = How much cross-border transactions relief have you deducted from revenues in this return?
@@ -208,16 +206,16 @@ reportAlternativeCharge.details=What we mean by ‘alternative charge’
 reportAlternativeCharge.details.text=<p>This is an alternative method that businesses can use to work out their Digital Services Tax liability.</p>\
 <p>The alternative charge only benefits groups who make a loss or have a low UK profit margin on a Digital Services activity.</p>
 reportAlternativeCharge.error.required = Select yes if you are applying the alternative charge for low or negative UK profit margins in this return
-reportAlternativeCharge.checkYourAnswersLabel = Alternative charge applied
+reportAlternativeCharge.checkYourAnswersLabel = Are you applying the alternative charge for low or negative UK profit margins in this return?
 reportAlternativeCharge.checkYourAnswersLabel.change=Change alternative charge applied
-reportAlternativeCharge.change.hidden = Alternative charge applied
+reportAlternativeCharge.change.hidden = if you are applying the alternative charge for low or negative UK profit margins in this return
 
 #Report online marketplace loss
 reportOnlineMarketplaceLoss.title = Has the {0} made a loss on its online marketplace activity?
 reportOnlineMarketplaceLoss.heading = Has the {0} made a loss on its online marketplace activity?
 reportOnlineMarketplaceLoss.checkYourAnswersLabel = Loss made
 reportOnlineMarketplaceLoss.error.required = Select yes if the {0} made a loss on its online marketplace activity
-reportOnlineMarketplaceLoss.change.hidden = Change loss made
+reportOnlineMarketplaceLoss.change.hidden = if the group has made a loss on its online marketplace activity
 
 #Report cross border transactions relief
 reportCrossBorderRelief.title = Are you claiming any relief on cross-border transactions for this return period?
@@ -225,10 +223,9 @@ reportCrossBorderRelief.heading = Are you claiming any relief on cross-border tr
 reportCrossBorderRelief.details=What we mean by ‘relief on cross-border transactions’
 reportCrossBorderRelief.details.text=<p> If a transaction involves a UK user and a non-UK user who is in a country \
   that also operates a Digital Services Tax, only 50% of the revenues from that transaction will be taxable as UK revenues.</p>
-reportCrossBorderRelief.checkYourAnswersLabel = Are you claiming any relief on cross-border transactions for this period?
-
+reportCrossBorderRelief.checkYourAnswersLabel = Are you claiming any relief on cross-border transactions for this return period?
 reportCrossBorderRelief.error.required = Select yes if you are claiming any relief on cross-border transactions for this return period
-reportCrossBorderRelief.change.hidden = Change is you are claiming any relief on cross-border transactions for this period
+reportCrossBorderRelief.change.hidden = if you are claiming any relief on cross-border transactions for this period
 
 allowanceDeducted.title = How much of the £25m annual allowance have you deducted from revenues in this return?
 allowanceDeducted.heading = How much of the £25m annual allowance have you deducted from revenues in this return?
@@ -236,21 +233,21 @@ allowanceDeducted.details=What we mean by ‘£25m annual allowance’
 allowanceDeducted.details.text=<p>The £25m annual allowance means the first £25m of revenues derived \
 from UK users will not be subject to Digital Services Tax.</p><p>The allowance is pro-rated for accounting \
 periods less than 12 months.</p>
-allowanceDeducted.checkYourAnswersLabel = Amount of £25m annual allowance claimed
+allowanceDeducted.checkYourAnswersLabel = Amount of £25m annual allowance deducted from revenues in this return
 allowanceDeducted.error.required = Enter how much of the £25m annual allowance you have deducted from revenues in this return
 allowanceDeducted.error.invalid = The amount of the £25m annual allowance you have deducted from revenues must be an amount \
 of money, like 1,234.56 or 1,560.00
 allowanceDeducted.error.exceeded = The amount of the £25m annual allowance you have deducted from revenues must be 15 numbers or fewer
 allowanceDeducted.error.minimum-money=The amount of the £25m annual allowance you have deducted from revenues must be £1 or more
 allowanceDeducted.error.max-money=The amount of the £25m annual allowance you have deducted from revenues must be £25m or less
-allowanceDeducted.change.hidden = Change the amount of £25m annual allowance claimed
+allowanceDeducted.change.hidden = amount of £25m annual allowance claimed
 
 searchEngineLoss.title = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.heading = Has the {0} made a loss on its search engine activity?
 searchEngineLoss.checkYourAnswersLabel = Loss made
 searchEngineLoss.checkYourAnswersLabel.heading = Search engine activity
 searchEngineLoss.error.required = Select yes if the {0} made a loss on its search engine activity
-searchEngineLoss.change.hidden = Loss made
+searchEngineLoss.change.hidden = if the group has made a loss on its search engine activity
 
 uKBankDetails.title = Your bank details for repayment
 uKBankDetails.heading = Your bank details for repayment
@@ -277,10 +274,10 @@ uKBankDetails.error.buildingNumber.length  = Building society roll number must b
 uKBankDetails.error.buildingNumber.invalid  = Building society roll number must only include letters a to z, numbers, hyphens and spaces
 
 uKBankDetails.buildingRollNumber = Building society roll number
-uKBankDetails.accountName.change.hidden = Account name
-uKBankDetails.sortCode.change.hidden = Sort code
-uKBankDetails.accountNumber.change.hidden = Account number
-uKBankDetails.buildingRollNumber.change.hidden = Building society roll number (if you have one)
+uKBankDetails.accountName.change.hidden = name on the bank account
+uKBankDetails.sortCode.change.hidden = sort code
+uKBankDetails.accountNumber.change.hidden = bank account number
+uKBankDetails.buildingRollNumber.change.hidden = building society roll number
 
 companyLiabilities.title = What are your UK Digital Services Tax liabilities for {0} from {1} to {2}?
 companyLiabilities.heading = What are your UK Digital Services Tax liabilities for {0} from {1} to {2}?
@@ -288,13 +285,13 @@ companyLiabilities.checkYourAnswersLabel = {0}’s Digital Services Tax liabilit
 companyLiabilities.error.required = Enter the Digital Services Tax liability for {0} in pounds or pounds and pence
 companyLiabilities.error.invalid = The liability for {0} must be an amount of money, like 1,234.56 or 1,560.00
 companyLiabilities.error.exceeded = The liability for {0} must be 15 numbers or fewer
-companyLiabilities.change.hidden = Company liabilities
+companyLiabilities.change.hidden = {0}'s Digital Services Tax liability
 
 isRepaymentBankAccountUK.title = Is this a UK bank account?
 isRepaymentBankAccountUK.heading = Is this a UK bank account?
 isRepaymentBankAccountUK.checkYourAnswersLabel = Is this a UK bank account?
 isRepaymentBankAccountUK.error.required = Select yes if this is a UK bank account
-isRepaymentBankAccountUK.change.hidden = Change if this is a UK bank account
+isRepaymentBankAccountUK.change.hidden = if this is a UK bank account
 
 bankDetailsForRepayment.title = Your bank details for repayment
 bankDetailsForRepayment.heading = Your bank details for repayment
@@ -308,7 +305,7 @@ bankDetailsForRepayment.error.accountName.length = The name on the account must 
 bankDetailsForRepayment.error.internationalBankAccountNumber.length = IBAN must be 34 characters or less
 bankDetailsForRepayment.error.internationalBankAccountNumber.invalid = Enter a valid IBAN
 bankDetailsForRepayment.error.accountName.invalid = The name on the account must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
-bankDetailsForRepayment.accountName.change.hidden = Account Name
+bankDetailsForRepayment.accountName.change.hidden = bank account number
 bankDetailsForRepayment.internationalBankAccountNumber.change.hidden = IBAN
 
 
@@ -320,14 +317,14 @@ groupLiability.checkYourAnswersLabel = Group’s total Digital Services Tax liab
 groupLiability.error.required = Enter the {0}’s total Digital Services Tax liability for {1} to {2} in pounds or pounds and pence
 groupLiability.error.invalid = The {0}’s total liability must be an amount of money, like 1,234.56 or 1,560.00
 groupLiability.error.exceeded = The {0}’s total liability must be 15 numbers or fewer
-groupLiability.change.hidden = Change the group’s total Digital Services Tax liability
+groupLiability.change.hidden = group’s total Digital Services Tax liability
 
 repayment.title = Do you need to be repaid any Digital Services Tax for {0} to {1}?
 repayment.heading = Do you need to be repaid any Digital Services Tax for {0} to {1}?
 repayment.checkYourAnswersLabel.heading = Return repayments
 repayment.checkYourAnswersLabel = Do you need to be repaid any Digital Services Tax for this period?
 repayment.error.required = Select yes if you need to be repaid any Digital Services Tax for {0} to {1}
-repayment.change.hidden = Change if you need to be repaid any Digital Services Tax for this period
+repayment.change.hidden = if you need to be repaid any Digital Services Tax for this period
 
 checkYourAnswers.title = Check your answers before sending your return for {0} to {1}
 checkYourAnswers.title.print = Digital Services Tax return details for {0} (for the period {1} to {2})
@@ -353,35 +350,35 @@ common.feedback.survey.p1 = (takes 30 seconds)
 
 reportOnlineMarketplaceOperatingMargin.title = What was the {0}’s operating margin on its online marketplace activity?
 reportOnlineMarketplaceOperatingMargin.heading = What was the {0}’s operating margin on its online marketplace activity?
-reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = Group’s profit margin on activity
+reportOnlineMarketplaceOperatingMargin.checkYourAnswersLabel = Group’s operating margin on activity
 reportOnlineMarketplaceOperatingMargin.error.required = Enter the {0}’s operating margin on its online marketplace activity
 reportOnlineMarketplaceOperatingMargin.error.invalid = Enter the {0}’s operating margin on its online marketplace activity \
                                                          in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
-reportOnlineMarketplaceOperatingMargin.change.hidden = Change group’s profit margin on activity
+reportOnlineMarketplaceOperatingMargin.change.hidden = group’s operating margin on online marketplace activity
 
 reportSocialMediaOperatingMargin.title = What was the {0}’s operating margin on its social media activity?
 reportSocialMediaOperatingMargin.heading = What was the {0}’s operating margin on its social media activity?
-reportSocialMediaOperatingMargin.checkYourAnswersLabel = Group’s profit margin on activity
+reportSocialMediaOperatingMargin.checkYourAnswersLabel = Group’s operating margin on activity
 reportSocialMediaOperatingMargin.error.required = Enter the {0}’s operating margin on its social media activity
 reportSocialMediaOperatingMargin.error.invalid = Enter the {0}’s operating margin on its social media activity in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
-reportSocialMediaOperatingMargin.change.hidden = Change group’s profit margin on activity
+reportSocialMediaOperatingMargin.change.hidden = group’s operating margin on social media activity
 
 reliefDeducted.title = How much cross-border transactions relief have you deducted from revenues in this return?
 reliefDeducted.heading = How much cross-border transactions relief have you deducted from revenues in this return?
-reliefDeducted.checkYourAnswersLabel = Amount of relief claimed on cross-border transactions
+reliefDeducted.checkYourAnswersLabel = Amount of cross-border transactions relief deducted from revenues in this return
 reliefDeducted.error.required = Enter the amount of cross-border transactions relief you have deducted from revenues in this return in pounds or pounds and pence
 reliefDeducted.error.invalid = The amount of cross-border transactions relief you deducted from revenues must be an amount of \
                                  money, like 1,234.56 or 1,560.00
 reliefDeducted.error.exceeded = The amount of cross-border transactions relief you deducted from revenues must be 15 numbers or fewer
-reliefDeducted.change.hidden = Change the amount of relief claimed on cross-border transactions
+reliefDeducted.change.hidden = amount of cross-border transactions relief deducted from revenues in this return
 
 reportSearchEngineOperatingMargin.title = What is the {0}’s operating margin on its search engine activity?
 reportSearchEngineOperatingMargin.heading = What is the {0}’s operating margin on its search engine activity?
-reportSearchEngineOperatingMargin.checkYourAnswersLabel = Group’s profit margin on activity
+reportSearchEngineOperatingMargin.checkYourAnswersLabel = Group’s operating margin on activity
 reportSearchEngineOperatingMargin.error.required = Enter the {0}’s operating margin on its search engine activity
 reportSearchEngineOperatingMargin.error.invalid = Enter the {0}’s operating margin on its search engine activity \
                                                     in the correct format, like 27.55%, 46.00%, 1.234% or 100%.
-reportSearchEngineOperatingMargin.change.hidden = Change group’s profit margin on activity
+reportSearchEngineOperatingMargin.change.hidden = group’s operating margin on search engine activity
 
 resubmitAReturn.title = Which return do you need to resubmit?
 resubmitAReturn.heading = Which return do you need to resubmit?
