@@ -25,7 +25,7 @@ import models.UKBankDetails
 
 class UKBankDetailsFormProvider @Inject() extends Mappings {
 
-  val accountNameRegex        = """^[a-zA-Z&^]{1,35}$"""
+  val accountNameRegex        = """^[a-zA-Z&^ ]{1,35}$"""
   val sortCodeRegex           = """^[0-9]{6}$"""
   val accountNumberRegex      = """^[0-9]{8}$"""
   val buildingRollNumberRegex = """^[A-Za-z0-9 -]{1,18}$"""

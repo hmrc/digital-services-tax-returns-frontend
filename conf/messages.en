@@ -261,7 +261,7 @@ uKBankDetails.buildingNumber.hint = You can find it on your card, statement or p
 
 uKBankDetails.checkYourAnswersLabel = Return repayments
 uKBankDetails.error.accountName.required = Enter the account name
-uKBankDetails.error.accountName.invalid= Account name must only include letters a to z
+uKBankDetails.error.accountName.invalid = The name on the account must only include letters a to z, numbers, hyphens, spaces, forward slashes and full stops
 uKBankDetails.error.accountName.length = Account name must be 35 characters or less
 
 uKBankDetails.error.sortCode.required = Enter the sort code
