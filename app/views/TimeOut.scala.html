@@ -21,7 +21,12 @@
 
 @()(implicit request: Request[?], messages: Messages)
 
-@layout(pageTitle = messages("signedOut.title").toString(), showBackLink = false) {
+@layout(
+    pageTitle = messages("signedOut.title").toString(),
+    showBackLink = false,
+    timeout      = false,
+    showSignOut  = false
+) {
     <h1 class="govuk-heading-l">@messages("signedOut.title")</h1>
 
     <p class="govuk-body">@messages("signedOut.guidance")</p>

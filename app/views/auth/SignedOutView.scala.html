@@ -22,7 +22,10 @@
 @()(implicit request: Request[?], messages: Messages)
 
 @layout(
-    pageTitle = s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}"
+    pageTitle = s"${messages("resubmit-a-return.title")} - ${messages("common.title")} - ${messages("common.title.suffix")}",
+    showBackLink = false,
+    timeout      = false,
+    showSignOut  = false
 ) {
 
     <h1 class="govuk-heading-xl">@messages("signedOut.heading")</h1>
