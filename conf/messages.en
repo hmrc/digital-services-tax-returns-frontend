@@ -340,10 +340,10 @@ returnsComplete.what-you-do-next.p1 = Your next return will be for {0} to {1}.
 returnsComplete.what-you-do-next.p2 = You must pay any Digital Services Tax you owe for your next return period by {0} and submit a return by {1}.
 returnsComplete.index = Go to your Digital Services Tax details
 
-returns-already-submitted.title = Returns Submitted
-returns-already-submitted.heading = Returns Submitted
+returns-already-submitted.title = Returns submitted
+returns-already-submitted.heading = Returns submitted
 returns-already-submitted.p1 = Your session has been cleared because you submitted your returns.
-returns-already-submitted.button = Start Again
+returns-already-submitted.button = Start again
 
 common.feedback.survey = What did you think of this service?
 common.feedback.survey.p1 = (takes 30 seconds)
